@@ -1,15 +1,15 @@
 {
-    "name": "tewn-pkg",
+    "name": "vietnam-fishery-api",
     "version": "1.0.0",
     "description": "a seed project for creating http service using express written in typescript",
-    "main": "app.js",
+    "main": "./src/index.js",
     "scripts": {
         "test": "jest --forceExit",
         "start": "npm run server:dev",
         "server:dev": "node ./dist/index",
-        "dev": "set NODE_ENV=development && nodemon --exec ts-node src/index.ts",
+        "dev": "set NODE_ENV=development && nodemon --exec ts-node ./src/index.ts",
         "debug:dev": "ts-node ./src/index.ts",
-        "prod": "set NODE_ENV=production && nodemon --exec ts-node src/index.ts",
+        "prod": "set NODE_ENV=production && nodemon --exec ts-node ./src/index.ts",
         "build": "npm run build:dev",
         "build:dev": "webpack --config ./webpack.config.js --progress --profile --color --display-error-details --display-cached && npm run copy-files",
         "postinstall": "cross-env NODE_ENV=production webpack --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail && npm run copy-files",
@@ -17,9 +17,10 @@
         "clean": "npm cache clear && rimraf --dist"
     },
     "keywords": [],
-    "author": "Nguyen Viet Huan",
+    "author": "Nguyen Viet Huan & Vo Hoai Phong",
     "license": "MIT",
     "dependencies": {
+        "bcryptjs": "^2.4.3",
         "bluebird": "^3.5.1",
         "body-parser": "^1.18.2",
         "compression": "^1.7.2",
@@ -36,6 +37,8 @@
         "lodash": "^4.17.10",
         "lokijs": "^1.5.3",
         "method-override": "^2.3.10",
+        "moment": "^2.22.2",
+        "moment-timezone": "^0.5.21",
         "morgan": "^1.9.0",
         "mssql": "^4.1.0",
         "multer": "^1.3.0",
@@ -47,12 +50,13 @@
         "socket.io": "^2.1.1",
         "socket.io-redis": "^5.2.0",
         "ssh2": "^0.6.1",
-        "uuid": "^3.2.1",
+        "uuid": "^3.3.2",
         "wicket": "^1.3.3",
         "winston": "^2.4.2"
     },
     "devDependencies": {
         "@reactivex/rxjs": "^6.0.0",
+        "@types/bcryptjs": "^2.4.2",
         "@types/body-parser": "1.17.0",
         "@types/chai": "^4.1.3",
         "@types/compression": "^0.0.36",
@@ -71,6 +75,7 @@
         "@types/lokijs": "^1.5.2",
         "@types/method-override": "^0.0.31",
         "@types/mocha": "^5.2.0",
+        "@types/moment-timezone": "^0.5.9",
         "@types/morgan": "^1.7.35",
         "@types/mssql": "^4.0.7",
         "@types/multer": "^1.3.6",
@@ -82,6 +87,7 @@
         "@types/socket.io-redis": "^1.0.25",
         "@types/ssh2": "^0.5.35",
         "@types/supertest": "^2.0.4",
+        "@types/uuid": "^3.4.4",
         "@types/webpack": "^4.1.4",
         "@types/winston": "^2.3.9",
         "babel-cli": "^6.26.0",
@@ -128,4 +134,3 @@
         "testEnvironment": "node"
     }
 }
-

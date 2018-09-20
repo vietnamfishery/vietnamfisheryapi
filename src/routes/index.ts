@@ -4,7 +4,8 @@ import * as httpStatusCode from 'http-status-codes';
 import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';
 import { PingRoute } from './ping';
-import { UploadRoute } from './upload';
+import { UserRoute } from './users';
+// import { UploadRoute } from './upload';
 
 /**
  * / route
@@ -48,6 +49,7 @@ export class ApiRoutes extends BaseRoute {
         // add index page route
         this.router.get('/', this.get);
         this.router.use(PingRoute.path, PingRoute.router);
+        this.router.use(UserRoute.path, UserRoute.router);
     }
 
     /**

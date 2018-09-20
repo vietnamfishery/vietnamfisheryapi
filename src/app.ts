@@ -10,12 +10,11 @@ import * as helmet from 'helmet';
 import * as methodOverride from 'method-override';
 import * as morgan from 'morgan';
 import * as path from 'path';
-// import * as SocketIO from 'socket.io';
+import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
 
 // socket import
-// import { BaseSocketServer } from './socketServer/BaseSocket';
-// import { PhSocket } from './socketServer/phSocket';
+import { BaseSocketServer } from './socketServer';
 
 import { ApiRoutes } from './routes';
 import { logger } from './services';
@@ -41,7 +40,7 @@ export class ServerExpress {
 
     public app: express.Application;
     public server: Server;
-    public io;
+    public io: SocketIO.Server;
 
     /**
      * Constructor.
@@ -55,9 +54,8 @@ export class ServerExpress {
         // create server for socket io
         this.server = createServer(this.app);
         // Add socket server
-        // this.io = SocketIO(this.server);
-        // socket client in /socket.io/socket.io.js
-        // new BaseSocketServer(this.io);
+        this.io = SocketIO(this.server);
+        new BaseSocketServer(this.io)
         // configure application
         this.config();
         // add routes
