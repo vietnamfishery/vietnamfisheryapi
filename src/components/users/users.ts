@@ -1,15 +1,15 @@
-import { Signin } from './signin';
 import { Enscrypt } from '../../lib/Enscrypt';
+import * as Sequeliz from 'sequelize';
 
 export class User {
 
     public constructor(
-        private uuid: string,
+        private userUUId: string,
         protected firstName: string,
         protected lastName: string,
         private username: string,
         private password: string,
-        private birdthday: Date, 
+        private birdthday: Date,
         private email: string,
         private phone: string,
         private address: string,
@@ -20,10 +20,10 @@ export class User {
         private status: number,
         private images: string,
         private cretatedDate: Date,
-        private updateddDate: Date,
+        private updatedDate: Date,
         private isDeleted: boolean
-    ){
-        this.uuid = uuid;
+    ) {
+        this.userUUId = userUUId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -39,7 +39,7 @@ export class User {
         this.status = status;
         this.images = images;
         this.cretatedDate = cretatedDate;
-        this.updateddDate = updateddDate;
+        this.updatedDate = updatedDate;
         this.isDeleted = isDeleted;
     }
 
@@ -47,12 +47,14 @@ export class User {
         return this.firstName;
     }
 
-    public getFullName(): string{
-        return `${ this.lastName } ${ this.firstName }`
+    public getFullName(): string {
+        return `${ this.lastName } ${ this.firstName }`;
     }
 
-    public async signin() {
-        const salt = await Enscrypt.getSalt();
-        return salt;
+    public async signin(models: Sequeliz.Model<{}, any>): Promise<any> {
+        return new Promise( async (resolve, reject) => {
+            this.password = await Enscrypt.hashing(this.password, (await Enscrypt.getSalt(12)));
+            resolve(await models.create(this));
+        });
     }
 }

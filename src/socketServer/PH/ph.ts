@@ -1,7 +1,7 @@
 import * as SocketIO from 'socket.io';
 
 export class PH {
-    constructor(protected io: SocketIO.Server, protected socket: SocketIO.Socket){}
+    constructor (protected io: SocketIO.Server, protected socket: SocketIO.Socket) {}
 
     public receivedPh(): void {
         this.socket.on('server-received-ph', (data) => {
@@ -27,7 +27,7 @@ export class PH {
 
     /**
      * Gửi cho tất cả client còn lại ngoại trừ client gửi tín hiệu
-     * @param data 
+     * @param data
      */
     sendWithoutMySelf(data: any): void {
         this.socket.broadcast.emit('[ser-ph]-send-to-without-my-selt', data);
@@ -35,8 +35,8 @@ export class PH {
 
     /**
      * Gửi đến một socket ID cụ thể.
-     * @param id 
-     * @param data 
+     * @param id
+     * @param data
      */
     sendPoint(id: string, data: any): void {
         this.io.to(id).emit('[ser-ph]-send-client-point', data);

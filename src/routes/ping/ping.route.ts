@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
+import { IModelsDB } from '../../interfaces';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -17,8 +18,13 @@ export class PingRoute extends BaseRoute {
    * @class PingRoute
    * @constructor
    */
-  private constructor () {
-    super();
+  private constructor (
+    models: IModelsDB = {
+        name: null,
+        model: null
+    }
+  ) {
+    super(models);
     this.get = this.get.bind(this);
     this.init();
   }
@@ -36,9 +42,6 @@ export class PingRoute extends BaseRoute {
 
     // add index page route
     this.router.get('/', this.get);
-    this.router.get('/haha', (req, res, next) => {
-        res.json({});
-    });
   }
 
   /**

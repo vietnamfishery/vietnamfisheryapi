@@ -12,14 +12,12 @@ import * as morgan from 'morgan';
 import * as path from 'path';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
-
+import DBHelper from './helpers/db-helpers';
 // socket import
 import { BaseSocketServer } from './socketServer';
 
 import { ApiRoutes } from './routes';
 import { logger } from './services';
-
-import './services/connectionDB';
 
 /**
  * The server.
@@ -55,11 +53,13 @@ export class ServerExpress {
         this.server = createServer(this.app);
         // Add socket server
         this.io = SocketIO(this.server);
-        new BaseSocketServer(this.io)
+        new BaseSocketServer(this.io);
         // configure application
         this.config();
         // add routes
         this.routes();
+        // connect db
+        DBHelper.getDatabaseConnection();
     }
 
     /**

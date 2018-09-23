@@ -3,6 +3,8 @@ import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
+import { IModelsDB } from '../../interfaces';
+import { userModel } from '../../models';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -12,69 +14,59 @@ import * as uuidv4 from 'uuid/v4';
  * @apiSuccess {String} type Json Type.
  */
 export class UserRoute extends BaseRoute {
-  public static path = '/user';
-  private static instance: UserRoute;
-
-  /**
-   * @class UserRoute
-   * @constructor
-   */
-  private constructor () {
-    super();
-    this.get = this.get.bind(this);
-    this.init();
-  }
-
-  static get router () {
-    if (!UserRoute.instance) {
-      UserRoute.instance = new UserRoute();
+    public static path = '/user';
+    private static instance: UserRoute;
+    /**
+     * @class UserRoute
+     * @constructor
+     */
+    private constructor(
+        models: IModelsDB = {
+            name: 'user',
+            model: userModel
+        }
+    ) {
+        super(models);
+        this.init();
     }
-    return UserRoute.instance.router;
-  }
 
-  private init () {
-    // log
-    logger.info('[UserRoute] Creating ping route.');
+    static get router() {
+        if (!UserRoute.instance) {
+            UserRoute.instance = new UserRoute();
+        }
+        return UserRoute.instance.router;
+    }
 
-    // add index page route
-    this.router.post('/signin', this.addNewUser);
-  }
+    private init() {
+        // log
+        logger.info('[UserRoute] Creating ping route.');
 
-  /**
-   * @class UserRoute
-   * @method get
-   * @param req {Request} The express Request object.
-   * @param res {Response} The express Response object.
-   * @param next {NextFunction} Execute the next method.
-   */
-  private async get (req: Request, res: Response, next: NextFunction) {
-    const request = req;
-    res.json({pong: 'pong'});
-  }
+        // add index page route
+        this.router.post('/signin', this.addNewUser);
+    }
 
-  private async addNewUser (req: Request, res: Response, next: NextFunction) {
-    const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, images, cretatedDate, updateddDate, isDeleted } = req.body
-    const user: User = new User(
-        uuidv4(),
-        firstName,
-        lastName,
-        username,
-        password,
-        birdthday,
-        email,
-        phone,
-        address,
-        town,
-        district,
-        province,
-        roles,
-        status,
-        'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
-        cretatedDate,
-        updateddDate,
-        isDeleted
-    )
-    const salt = await user.signin();
-    res.json({salt});
-  }
+    private addNewUser = async (req: Request, res: Response, next: NextFunction) => {
+        const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, cretatedDate, updateddDate, isDeleted } = req.body;
+        const user: User = new User(
+            uuidv4(),
+            firstName,
+            lastName,
+            username,
+            password,
+            birdthday,
+            email,
+            phone,
+            address,
+            town,
+            district,
+            province,
+            roles,
+            status,
+            'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
+            cretatedDate,
+            updateddDate,
+            isDeleted
+        );
+        res.json(await user.signin(this.model));
+    }
 }

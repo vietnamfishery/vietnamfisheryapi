@@ -4,12 +4,11 @@
     ],
     "rules": {
         "class-name": true,
-        // "tslint.autoFixOnSave": true,
+        "tslint.autoFixOnSave": true,
         "comment-format": [
             true,
             "check-space"
         ],
-        // "comment": "Fix : no-console | Calls to 'console.log' are not allowed.",
         "no-console": [
             true,
             "warning"
@@ -38,7 +37,7 @@
             "ignore-bound-class-methods"
         ],
         "whitespace": [
-            true,
+            false,
             "check-branch",
             "check-decl",
             "check-operator",
@@ -47,27 +46,27 @@
             "check-type"
         ],
         "typedef-whitespace": [
-            true,
+            false,
             {
-                "call-signature": "nospace",
-                "index-signature": "nospace",
-                "parameter": "nospace",
-                "property-declaration": "nospace",
-                "variable-declaration": "nospace"
+                "callSignature": "noSpace",
+                "indexSignature": "noSpace",
+                "parameter": "noSpace",
+                "propertySeclaration": "noSpace",
+                "variableDeclaration": "noSpace"
             },
             {
-                "call-signature": "onespace",
-                "index-signature": "onespace",
+                "callSignature": "onespace",
+                "indexSignature": "onespace",
                 "parameter": "onespace",
-                "property-declaration": "onespace",
-                "variable-declaration": "onespace"
+                "propertyDeclaration": "onespace",
+                "variableDeclaration": "onespace"
             }
         ],
         "max-line-length": [
             false
         ],
         "trailing-comma": [
-            true,
+            false,
             {
                 "multiline": {
                     "objects": "ignore",
@@ -78,8 +77,25 @@
                 "esSpecCompliant": true
             }
         ],
+        "member-ordering": [
+            false,
+            {
+                "order": [
+                    {
+                        "name": "static non-private",
+                        "kinds": [
+                            "public-static-field",
+                            "protected-static-field",
+                            "public-static-method",
+                            "protected-static-method"
+                        ]
+                    },
+                    "constructor"
+                ]
+            }
+        ],
         "no-internal-module": true,
-        // "no-trailing-whitespace": true,
+        "no-trailing-whitespace": true,
         "no-null-keyword": false,
         "space-before-function-paren": false,
         "arrow-parens": false,
@@ -87,13 +103,19 @@
         "prefer-const": true,
         "jsdoc-format": true,
         "no-unused-expression": false,
-        // "comment": "Fix: ordered-imports | Import sources within a group must be alphabetized.",
         "ordered-imports": [
             true,
             {
                 "import-sources-order": "any",
                 "named-imports-order": "case-insensitive"
             }
-        ]
+        ],
+        "object-literal-sort-keys": [
+            false,
+            "ignore-case",
+            "match-declaration-order",
+            "shorthand-first"
+        ],
+        "member-access": false
     }
 }

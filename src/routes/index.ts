@@ -5,7 +5,7 @@ import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';
 import { PingRoute } from './ping';
 import { UserRoute } from './users';
-// import { UploadRoute } from './upload';
+import { IModelsDB } from '../interfaces';
 
 /**
  * / route
@@ -20,9 +20,14 @@ export class ApiRoutes extends BaseRoute {
      * @class ApiRoutes
      * @constructor
      */
-    private constructor () {
-        super();
-        this.get = this.get.bind(this);
+    private constructor (
+        models: IModelsDB = {
+            name: null,
+            model: null
+        }
+    ) {
+        super(models);
+        // this.get = this.get.bind(this);
         this.init();
     }
 
@@ -48,7 +53,7 @@ export class ApiRoutes extends BaseRoute {
 
         // add index page route
         this.router.get('/', this.get);
-        this.router.use(PingRoute.path, PingRoute.router);
+        // this.router.use(PingRoute.path, PingRoute.router);
         this.router.use(UserRoute.path, UserRoute.router);
     }
 
@@ -59,7 +64,7 @@ export class ApiRoutes extends BaseRoute {
      * @param res {Response} The express Response object.
      * @param next {NextFunction} Execute the next method.
      */
-    private async get (req: Request, res: Response, next: NextFunction) {
+    private get = async (req: Request, res: Response, next: NextFunction) => {
         res.status(httpStatusCode.OK).render('index');
     }
 }

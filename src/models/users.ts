@@ -1,11 +1,11 @@
 import * as Sequelize from 'sequelize';
-import { DateUtil } from '../lib/date-util';
+import { DateUtil } from '../lib';
 
 export const userModel: any = {
     userId: {
+        autoIncrement: true,
         type: Sequelize.BIGINT(20),
         primaryKey: true,
-        autoIncrement: true,
         field: 'userId'
     },
     userUUId: {
@@ -18,7 +18,7 @@ export const userModel: any = {
     },
     lastName: {
         type: Sequelize.STRING(50),
-        field: 'firstName'
+        field: 'lastName'
     },
     username: {
         type: Sequelize.STRING(50),
@@ -71,7 +71,7 @@ export const userModel: any = {
         field: 'email'
     },
     images: {
-        type: Sequelize.TEXT({length: '1000'}),
+        type: Sequelize.TEXT({ length: '1000' }),
         allowNull: true,
         field: 'images'
     },
@@ -81,7 +81,7 @@ export const userModel: any = {
         defaultValue: () => {
             return DateUtil.getUTCDateTime();
         },
-        field: 'CreatedDate'
+        field: 'createdDate'
     },
     updatedDate: {
         type: Sequelize.DATE,
@@ -89,12 +89,12 @@ export const userModel: any = {
         defaultValue: () => {
             return DateUtil.getUTCDateTime();
         },
-        field: 'UpdatedDate'
+        field: 'updatedDate'
     },
     isDeleted: {
         type: Sequelize.BOOLEAN,
         allowNull: true,
         defaultValue: '1',
-        field: 'IsDeleted'
+        field: 'isDeleted'
     }
-}
+};
