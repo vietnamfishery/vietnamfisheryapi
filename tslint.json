@@ -4,7 +4,6 @@
     ],
     "rules": {
         "class-name": true,
-        "tslint.autoFixOnSave": true,
         "comment-format": [
             true,
             "check-space"
@@ -94,6 +93,7 @@
                 ]
             }
         ],
+        "no-empty": false,
         "no-internal-module": true,
         "no-trailing-whitespace": true,
         "no-null-keyword": false,

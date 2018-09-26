@@ -3,20 +3,18 @@ import * as Sequeliz from 'sequelize';
 import * as config from '../config';
 import * as constants from '../common';
 import { logger } from '../services';
-import { IModelsDB } from '../interfaces';
+import { IOptionsModelDB } from '../interfaces';
 
 const { dialect, operatorsAliases, pool, replication } = config.configDB;
 
 export default class DBHelper {
-    public static sequelize: Sequelize;
-    constructor() {
-        DBHelper.sequelize = new Sequeliz(constants.databaseName, null, null, {
-            dialect,
-            operatorsAliases,
-            pool,
-            replication
-        });
-    }
+    public static sequelize: Sequelize = new Sequeliz(constants.databaseName, null, null, {
+        dialect,
+        operatorsAliases,
+        pool,
+        replication
+    });
+    constructor(private optionsModel: IOptionsModelDB) {}
 
     public static async getDatabaseConnection() {
         DBHelper.sequelize.authenticate().then(() => {
@@ -27,24 +25,16 @@ export default class DBHelper {
         });
     }
 
-    public toModel (models: IModelsDB): Sequeliz.Model<{}, any> {
-        return DBHelper.sequelize.define(models.name, models.model, {
-            createdAt: false,
-            scopes: {
-                deletedRecord: {
-                    where: {
-                        isDeleted: true
-                    }
-                }
-            },
-            defaultScope: {
-                where: {
-                    isDeleted: false
-                }
-            },
-            deletedAt: false,
-            hooks: {},
-            updatedAt: false
-        });
+    private get modelName () {
+        return this.optionsModel.name;
     }
+
+    private get deleteMode () {
+        return this.optionsModel.deleteMode;
+    }
+
+    public get model () {
+        return DBHelper.sequelize.define(this.modelName, this.optionsModel.model, this.deleteMode);
+    }
+
 }

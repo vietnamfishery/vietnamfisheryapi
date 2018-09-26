@@ -2,6 +2,7 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as createError from 'http-errors';
 import * as compression from 'compression';
+import * as session from 'express-session';
 import * as cors from 'cors';
 import * as errorHandler from 'errorhandler';
 import * as express from 'express';
@@ -12,6 +13,7 @@ import * as morgan from 'morgan';
 import * as path from 'path';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
+import * as passport from 'passport';
 import DBHelper from './helpers/db-helpers';
 // socket import
 import { BaseSocketServer } from './socketServer';
@@ -58,6 +60,8 @@ export class ServerExpress {
         this.config();
         // add routes
         this.routes();
+        // handle error
+        this.handleErr();
         // connect db
         DBHelper.getDatabaseConnection();
     }
@@ -68,7 +72,7 @@ export class ServerExpress {
      * @class Server
      * @method config
      */
-    public async config() {
+    public config() {
         // add static paths
         this.app.use('/assets', express.static(path.join(__dirname, '../public')));
 
@@ -84,17 +88,32 @@ export class ServerExpress {
         } as morgan.Options));
 
         // mount urlencode parser
-        await this.app.use(bodyParser.json({
-            limit: '50mb',
+        this.app.use(bodyParser.json({
+            limit: '50mb'
         }));
 
         // mount urlencode parser
-        await this.app.use(bodyParser.urlencoded({
-            extended: false,
+        this.app.use(bodyParser.urlencoded({
+            extended: false
         }));
 
         // mount query string parser
         this.app.use(cookieParser());
+
+        this.app.use(session({
+            secret: 'vietnamfisherysecret',
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+              maxAge: 365 * 24 * 60 * 60 * 1000
+            }
+        }));
+
+        /**
+         * Using passport
+         */
+        this.app.use(passport.initialize());
+        this.app.use(passport.session());
 
         // mount override?
         this.app.use(helmet());
@@ -102,10 +121,9 @@ export class ServerExpress {
         this.app.use(compression());
         this.app.use(methodOverride());
         this.app.use(expressStatusMonitor());
+    }
 
-        // create socket
-        // new PhSocket(this.io);
-
+    private handleErr() {
         // catch 404 and forward to error handler
         this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
             next(createError(404));

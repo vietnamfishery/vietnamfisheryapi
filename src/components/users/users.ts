@@ -1,14 +1,16 @@
 import { Enscrypt } from '../../lib/Enscrypt';
 import * as Sequeliz from 'sequelize';
+import { UserServives } from '../../services';
+import { actionUserServices } from '../../common';
 
 export class User {
-
+    private userServices: UserServives;
     public constructor(
         private userUUId: string,
         protected firstName: string,
         protected lastName: string,
-        private username: string,
-        private password: string,
+        public username: string,
+        public password: string,
         private birdthday: Date,
         private email: string,
         private phone: string,
@@ -19,42 +21,17 @@ export class User {
         private roles: number,
         private status: number,
         private images: string,
-        private cretatedDate: Date,
+        private createdBy: string,
+        private createdDate: Date,
+        private updatedBy: string,
         private updatedDate: Date,
-        private isDeleted: boolean
+        private isDeleted: number
     ) {
-        this.userUUId = userUUId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.birdthday = birdthday;
-        this.email = email;
-        this.phone = phone;
-        this.address = address;
-        this.town = town;
-        this.district = district;
-        this.province = province;
-        this.roles = roles;
-        this.status = status;
-        this.images = images;
-        this.cretatedDate = cretatedDate;
-        this.updatedDate = updatedDate;
-        this.isDeleted = isDeleted;
+        this.userServices = new UserServives();
     }
 
-    public getFirstname(): string {
-        return this.firstName;
-    }
-
-    public getFullName(): string {
-        return `${ this.lastName } ${ this.firstName }`;
-    }
-
-    public async signin(models: Sequeliz.Model<{}, any>): Promise<any> {
-        return new Promise( async (resolve, reject) => {
-            this.password = await Enscrypt.hashing(this.password, (await Enscrypt.getSalt(12)));
-            resolve(await models.create(this));
-        });
+    public async signin() {
+        this.password = await Enscrypt.hashing(this.password, (await Enscrypt.getSalt(12)));
+        return await this.userServices.register(this);
     }
 }

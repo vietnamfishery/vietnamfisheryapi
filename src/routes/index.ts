@@ -5,7 +5,7 @@ import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';
 import { PingRoute } from './ping';
 import { UserRoute } from './users';
-import { IModelsDB } from '../interfaces';
+import { IOptionsModelDB } from '../interfaces';
 
 /**
  * / route
@@ -20,13 +20,8 @@ export class ApiRoutes extends BaseRoute {
      * @class ApiRoutes
      * @constructor
      */
-    private constructor (
-        models: IModelsDB = {
-            name: null,
-            model: null
-        }
-    ) {
-        super(models);
+    private constructor () {
+        super();
         // this.get = this.get.bind(this);
         this.init();
     }

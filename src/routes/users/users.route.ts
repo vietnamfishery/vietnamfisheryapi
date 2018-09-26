@@ -3,8 +3,7 @@ import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
-import { IModelsDB } from '../../interfaces';
-import { userModel } from '../../models';
+import { LoginHelper } from '../../helpers/login-helpers';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -20,13 +19,8 @@ export class UserRoute extends BaseRoute {
      * @class UserRoute
      * @constructor
      */
-    private constructor(
-        models: IModelsDB = {
-            name: 'user',
-            model: userModel
-        }
-    ) {
-        super(models);
+    private constructor() {
+        super();
         this.init();
     }
 
@@ -40,13 +34,19 @@ export class UserRoute extends BaseRoute {
     private init() {
         // log
         logger.info('[UserRoute] Creating ping route.');
-
+        const loginHelper = new LoginHelper();
         // add index page route
-        this.router.post('/signin', this.addNewUser);
+        this.router.post('/signin', this.signin);
+        this.router.post('/login', loginHelper.authenticate('login/success', 'login'));
+        this.router.get('/login/success', LoginHelper.isLoggedIn, this.loginSuccess);
+        this.router.get('/login', LoginHelper.notLoggedIn, this.loginFailure);
+        this.router.get('/login-ui', function(req, res) {
+            res.render('login');
+        });
     }
 
-    private addNewUser = async (req: Request, res: Response, next: NextFunction) => {
-        const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, cretatedDate, updateddDate, isDeleted } = req.body;
+    private signin = async (req: Request, res: Response, next: NextFunction) => {
+        const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
         const user: User = new User(
             uuidv4(),
             firstName,
@@ -63,10 +63,26 @@ export class UserRoute extends BaseRoute {
             roles,
             status,
             'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
-            cretatedDate,
-            updateddDate,
+            createdBy,
+            createdDate,
+            updatedBy,
+            updatedDate,
             isDeleted
         );
-        res.json(await user.signin(this.model));
+        res.json(await user.signin());
+    }
+
+    private loginSuccess = async (req: Request, res: Response, next: NextFunction) => {
+        res.json({
+            action: 'login',
+            status: true
+        });
+    }
+
+    private loginFailure = async (req: Request, res: Response, next: NextFunction) => {
+        res.json({
+            action: 'login',
+            status: false
+        });
     }
 }

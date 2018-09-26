@@ -32,3 +32,21 @@ export const authdb: any = {
     password: 'J%:dTva*#9c>k@L6',
     username: 'fisherier'
 };
+
+export enum actionServices {
+    ADD = 'insert',
+    EDIT = 'update',
+}
+
+export enum actionUserServices {
+    SIGNIN = 'signin',
+    ADD_CHILD = 'add_employee',
+    LOGIN = 'login',
+    UPDATE = 'update',
+    DELETE = 'delete'
+}
+
+export enum modelName {
+    USER = 'users',
+    POND = 'ponds'
+}

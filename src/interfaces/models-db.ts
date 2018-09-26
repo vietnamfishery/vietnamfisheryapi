@@ -1,6 +1,7 @@
 import * as Sequeliz from 'sequelize';
 
-export interface IModelsDB {
+export interface IOptionsModelDB {
     name: string;
     model: any;
+    deleteMode: any;
 }
