@@ -16,6 +16,7 @@ export const pondOptions: any = _.merge({
         },
         pondUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'pondUUId'
         },
         pondName: {

@@ -34,6 +34,7 @@ export const breedOptions: any = _.merge({
         },
         descriptions: {
             type: Sequelize.TEXT,
+            allowNull: true,
             field: 'descriptions'
         }
     },

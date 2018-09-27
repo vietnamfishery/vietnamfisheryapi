@@ -22,7 +22,6 @@ export const couponOptions: any = _.merge({
         userId: {
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
-            unique: true,
             field: 'userId'
         },
         couponName: {
@@ -30,9 +29,7 @@ export const couponOptions: any = _.merge({
             field: 'couponName'
         },
         couponType: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            defaultValue: 0,
+            type: Sequelize.INTEGER(1),
             field: 'couponType'
         }
     },

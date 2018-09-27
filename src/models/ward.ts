@@ -27,7 +27,6 @@ export const wardOptions: any = _.merge({
         },
         districtid: {
             type: Sequelize.STRING(5),
-            unique: true,
             field: 'districtid'
         }
     },

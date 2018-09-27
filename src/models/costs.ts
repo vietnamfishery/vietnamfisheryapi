@@ -16,6 +16,7 @@ export const costsOptions: any = _.merge({
         },
         costUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'costUUId'
         },
         pondPrepareId: {

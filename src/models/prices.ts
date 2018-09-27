@@ -16,6 +16,7 @@ export const pricesOptions: any = _.merge({
         },
         priceUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'priceUUId'
         },
         storageId: {

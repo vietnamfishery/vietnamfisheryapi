@@ -10,6 +10,7 @@ export const materialOptions: any = _.merge({
     attributes: {
         materialUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'materialUUId'
         },
         couponId: {
@@ -38,6 +39,7 @@ export const materialOptions: any = _.merge({
         },
         unit: {
             type: Sequelize.INTEGER(1),
+            allowNull: true,
             field: 'unit'
         },
         unitPrice: {
@@ -56,6 +58,7 @@ export const materialOptions: any = _.merge({
         },
         prodcutionBatch: {
             type: Sequelize.STRING(100),
+            allowNull: true,
             field: 'prodcutionBatch'
         }
     },

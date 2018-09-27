@@ -21,7 +21,6 @@ export const boughtbreedOptions: any = _.merge({
         },
         userId: {
             type: Sequelize.BIGINT(20),
-            unique: true,
             field: 'userId'
         },
         boughtBreedName: {

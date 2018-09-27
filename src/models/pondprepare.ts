@@ -16,6 +16,7 @@ export const pondprepareOptions: any = _.merge({
         },
         pondPrepareUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'pondPrepareUUId'
         },
         seasonId: {

@@ -9,6 +9,7 @@ export const pondpreparedetailOptions: any = _.merge({
 {
     attributes: {
         pondPrepareDetailId: {
+            autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
             field: 'pondPrepareDetailId'
@@ -26,7 +27,6 @@ export const pondpreparedetailOptions: any = _.merge({
         storageId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            unique: true,
             field: 'storageId'
         },
         quantity: {

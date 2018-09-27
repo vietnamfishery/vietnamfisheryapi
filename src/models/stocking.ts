@@ -16,6 +16,7 @@ export const stockingOptions: any = _.merge({
         },
         stockingUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'stockingUUId'
         },
         seasonId: {

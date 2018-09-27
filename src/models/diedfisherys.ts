@@ -16,6 +16,7 @@ export const diedfisherysOptions: any = _.merge({
         },
         diedFisheryUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'diedFisheryUUId'
         },
         seasonId: {

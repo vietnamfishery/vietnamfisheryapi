@@ -23,7 +23,6 @@ export const stockingdetailOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            unique: true,
             field: 'stockingId'
         },
         costOfStocking: {

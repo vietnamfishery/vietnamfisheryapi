@@ -32,6 +32,9 @@ export const harvestdetailOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        createdBy: false,
+        createdDate: false,
+        updatedBy: false,
+        updatedDate: false,
     }
 }, _.cloneDeep(baseModel));

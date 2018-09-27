@@ -21,7 +21,6 @@ export const takecareOptions: any = _.merge({
         },
         seasonId: {
             type: Sequelize.BIGINT(20),
-            unique: true,
             field: 'seasonId'
         },
         takeCareName: {
