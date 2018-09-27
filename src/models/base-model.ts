@@ -5,7 +5,7 @@ export const baseModel: any = {
     attributes: {
         createdBy: {
             type: Sequelize.STRING,
-            field: 'CreatedBy'
+            field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -13,11 +13,12 @@ export const baseModel: any = {
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'CreatedDate'
+            field: 'createdDate'
         },
         updatedBy: {
             type: Sequelize.STRING,
-            field: 'UpdatedBy'
+            allowNull: true,
+            field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -25,13 +26,13 @@ export const baseModel: any = {
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'UpdatedDate'
+            field: 'updatedDate'
         },
         isDeleted: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.INTEGER(1),
             allowNull: true,
-            defaultValue: false,
-            field: 'IsDeleted'
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
 

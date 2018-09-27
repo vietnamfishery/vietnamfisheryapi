@@ -16,6 +16,7 @@ export const userOptions: any = _.merge({
         },
         userUUId: {
             type: Sequelize.STRING(36),
+            unique: true,
             field: 'userUUId'
         },
         firstName: {
@@ -28,6 +29,7 @@ export const userOptions: any = _.merge({
         },
         username: {
             type: Sequelize.STRING(50),
+            unique: true,
             field: 'username'
         },
         password: {
@@ -55,15 +57,15 @@ export const userOptions: any = _.merge({
             field: 'province'
         },
         roles: {
-            type: Sequelize.BOOLEAN,
-            allowNull: true,
-            defaultValue: '1',
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+            defaultValue: 0,
             field: 'roles'
         },
         status: {
-            type: Sequelize.BOOLEAN,
-            allowNull: true,
-            defaultValue: '1',
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+            defaultValue: 0,
             field: 'status'
         },
         phone: {
