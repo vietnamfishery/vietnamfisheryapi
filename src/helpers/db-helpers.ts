@@ -36,5 +36,4 @@ export default class DBHelper {
     public get model () {
         return DBHelper.sequelize.define(this.modelName, this.optionsModel.model, this.deleteMode);
     }
-
 }
