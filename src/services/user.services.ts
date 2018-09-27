@@ -1,4 +1,4 @@
-import { BaseServices } from './base-services';
+import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
 import { userOptions } from '../models';
 import { Promise } from '../lib';
