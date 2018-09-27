@@ -28,9 +28,9 @@ export const baseModel: any = {
             field: 'UpdatedDate'
         },
         isDeleted: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.INTEGER(1),
             allowNull: true,
-            defaultValue: false,
+            defaultValue: 0,
             field: 'IsDeleted'
         }
     },
