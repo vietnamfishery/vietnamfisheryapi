@@ -3,7 +3,7 @@ import * as httpStatusCode from 'http-status-codes';
 
 import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';
-import { PingRoute } from './ping';
+// import { PingRoute } from './ping';
 import { UserRoute } from './users';
 import { IOptionsModelDB } from '../interfaces';
 

@@ -36,7 +36,7 @@ export class UserRoute extends BaseRoute {
         logger.info('[UserRoute] Creating ping route.');
         const loginHelper = new LoginHelper();
         // add index page route
-        this.router.post('/signin', this.signin);
+        this.router.post('/register', this.register);
         this.router.post('/login', loginHelper.authenticate('login/success', 'login'));
         this.router.get('/login/success', LoginHelper.isLoggedIn, this.loginSuccess);
         this.router.get('/login', LoginHelper.notLoggedIn, this.loginFailure);
@@ -45,7 +45,7 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    private signin = async (req: Request, res: Response, next: NextFunction) => {
+    private register = async (req: Request, res: Response, next: NextFunction) => {
         const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
         const user: User = new User(
             uuidv4(),
@@ -69,7 +69,7 @@ export class UserRoute extends BaseRoute {
             updatedDate,
             isDeleted
         );
-        res.json(await user.signin());
+        res.json(await user.register());
     }
 
     private loginSuccess = async (req: Request, res: Response, next: NextFunction) => {

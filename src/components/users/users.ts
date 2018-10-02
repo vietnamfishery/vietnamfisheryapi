@@ -1,4 +1,4 @@
-import { Enscrypt } from '../../lib/Enscrypt';
+import { Enscrypts } from '../../lib/';
 import * as Sequeliz from 'sequelize';
 import { UserServives } from '../../services';
 import { actionUserServices } from '../../common';
@@ -30,8 +30,8 @@ export class User {
         this.userServices = new UserServives();
     }
 
-    public async signin() {
-        this.password = await Enscrypt.hashing(this.password, (await Enscrypt.getSalt(12)));
+    public async register() {
+        this.password = await Enscrypts.hashing(this.password, (await Enscrypts.getSalt(12)));
         return await this.userServices.register(this);
     }
 }

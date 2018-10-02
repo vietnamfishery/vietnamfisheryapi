@@ -1,3 +1,3 @@
 export * from './date-util';
-export * from './enscrypt';
+export * from './enscrypts';
 export * from './promise';

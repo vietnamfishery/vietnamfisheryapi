@@ -1,7 +1,7 @@
 import * as bcryptjs from 'bcryptjs';
 import { Promise } from './promise';
 
-export class Enscrypt {
+export class Enscrypts {
     public static getSalt(rounds: number): Promise<string> {
         return Promise.resolve(bcryptjs.genSalt(rounds));
     }

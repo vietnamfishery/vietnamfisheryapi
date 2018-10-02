@@ -3,7 +3,7 @@ import * as localStrategy from 'passport-local';
 const LocalStrategy = localStrategy.Strategy;
 import { UserServives } from '../services';
 import { User } from '../components/users/users';
-import { Enscrypt } from '../lib';
+import { Enscrypts } from '../lib';
 import { NextFunction, Request, Response } from 'express';
 import { TokenHelper } from './token-helpers';
 
@@ -19,7 +19,7 @@ export class LoginHelper {
     private usingPassport(): void {
         passport.use(new LocalStrategy((username, password, done) => {
             this.userServices.getUserByUsername(this.getQuery({username})).then((result: any) => {
-                Enscrypt.compare(password, result.password).then((isMatch: boolean) => {
+                Enscrypts.compare(password, result.password).then((isMatch: boolean) => {
                     if(typeof isMatch === typeof Error) {
                         throw isMatch;
                     }

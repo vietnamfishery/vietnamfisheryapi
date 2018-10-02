@@ -44,23 +44,7 @@
             "check-separator",
             "check-type"
         ],
-        "typedef-whitespace": [
-            false,
-            {
-                "callSignature": "noSpace",
-                "indexSignature": "noSpace",
-                "parameter": "noSpace",
-                "propertySeclaration": "noSpace",
-                "variableDeclaration": "noSpace"
-            },
-            {
-                "callSignature": "onespace",
-                "indexSignature": "onespace",
-                "parameter": "onespace",
-                "propertyDeclaration": "onespace",
-                "variableDeclaration": "onespace"
-            }
-        ],
+        "typedef-whitespace": false,
         "max-line-length": [
             false
         ],
@@ -104,18 +88,15 @@
         "jsdoc-format": true,
         "no-unused-expression": false,
         "ordered-imports": [
-            true,
+            false,
             {
                 "import-sources-order": "any",
                 "named-imports-order": "case-insensitive"
             }
         ],
-        "object-literal-sort-keys": [
-            false,
-            "ignore-case",
-            "match-declaration-order",
-            "shorthand-first"
-        ],
-        "member-access": false
+        "object-literal-sort-keys": false,
+        "member-access": false,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }
