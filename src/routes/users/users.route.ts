@@ -4,6 +4,9 @@ import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
 import { LoginHelper } from '../../helpers/login-helpers';
+import { Enscrypts } from '../../lib';
+import * as jwt from 'jsonwebtoken';
+import * as constants from '../../common';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -37,21 +40,22 @@ export class UserRoute extends BaseRoute {
         const loginHelper = new LoginHelper();
         // add index page route
         this.router.post('/register', this.register);
-        this.router.post('/login', loginHelper.authenticate('login/success', 'login'));
-        this.router.get('/login/success', LoginHelper.isLoggedIn, this.loginSuccess);
-        this.router.get('/login', LoginHelper.notLoggedIn, this.loginFailure);
+        this.router.post('/login', this.login);
+        this.router.get('/login', this.loginSuccess);
+        this.router.get('/login/failure', this.loginFailure);
+        //
         this.router.get('/login-ui', function(req, res) {
             res.render('login');
         });
     }
 
-    private register = async (req: Request, res: Response, next: NextFunction) => {
-        const { firstName, lastName, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
+    private register = (req: Request, res: Response, next: NextFunction) => {
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
         const user: User = new User(
             uuidv4(),
-            firstName,
-            lastName,
-            username,
+            firstname,
+            lastname,
+            username.toLowerCase(),
             password,
             birdthday,
             email,
@@ -69,17 +73,88 @@ export class UserRoute extends BaseRoute {
             updatedDate,
             isDeleted
         );
-        res.json(await user.register());
+        user.register().then(value => {
+            const obj: any = value;
+            obj[`action`] = 'register';
+            obj[`success`] = true;
+            res.json(obj);
+        }).catch(err => {
+            res.json({
+                action: 'register',
+                success: false
+            });
+        });
     }
 
-    private loginSuccess = async (req: Request, res: Response, next: NextFunction) => {
+    private login = (req: Request, res: Response, next: NextFunction) => {
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, keepLogin } = req.body;
+        const user: User = new User(
+            '',
+            firstname,
+            lastname,
+            username.toLowerCase(),
+            password,
+            birdthday,
+            email,
+            phone,
+            address,
+            town,
+            district,
+            province,
+            roles,
+            status,
+            '',
+            createdBy,
+            createdDate,
+            updatedBy,
+            updatedDate,
+            isDeleted
+        );
+        user.login().then(user$ => {
+            if(!user$) {
+                res.json({
+                    action: 'login',
+                    success: false
+                });
+            } else {
+                Enscrypts.compare(user.password, user$.password).then((isMatch: boolean) => {
+                    if(isMatch) {
+                        delete user$.password;
+                        const token = jwt.sign(user$, constants.secret);
+                        const obj: any = user$;
+                        obj[`action`] = 'login';
+                        obj[`success`] = true;
+                        obj[`token`] = token;
+                        res.json(obj);
+                    } else {
+                        res.json({
+                            action: 'login',
+                            success: false
+                        });
+                    }
+                }).catch(err => {
+                    res.json({
+                        action: 'login',
+                        success: false
+                    });
+                });
+            }
+        }).catch(err => {
+            res.json({
+                action: 'login',
+                success: false
+            });
+        });
+    }
+
+    private loginSuccess = (req: Request, res: Response, next: NextFunction) => {
         res.json({
             action: 'login',
             status: true
         });
     }
 
-    private loginFailure = async (req: Request, res: Response, next: NextFunction) => {
+    private loginFailure = (req: Request, res: Response, next: NextFunction) => {
         res.json({
             action: 'login',
             status: false

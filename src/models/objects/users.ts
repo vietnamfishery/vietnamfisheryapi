@@ -19,13 +19,13 @@ export const userOptions: any = _.merge({
             unique: true,
             field: 'userUUId'
         },
-        firstName: {
+        firstname: {
             type: Sequelize.STRING(50),
-            field: 'firstName'
+            field: 'firstname'
         },
-        lastName: {
+        lastname: {
             type: Sequelize.STRING(50),
-            field: 'lastName'
+            field: 'lastname'
         },
         username: {
             type: Sequelize.STRING(50),

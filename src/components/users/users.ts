@@ -1,14 +1,15 @@
 import { Enscrypts } from '../../lib/';
 import * as Sequeliz from 'sequelize';
 import { UserServives } from '../../services';
-import { actionUserServices } from '../../common';
+import { BaseComponent } from '../baseComponents';
+import { Promise } from '../../lib';
 
-export class User {
+export class User extends BaseComponent {
     private userServices: UserServives;
     public constructor(
         private userUUId: string,
-        protected firstName: string,
-        protected lastName: string,
+        protected firstname: string,
+        protected lastname: string,
         public username: string,
         public password: string,
         private birdthday: Date,
@@ -27,11 +28,28 @@ export class User {
         private updatedDate: Date,
         private isDeleted: number
     ) {
+        super();
         this.userServices = new UserServives();
     }
 
-    public async register() {
-        this.password = await Enscrypts.hashing(this.password, (await Enscrypts.getSalt(12)));
-        return await this.userServices.register(this);
+    public register(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            Enscrypts.getSalt(12).then(salt => {
+                Enscrypts.hashing(this.password, salt).then(hash => {
+                    this.password = hash;
+                    this.userServices.register(this).then((user: User) => {
+                        resolve(user);
+                    });
+                });
+            });
+        });
+    }
+
+    public login(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.userServices.getUserByUsername(this.getQuery({username: this.username})).then((user$: User) => {
+                resolve(user$);
+            });
+        });
     }
 }

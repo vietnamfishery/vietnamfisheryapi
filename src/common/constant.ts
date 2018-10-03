@@ -50,3 +50,5 @@ export enum modelName {
     USER = 'users',
     POND = 'ponds'
 }
+
+export const secret = 'vietnamfisherysecret';

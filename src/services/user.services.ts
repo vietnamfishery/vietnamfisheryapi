@@ -19,14 +19,20 @@ export class UserServives extends BaseServices {
         return new Promise((resolve, reject) => {
             this.models.create(entity).then((user) => {
                 resolve(user);
+            }).catch(err => {
+                reject(err);
             });
         });
     }
 
-    public getUserByUsername(userQuery: any): Promise<User> {
+    public getUserByUsername(userQuery: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.models.findOne(userQuery).then((user: User) => {
-                resolve(user);
+            this.models.findOne(userQuery).then((user: any) => {
+                if(user) {
+                    resolve(user.dataValues);
+                } else {
+                    resolve(user);
+                }
             });
         });
     }

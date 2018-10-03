@@ -1,11 +1,13 @@
+import { NextFunction, Request, Response } from 'express';
 import * as passport from 'passport';
 import * as localStrategy from 'passport-local';
 const LocalStrategy = localStrategy.Strategy;
+import * as jwtStrategy from 'passport-jwt';
+const JwtStrategy = jwtStrategy.Strategy;
+const ExtractJwt = jwtStrategy.ExtractJwt;
 import { UserServives } from '../services';
-import { User } from '../components/users/users';
-import { Enscrypts } from '../lib';
-import { NextFunction, Request, Response } from 'express';
-import { TokenHelper } from './token-helpers';
+import * as constants from '../common';
+import { User } from '../components/users';
 
 export class LoginHelper {
     private userServices: UserServives = new UserServives();
@@ -17,9 +19,24 @@ export class LoginHelper {
     }
 
     private usingPassport(): void {
+        const opts: any = {};
+        opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
+        opts.secretOrKey = constants.secret;
+        passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+            this.userServices.getUserByUsername(this.getQuery({username: jwtPayload.username})).then(user => {
+                done(null, user);
+            }).catch(err => {
+                if(err) {
+                    return done(err, false);
+                }
+                done(null, false);
+            });
+        }));
+        /*
         passport.use(new LocalStrategy((username, password, done) => {
             this.userServices.getUserByUsername(this.getQuery({username})).then((result: any) => {
                 Enscrypts.compare(password, result.password).then((isMatch: boolean) => {
+                    console.log(isMatch);
                     if(typeof isMatch === typeof Error) {
                         throw isMatch;
                     }
@@ -38,6 +55,7 @@ export class LoginHelper {
                 return done(null, false);
             });
         }));
+        */
     }
 
     private serializeUser(): void {
@@ -69,20 +87,20 @@ export class LoginHelper {
             });
             return next();
         }
-        res.redirect('/api/user/login');
+        res.redirect('/api/user/login/failure');
     }
 
     public static notLoggedIn(req: Request, res: Response, next: NextFunction) {
         if (!req.isAuthenticated()) {
             return next();
         }
-        res.redirect('user/login');
+        res.redirect('/api/user/login');
     }
 
-    public authenticate(successRedirect: string, failureRedirect: string): any {
-        return passport.authenticate('local', {
-            successRedirect,
-            failureRedirect
-        });
-    }
+    // public authenticate(successRedirect: string, failureRedirect: string): any {
+    //     return passport.authenticate('local', {
+    //         successRedirect,
+    //         failureRedirect
+    //     });
+    // }
 }

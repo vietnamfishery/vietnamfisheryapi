@@ -2,8 +2,7 @@ import * as Sequeliz from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
 import { actionServices, modelName } from '../common';
 import { IOptionsModelDB } from '../interfaces';
-import { BoughtBreedDetailsServives, BoughtBreedServives, PondsServices, RolesUsersServices, CouponServives, SeasonServices, UserServives } from './';
-import { boughtbreeddetailsOptions, boughtbreedOptions, pondOptions, rolesusersOptions, couponOptions, seasonOptions, userOptions } from '../models/objects';
+import { Promise } from '../lib';
 
 export abstract class BaseServices {
     protected conn: DBHelper;
@@ -16,5 +15,14 @@ export abstract class BaseServices {
         }
     ) {
         this.conn = new DBHelper(optionsModel);
+    }
+
+    public getById(id: any): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            this.models.findById(id).then(obj => resolve(obj));
+        })
+        .catch(err => {
+            throw err;
+        });
     }
 }
