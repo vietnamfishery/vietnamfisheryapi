@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { districtOptions } from '../models';
+import { districtOptions } from '../models/objects';
 
 export class DistrictServives extends BaseServices {
     constructor(

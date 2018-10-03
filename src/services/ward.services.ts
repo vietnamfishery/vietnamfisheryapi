@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { wardOptions } from '../models';
+import { wardOptions } from '../models/objects';
 
 export class WardServices extends BaseServices {
     constructor(

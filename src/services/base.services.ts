@@ -1,13 +1,13 @@
-import { ModelBuilder } from './../models/associations/model-builder';
 import * as Sequeliz from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
 import { actionServices, modelName } from '../common';
 import { IOptionsModelDB } from '../interfaces';
+import { BoughtBreedDetailsServives, BoughtBreedServives, PondsServices, RolesUsersServices, CouponServives, SeasonServices, UserServives } from './';
+import { boughtbreeddetailsOptions, boughtbreedOptions, pondOptions, rolesusersOptions, couponOptions, seasonOptions, userOptions } from '../models/objects';
 
 export abstract class BaseServices {
-    private conn: DBHelper;
+    protected conn: DBHelper;
     protected models: Sequeliz.Model<{}, any>;
-
     constructor(
         protected optionsModel: IOptionsModelDB = {
             name: '',
@@ -16,6 +16,5 @@ export abstract class BaseServices {
         }
     ) {
         this.conn = new DBHelper(optionsModel);
-        this.models = this.conn.model;
     }
 }

@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { storagesOptions } from '../models';
+import { storagesOptions } from '../models/objects';
 
 export class StoregeServices extends BaseServices {
     constructor(

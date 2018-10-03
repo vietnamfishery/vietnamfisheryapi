@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { pondenvironmentsOptions } from '../models';
+import { pondenvironmentsOptions } from '../models/objects';
 
 export class PondEnvironmentsServices extends BaseServices {
     constructor(

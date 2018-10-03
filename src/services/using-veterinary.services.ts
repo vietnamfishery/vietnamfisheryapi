@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { usingveterinaryOptions } from '../models';
+import { usingveterinaryOptions } from '../models/objects';
 
 export class UsingVeterinaryServices extends BaseServices {
     constructor(

@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { boughtbreeddetailsOptions } from '../models';
+import { boughtbreeddetailsOptions } from '../models/objects';
 
 export class BoughtBreedDetailsServives extends BaseServices {
     constructor(

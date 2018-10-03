@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { seasonOptions } from '../models';
+import { seasonOptions } from '../models/objects';
 
 export class SeasonServices extends BaseServices {
     constructor(

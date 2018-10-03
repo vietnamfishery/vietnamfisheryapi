@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { stockingOptions } from '../models';
+import { stockingOptions } from '../models/objects';
 
 export class StockingServices extends BaseServices {
     constructor(

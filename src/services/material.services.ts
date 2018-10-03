@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { materialOptions } from '../models';
+import { materialOptions } from '../models/objects';
 
 export class MaterialServives extends BaseServices {
     constructor(

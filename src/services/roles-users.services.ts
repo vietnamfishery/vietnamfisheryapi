@@ -1,6 +1,6 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { rolesusersOptions } from '../models';
+import { rolesusersOptions } from '../models/objects';
 
 export class RolesUsersServices extends BaseServices {
     constructor(
