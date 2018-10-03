@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toStockingdetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function stockingToStockingdetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'stocking',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toStockingdetails(thatmodel: Sequeliz.Model<{}, any>, model: Seq
     });
 }
 
-export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function stockingToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'season',
         foreignKey: {

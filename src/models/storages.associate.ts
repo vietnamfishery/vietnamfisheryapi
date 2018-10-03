@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toPondpreparedetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToPondpreparedetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'storages',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toPondpreparedetails(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
-export function toMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'storages',
         foreignKey: {
@@ -20,7 +20,7 @@ export function toMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
-export function toPrices(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToPrices(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'storages',
         foreignKey: {
@@ -30,7 +30,7 @@ export function toPrices(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mod
     });
 }
 
-export function toUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'storages',
         foreignKey: {
@@ -40,7 +40,7 @@ export function toUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
     });
 }
 
-export function toUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'storages',
         foreignKey: {
