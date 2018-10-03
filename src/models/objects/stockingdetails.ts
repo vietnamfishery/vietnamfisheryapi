@@ -14,7 +14,6 @@ export const stockingdetailOptions: any = _.merge({
             field: 'stockingDetailUUId'
         },
         breedId: {
-            autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
             field: 'breedId'

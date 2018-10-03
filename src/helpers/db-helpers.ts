@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize, Options } from 'sequelize';
 import * as Sequeliz from 'sequelize';
 import * as config from '../config';
 import * as constants from '../common';
@@ -16,18 +16,12 @@ export default class DBHelper {
         pool,
         replication
     });
-    private usersModel$: Sequeliz.Model<{}, any>;
-    private pondsModel$: Sequeliz.Model<{}, any>;
-    private rolesUsersModel$: Sequeliz.Model<{}, any>;
-    private couponModel$: Sequeliz.Model<{}, any>;
-    private boughtbreedsModel$: Sequeliz.Model<{}, any>;
+    private models: any = {};
+
     constructor(private optionsModel: IOptionsModelDB) {
-        this.usersModel$ = this.toModel(userOptions.tableName, userOptions.attributes, userOptions.options);
-        this.pondsModel$ = this.toModel(pondOptions.tableName, pondOptions.attributes, pondOptions.options);
-        this.rolesUsersModel$ = this.toModel(rolesusersOptions.tableName, rolesusersOptions.attributes, rolesusersOptions.options);
-        this.couponModel$ = this.toModel(couponOptions.tableName, couponOptions.attributes, couponOptions.options);
-        this.boughtbreedsModel$ = this.toModel(boughtbreedOptions.tableName, boughtbreedOptions.attributes, boughtbreedOptions.options);
-        console.log(options);
+        Object.keys(options).forEach(element => {
+            this.models[element] = this.toModel(options[element].tableName, options[element].attributes, options[element].options);
+        });
     }
 
     public static getDatabaseConnection() {
@@ -56,8 +50,9 @@ export default class DBHelper {
     }
 
     public get usersModel () {
-        const modelBuilder: ModelBuilder = new ModelBuilder(this.model);
-        modelBuilder.userAssociate(this.rolesUsersModel$, this.pondsModel$, this.couponModel$, this.boughtbreedsModel$);
-        return this.model;
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.userAssociate(this.models[`rolesusersOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
+        return md;
     }
 }

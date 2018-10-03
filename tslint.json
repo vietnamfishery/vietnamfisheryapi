@@ -95,8 +95,6 @@
             }
         ],
         "object-literal-sort-keys": false,
-        "member-access": false,
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "member-access": false
     }
 }
