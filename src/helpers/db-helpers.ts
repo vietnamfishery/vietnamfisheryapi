@@ -55,4 +55,123 @@ export default class DBHelper {
         modelBuilder.usersAssociate(this.models[`rolesusersOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
         return md;
     }
+
+    public get boughtbreeddetailsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.boughtbreeddetailsAssociate(this.models[`boughtbreedOptions`], this.models[`breedOptions`]);
+        return md;
+    }
+
+    public get boughtbreedsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.boughtbreedsAssociate(this.models[`boughtbreeddetailsOptions`], this.models[`userOptions`]);
+        return md;
+    }
+
+    public get breedsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.breedsAssociate(this.models[`boughtbreeddetailsOptions`], this.models[`stockingdetailOptions`]);
+        return md;
+    }
+
+    public get costsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.costsAssociate(this.models[`pondprepareOptions`]);
+        return md;
+    }
+
+    public get couponModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.couponAssociate(this.models[`materialOptions`], this.models[`userOptions`]);
+        return md;
+    }
+
+    public get diedfisherysModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.diedfisherysAssociate(this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get growthsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.growthsAssociate(this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get harvestdetailsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.harvestdetailsAssociate(this.models[`harvestOptions`]);
+        return md;
+    }
+
+    public get harvestModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.harvestsAssociate(this.models[`harvestdetailOptions`], this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get materialModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.materialAssociate(this.models[`couponOptions`], this.models[`storagesOptions`]);
+        return md;
+    }
+
+    public get ponddiaryModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.materialAssociate(this.models[`couponOptions`], this.models[`storagesOptions`]);
+        return md;
+    }
+
+    public get pondenvironmentsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.pondenvironmentAssociate(this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get pondprepareModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.pondprepareAssociate(this.models[`seasonOptions`], this.models[`costsOptions`]);
+        return md;
+    }
+
+    public get pondpreparedetailsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.pondpreparedetailsAssociate(this.models[`pondprepareOptions`], this.models[`storagesOptions`]);
+        return md;
+    }
+
+    public get pondsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.pondsAssociate(this.models[`rolesusersOptions`], this.models[`seasonOptions`], this.models[`userOptions`]);
+        return md;
+    }
+
+    public get pricesModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.pricesAssociate(this.models[`storagesOptions`]);
+        return md;
+    }
+
+    public get rolesusersModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.rolesusersAssociate(this.models[`pondOptions`], this.models[`userOptions`]);
+        return md;
+    }
 }
