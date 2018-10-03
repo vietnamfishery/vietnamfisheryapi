@@ -55,4 +55,63 @@ export default class DBHelper {
         modelBuilder.usersAssociate(this.models[`rolesusersOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
         return md;
     }
+
+    public get usingveterinaryModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.usingveterinaryAssociate(this.models[`storagesOptions`], this.models[`takecareOptions`]);
+        return md;
+    }
+
+    public get usingfoodsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.usingfoodsAssociate(this.models[`storagesOptions`], this.models[`takecareOptions`]);
+        return md;
+    }
+
+    public get takecareModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.takecareAssociate(this.models[`usingveterinaryOptions`], this.models[`usingfoodOptions`], this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get storagesModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.storagesAssociate(this.models[`pondpreparedetailOptions`],this.models[`materialOptions`],this.models[`pricesOptions`], this.models[`usingfoodOptions`],this.models[`usingveterinaryOptions`]);
+        return md;
+    }
+
+    public get stockingdetailsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.stockingdetailsAssociate(this.models[`stockingOptions`],this.models[`breedOptions`]);
+        return md;
+    }
+
+    public get stockingModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.stockingAssociate(this.models[`stockingdetailOptions`], this.models[`seasonOptions`]);
+        return md;
+    }
+
+    public get seasonModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.seasonAssociate(
+            this.models[`pondOptions`],
+            this.models[`ponddiaryOptions`],
+            this.models[`pondprepareOptions`],
+            this.models[`takecareOptions`],
+            this.models[`growthOptions`],
+            this.models[`diedfisherysOptions`],
+            this.models[`pondenvironmentsOptions`],
+            this.models[`stockingOptions`],
+            this.models[`harvestdetailOptions`]
+        );
+        return md;
+    }
 }
