@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function toBoughToBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'breeds',
         foreignKey: {
