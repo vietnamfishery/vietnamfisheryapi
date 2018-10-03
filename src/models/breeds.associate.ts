@@ -10,7 +10,7 @@ export function toBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
-export function toStockingDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function breedsToStockingDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'breeds',
         foreignKey: {

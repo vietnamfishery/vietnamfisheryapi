@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function costsToPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'pondprepare',
         foreignKey: {

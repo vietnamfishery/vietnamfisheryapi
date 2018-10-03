@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondprepareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'season',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mod
     });
 }
 
-export function toCosts(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondprepareToCosts(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'pondprepare',
         foreignKey: {

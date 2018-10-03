@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function boughtbreeddetailsToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'boughtbreeds',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
     });
 }
 
-export function toBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function boughtbreeddetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'breeds',
         foreignKey: {

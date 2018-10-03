@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondpreparedetailsToPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'pondprepare',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
     });
 }
 
-export function toStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondpreparedetailsToStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'storages',
         foreignKey: {

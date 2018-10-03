@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toPonds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToPonds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'ponds',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toPonds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mode
     });
 }
 
-export function toPonddiary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToPonddiary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -20,7 +20,7 @@ export function toPonddiary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
     });
 }
 
-export function toPondprepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToPondprepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -30,7 +30,7 @@ export function toPondprepare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
     });
 }
 
-export function toTakecare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToTakecare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -40,7 +40,7 @@ export function toTakecare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
-export function toGrowths(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToGrowths(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -50,7 +50,7 @@ export function toGrowths(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mo
     });
 }
 
-export function toDiedfisherys(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToDiedfisherys(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -60,7 +60,7 @@ export function toDiedfisherys(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
     });
 }
 
-export function toPondenvironments(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToPondenvironments(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -70,7 +70,7 @@ export function toPondenvironments(thatmodel: Sequeliz.Model<{}, any>, model: Se
     });
 }
 
-export function toStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {
@@ -80,7 +80,7 @@ export function toStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
-export function toHarvest(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToHarvest(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'season',
         foreignKey: {

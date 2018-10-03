@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toRolesusers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondsToRolesusers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'ponds',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toRolesusers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
     });
 }
 
-export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'ponds',
         foreignKey: {
@@ -20,7 +20,7 @@ export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mod
     });
 }
 
-export function toUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'users',
         foreignKey: {

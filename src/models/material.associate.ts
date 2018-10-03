@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function materialToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'coupon',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mod
     });
 }
 
-export function toStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function materialToStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'storages',
         foreignKey: {

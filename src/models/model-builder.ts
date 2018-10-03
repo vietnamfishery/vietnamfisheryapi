@@ -11,4 +11,8 @@ export class ModelBuilder {
         userAssociations.userToCoupon(this.model, couponModel);
         userAssociations.userToBoughtBreeds(this.model, boughtbreedsModel);
     }
+
+    public boughtbreeddetailsAssociate(boughtBreedsModel: any, breedsModel: any) {
+        //
+    }
 }
