@@ -5,7 +5,12 @@ import * as associations from './';
 export class ModelBuilder {
     constructor(private model: Sequeliz.Model<{}, any>) {}
 
-    public usersAssociate(rolesUsersModel: any, pondsModel: any, couponModel: any, boughtbreedsModel: any) {
+    public usersAssociate(
+        rolesUsersModel: any,
+        pondsModel: any,
+        couponModel: any,
+        boughtbreedsModel: any
+    ) {
         associations.userToRolesUser(this.model, rolesUsersModel);
         associations.userToPond(this.model, pondsModel);
         associations.userToCoupon(this.model, couponModel);
@@ -107,7 +112,13 @@ export class ModelBuilder {
         associations.takecareToSeason(this.model, seasonModel);
     }
 
-    public storagesAssociate(pondpreparedetailsModel: any, MaterialsModel: any, PricesModel: any, UsingfoodsModel: any, UsingveterinaryModel: any) {
+    public storagesAssociate(
+        pondpreparedetailsModel: any,
+        MaterialsModel: any,
+        PricesModel: any,
+        UsingfoodsModel: any,
+        UsingveterinaryModel: any
+    ) {
         associations.storagesToPondpreparedetails(this.model, pondpreparedetailsModel);
         associations.storagesToMaterial(this.model, MaterialsModel);
         associations.storagesToPrices(this.model, PricesModel);
