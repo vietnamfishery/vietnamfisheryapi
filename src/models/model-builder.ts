@@ -19,6 +19,6 @@ export class ModelBuilder {
 
     public boughtbreedsAssociate(boughtBreedDetailsModel: any, usersModel: any) {
         associations.boughtbreedsToBoughtBreedDetails(this.model, boughtBreedDetailsModel);
-        associations.boughtbreeddetailsToBreeds(this.model, usersModel);
+        associations.boughtbreedsToUsers(this.model, usersModel);
     }
 }
