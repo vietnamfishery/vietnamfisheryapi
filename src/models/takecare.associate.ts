@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function toUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function takecareToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'takeCare',
         foreignKey: {
@@ -10,7 +10,7 @@ export function toUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Seq
     });
 }
 
-export function toUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function takecareToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'takeCare',
         foreignKey: {
@@ -20,7 +20,7 @@ export function toUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
     });
 }
 
-export function toSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function takecareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'season',
         foreignKey: {
