@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function rolesusersToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function ponduserrolesToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'users',
         foreignKey: {
@@ -10,7 +10,7 @@ export function rolesusersToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Seq
     });
 }
 
-export function rolesusersToPonds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function ponduserrolesToPonds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: 'ponds',
         foreignKey: {

@@ -19,10 +19,25 @@ export abstract class BaseServices {
 
     public getById(id: any): Promise<{}> {
         return new Promise((resolve, reject) => {
-            this.models.findById(id).then(obj => resolve(obj));
-        })
-        .catch(err => {
-            throw err;
+            this.models.findById(id).then((obj: any) => {
+                if(obj) {
+                    resolve(obj.dataValues);
+                } else {
+                    resolve(obj);
+                }
+            });
+        });
+    }
+
+    public getAll(): Promise<{}> {
+        return new Promise((resolve, reject) => {
+            this.models.find().then((obj: any) => {
+                if(obj) {
+                    resolve(obj.dataValues);
+                } else {
+                    resolve(obj);
+                }
+            });
         });
     }
 }

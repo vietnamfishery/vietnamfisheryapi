@@ -3,8 +3,8 @@ import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
-export const rolesusersOptions: any = _.merge({
-    tableName: 'rolesusers'
+export const ponduserrolesOptions: any = _.merge({
+    tableName: 'ponduserroles'
 },
 {
     attributes: {

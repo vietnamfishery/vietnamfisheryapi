@@ -1,13 +1,13 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { rolesusersOptions } from '../models/objects';
+import { ponduserrolesOptions } from '../models/objects';
 
-export class RolesUsersServices extends BaseServices {
+export class PondUserRolesServices extends BaseServices {
     constructor(
         protected optionsModel: IOptionsModelDB = {
-            name: rolesusersOptions.tableName,
-            model: rolesusersOptions.attributes,
-            deleteMode: rolesusersOptions.options
+            name: ponduserrolesOptions.tableName,
+            model: ponduserrolesOptions.attributes,
+            deleteMode: ponduserrolesOptions.options
         }
     ) {
         super(optionsModel);

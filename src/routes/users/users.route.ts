@@ -50,7 +50,7 @@ export class UserRoute extends BaseRoute {
     }
 
     private register = (req: Request, res: Response, next: NextFunction) => {
-        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, action } = req.body;
         const user: User = new User(
             uuidv4(),
             firstname,
@@ -64,7 +64,6 @@ export class UserRoute extends BaseRoute {
             town,
             district,
             province,
-            roles,
             status,
             'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
             createdBy,
@@ -73,14 +72,18 @@ export class UserRoute extends BaseRoute {
             updatedDate,
             isDeleted
         );
-        user.register().then(value => {
+        const entity: any = {
+            action,
+            roles
+        };
+        user.register(entity).then(value => {
             const obj: any = value;
-            obj[`action`] = 'register';
+            obj[`action`] = action;
             obj[`success`] = true;
             res.json(obj);
         }).catch(err => {
             res.json({
-                action: 'register',
+                action,
                 success: false
             });
         });
@@ -101,7 +104,6 @@ export class UserRoute extends BaseRoute {
             town,
             district,
             province,
-            roles,
             status,
             '',
             createdBy,

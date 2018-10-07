@@ -4,7 +4,7 @@ import * as config from '../config';
 import * as constants from '../common';
 import { IOptionsModelDB } from '../interfaces';
 import { ModelBuilder } from '../models/model-builder';
-import { userOptions, pondOptions, rolesusersOptions, couponOptions, boughtbreedOptions } from '../models/objects';
+import { userOptions, pondOptions, ponduserrolesOptions, couponOptions, boughtbreedOptions } from '../models/objects';
 import * as options from '../models/objects';
 
 const { dialect, operatorsAliases, pool, replication } = config.configDB;
@@ -52,7 +52,7 @@ export default class DBHelper {
     public get usersModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.usersAssociate(this.models[`rolesusersOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
+        modelBuilder.usersAssociate(this.models[`ponduserrolesOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
         return md;
     }
 
@@ -157,7 +157,7 @@ export default class DBHelper {
     public get pondsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondsAssociate(this.models[`rolesusersOptions`], this.models[`seasonOptions`], this.models[`userOptions`]);
+        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`userOptions`]);
         return md;
     }
 
@@ -168,10 +168,10 @@ export default class DBHelper {
         return md;
     }
 
-    public get rolesusersModel () {
+    public get ponduserrolesModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.rolesusersAssociate(this.models[`pondOptions`], this.models[`userOptions`]);
+        modelBuilder.ponduserrolesAssociate(this.models[`pondOptions`], this.models[`userOptions`]);
         return md;
     }
 

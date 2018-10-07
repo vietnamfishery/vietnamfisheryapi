@@ -24,3 +24,4 @@ checkstyle-result.xml
 .idea
 .vs
 package-lock.json
+.env

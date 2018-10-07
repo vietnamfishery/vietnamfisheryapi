@@ -17,7 +17,7 @@ export * from './pondpreparedetails';
 export * from './ponds';
 export * from './prices';
 export * from './province';
-export * from './rolesusers';
+export * from './ponduserroles';
 export * from './season';
 export * from './stocking';
 export * from './stockingdetails';

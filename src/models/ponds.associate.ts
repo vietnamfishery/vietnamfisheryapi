@@ -1,6 +1,6 @@
 import * as Sequeliz from 'sequelize';
 
-export function pondsToRolesusers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: 'ponds',
         foreignKey: {

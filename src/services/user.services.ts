@@ -36,4 +36,14 @@ export class UserServives extends BaseServices {
             });
         });
     }
+
+    public registerChild(entity: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.models.create(entity).then((user) => {
+                resolve(user);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
 }

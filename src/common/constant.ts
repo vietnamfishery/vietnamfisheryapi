@@ -39,8 +39,8 @@ export enum actionServices {
 }
 
 export enum actionUserServices {
-    SIGNIN = 'signin',
-    ADD_CHILD = 'add_employee',
+    REGISTER = 'register',
+    ADD_CHILD = 'register-empployees',
     LOGIN = 'login',
     UPDATE = 'update',
     DELETE = 'delete'
