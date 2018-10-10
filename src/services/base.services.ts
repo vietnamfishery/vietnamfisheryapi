@@ -1,12 +1,13 @@
 import * as Sequeliz from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
-import { actionServices, modelName } from '../common';
+import { actionServices, modelName, actionUserServices } from '../common';
 import { IOptionsModelDB } from '../interfaces';
 import { Promise } from '../lib';
+import { User } from '@/components/users';
 
 export abstract class BaseServices {
-    protected conn: DBHelper;
-    protected models: Sequeliz.Model<{}, any>;
+    public conn: DBHelper;
+    public models: Sequeliz.Model<{}, any>;
     constructor(
         protected optionsModel: IOptionsModelDB = {
             name: '',

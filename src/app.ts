@@ -1,3 +1,8 @@
+// config env
+import * as dotenv from 'dotenv';
+if(process.env.NODE_ENV !== 'debug') {
+    dotenv.config();
+}
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as createError from 'http-errors';
@@ -14,16 +19,16 @@ import * as path from 'path';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
 import * as passport from 'passport';
+import * as fileUpload from 'express-fileupload';
 import DBHelper from './helpers/db-helpers';
 // socket import
 import { BaseSocketServer } from './socketServer';
 
 import { ApiRoutes } from './routes';
 import { logger } from './services';
+// must be after config env
+import { GoogleDrive } from './googleAPI/drive.google';
 
-// import * as dotenv from 'dotenv';
-// config env
-// dotenv.config();
 /**
  * The server.
  *
@@ -59,6 +64,8 @@ export class ServerExpress {
         // Add socket server
         this.io = SocketIO(this.server);
         new BaseSocketServer(this.io);
+        // Google Drive API
+        new GoogleDrive();
         // configure application
         this.config();
         // add routes
@@ -124,6 +131,13 @@ export class ServerExpress {
         this.app.use(compression());
         this.app.use(methodOverride());
         this.app.use(expressStatusMonitor());
+        // using file upload
+        this.app.use(fileUpload());
+        this.app.use(function(req, res, next) {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+            next();
+        });
     }
 
     private handleErr() {

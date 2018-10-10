@@ -1,8 +1,15 @@
+import { actionUserServices } from '../common';
+
 export class BaseComponent {
     public constructor() {}
-    protected getQuery(where: any) {
-        return {
-            where
-        };
+    protected getQuery(...args: any[]): any {
+        const action: string = args[0] || null;
+
+        if(action === actionUserServices.REGISTER) {
+            return {
+                user: args[1],
+                roles: args[2]
+            };
+        }
     }
 }

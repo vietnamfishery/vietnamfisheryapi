@@ -56,12 +56,12 @@ export const userOptions: any = _.merge({
             allowNull: true,
             field: 'province'
         },
-        roles: {
-            type: Sequelize.INTEGER(1),
-            allowNull: false,
-            defaultValue: 0,
-            field: 'roles'
-        },
+        // roles: {
+        //     type: Sequelize.INTEGER(1),
+        //     allowNull: false,
+        //     defaultValue: 0,
+        //     field: 'roles'
+        // },
         status: {
             type: Sequelize.INTEGER(1),
             allowNull: false,
