@@ -21,9 +21,9 @@ import { BaseSocketServer } from './socketServer';
 import { ApiRoutes } from './routes';
 import { logger } from './services';
 
-import * as dotenv from 'dotenv';
+// import * as dotenv from 'dotenv';
 // config env
-dotenv.config();
+// dotenv.config();
 /**
  * The server.
  *
