@@ -11,16 +11,11 @@
 
     <button id="btn">Send</button>
     <br><hr><br> -->
-    <form action="http://localhost:7979/api/user/login" method="POST">
-        <input placeholder="username" type="text" name="username" id="username" autocomplete="off">
+    <form action="/api/user/files" method="post" enctype="application/x-www-form-urlencoded">
+        <input type="file" name="video" id="video">
         <br>
         <br>
-        <input placeholder="password" type="text" name="password" id="password" autocomplete="off">
-        <br>
-        <br>
-        <button type="submit" id="submit">Send</button>
-        <br>
-        <br>
+        <button type="submit">Upload</button>
     </form>
     <script src="http://localhost:7979/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>

@@ -11,5 +11,6 @@ export class PondUserRolesServices extends BaseServices {
         }
     ) {
         super(optionsModel);
+        this.models = this.conn.ponduserrolesModel;
     }
 }

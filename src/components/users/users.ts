@@ -1,6 +1,6 @@
 import { Enscrypts } from '../../lib/';
-import * as Sequeliz from 'sequelize';
-import { UserServives } from '../../services';
+import { userOptions } from '../../models/objects';
+import { UserServives, PondUserRolesServices, UserRolesServices } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
 import { actionUserServices } from '../../common';
@@ -8,28 +8,32 @@ import { actionUserServices } from '../../common';
 export class User extends BaseComponent {
     private userServices: UserServives;
     public constructor(
-        private userUUId: string,
-        protected firstname: string,
-        protected lastname: string,
+        public userUUId: string,
+        public firstname: string,
+        public lastname: string,
         public username: string,
         public password: string,
-        private birdthday: Date,
-        private email: string,
-        private phone: string,
-        private address: string,
-        private town: string,
-        private district: string,
-        private province: string,
-        private status: number,
-        private images: string,
-        private createdBy: string,
-        private createdDate: Date,
-        private updatedBy: string,
-        private updatedDate: Date,
-        private isDeleted: number
+        public birdthday: Date,
+        public email: string,
+        public phone: string,
+        public address: string,
+        public town: string,
+        public district: string,
+        public province: string,
+        public status: number,
+        public images: string,
+        public createdBy: string,
+        public createdDate: Date,
+        public updatedBy: string,
+        public updatedDate: Date,
+        public isDeleted: number
     ) {
         super();
-        this.userServices = new UserServives();
+        this.userServices = new UserServives({
+            name: userOptions.tableName,
+            model: userOptions.attributes,
+            deleteMode: userOptions.options
+        });
     }
 
     public register(entity: any): Promise<User> {
@@ -38,7 +42,8 @@ export class User extends BaseComponent {
                 Enscrypts.getSalt(12).then(salt => {
                     Enscrypts.hashing(this.password, salt).then(hash => {
                         this.password = hash;
-                        this.userServices.register(this).then((user: User) => {
+                        const query = this.getQuery(entity.action, this, entity.roles);
+                        this.userServices.register(query).then((user: User) => {
                             resolve(user);
                         });
                     });

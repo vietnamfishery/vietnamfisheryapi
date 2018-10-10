@@ -52,3 +52,7 @@ export enum modelName {
 }
 
 export const secret = 'vietnamfisherysecret';
+
+export enum folderDrive {
+    uploadImageVNF = '1zh74DklADISZbcEYVix2nDDKd5wtt0-Z'
+}

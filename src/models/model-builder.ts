@@ -6,15 +6,23 @@ export class ModelBuilder {
     constructor(private model: Sequeliz.Model<{}, any>) {}
 
     public usersAssociate(
-        ponduserrolesModel: any,
+        userrolesModel: any,
         pondsModel: any,
         couponModel: any,
         boughtbreedsModel: any
     ) {
-        associations.userToRolesUser(this.model, ponduserrolesModel);
+        associations.userToRolesUser(this.model, userrolesModel);
         associations.userToPond(this.model, pondsModel);
         associations.userToCoupon(this.model, couponModel);
         associations.userToBoughtBreeds(this.model, boughtbreedsModel);
+    }
+
+    public userRolesAssociate(
+        userModel: any,
+        pondUserRolesModel: any
+    ) {
+        associations.userrolesToUsers(this.model, userModel);
+        associations.userrolesPondUserRoles(this.model, pondUserRolesModel);
     }
 
     public boughtbreeddetailsAssociate(boughtBreedsModel: any, breedsModel: any) {
@@ -91,9 +99,8 @@ export class ModelBuilder {
         associations.pricesToStorages(this.model, storagesModel);
     }
 
-    public ponduserrolesAssociate(pondsModel: any, usersModel: any) {
-        associations.ponduserrolesToPonds(this.model, pondsModel);
-        associations.ponduserrolesToUsers(this.model, usersModel);
+    public ponduserrolesAssociate(userRolesModel: any) {
+        associations.ponduserrolesToUserRoles(this.model, userRolesModel);
     }
 
     public usingveterinaryAssociate(storagesModel: any, takecareModel: any) {

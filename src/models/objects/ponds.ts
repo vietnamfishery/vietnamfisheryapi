@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
 export const pondOptions: any = _.merge({
-    tableName: 'users'
+    tableName: 'ponds'
 },
 {
     attributes: {

@@ -43,7 +43,6 @@ export class UserRoute extends BaseRoute {
         this.router.post('/login', this.login);
         this.router.get('/login', this.loginSuccess);
         this.router.get('/login/failure', this.loginFailure);
-        //
         this.router.get('/login-ui', function(req, res) {
             res.render('login');
         });
