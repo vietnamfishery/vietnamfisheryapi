@@ -3,7 +3,7 @@ import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
-import { LoginHelper } from '../../helpers/login-helpers';
+// import { LoginHelper } from '../../helpers/login-helpers';
 
 /**
  * @api {get} /ping Ping Request customer object

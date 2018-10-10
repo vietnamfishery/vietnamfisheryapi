@@ -3,7 +3,7 @@ import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
-import { LoginHelper } from '../../helpers/login-helpers';
+// import { LoginHelper } from '../../helpers/login-helpers';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
 import * as constants from '../../common';
@@ -37,7 +37,7 @@ export class UserRoute extends BaseRoute {
     private init() {
         // log
         logger.info('[UserRoute] Creating ping route.');
-        const loginHelper = new LoginHelper();
+        // const loginHelper = new LoginHelper();
         // add index page route
         this.router.post('/register', this.register);
         this.router.post('/login', this.login);

@@ -1,106 +1,106 @@
-import { NextFunction, Request, Response } from 'express';
-import * as passport from 'passport';
-import * as localStrategy from 'passport-local';
-const LocalStrategy = localStrategy.Strategy;
-import * as jwtStrategy from 'passport-jwt';
-const JwtStrategy = jwtStrategy.Strategy;
-const ExtractJwt = jwtStrategy.ExtractJwt;
-import { UserServives } from '../services';
-import * as constants from '../common';
-import { User } from '../components/users';
+// import { NextFunction, Request, Response } from 'express';
+// import * as passport from 'passport';
+// import * as localStrategy from 'passport-local';
+// const LocalStrategy = localStrategy.Strategy;
+// import * as jwtStrategy from 'passport-jwt';
+// const JwtStrategy = jwtStrategy.Strategy;
+// const ExtractJwt = jwtStrategy.ExtractJwt;
+// import { UserServives } from '../services';
+// import * as constants from '../common';
+// import { User } from '../components/users';
 
-export class LoginHelper {
-    private userServices: UserServives = new UserServives();
-    public static token: string;
-    constructor() {
-        this.usingPassport();
-        this.serializeUser();
-        this.deserializeUser();
-    }
+// export class LoginHelper {
+//     private userServices: UserServives = new UserServives();
+//     public static token: string;
+//     constructor() {
+//         this.usingPassport();
+//         this.serializeUser();
+//         this.deserializeUser();
+//     }
 
-    private usingPassport(): void {
-        const opts: any = {};
-        opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
-        opts.secretOrKey = constants.secret;
-        passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
-            this.userServices.getUserByUsername(this.getQuery({username: jwtPayload.username})).then(user => {
-                done(null, user);
-            }).catch(err => {
-                if(err) {
-                    return done(err, false);
-                }
-                done(null, false);
-            });
-        }));
-        /*
-        passport.use(new LocalStrategy((username, password, done) => {
-            this.userServices.getUserByUsername(this.getQuery({username})).then((result: any) => {
-                Enscrypts.compare(password, result.password).then((isMatch: boolean) => {
-                    console.log(isMatch);
-                    if(typeof isMatch === typeof Error) {
-                        throw isMatch;
-                    }
-                    else if (isMatch) {
-                        TokenHelper.sign(result.username)
-                        .then((token) => {
-                            LoginHelper.token = token;
-                            return done(null, result);
-                        });
-                    }
-                    else {
-                        return done(null, false);
-                    }
-                });
-            }).catch(() => {
-                return done(null, false);
-            });
-        }));
-        */
-    }
+//     private usingPassport(): void {
+//         const opts: any = {};
+//         opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme('jwt');
+//         opts.secretOrKey = constants.secret;
+//         passport.use(new JwtStrategy(opts, (jwtPayload, done) => {
+//             this.userServices.getUserByUsername(this.getQuery({username: jwtPayload.username})).then(user => {
+//                 done(null, user);
+//             }).catch(err => {
+//                 if(err) {
+//                     return done(err, false);
+//                 }
+//                 done(null, false);
+//             });
+//         }));
+//         /*
+//         passport.use(new LocalStrategy((username, password, done) => {
+//             this.userServices.getUserByUsername(this.getQuery({username})).then((result: any) => {
+//                 Enscrypts.compare(password, result.password).then((isMatch: boolean) => {
+//                     console.log(isMatch);
+//                     if(typeof isMatch === typeof Error) {
+//                         throw isMatch;
+//                     }
+//                     else if (isMatch) {
+//                         TokenHelper.sign(result.username)
+//                         .then((token) => {
+//                             LoginHelper.token = token;
+//                             return done(null, result);
+//                         });
+//                     }
+//                     else {
+//                         return done(null, false);
+//                     }
+//                 });
+//             }).catch(() => {
+//                 return done(null, false);
+//             });
+//         }));
+//         */
+//     }
 
-    private serializeUser(): void {
-        passport.serializeUser((user: User, done: any) => {
-            done(null, user);
-        });
-    }
+//     private serializeUser(): void {
+//         passport.serializeUser((user: User, done: any) => {
+//             done(null, user);
+//         });
+//     }
 
-    private deserializeUser(): void {
-        passport.deserializeUser((user: User, done: any) => {
-            this.userServices.getUserByUsername(this.getQuery({username: user.username})).then((result: User) => {
-                return done(null, result);
-            }).catch(() => {
-                return done(null, false);
-            });
-        });
-    }
+//     private deserializeUser(): void {
+//         passport.deserializeUser((user: User, done: any) => {
+//             this.userServices.getUserByUsername(this.getQuery({username: user.username})).then((result: User) => {
+//                 return done(null, result);
+//             }).catch(() => {
+//                 return done(null, false);
+//             });
+//         });
+//     }
 
-    private getQuery(where: any): any {
-        return {
-            where
-        };
-    }
+//     private getQuery(where: any): any {
+//         return {
+//             where
+//         };
+//     }
 
-    public static isLoggedIn(req: Request, res: Response, next: NextFunction) {
-        if (req.isAuthenticated()) {
-            res.cookie('vietnamfishery', LoginHelper.token, {
-                maxAge: 365 * 24 * 60 * 60 * 1000
-            });
-            return next();
-        }
-        res.redirect('/api/user/login/failure');
-    }
+//     public static isLoggedIn(req: Request, res: Response, next: NextFunction) {
+//         if (req.isAuthenticated()) {
+//             res.cookie('vietnamfishery', LoginHelper.token, {
+//                 maxAge: 365 * 24 * 60 * 60 * 1000
+//             });
+//             return next();
+//         }
+//         res.redirect('/api/user/login/failure');
+//     }
 
-    public static notLoggedIn(req: Request, res: Response, next: NextFunction) {
-        if (!req.isAuthenticated()) {
-            return next();
-        }
-        res.redirect('/api/user/login');
-    }
+//     public static notLoggedIn(req: Request, res: Response, next: NextFunction) {
+//         if (!req.isAuthenticated()) {
+//             return next();
+//         }
+//         res.redirect('/api/user/login');
+//     }
 
-    // public authenticate(successRedirect: string, failureRedirect: string): any {
-    //     return passport.authenticate('local', {
-    //         successRedirect,
-    //         failureRedirect
-    //     });
-    // }
-}
+//     // public authenticate(successRedirect: string, failureRedirect: string): any {
+//     //     return passport.authenticate('local', {
+//     //         successRedirect,
+//     //         failureRedirect
+//     //     });
+//     // }
+// }
