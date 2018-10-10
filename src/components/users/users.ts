@@ -42,6 +42,7 @@ export class User extends BaseComponent {
                 Enscrypts.getSalt(12).then(salt => {
                     Enscrypts.hashing(this.password, salt).then(hash => {
                         this.password = hash;
+                        entity[`roles`] = 0;
                         const query = this.getQuery(entity.action, this, entity.roles);
                         this.userServices.register(query).then((user: User) => {
                             resolve(user);
@@ -65,9 +66,9 @@ export class User extends BaseComponent {
         }
     }
 
-    public login(): Promise<User> {
+    public login(action: string): Promise<User> {
         return new Promise((resolve, reject) => {
-            this.userServices.getUserByUsername(this.getQuery({username: this.username})).then((user$: User) => {
+            this.userServices.getUserByUsername(this.getQuery(action, {username: this.username})).then((user$: User) => {
                 resolve(user$);
             });
         });

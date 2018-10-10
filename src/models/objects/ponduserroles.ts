@@ -6,29 +6,21 @@ import { baseModel } from './base.model';
 export const ponduserrolesOptions: any = _.merge({
     tableName: 'ponduserroles'
 },
-{
-    attributes: {
-        userId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'userId'
+    {
+        attributes: {
+            rolesId: {
+                type: Sequelize.BIGINT(20),
+                primaryKey: true,
+                field: 'rolesId'
+            },
+            pondId: {
+                type: Sequelize.BIGINT(20),
+                primaryKey: true,
+                unique: true,
+                field: 'pondId'
+            }
         },
-        useUserId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'useUserId'
-        },
-        pondId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'pondId'
+        options: {
+            //
         }
-    },
-    options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false,
-        isDeleted: false
-    }
-}, _.cloneDeep(baseModel));
+    }, _.cloneDeep(baseModel));

@@ -11,5 +11,10 @@ export class BaseComponent {
                 roles: args[2]
             };
         }
+        if(action === actionUserServices.LOGIN) {
+            return {
+                where: args[1]
+            };
+        }
     }
 }

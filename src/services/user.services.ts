@@ -15,11 +15,24 @@ export class UserServives extends BaseServices {
     }
     public register(entity: any): Promise<any> {
         const sequeliz: Sequelize = DBHelper.sequelize;
-        return sequeliz.transaction({autocommit: true},(t: Transaction) => {
-            return this.models.create(entity.user);
-        }).then((user) => {
-            const userRoles: UserRoles = new UserRoles(user.userId, entity.roles);
-            return userRoles.userRolesServices.models.create(userRoles);
+        return new Promise((resolve, reject) => {
+            sequeliz.transaction({autocommit: true},(t: Transaction) => {
+                return this.models.create(entity.user);
+            }).catch(e => {
+                return resolve(e);
+            }).then((user) => {
+                if(user) {
+                    const userRoles: UserRoles = new UserRoles(user.userId, entity.roles);
+                    return userRoles.userRolesServices.models.create(userRoles);
+                } else {
+                    return;
+                }
+            }).catch(e => {
+                return resolve(e);
+            }).
+            then((res: any) => {
+                resolve(res ? res.dataValues : null);
+            });
         });
     }
 

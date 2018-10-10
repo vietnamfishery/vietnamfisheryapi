@@ -1,8 +1,8 @@
 import * as Sequeliz from 'sequelize';
 
 export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
-        as: 'ponds',
+    return thatmodel.hasOne(model, {
+        as: 'ponduserroles',
         foreignKey: {
             name: 'pondId',
             field: 'pondId'

@@ -30,11 +30,23 @@ export const takecareOptions: any = _.merge({
         takeType: {
             type: Sequelize.INTEGER(1),
             field: 'takeType'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        updatedBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));

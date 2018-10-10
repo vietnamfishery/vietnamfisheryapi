@@ -38,6 +38,38 @@ export const growthOptions: any = _.merge({
         livingRatio: {
             type: Sequelize.FLOAT,
             field: 'livingRatio'
+        },
+        createdBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'createdBy'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        updatedBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'updatedBy'
+        },
+        updatedDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'updatedDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {

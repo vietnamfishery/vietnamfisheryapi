@@ -32,6 +32,28 @@ export const pondpreparedetailOptions: any = _.merge({
         quantity: {
             type: Sequelize.FLOAT,
             field: 'quantity'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        updatedDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'updatedDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {

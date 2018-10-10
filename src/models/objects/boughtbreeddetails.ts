@@ -35,12 +35,15 @@ export const boughtbreeddetailsOptions: any = _.merge({
             type: Sequelize.STRING,
             allowNull: true,
             field: 'soldAddress'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));

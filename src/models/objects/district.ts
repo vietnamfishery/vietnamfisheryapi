@@ -31,10 +31,6 @@ export const districtOptions: any = _.merge({
         }
     },
     options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false,
-        isDeleted: false
+        //
     }
 }, _.cloneDeep(baseModel));

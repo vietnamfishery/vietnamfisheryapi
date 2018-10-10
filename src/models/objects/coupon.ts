@@ -30,10 +30,31 @@ export const couponOptions: any = _.merge({
         couponType: {
             type: Sequelize.INTEGER(1),
             field: 'couponType'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        updatedDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'updatedDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        updatedBy: false
+        //
     }
 }, _.cloneDeep(baseModel));

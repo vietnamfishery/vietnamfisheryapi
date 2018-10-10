@@ -35,11 +35,23 @@ export const pricesOptions: any = _.merge({
         value: {
             type: Sequelize.FLOAT,
             field: 'value'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        updatedBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));

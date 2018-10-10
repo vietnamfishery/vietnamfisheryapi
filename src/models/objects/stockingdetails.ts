@@ -41,12 +41,15 @@ export const stockingdetailOptions: any = _.merge({
             type: Sequelize.FLOAT,
             allowNull: true,
             field: 'salinityFirst'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));

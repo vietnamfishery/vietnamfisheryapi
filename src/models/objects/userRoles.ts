@@ -21,10 +21,28 @@ export const userrolesOptions: any = _.merge({
         roles: {
             type: Sequelize.INTEGER(11),
             field: 'roles'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        updatedBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'updatedBy'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));

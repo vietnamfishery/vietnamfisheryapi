@@ -29,12 +29,15 @@ export const harvestdetailOptions: any = _.merge({
         unitPrice: {
             type: Sequelize.FLOAT,
             field: 'unitPrice'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false,
+        //
     }
 }, _.cloneDeep(baseModel));

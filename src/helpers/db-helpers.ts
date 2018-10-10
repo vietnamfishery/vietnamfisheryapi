@@ -169,7 +169,7 @@ export default class DBHelper {
     public get ponduserrolesModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.ponduserrolesAssociate(this.models[`userrolesOptions`]);
+        modelBuilder.ponduserrolesAssociate(this.models[`userrolesOptions`], this.models[`pondOptions`]);
         return md;
     }
 

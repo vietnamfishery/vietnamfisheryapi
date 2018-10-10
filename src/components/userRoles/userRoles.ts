@@ -1,13 +1,13 @@
 import { UserRolesServices } from '../../services';
 import { userrolesOptions } from '../../models/objects';
 import { BaseComponent } from '../baseComponents';
-import { Promise } from '../../lib';
 
 export class UserRoles extends BaseComponent {
     public userRolesServices: UserRolesServices;
     public constructor(
         public userId: string,
-        public roles: number
+        public roles: number,
+        public createdBy?: string
     ) {
         super();
         this.userRolesServices = new UserRolesServices({

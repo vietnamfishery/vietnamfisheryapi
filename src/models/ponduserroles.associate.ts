@@ -9,3 +9,13 @@ export function ponduserrolesToUserRoles(thatmodel: Sequeliz.Model<{}, any>, mod
         }
     });
 }
+
+export function ponduserrolesToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: 'ponds',
+        foreignKey: {
+            name: 'pondId',
+            field: 'pondId'
+        }
+    });
+}

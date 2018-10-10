@@ -99,8 +99,9 @@ export class ModelBuilder {
         associations.pricesToStorages(this.model, storagesModel);
     }
 
-    public ponduserrolesAssociate(userRolesModel: any) {
+    public ponduserrolesAssociate(userRolesModel: any, pondsModel: any) {
         associations.ponduserrolesToUserRoles(this.model, userRolesModel);
+        associations.ponduserrolesToPond(this.model, pondsModel);
     }
 
     public usingveterinaryAssociate(storagesModel: any, takecareModel: any) {

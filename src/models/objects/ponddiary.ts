@@ -39,6 +39,38 @@ export const ponddiaryOptions: any = _.merge({
             type: Sequelize.INTEGER(11),
             unique: true,
             field: 'diedFishery'
+        },
+        createdBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'createdBy'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        updatedBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'updatedBy'
+        },
+        updatedDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'updatedDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {

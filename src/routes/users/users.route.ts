@@ -75,21 +75,23 @@ export class UserRoute extends BaseRoute {
             action,
             roles
         };
-        user.register(entity).then(value => {
-            const obj: any = value;
-            obj[`action`] = action;
-            obj[`success`] = true;
-            res.json(obj);
-        }).catch(err => {
-            res.json({
-                action,
-                success: false
-            });
+        user.register(entity).then((value: any) => {
+            if(value.errors) {
+                res.status(200).json({
+                    action,
+                    success: false
+                });
+            } else {
+                const obj: any = value;
+                obj[`action`] = action;
+                obj[`success`] = true;
+                res.json(obj);
+            }
         });
     }
 
     private login = (req: Request, res: Response, next: NextFunction) => {
-        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, keepLogin } = req.body;
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, action, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, keepLogin } = req.body;
         const user: User = new User(
             '',
             firstname,
@@ -111,7 +113,7 @@ export class UserRoute extends BaseRoute {
             updatedDate,
             isDeleted
         );
-        user.login().then(user$ => {
+        user.login(action).then(user$ => {
             if(!user$) {
                 res.json({
                     action: 'login',
@@ -126,6 +128,17 @@ export class UserRoute extends BaseRoute {
                         obj[`action`] = 'login';
                         obj[`success`] = true;
                         obj[`token`] = token;
+                        if(keepLogin) {
+                            const domain = (req.header as any).origin ;
+                            res.cookie(`vietnamfishery`,token, {
+                                maxAge: 1000 * 3600 * 24 * 365,
+                                secure: false,
+                                domain,
+                                path: '/session/sigin'
+                            });
+                        } else {
+                            res.cookie(`vietnamfishery`,token);
+                        }
                         res.json(obj);
                     } else {
                         res.json({

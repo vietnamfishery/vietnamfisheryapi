@@ -35,10 +35,28 @@ export const usingfoodOptions: any = _.merge({
         totalFood: {
             type: Sequelize.FLOAT,
             field: 'totalFood'
+        },
+        createdBy: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            field: 'createdBy'
+        },
+        createdDate: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            defaultValue: () => {
+                return DateUtil.getUTCDateTime();
+            },
+            field: 'createdDate'
+        },
+        isDeleted: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true,
+            defaultValue: 0,
+            field: 'isDeleted'
         }
     },
     options: {
-        updatedBy: false,
-        updatedDate: false
+        //
     }
 }, _.cloneDeep(baseModel));
