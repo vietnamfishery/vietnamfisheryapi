@@ -68,6 +68,10 @@ export default class DBHelper {
         return md;
     }
 
+    public get provinceModel () {
+        return this.model;
+    }
+
     public get breedsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);

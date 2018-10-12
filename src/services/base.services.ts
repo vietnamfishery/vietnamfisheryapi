@@ -1,9 +1,7 @@
 import * as Sequeliz from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
-import { actionServices, modelName, actionUserServices } from '../common';
 import { IOptionsModelDB } from '../interfaces';
 import { Promise } from '../lib';
-import { User } from '@/components/users';
 
 export abstract class BaseServices {
     public conn: DBHelper;
@@ -30,14 +28,10 @@ export abstract class BaseServices {
         });
     }
 
-    public getAll(): Promise<{}> {
+    public getAll(): Promise<any[]> {
         return new Promise((resolve, reject) => {
-            this.models.find().then((obj: any) => {
-                if(obj) {
-                    resolve(obj.dataValues);
-                } else {
-                    resolve(obj);
-                }
+            this.models.findAll().then((obj: any[]) => {
+                resolve(obj);
             });
         });
     }

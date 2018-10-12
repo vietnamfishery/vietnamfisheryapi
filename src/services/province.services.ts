@@ -4,12 +4,9 @@ import { provinceOptions } from '../models/objects';
 
 export class ProvinceServices extends BaseServices {
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: provinceOptions.tableName,
-            model: provinceOptions.attributes,
-            deleteMode: provinceOptions.options
-        }
+        protected optionsModel: IOptionsModelDB
     ) {
         super(optionsModel);
+        this.models = this.conn.provinceModel;
     }
 }

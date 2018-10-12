@@ -43,9 +43,11 @@ export class UserRoute extends BaseRoute {
         this.router.post('/login', this.login);
         this.router.get('/login', this.loginSuccess);
         this.router.get('/login/failure', this.loginFailure);
-        this.router.get('/login-ui', function(req, res) {
-            res.redirect((req.headers as any).origin);
-        });
+        this.router.get('/info', this.getUserInfo);
+        this.router.post('/updateUser', this.updateUserProfile);
+        // this.router.get('/login-ui', function(req, res) {
+        //     res.redirect((req.headers as any).origin);
+        // });
     }
 
     private register = (req: Request, res: Response, next: NextFunction) => {
@@ -161,6 +163,86 @@ export class UserRoute extends BaseRoute {
         res.json({
             action: 'login',
             status: false
+        });
+    }
+
+    private getUserInfo = (request: Request, response: Response) => {
+        const token: string = request.headers.authorization.split('%')[1];
+        const decodetoken: any = jwt.verify(token,constants.secret);
+        const { userId } = decodetoken;
+        const user = new User(
+            null,
+            null,
+            null,
+            (decodetoken as any).username,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+        user.getUserInfo().then(user$ => {
+            if(!user$) {
+                response.json({
+                    action: 'login',
+                    success: false
+                });
+            } else {
+                delete user$[`password`];
+                response.json(user$);
+            }
+        }).catch(err => {
+            response.json({
+                action: 'login',
+                success: false
+            });
+        });
+    }
+
+    private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
+        const token: string = request.headers.authorization.split('%')[1];
+        const decodetoken = jwt.verify(token,constants.secret);
+        const { firstname, lastname, birthday, email, phone, town, district, province, action } = request.body;
+
+        const user = new User(
+            null,
+            firstname,
+            lastname,
+            (decodetoken as any).username,
+            null,
+            birthday,
+            email,
+            phone,
+            null,
+            town,
+            district,
+            province,
+            0,
+            'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
+            null,
+            null,
+            null,
+            new Date(),
+            0
+        );
+        user.updateMyProfile().then(res => {
+            response.status(200).json(res);
+        }).catch(e => {
+            response.status(200).json({
+                action,
+                success: false,
+                error: e
+            });
         });
     }
 }

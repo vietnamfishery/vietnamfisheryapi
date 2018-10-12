@@ -43,7 +43,8 @@ export enum actionUserServices {
     ADD_CHILD = 'register-empployees',
     LOGIN = 'login',
     UPDATE = 'update',
-    DELETE = 'delete'
+    DELETE = 'delete',
+    USERINFO = 'getUserInfo'
 }
 
 export enum modelName {

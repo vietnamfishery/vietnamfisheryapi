@@ -23,10 +23,11 @@ export const provinceOptions: any = _.merge({
         }
     },
     options: {
-        createdBy: false,
-        createdDate: false,
-        updatedBy: false,
-        updatedDate: false,
-        isDeleted: false
+        tableName: 'province',
+        createdAt: false,
+        updatedAt: false,
+        deletedAt: false,
+        defaultScope: {},
+        scopes: {}
     }
-}, _.cloneDeep(baseModel));
+});

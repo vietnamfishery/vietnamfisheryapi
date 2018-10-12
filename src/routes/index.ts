@@ -7,6 +7,7 @@ import { logger } from '../services';
 import { UserRoute } from './users';
 import { UploadRoute } from './upload';
 import { GetFileRoute } from './getFile';
+import { ProvinceRoute } from './province';
 
 /**
  * / route
@@ -53,6 +54,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(UserRoute.path, UserRoute.router);
         this.router.use(UploadRoute.path, UploadRoute.router);
         this.router.use(GetFileRoute.path, GetFileRoute.router);
+        this.router.use(ProvinceRoute.path, ProvinceRoute.router);
         this.logPath();
     }
 

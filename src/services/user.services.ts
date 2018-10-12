@@ -57,4 +57,16 @@ export class UserServives extends BaseServices {
             });
         });
     }
+
+    public updateMyProfile(entity: any, options: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.models.update(entity, options).then((user: any) => {
+                if(user) {
+                    resolve(user.dataValues);
+                } else {
+                    resolve(user);
+                }
+            });
+        });
+    }
 }

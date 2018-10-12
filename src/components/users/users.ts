@@ -13,7 +13,7 @@ export class User extends BaseComponent {
         public lastname: string,
         public username: string,
         public password: string,
-        public birdthday: Date,
+        public birthday: Date,
         public email: string,
         public phone: string,
         public address: string,
@@ -42,7 +42,7 @@ export class User extends BaseComponent {
                 Enscrypts.getSalt(12).then(salt => {
                     Enscrypts.hashing(this.password, salt).then(hash => {
                         this.password = hash;
-                        this.username = this.username.toLocaleUpperCase().trim();
+                        this.username = this.username.toLowerCase().trim();
                         entity[`roles`] = 0;
                         const query = this.getQuery(entity.action, this, entity.roles);
                         this.userServices.register(query).then((user: User) => {
@@ -69,9 +69,43 @@ export class User extends BaseComponent {
 
     public login(action: string): Promise<User> {
         return new Promise((resolve, reject) => {
-            this.userServices.getUserByUsername(this.getQuery(action, {username: this.username.toLocaleUpperCase().trim()})).then((user$: User) => {
+            this.userServices.getUserByUsername(this.getQuery(action, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
                 resolve(user$);
             });
         });
+    }
+
+    public updateMyProfile(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.userServices.updateMyProfile(this, {
+                where: {
+                    username: this.username
+                },
+                fields: this.getUpdateFields(this)
+            }).then(res => {
+                resolve(res);
+            });
+        });
+    }
+
+    public getUserInfo(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.userServices.getUserByUsername(this.getQuery(actionUserServices.USERINFO, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
+                resolve(user$);
+            });
+        });
+    }
+
+    private getUpdateFields(obj: User): string[] {
+        const that = this;
+        const arr: string[] = [];
+        for(const key in obj) {
+            if(that[key] != null && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function') {
+                const type$ = typeof that[key] !== 'object';
+                console.log(type$);
+                arr.push(key);
+            }
+        }
+        return arr;
     }
 }
