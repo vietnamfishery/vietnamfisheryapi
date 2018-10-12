@@ -44,7 +44,7 @@ export class UserRoute extends BaseRoute {
         this.router.get('/login', this.loginSuccess);
         this.router.get('/login/failure', this.loginFailure);
         this.router.get('/login-ui', function(req, res) {
-            res.render('login');
+            res.redirect((req.headers as any).origin);
         });
     }
 
@@ -91,7 +91,7 @@ export class UserRoute extends BaseRoute {
     }
 
     private login = (req: Request, res: Response, next: NextFunction) => {
-        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, action, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, keepLogin } = req.body;
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, action, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
         const user: User = new User(
             '',
             firstname,
@@ -128,17 +128,6 @@ export class UserRoute extends BaseRoute {
                         obj[`action`] = 'login';
                         obj[`success`] = true;
                         obj[`token`] = token;
-                        if(keepLogin) {
-                            const domain = (req.header as any).origin ;
-                            res.cookie(`vietnamfishery`,token, {
-                                maxAge: 1000 * 3600 * 24 * 365,
-                                secure: false,
-                                domain,
-                                path: '/session/sigin'
-                            });
-                        } else {
-                            res.cookie(`vietnamfishery`,token);
-                        }
                         res.json(obj);
                     } else {
                         res.json({
