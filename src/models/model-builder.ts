@@ -9,18 +9,12 @@ export class ModelBuilder {
         userrolesModel: any,
         pondsModel: any,
         couponModel: any,
-        boughtbreedsModel: any,
-        provinceModel: any,
-        districtModel: any,
-        wardModel: any,
+        boughtbreedsModel: any
     ) {
         associations.userToRolesUser(this.model, userrolesModel);
         associations.userToPond(this.model, pondsModel);
         associations.userToCoupon(this.model, couponModel);
         associations.userToBoughtBreeds(this.model, boughtbreedsModel);
-        associations.userToProvince(this.model, provinceModel);
-        associations.userToDistrict(this.model, districtModel);
-        associations.userToWard(this.model, wardModel);
     }
 
     public userRolesAssociate(
@@ -172,15 +166,4 @@ export class ModelBuilder {
         associations.seasonToHarvest(this.model, harvestModel);
     }
 
-    public provinceAssociate(userModel: any) {
-        associations.provinceToUser(this.model, userModel);
-    }
-
-    public districtAssociate(userModel: any) {
-        associations.districtToUser(this.model, userModel);
-    }
-
-    public wardAssociate(userModel: any) {
-        associations.wardToUser(this.model, userModel);
-    }
 }

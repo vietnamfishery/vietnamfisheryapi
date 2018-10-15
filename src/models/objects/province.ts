@@ -1,5 +1,7 @@
 import * as Sequelize from 'sequelize';
+import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
+import { baseModel } from './base.model';
 
 export const provinceOptions: any = _.merge({
     tableName: 'province'

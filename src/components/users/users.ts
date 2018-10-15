@@ -1,4 +1,5 @@
 import { Enscrypts } from '../../lib/';
+import { userOptions } from '../../models/objects';
 import { UserServives, PondUserRolesServices, UserRolesServices } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
@@ -28,7 +29,11 @@ export class User extends BaseComponent {
         public isDeleted: number
     ) {
         super();
-        this.userServices = new UserServives();
+        this.userServices = new UserServives({
+            name: userOptions.tableName,
+            model: userOptions.attributes,
+            deleteMode: userOptions.options
+        });
     }
 
     public register(entity: any): Promise<User> {
@@ -97,13 +102,10 @@ export class User extends BaseComponent {
         for(const key in obj) {
             if(that[key] != null && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function') {
                 const type$ = typeof that[key] !== 'object';
+                console.log(type$);
                 arr.push(key);
             }
         }
         return arr;
-    }
-
-    public getQuery(...args: any[]): any {
-        super.getQuery(args);
     }
 }
