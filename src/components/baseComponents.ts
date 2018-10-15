@@ -16,10 +16,5 @@ export class BaseComponent {
                 where: args[1]
             };
         }
-        if(action === actionUserServices.USERINFO) {
-            return {
-                where: args[1]
-            };
-        }
     }
 }

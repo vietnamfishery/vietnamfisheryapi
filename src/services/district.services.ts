@@ -1,15 +1,22 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { districtOptions } from '../models/objects';
 
 export class DistrictServives extends BaseServices {
-    constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: districtOptions.tableName,
-            model: districtOptions.attributes,
-            deleteMode: districtOptions.options
-        }
-    ) {
-        super(optionsModel);
+    protected static optionsModel: IOptionsModelDB;
+    constructor() {
+        super(DistrictServives.optionsModel);
+        this.models = this.conn.districtModel;
+    }
+
+    getByProviceId(id): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            this.models.findAll({
+                where: {
+                    provinceid: id
+                }
+            }).then((res: any) => {
+                resolve(res);
+            });
+        });
     }
 }

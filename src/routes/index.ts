@@ -8,6 +8,8 @@ import { UserRoute } from './users';
 import { UploadRoute } from './upload';
 import { GetFileRoute } from './getFile';
 import { ProvinceRoute } from './province';
+import { DistrictRoute } from './district';
+import { WardRoute } from './ward';
 
 /**
  * / route
@@ -55,6 +57,8 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(UploadRoute.path, UploadRoute.router);
         this.router.use(GetFileRoute.path, GetFileRoute.router);
         this.router.use(ProvinceRoute.path, ProvinceRoute.router);
+        this.router.use(DistrictRoute.path, DistrictRoute.router);
+        this.router.use(WardRoute.path, WardRoute.router);
         this.logPath();
     }
 

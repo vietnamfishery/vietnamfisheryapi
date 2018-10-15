@@ -7,10 +7,9 @@ import { Sequelize, Transaction } from 'sequelize';
 import { UserRoles } from '../components/userRoles';
 
 export class UserServives extends BaseServices {
-    constructor(
-        protected optionsModel: IOptionsModelDB
-    ) {
-        super(optionsModel);
+    protected static optionsModel: IOptionsModelDB;
+    constructor() {
+        super(UserServives.optionsModel);
         this.models = this.conn.usersModel;
     }
     public register(entity: any): Promise<any> {
@@ -61,6 +60,18 @@ export class UserServives extends BaseServices {
     public updateMyProfile(entity: any, options: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.models.update(entity, options).then((user: any) => {
+                if(user) {
+                    resolve(user.dataValues);
+                } else {
+                    resolve(user);
+                }
+            });
+        });
+    }
+
+    public getUserInfo(userQuery: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.models.findOne(userQuery).then((user: any) => {
                 if(user) {
                     resolve(user.dataValues);
                 } else {

@@ -1,7 +1,5 @@
 import * as Sequelize from 'sequelize';
-import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
-import { baseModel } from './base.model';
 
 export const wardOptions: any = _.merge({
     tableName: 'ward'
@@ -31,6 +29,11 @@ export const wardOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'ward',
+        createdAt: false,
+        updatedAt: false,
+        deletedAt: false,
+        defaultScope: {},
+        scopes: {}
     }
-}, _.cloneDeep(baseModel));
+});

@@ -25,3 +25,6 @@ export * from './users.associate';
 export * from './userRoles.associate';
 export * from './usingfoods.associate';
 export * from './usingveterinary.associate';
+export * from './province.associate';
+export * from './district.associate';
+export * from './ward.associate';

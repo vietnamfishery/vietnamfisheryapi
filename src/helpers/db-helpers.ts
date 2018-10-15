@@ -50,14 +50,15 @@ export default class DBHelper {
     public get usersModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.usersAssociate(this.models[`userrolesOptions`], this.models[`pondOptions`], this.models[`couponOptions`], this.models[`boughtbreedOptions`]);
-        return md;
-    }
-
-    public get boughtbreeddetailsModel () {
-        const md = this.model;
-        const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.boughtbreeddetailsAssociate(this.models[`boughtbreedOptions`], this.models[`breedOptions`]);
+        modelBuilder.usersAssociate(
+            this.models[`userrolesOptions`],
+            this.models[`pondOptions`],
+            this.models[`couponOptions`],
+            this.models[`boughtbreedOptions`],
+            this.models[`provinceOptions`],
+            this.models[`districtOptions`],
+            this.models[`wardOptions`]
+        );
         return md;
     }
 
@@ -68,8 +69,32 @@ export default class DBHelper {
         return md;
     }
 
-    public get provinceModel () {
-        return this.model;
+    public get boughtbreeddetailsModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.boughtbreeddetailsAssociate(this.models[`boughtbreedOptions`], this.models[`breedOptions`]);
+        return md;
+    }
+
+    public get provinceModel() {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.provinceAssociate(this.models[`userOptions`]);
+        return md;
+    }
+
+    public get districtModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.districtAssociate(this.models[`userOptions`]);
+        return md;
+    }
+
+    public get wardModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.wardAssociate(this.models[`userOptions`]);
+        return md;
     }
 
     public get breedsModel () {

@@ -169,7 +169,6 @@ export class UserRoute extends BaseRoute {
     private getUserInfo = (request: Request, response: Response) => {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken: any = jwt.verify(token,constants.secret);
-        const { userId } = decodetoken;
         const user = new User(
             null,
             null,

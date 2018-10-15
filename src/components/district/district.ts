@@ -1,24 +1,38 @@
 import { BaseComponent } from '../baseComponents';
-import { PondsServices } from '../../services';
+import { DistrictServives } from '../../services';
+import { districtOptions } from '../../models/objects';
 import { Promise } from '../../lib';
 
-export class Pond extends BaseComponent {
-    private pondsServices: PondsServices;
-    constructor(
-        public pondUUId: string,
-        public pondName: string,
-        public latitude: number,
-        public longitude: number,
-        public pondArea: number,
-        public pondDepth: number,
-        public createdCost: number,
-        public status: number,
-        public createdBy: string,
-        public updatedBy: string,
-        public createdDate: Date,
-        public updatedDate: Date,
-        public isDeteled: number
-    ) {
+export class District extends BaseComponent {
+    private districtServives: DistrictServives;
+    public districtid: string;
+    public name: string;
+    public type: string;
+    public location: string;
+    public provinceid: string;
+
+    constructor() {
         super();
+        // this.districtServives = new DistrictServives({
+        //     name: districtOptions.tableName,
+        //     model: districtOptions.attributes,
+        //     deleteMode: districtOptions.options,
+        // });
     }
+
+    getAllDistrict(): Promise<District[]> {
+        return  new Promise((resolve, reject) => {
+            this.districtServives.getAll().then((res: any[])  => {
+                resolve(res);
+            });
+        });
+    }
+
+    // getDistrictByProvinceId(proId): Promise<District[]> {
+    //     return  new Promise((resolve, reject) => {
+    //         this.districtServives.g().then((res: any[])  => {
+    //             resolve(res);
+    //         });
+    //     });
+    // }
 }

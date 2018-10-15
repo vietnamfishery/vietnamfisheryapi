@@ -39,3 +39,33 @@ export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Se
         }
     });
 }
+
+export function userToProvince(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: 'province',
+        foreignKey: {
+            name: 'provinceid',
+            field: 'provinceid'
+        }
+    });
+}
+
+export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: 'district',
+        foreignKey: {
+            name: 'districtid',
+            field: 'districtid'
+        }
+    });
+}
+
+export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: 'ward',
+        foreignKey: {
+            name: 'wardid',
+            field: 'wardid'
+        }
+    });
+}
