@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { DistrictServives } from '../../services';
-import { districtOptions } from '../../models/objects';
 import { Promise } from '../../lib';
 
 export class District extends BaseComponent {
@@ -13,11 +12,7 @@ export class District extends BaseComponent {
 
     constructor() {
         super();
-        // this.districtServives = new DistrictServives({
-        //     name: districtOptions.tableName,
-        //     model: districtOptions.attributes,
-        //     deleteMode: districtOptions.options,
-        // });
+        this.districtServives = new DistrictServives();
     }
 
     getAllDistrict(): Promise<District[]> {

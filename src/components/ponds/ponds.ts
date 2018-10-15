@@ -24,7 +24,7 @@ export class Pond extends BaseComponent {
 
     public getAllPond(): Promise<Pond> {
         return new Promise((resolve, reject) => {
-            this.pondsServices.getAll().then((pond: Pond) => {
+            this.pondsServices.getAll().then((pond: any) => {
                 if(pond) {
                     resolve(pond);
                 } else {

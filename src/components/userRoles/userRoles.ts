@@ -1,5 +1,4 @@
 import { UserRolesServices } from '../../services';
-import { userrolesOptions } from '../../models/objects';
 import { BaseComponent } from '../baseComponents';
 
 export class UserRoles extends BaseComponent {
@@ -10,10 +9,6 @@ export class UserRoles extends BaseComponent {
         public createdBy?: string
     ) {
         super();
-        this.userRolesServices = new UserRolesServices({
-            name: userrolesOptions.tableName,
-            model: userrolesOptions.attributes,
-            deleteMode: userrolesOptions.options
-        });
+        this.userRolesServices = new UserRolesServices();
     }
 }

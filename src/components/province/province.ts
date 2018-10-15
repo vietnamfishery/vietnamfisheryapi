@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { ProvinceServices } from '../../services';
-import { provinceOptions } from '../../models/objects';
 import { Promise } from '../../lib';
 
 export class Province extends BaseComponent {
@@ -11,11 +10,7 @@ export class Province extends BaseComponent {
 
     constructor() {
         super();
-        this.provinceServices = new ProvinceServices({
-            name: provinceOptions.tableName,
-            model: provinceOptions.attributes,
-            deleteMode: provinceOptions.options,
-        });
+        this.provinceServices = new ProvinceServices();
     }
 
     getAllProvince(): Promise<Province[]> {

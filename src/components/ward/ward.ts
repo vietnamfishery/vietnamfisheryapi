@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { WardServices } from '../../services';
-import { wardOptions } from '../../models/objects';
 import { Promise } from '../../lib';
 
 export class Ward extends BaseComponent {
@@ -13,11 +12,7 @@ export class Ward extends BaseComponent {
 
     constructor() {
         super();
-        this.wardServices = new WardServices({
-            name: wardOptions.tableName,
-            model: wardOptions.attributes,
-            deleteMode: wardOptions.options,
-        });
+        this.wardServices = new WardServices();
     }
 
     getAllWard(): Promise<Ward[]> {

@@ -1,5 +1,4 @@
 import { Enscrypts } from '../../lib/';
-import { userOptions } from '../../models/objects';
 import { UserServives, PondUserRolesServices, UserRolesServices } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
