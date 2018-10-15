@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { couponOptions } from '../models/objects';
 
 export class CouponServives extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = couponOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: couponOptions.tableName,
-            model: couponOptions.attributes,
-            deleteMode: couponOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(CouponServives.optionsModel);
+        this.models = this.conn.couponModel;
     }
 }

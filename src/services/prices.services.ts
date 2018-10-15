@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { pricesOptions } from '../models/objects';
 
 export class PricesServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = pricesOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: pricesOptions.tableName,
-            model: pricesOptions.attributes,
-            deleteMode: pricesOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(PricesServices.optionsModel);
+        this.models = this.conn.pricesModel;
     }
 }

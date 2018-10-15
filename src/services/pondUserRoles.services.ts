@@ -3,10 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { ponduserrolesOptions } from '../models/objects';
 
 export class PondUserRolesServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = ponduserrolesOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB
     ) {
-        super(optionsModel);
+        super(PondUserRolesServices.optionsModel);
         this.models = this.conn.ponduserrolesModel;
     }
 }

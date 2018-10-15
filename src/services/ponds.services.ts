@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { pondOptions } from '../models/objects';
 
 export class PondsServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = pondOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: pondOptions.tableName,
-            model: pondOptions.attributes,
-            deleteMode: pondOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(PondsServices.optionsModel);
+        this.models = this.conn.pondsModel;
     }
 }

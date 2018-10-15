@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { diedfisherysOptions } from '../models/objects';
 
 export class DiedFisherysServives extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = diedfisherysOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: diedfisherysOptions.tableName,
-            model: diedfisherysOptions.attributes,
-            deleteMode: diedfisherysOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(DiedFisherysServives.optionsModel);
+        this.models = this.conn.diedfisherysModel;
     }
 }

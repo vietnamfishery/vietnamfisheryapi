@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { growthOptions } from '../models/objects';
 
 export class GrowthsServives extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = growthOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: growthOptions.tableName,
-            model: growthOptions.attributes,
-            deleteMode: growthOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(GrowthsServives.optionsModel);
+        this.models = this.conn.growthsModel;
     }
 }

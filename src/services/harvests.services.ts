@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { harvestOptions } from '../models/objects';
 
 export class HarvestsServives extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = harvestOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: harvestOptions.tableName,
-            model: harvestOptions.attributes,
-            deleteMode: harvestOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(HarvestsServives.optionsModel);
+        this.models = this.conn.harvestModel;
     }
 }
