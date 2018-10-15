@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { usingveterinaryOptions } from '../models/objects';
 
 export class UsingVeterinaryServices extends BaseServices {
-    constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: usingveterinaryOptions.tableName,
-            model: usingveterinaryOptions.attributes,
-            deleteMode: usingveterinaryOptions.options
-        }
-    ) {
-        super(optionsModel);
+    protected static optionsModel: IOptionsModelDB = usingveterinaryOptions;
+    constructor() {
+        super(UsingVeterinaryServices.optionsModel);
+        this.models = this.conn.usingveterinaryModel;
+
     }
 }

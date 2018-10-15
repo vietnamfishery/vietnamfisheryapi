@@ -7,7 +7,7 @@ import { Sequelize, Transaction } from 'sequelize';
 import { UserRoles } from '../components/userRoles';
 
 export class UserServives extends BaseServices {
-    protected static optionsModel: IOptionsModelDB;
+    protected static optionsModel: IOptionsModelDB = userOptions;
     constructor() {
         super(UserServives.optionsModel);
         this.models = this.conn.usersModel;

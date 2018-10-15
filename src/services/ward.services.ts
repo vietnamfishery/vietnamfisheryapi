@@ -4,10 +4,10 @@ import { wardOptions } from '../models/objects';
 import { Promise } from '../lib';
 
 export class WardServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = wardOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB
     ) {
-        super(optionsModel);
+        super(WardServices.optionsModel);
         this.models = this.conn.wardModel;
     }
 

@@ -3,13 +3,10 @@ import { IOptionsModelDB } from '../interfaces';
 import { usingfoodOptions } from '../models/objects';
 
 export class UsingFoodsServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = usingfoodOptions;
     constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: usingfoodOptions.tableName,
-            model: usingfoodOptions.attributes,
-            deleteMode: usingfoodOptions.options
-        }
     ) {
-        super(optionsModel);
+        super(UsingFoodsServices.optionsModel);
+        this.models = this.conn.usingfoodsModel;
     }
 }

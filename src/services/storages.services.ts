@@ -3,13 +3,9 @@ import { IOptionsModelDB } from '../interfaces';
 import { storagesOptions } from '../models/objects';
 
 export class StoregeServices extends BaseServices {
-    constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: storagesOptions.tableName,
-            model: storagesOptions.attributes,
-            deleteMode: storagesOptions.options
-        }
-    ) {
-        super(optionsModel);
+    protected static optionsModel: IOptionsModelDB = storagesOptions;
+    constructor() {
+        super(StoregeServices.optionsModel);
+        this.models = this.conn.storagesModel;
     }
 }

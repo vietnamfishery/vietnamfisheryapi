@@ -3,13 +3,9 @@ import { IOptionsModelDB } from '../interfaces';
 import { seasonOptions } from '../models/objects';
 
 export class SeasonServices extends BaseServices {
-    constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: seasonOptions.tableName,
-            model: seasonOptions.attributes,
-            deleteMode: seasonOptions.options
-        }
-    ) {
-        super(optionsModel);
+    protected static optionsModel: IOptionsModelDB = seasonOptions;
+    constructor(){
+        super(SeasonServices.optionsModel);
+        this.models = this.conn.seasonModel;
     }
 }
