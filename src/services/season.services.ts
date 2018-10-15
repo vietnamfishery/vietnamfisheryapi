@@ -4,7 +4,7 @@ import { seasonOptions } from '../models/objects';
 
 export class SeasonServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = seasonOptions;
-    constructor(){
+    constructor() {
         super(SeasonServices.optionsModel);
         this.models = this.conn.seasonModel;
     }

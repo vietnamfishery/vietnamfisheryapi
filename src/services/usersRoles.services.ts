@@ -4,7 +4,7 @@ import { userrolesOptions } from '@/models/objects';
 
 export class UserRolesServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = userrolesOptions;
-    constructor(){
+    constructor() {
         super(UserRolesServices.optionsModel);
         this.models = this.conn.userRolesModel;
     }
