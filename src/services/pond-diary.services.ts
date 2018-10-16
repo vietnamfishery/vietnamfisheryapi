@@ -4,8 +4,7 @@ import { ponddiaryOptions } from '../models/objects';
 
 export class PondDiaryServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = ponddiaryOptions;
-    constructor(
-    ) {
+    constructor() {
         super(PondDiaryServices.optionsModel);
         this.models = this.conn.ponddiaryModel;
     }

@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 
 export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasOne(model, {
-        as: 'ponduserroles',
+        as: 'pondsToponduserroles',
         foreignKey: {
             name: 'pondId',
             field: 'pondId'
@@ -12,7 +12,7 @@ export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: 
 
 export function pondsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'ponds',
+        as: 'pondsToSeason',
         foreignKey: {
             name: 'pondId',
             field: 'pondId'
@@ -22,7 +22,7 @@ export function pondsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
 
 export function pondsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'users',
+        as: 'pondsToUsers',
         foreignKey: {
             name: 'userId',
             field: 'userId'

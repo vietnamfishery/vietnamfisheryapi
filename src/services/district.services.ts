@@ -1,8 +1,9 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
+import { districtOptions } from '../models/objects';
 
 export class DistrictServives extends BaseServices {
-    protected static optionsModel: IOptionsModelDB;
+    protected static optionsModel: IOptionsModelDB = districtOptions;
     constructor() {
         super(DistrictServives.optionsModel);
         this.models = this.conn.districtModel;

@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 
 export function pondprepareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'season',
+        as: 'pondprepareToSeason',
         foreignKey: {
             name: 'seasonId',
             field: 'seasonId'
@@ -12,7 +12,7 @@ export function pondprepareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: S
 
 export function pondprepareToCosts(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'pondprepare',
+        as: 'pondprepareToCosts',
         foreignKey: {
             name: 'pondPrepareId',
             field: 'pondPrepareId'

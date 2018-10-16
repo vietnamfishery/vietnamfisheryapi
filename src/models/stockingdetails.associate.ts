@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 
 export function stockingdetailsToStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'stocking',
+        as: 'stockingdetailsToStocking',
         foreignKey: {
             name: 'stockingId',
             field: 'stockingId'
@@ -12,7 +12,7 @@ export function stockingdetailsToStocking(thatmodel: Sequeliz.Model<{}, any>, mo
 
 export function stockingdetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'breeds',
+        as: 'stockingdetailsToBreeds',
         foreignKey: {
             name: 'breedId',
             field: 'breedId'

@@ -16,18 +16,18 @@ export class District extends BaseComponent {
     }
 
     getAllDistrict(): Promise<District[]> {
-        return  new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.districtServives.getAll().then((res: any[])  => {
                 resolve(res);
             });
         });
     }
 
-    // getDistrictByProvinceId(proId): Promise<District[]> {
-    //     return  new Promise((resolve, reject) => {
-    //         this.districtServives.g().then((res: any[])  => {
-    //             resolve(res);
-    //         });
-    //     });
-    // }
+    getDistrictByProvinceId(proId): Promise<District[]> {
+        return new Promise((resolve, reject) => {
+            this.districtServives.getByProviceId(proId).then((res: any[])  => {
+                resolve(res);
+            });
+        });
+    }
 }

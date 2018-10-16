@@ -4,8 +4,7 @@ import { pondprepareOptions } from '../models/objects';
 
 export class PondPrepareServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = pondprepareOptions;
-    constructor(
-    ) {
+    constructor() {
         super(PondPrepareServices.optionsModel);
         this.models = this.conn.pondprepareModel;
     }

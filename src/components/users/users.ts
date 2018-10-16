@@ -1,5 +1,6 @@
 import { Enscrypts } from '../../lib/';
-import { UserServives, PondUserRolesServices, UserRolesServices } from '../../services';
+import { userOptions } from '../../models/objects';
+import { UserServives, PondUserRolesServices, UserRolesServices, DistrictServives, ProvinceServices, WardServices } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
 import { actionUserServices } from '../../common';
@@ -85,7 +86,7 @@ export class User extends BaseComponent {
 
     public getUserInfo(): Promise<User> {
         return new Promise((resolve, reject) => {
-            this.userServices.getUserByUsername(this.getQuery(actionUserServices.USERINFO, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
+            this.userServices.getUserInfo(this.getQuery(actionUserServices.USERINFO, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
                 resolve(user$);
             });
         });
@@ -101,9 +102,5 @@ export class User extends BaseComponent {
             }
         }
         return arr;
-    }
-
-    public getQuery(...args: any[]): any {
-        super.getQuery(args);
     }
 }

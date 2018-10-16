@@ -6,20 +6,18 @@ import { Promise } from '../lib';
 export abstract class BaseServices {
     public conn: DBHelper;
     public models: Sequeliz.Model<{}, any>;
-    constructor(
-        protected optionsModel: IOptionsModelDB = {
-            name: '',
-            model: {},
-            deleteMode: {}
-        }
-    ) {
-        this.conn = new DBHelper(optionsModel);
+    constructor(protected optionsModel: IOptionsModelDB = {
+        tableName: '',
+        attributes: {},
+        options: {}
+    }) {
+        this.conn = new DBHelper(this.optionsModel);
     }
 
     public getById(id: any): Promise<{}> {
         return new Promise((resolve, reject) => {
             this.models.findById(id).then((obj: any) => {
-                if(obj) {
+                if (obj) {
                     resolve(obj.dataValues);
                 } else {
                     resolve(obj);

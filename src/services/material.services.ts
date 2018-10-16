@@ -4,8 +4,7 @@ import { materialOptions } from '../models/objects';
 
 export class MaterialServives extends BaseServices {
     protected static optionsModel: IOptionsModelDB = materialOptions;
-    constructor(
-    ) {
+    constructor() {
         super(MaterialServives.optionsModel);
         this.models = this.conn.materialModel;
     }

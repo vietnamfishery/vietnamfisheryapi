@@ -50,9 +50,9 @@ export class DistrictRoute extends BaseRoute {
                 response.status(200).json(res);
             });
         } else {
-            // district.getDistrictByProvinceId(request.headers.provinceid).then((res: any[]) => {
-            //     response.status(200).json(res);
-            // });
+            district.getDistrictByProvinceId(request.headers.provinceid).then((res: any[]) => {
+                response.status(200).json(res);
+            });
         }
     }
 }
