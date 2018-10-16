@@ -5,8 +5,7 @@ import { Promise } from '../lib';
 
 export class WardServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = wardOptions;
-    constructor(
-    ) {
+    constructor() {
         super(WardServices.optionsModel);
         this.models = this.conn.wardModel;
     }

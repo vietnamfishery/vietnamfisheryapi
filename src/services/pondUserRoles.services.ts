@@ -4,8 +4,7 @@ import { ponduserrolesOptions } from '../models/objects';
 
 export class PondUserRolesServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = ponduserrolesOptions;
-    constructor(
-    ) {
+    constructor() {
         super(PondUserRolesServices.optionsModel);
         this.models = this.conn.ponduserrolesModel;
     }

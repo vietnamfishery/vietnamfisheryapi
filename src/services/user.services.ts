@@ -71,7 +71,8 @@ export class UserServives extends BaseServices {
 
     public getUserInfo(userQuery: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.models.findOne(userQuery).then((user: any) => {
+            const query: any = this.joinQuery(userQuery);
+            this.models.findOne(query).then((user: any) => {
                 if(user) {
                     resolve(user.dataValues);
                 } else {
@@ -79,5 +80,32 @@ export class UserServives extends BaseServices {
                 }
             });
         });
+    }
+
+    private joinQuery(userQuery: any): any {
+        const include =  {
+            include: [
+                {
+                    model: (this.models as any).sequelize.models.province,
+                    as: 'pro',
+                    require: true,
+                    attributes: ['name']
+                },
+                {
+                    model: (this.models as any).sequelize.models.district,
+                    as: 'dis',
+                    require: true,
+                    attributes: ['name', 'location']
+                },
+                {
+                    model: (this.models as any).sequelize.models.ward,
+                    as: 'war',
+                    require: true,
+                    attributes: ['name', `location`]
+                }
+            ],
+            attributes: [`userId`, `userUUId`, `firstname`, `lastname`, `username`, `password`, `birthday`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`, `pro.name`,`dis.name`, `war.name`]
+        };
+        return { ...userQuery, ...include };
     }
 }

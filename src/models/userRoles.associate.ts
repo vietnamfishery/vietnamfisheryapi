@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 
 export function userrolesToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'users',
+        as: 'userrolesToUsers',
         foreignKey: {
             name: 'userId',
             field: 'userId'
@@ -12,7 +12,7 @@ export function userrolesToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
 
 export function userrolesPondUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'usersRoles',
+        as: 'userrolesPondUserRoles',
         foreignKey: {
             name: 'rolesId',
             field: 'rolesId'

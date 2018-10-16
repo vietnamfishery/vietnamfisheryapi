@@ -36,15 +36,15 @@ export default class DBHelper {
     }
 
     private get modelName () {
-        return this.optionsModel.name;
+        return this.optionsModel.tableName;
     }
 
     private get deleteMode () {
-        return this.optionsModel.deleteMode;
+        return this.optionsModel.options;
     }
 
     private get model () {
-        return DBHelper.sequelize.define(this.modelName, this.optionsModel.model, this.deleteMode);
+        return DBHelper.sequelize.define(this.modelName, this.optionsModel.attributes, this.deleteMode);
     }
 
     public get usersModel () {

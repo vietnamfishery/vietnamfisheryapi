@@ -4,8 +4,7 @@ import { harvestdetailOptions } from '../models/objects';
 
 export class HarvestDetailsServives extends BaseServices {
     protected static optionsModel: IOptionsModelDB = harvestdetailOptions;
-    constructor(
-    ) {
+    constructor() {
         super(HarvestDetailsServives.optionsModel);
         this.models = this.conn.harvestdetailsModel;
     }

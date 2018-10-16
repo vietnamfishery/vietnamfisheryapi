@@ -4,8 +4,7 @@ import { provinceOptions } from '../models/objects';
 
 export class ProvinceServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = provinceOptions;
-    constructor(
-    ) {
+    constructor() {
         super(ProvinceServices.optionsModel);
         this.models = this.conn.provinceModel;
     }

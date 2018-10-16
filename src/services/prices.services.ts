@@ -4,8 +4,7 @@ import { pricesOptions } from '../models/objects';
 
 export class PricesServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = pricesOptions;
-    constructor(
-    ) {
+    constructor() {
         super(PricesServices.optionsModel);
         this.models = this.conn.pricesModel;
     }

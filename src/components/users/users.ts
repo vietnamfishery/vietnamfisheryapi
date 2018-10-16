@@ -1,6 +1,6 @@
 import { Enscrypts } from '../../lib/';
 import { userOptions } from '../../models/objects';
-import { UserServives, PondUserRolesServices, UserRolesServices } from '../../services';
+import { UserServives, PondUserRolesServices, UserRolesServices, DistrictServives, ProvinceServices, WardServices } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
 import { actionUserServices } from '../../common';
@@ -29,11 +29,7 @@ export class User extends BaseComponent {
         public isDeleted: number
     ) {
         super();
-        this.userServices = new UserServives({
-            name: userOptions.tableName,
-            model: userOptions.attributes,
-            deleteMode: userOptions.options
-        });
+        this.userServices = new UserServives();
     }
 
     public register(entity: any): Promise<User> {
@@ -90,7 +86,7 @@ export class User extends BaseComponent {
 
     public getUserInfo(): Promise<User> {
         return new Promise((resolve, reject) => {
-            this.userServices.getUserByUsername(this.getQuery(actionUserServices.USERINFO, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
+            this.userServices.getUserInfo(this.getQuery(actionUserServices.USERINFO, {username: this.username.toLowerCase().trim()})).then((user$: User) => {
                 resolve(user$);
             });
         });
@@ -102,7 +98,6 @@ export class User extends BaseComponent {
         for(const key in obj) {
             if(that[key] != null && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function') {
                 const type$ = typeof that[key] !== 'object';
-                console.log(type$);
                 arr.push(key);
             }
         }

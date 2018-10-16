@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 
 export function materialToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'coupon',
+        as: 'materialToCoupon',
         foreignKey: {
             name: 'couponId',
             field: 'couponId'
@@ -12,7 +12,7 @@ export function materialToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
 
 export function materialToStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'storages',
+        as: 'materialToStorages',
         foreignKey: {
             name: 'storageId',
             field: 'storageId'
