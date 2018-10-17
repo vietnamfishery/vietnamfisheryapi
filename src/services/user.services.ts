@@ -78,6 +78,14 @@ export class UserServives extends BaseServices {
         });
     }
 
+    public changePassword(enity: any, query: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.models.update(enity, query).then((data: any) => {
+                resolve(data);
+            });
+        });
+    }
+
     private joinQuery(userQuery: any): any {
         const include =  {
             include: [

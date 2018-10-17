@@ -92,6 +92,24 @@ export class User extends BaseComponent {
         });
     }
 
+    public changePassword(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            Enscrypts.getSalt(12).then((salt: string) => {
+                Enscrypts.hashing(this.password, salt).then((hash: string) => {
+                    this.password = hash;
+                    this.userServices.changePassword(this, {
+                        where: {
+                            username: this.username
+                        },
+                        fields: this.getUpdateFields(this)
+                    }).then((res: any) => {
+                        resolve(res);
+                    });
+                });
+            });
+        });
+    }
+
     private getUpdateFields(obj: User): string[] {
         const that = this;
         const arr: string[] = [];

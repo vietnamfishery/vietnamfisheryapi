@@ -47,6 +47,7 @@ export class UserRoute extends BaseRoute {
         this.router.get('/login/failure', this.loginFailure);
         this.router.get('/info', this.getUserInfo);
         this.router.post('/updateUser', this.updateUserProfile);
+        this.router.post('/updateUserPassword', this.updateUserPassword);
         // this.router.get('/login-ui', function(req, res) {
         //     res.redirect((req.headers as any).origin);
         // });
@@ -131,7 +132,7 @@ export class UserRoute extends BaseRoute {
     private getUserInfo = (request: Request, response: Response) => {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken: any = jwt.verify(token,constants.secret);
-        const user = new User(null,null,null,(decodetoken as any).username,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+        const user = new User(null,null,null,decodetoken.username,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
         user.getUserInfo().then(user$ => {
             if(!user$) {
                 response.json({
@@ -207,5 +208,36 @@ export class UserRoute extends BaseRoute {
                 });
             });
         }
+    }
+
+    private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
+        const { oldPassword, action, newPassword } = request.body;
+        const token: string = request.headers.authorization.split('%')[1];
+        const decodetoken: any = jwt.verify(token,constants.secret);
+        const user = new User(null,null,null,decodetoken.username,newPassword,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+        user.getUserInfo().then((data: any) => {
+            Enscrypts.compare(oldPassword, data.password).then((isMatch: boolean) => {
+                if(!isMatch) {
+                    response.status(200).json({
+                        action,
+                        success: false,
+                        message: 'Sai mật khẩu cũ!'
+                    });
+                } else {
+                    user.changePassword().then((data$: any) => {
+                        response.status(200).json({
+                            action,
+                            success: true
+                        });
+                    }).catch(e => {
+                        response.status(200).json({
+                            action,
+                            success: false,
+                            error: e
+                        });
+                    });
+                }
+            });
+        });
     }
 }
