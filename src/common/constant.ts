@@ -42,9 +42,12 @@ export enum actionUserServices {
     REGISTER = 'register',
     ADD_CHILD = 'register-empployees',
     LOGIN = 'login',
-    UPDATE = 'update',
+    LOGOUT = 'logout',
+    UPDATEMYPROFILE = 'updateMyProfile',
     DELETE = 'delete',
-    USERINFO = 'getUserInfo'
+    USERINFO = 'getUserInfo',
+    CHANGEUSERPASSWORD = 'updateUserPassword',
+    UPLOAD_IMAGE = 'uploadImage'
 }
 
 export enum modelName {
@@ -57,3 +60,5 @@ export const secret = 'vietnamfisherysecret';
 export enum folderDrive {
     uploadImageVNF = '1zh74DklADISZbcEYVix2nDDKd5wtt0-Z'
 }
+
+export const defaultImage: string = `1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2`;

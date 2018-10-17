@@ -60,11 +60,7 @@ export class UserServives extends BaseServices {
     public updateMyProfile(entity: any, options: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.models.update(entity, options).then((user: any) => {
-                if(user) {
-                    resolve(user.dataValues);
-                } else {
-                    resolve(user);
-                }
+                resolve(user);
             });
         });
     }
@@ -88,20 +84,17 @@ export class UserServives extends BaseServices {
                 {
                     model: (this.models as any).sequelize.models.province,
                     as: 'pro',
-                    require: true,
-                    attributes: ['name']
+                    require: true
                 },
                 {
                     model: (this.models as any).sequelize.models.district,
                     as: 'dis',
-                    require: true,
-                    attributes: ['name', 'location']
+                    require: true
                 },
                 {
                     model: (this.models as any).sequelize.models.ward,
                     as: 'war',
-                    require: true,
-                    attributes: ['name', `location`]
+                    require: true
                 }
             ],
             attributes: [`userId`, `userUUId`, `firstname`, `lastname`, `username`, `password`, `birthday`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`, `pro.name`,`dis.name`, `war.name`]

@@ -7,6 +7,8 @@ import * as uuidv4 from 'uuid/v4';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
 import * as constants from '../../common';
+import { GoogleDrive } from '../../googleAPI/drive.google';
+import { actionUserServices, defaultImage } from '../../common';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -52,27 +54,7 @@ export class UserRoute extends BaseRoute {
 
     private register = (req: Request, res: Response, next: NextFunction) => {
         const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, action } = req.body;
-        const user: User = new User(
-            uuidv4(),
-            firstname,
-            lastname,
-            username.toLowerCase(),
-            password,
-            birdthday,
-            email,
-            phone,
-            address,
-            town,
-            district,
-            province,
-            status,
-            'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
-            createdBy,
-            createdDate,
-            updatedBy,
-            updatedDate,
-            isDeleted
-        );
+        const user: User = new User(uuidv4(),firstname,lastname,username.toLowerCase(),password,birdthday,email,phone,address,town,district,province,status,defaultImage,createdBy,createdDate,updatedBy,updatedDate,isDeleted);
         const entity: any = {
             action,
             roles
@@ -94,27 +76,7 @@ export class UserRoute extends BaseRoute {
 
     private login = (req: Request, res: Response, next: NextFunction) => {
         const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, action, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
-        const user: User = new User(
-            '',
-            firstname,
-            lastname,
-            username.toLowerCase(),
-            password,
-            birdthday,
-            email,
-            phone,
-            address,
-            town,
-            district,
-            province,
-            status,
-            '',
-            createdBy,
-            createdDate,
-            updatedBy,
-            updatedDate,
-            isDeleted
-        );
+        const user: User = new User(null,firstname,lastname,username.toLowerCase(),password,birdthday,email,phone,address,town,district,province,status,'',createdBy,createdDate,updatedBy,updatedDate,isDeleted);
         user.login(action).then(user$ => {
             if(!user$) {
                 res.json({
@@ -169,27 +131,7 @@ export class UserRoute extends BaseRoute {
     private getUserInfo = (request: Request, response: Response) => {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken: any = jwt.verify(token,constants.secret);
-        const user = new User(
-            null,
-            null,
-            null,
-            (decodetoken as any).username,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-        );
+        const user = new User(null,null,null,(decodetoken as any).username,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
         user.getUserInfo().then(user$ => {
             if(!user$) {
                 response.json({
@@ -211,37 +153,59 @@ export class UserRoute extends BaseRoute {
     private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken = jwt.verify(token,constants.secret);
-        const { firstname, lastname, birthday, email, phone, town, district, province, action } = request.body;
-
-        const user = new User(
-            null,
-            firstname,
-            lastname,
-            (decodetoken as any).username,
-            null,
-            birthday,
-            email,
-            phone,
-            null,
-            town,
-            district,
-            province,
-            0,
-            'http://icons.iconarchive.com/icons/artua/dragon-soft/512/User-icon.png',
-            null,
-            null,
-            null,
-            new Date(),
-            0
-        );
-        user.updateMyProfile().then(res => {
-            response.status(200).json(res);
-        }).catch(e => {
-            response.status(200).json({
-                action,
-                success: false,
-                error: e
+        const { firstname, lastname, birthday, email, phone, town, district, province, images, action } = request.body;
+        if(action === actionUserServices.UPLOAD_IMAGE) {
+            GoogleDrive.upload(request,response,next).then((data: any) => {
+                if(data.fileId) {
+                    const user = new User(null,firstname,lastname,(decodetoken as any).username,null,birthday,email,phone,null,town,district,province,0,data.fileId,null,null,null,new Date(),0);
+                    user.updateMyProfile().then(res => {
+                        if(Array.isArray(res)) {
+                            response.status(200).json({
+                                action,
+                                success: true,
+                                fileId: data.fileId
+                            });
+                        } else {
+                            response.status(200).json({
+                                action,
+                                success: false
+                            });
+                        }
+                    }).catch(e => {
+                        response.status(200).json({
+                            action,
+                            success: false,
+                            error: e
+                        });
+                    });
+                } else {
+                    response.status(200).json({
+                        action,
+                        success: false
+                    });
+                }
             });
-        });
+        } else {
+            const user = new User(null,firstname,lastname,(decodetoken as any).username,null,birthday,email,phone,null,town,district,province,0,images,null,null,null,new Date(),0);
+            user.updateMyProfile().then(res => {
+                if(Array.isArray(res)) {
+                    response.status(200).json({
+                        action,
+                        success: true
+                    });
+                } else {
+                    response.status(200).json({
+                        action,
+                        success: false
+                    });
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    action,
+                    success: false,
+                    error: e
+                });
+            });
+        }
     }
 }

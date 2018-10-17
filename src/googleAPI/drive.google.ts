@@ -1,9 +1,8 @@
 import { google, drive_v3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
-import * as constants from '../common';
+import { folderDrive, actionUserServices } from '../common';
 import { NextFunction, Request, Response } from 'express';
-import { CustomStream } from '../lib';
-import { Stream } from 'stream';
+import { CustomStream, Promise } from '../lib';
 
 export class GoogleDrive {
     private static drive: drive_v3.Drive;
@@ -23,35 +22,38 @@ export class GoogleDrive {
         });
     }
 
-    public static upload(request: Request, response: Response, next: NextFunction) {
-        const image: any = request.files.image;
-        const requestBody = {
-            name: image.name,
-            parents: [constants.folderDrive.uploadImageVNF]
-        };
+    public static upload(request: Request, response: Response, next: NextFunction): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const image: any = request.files.image;
+            const requestBody = {
+                name: image.name,
+                parents: [folderDrive.uploadImageVNF]
+            };
 
-        const media = {
-            mediaType: image.mimetype,
-            body: CustomStream.BufferToStream(image.data as Buffer)
-        };
+            const media = {
+                mediaType: image.mimetype,
+                body: CustomStream.BufferToStream(image.data as Buffer)
+            };
 
-        GoogleDrive.drive.files.create({
-            auth: GoogleDrive.jwtToken,
-            requestBody,
-            media
-        }, (err, file) => {
-            if (err) {
-                response.status(200).json({
-                    action: 'upload',
-                    success: false,
-                    message: 'Can not upload files. Please try again later.'
-                });
-            }
-            response.status(200).json({
-                action: 'upload',
-                success: true,
-                message: 'Upload file successful!',
-                fileId: file.data.id
+            GoogleDrive.drive.files.create({
+                auth: GoogleDrive.jwtToken,
+                requestBody,
+                media
+            }, (err, file) => {
+                if (err) {
+                    resolve({
+                        action: 'upload',
+                        success: false,
+                        message: 'Can not upload files. Please try again later.'
+                    });
+                } else {
+                    resolve({
+                        action: 'upload',
+                        success: true,
+                        message: 'Upload file successful!',
+                        fileId: file.data.id
+                    });
+                }
             });
         });
     }
@@ -63,24 +65,18 @@ export class GoogleDrive {
             alt: 'media'
         };
         GoogleDrive.drive.files.get(options, {
-            responseType: 'stream'
+            responseType: 'arraybuffer'
         }, (err, file: any) => {
             if (err) {
                 console.log(err);
-                return;
+                response.status(200).json({ error: err.toString() });
             }
-            if(file) {
-                response.contentType(file.headers[`content-type`]);
-                const data: Stream = file.data;
-                data.on('data', (chunk) => {
-                    console.log(chunk);
-                }).on('end', () => {
-                    console.log(`Done!`);
-                    response.end();
-                }).on('error', err$ => {
-                    console.log(`Error: ${err$}`);
-                    response.end();
-                }).pipe(response);
+            if (file) {
+                const type = file.headers[`content-type`];
+                const prefix = 'data:' + type + ';base64,';
+                const base64 = file.data.toString('base64');
+                const data = prefix + base64;
+                response.status(200).json({ data });
             }
         });
     }
