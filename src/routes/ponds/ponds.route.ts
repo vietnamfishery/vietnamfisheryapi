@@ -1,8 +1,10 @@
+import { Pond } from './../../components/ponds/ponds';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User } from '../../components/users/users';
 import * as uuidv4 from 'uuid/v4';
+import { any } from 'bluebird';
 // import { LoginHelper } from '../../helpers/login-helpers';
 
 /**
@@ -13,7 +15,7 @@ import * as uuidv4 from 'uuid/v4';
  * @apiSuccess {String} type Json Type.
  */
 export class PondRoute extends BaseRoute {
-    public static path = '/user';
+    public static path = '/pond';
     private static instance: PondRoute;
     /**
      * @class PondRoute
@@ -33,6 +35,7 @@ export class PondRoute extends BaseRoute {
 
     private init() {
         logger.info('[PondRoute] Creating ping route.');
+        // this.router.get('/', this.getAllPondByUser);
     }
 
     private getPonds(req: Request, res: Response, next: NextFunction) {

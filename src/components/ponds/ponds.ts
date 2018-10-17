@@ -13,6 +13,7 @@ export class Pond extends BaseComponent {
         public pondDepth: number,
         public createdCost: number,
         public status: number,
+        public images: string,
         public createdBy: string,
         public updatedBy: string,
         public createdDate: Date,
