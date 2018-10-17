@@ -26,10 +26,26 @@ export abstract class BaseServices {
         });
     }
 
-    public getAll(): Promise<any[]> {
+    public getAll(query: any): Promise<any[]> {
+        if(query) {
+            return new Promise((resolve, reject) => {
+                this.models.findAll(query).then((obj: any[]) => {
+                    resolve(obj);
+                });
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                this.models.findAll().then((obj: any[]) => {
+                    resolve(obj);
+                });
+            });
+        }
+    }
+
+    insert(data: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.models.findAll().then((obj: any[]) => {
-                resolve(obj);
+            this.models.create(data).then((record: any) => {
+                resolve(record);
             });
         });
     }

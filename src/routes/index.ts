@@ -10,6 +10,7 @@ import { GetFileRoute } from './getFile';
 import { ProvinceRoute } from './province';
 import { DistrictRoute } from './district';
 import { WardRoute } from './ward';
+import { PondRoute } from './ponds';
 
 /**
  * / route
@@ -59,6 +60,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(ProvinceRoute.path, ProvinceRoute.router);
         this.router.use(DistrictRoute.path, DistrictRoute.router);
         this.router.use(WardRoute.path, WardRoute.router);
+        this.router.use(PondRoute.path, PondRoute.router);
         this.logPath();
     }
 

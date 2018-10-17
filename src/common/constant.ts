@@ -61,4 +61,14 @@ export enum folderDrive {
     uploadImageVNF = '1zh74DklADISZbcEYVix2nDDKd5wtt0-Z'
 }
 
-export const defaultImage: string = `1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2`;
+export enum defaultImage {
+    userImage = '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2',
+    pondImage = '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W'
+}
+
+export enum ActionServer {
+    GET = 'select',
+    GETAUTH = 'selectAuth',
+    INSERT = 'insert',
+    UPDATE = 'update'
+}

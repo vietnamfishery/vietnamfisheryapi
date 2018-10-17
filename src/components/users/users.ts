@@ -1,6 +1,5 @@
 import { Enscrypts } from '../../lib/';
-import { userOptions } from '../../models/objects';
-import { UserServives, PondUserRolesServices, UserRolesServices, DistrictServives, ProvinceServices, WardServices } from '../../services';
+import { UserServives } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
 import { actionUserServices } from '../../common';
@@ -30,6 +29,7 @@ export class User extends BaseComponent {
     ) {
         super();
         this.userServices = new UserServives();
+        this.services = this.userServices;
     }
 
     public register(entity: any): Promise<User> {
@@ -42,19 +42,6 @@ export class User extends BaseComponent {
                         entity[`roles`] = 0;
                         const query = this.getQuery(entity.action, this, entity.roles);
                         this.userServices.register(query).then((user: User) => {
-                            resolve(user);
-                        });
-                    });
-                });
-            });
-        }
-        if(entity.action === actionUserServices.ADD_CHILD) {
-            return new Promise((resolve, reject) => {
-                Enscrypts.getSalt(12).then(salt => {
-                    Enscrypts.hashing(this.password, salt).then(hash => {
-                        this.password = hash;
-                        this[`roles`] = entity.roles;
-                        this.userServices.registerChild(this).then((user: User) => {
                             resolve(user);
                         });
                     });
@@ -77,7 +64,7 @@ export class User extends BaseComponent {
                 where: {
                     username: this.username
                 },
-                fields: this.getUpdateFields(this)
+                fields: this.getFields(this)
             }).then(res => {
                 resolve(res);
             });
@@ -101,24 +88,12 @@ export class User extends BaseComponent {
                         where: {
                             username: this.username
                         },
-                        fields: this.getUpdateFields(this)
+                        fields: this.getFields(this)
                     }).then((res: any) => {
                         resolve(res);
                     });
                 });
             });
         });
-    }
-
-    private getUpdateFields(obj: User): string[] {
-        const that = this;
-        const arr: string[] = [];
-        for(const key in obj) {
-            if(that[key] != null && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function') {
-                const type$ = typeof that[key] !== 'object';
-                arr.push(key);
-            }
-        }
-        return arr;
     }
 }

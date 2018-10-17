@@ -17,7 +17,7 @@ export class District extends BaseComponent {
 
     getAllDistrict(): Promise<District[]> {
         return new Promise((resolve, reject) => {
-            this.districtServives.getAll().then((res: any[])  => {
+            this.districtServives.getAll(null).then((res: any[])  => {
                 resolve(res);
             });
         });

@@ -15,7 +15,7 @@ export class Province extends BaseComponent {
 
     getAllProvince(): Promise<Province[]> {
         return  new Promise((resolve, reject) => {
-            this.provinceServices.getAll().then((res: any[])  => {
+            this.provinceServices.getAll(null).then((res: any[])  => {
                 resolve(res);
             });
         });

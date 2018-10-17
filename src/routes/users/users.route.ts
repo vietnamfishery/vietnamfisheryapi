@@ -54,8 +54,9 @@ export class UserRoute extends BaseRoute {
     }
 
     private register = (req: Request, res: Response, next: NextFunction) => {
-        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted, action } = req.body;
-        const user: User = new User(uuidv4(),firstname,lastname,username.toLowerCase(),password,birdthday,email,phone,address,town,district,province,status,defaultImage,createdBy,createdDate,updatedBy,updatedDate,isDeleted);
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, roles, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
+        const action = actionUserServices.REGISTER;
+        const user: User = new User(uuidv4(),firstname,lastname,username.toLowerCase(),password,birdthday,email,phone,address,town,district,province,status,defaultImage.userImage,createdBy,createdDate,updatedBy,updatedDate,isDeleted);
         const entity: any = {
             action,
             roles
@@ -76,7 +77,8 @@ export class UserRoute extends BaseRoute {
     }
 
     private login = (req: Request, res: Response, next: NextFunction) => {
-        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, action, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
+        const { firstname, lastname, username, password, birdthday, email, phone, address, town, district, province, status, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = req.body;
+        const action = actionUserServices.LOGIN;
         const user: User = new User(null,firstname,lastname,username.toLowerCase(),password,birdthday,email,phone,address,town,district,province,status,'',createdBy,createdDate,updatedBy,updatedDate,isDeleted);
         user.login(action).then(user$ => {
             if(!user$) {
@@ -154,7 +156,8 @@ export class UserRoute extends BaseRoute {
     private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken = jwt.verify(token,constants.secret);
-        const { firstname, lastname, birthday, email, phone, town, district, province, images, action } = request.body;
+        const { firstname, lastname, birthday, email, phone, town, district, province, images } = request.body;
+        const action = request.files ? actionUserServices.UPLOAD_IMAGE : null;
         if(action === actionUserServices.UPLOAD_IMAGE) {
             GoogleDrive.upload(request,response,next).then((data: any) => {
                 if(data.fileId) {
@@ -211,7 +214,8 @@ export class UserRoute extends BaseRoute {
     }
 
     private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
-        const { oldPassword, action, newPassword } = request.body;
+        const { oldPassword, newPassword } = request.body;
+        const action = actionUserServices.CHANGEUSERPASSWORD;
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken: any = jwt.verify(token,constants.secret);
         const user = new User(null,null,null,decodetoken.username,newPassword,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
