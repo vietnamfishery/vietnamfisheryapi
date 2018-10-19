@@ -3,11 +3,9 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import * as jwt from 'jsonwebtoken';
-import { defaultImage, secret } from '../../common';
+import { defaultImage, secret, ActionServer } from '../../common';
 import * as uuidv4 from 'uuid/v4';
-import { Promise } from 'bluebird';
-import { pondOptions } from '../../models/objects';
-// import { LoginHelper } from '../../helpers/login-helpers';
+import { GoogleDrive } from '../../googleAPI/drive.google';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -38,39 +36,50 @@ export class PondRoute extends BaseRoute {
     private init() {
         logger.info('[PondRoute] Creating ping route.');
         this.router.get('/gets', this.getPonds);
+        // this.router.get('/get/:pondId', this.getPondById);
         this.router.post('/add', this.addPond);
         // this.router.post('/update', this.addPond);
     }
 
-    private getPonds(request: Request, response: Response, next: NextFunction) {
+    private async getPonds(request: Request, response: Response, next: NextFunction) {
         const token: string = request.headers.authorization.split('%')[1];
-        const decodetoken: any = jwt.verify(token,secret);
-        const { action } = request.headers;
+        const action = ActionServer.AUTH;
         const pond = new Pond();
-        pond.getAll(action, decodetoken.userId).then((ponds: any) => {
-            if(ponds) {
-                response.status(200).json({
-                    action,
-                    success: true,
-                    message: '',
-                    ponds
-                });
+        const decodetoken: any = jwt.verify(token, secret);
+        if(decodetoken) {
+            const pondResult = await pond.getAll(action, decodetoken.userId).catch(e => {
+                if(e) {
+                    response.status(200).json({
+                        action,
+                        success: false,
+                        message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
+                    });
+                }
+            });
+            const endData = [];
+            for(const e of pondResult) {
+                e[`images`] = await GoogleDrive.delayGetFileById(e.images);
+                endData.push(e);
             }
-        }).catch(e => {
-            if(e) {
-                response.status(200).json({
-                    action,
-                    success: false,
-                    message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
-                });
-            }
-        });
+            response.status(200).json({
+                action,
+                success: true,
+                ponds: endData
+            });
+        } else {
+            response.status(200).json({
+                action,
+                success: false,
+                message: 'Bạn không có quyền truy cập!'
+            });
+        }
     }
 
     private addPond(request: Request, response: Response, next: NextFunction) {
         const token: string = request.headers.authorization.split('%')[1];
         const decodetoken: any = jwt.verify(token,secret);
-        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, pondStatus, action } = request.body;
+        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, pondStatus } = request.body;
+        const action = ActionServer.INSERT;
         const pond = new Pond();
         pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondStatus, images || defaultImage.pondImage, pondLatitude, pondLongitude);
         pond.upsert(action).then((res: any) => {
@@ -91,4 +100,13 @@ export class PondRoute extends BaseRoute {
             }
         });
     }
+
+    // private getPondById(request: Request, response: Response, next: NextFunction) {
+    //     const token: string = request.headers.authorization.split('%')[1];
+    //     const decodetoken: any = jwt.verify(token,secret);
+    //     const { pondId } = request.params;
+    //     const pond = new Pond();
+    //     pond.setPondId = pondId;
+    //     pond.
+    // }
 }

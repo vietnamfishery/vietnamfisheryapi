@@ -5,6 +5,7 @@ import { Promise } from '../lib';
 import DBHelper from '../helpers/db-helpers';
 import { Sequelize, Transaction } from 'sequelize';
 import { UserRoles } from '../components/userRoles';
+import { ActionAssociateDatabase } from '../common';
 
 export class UserServives extends BaseServices {
     protected static optionsModel: IOptionsModelDB = userOptions;
@@ -91,17 +92,17 @@ export class UserServives extends BaseServices {
             include: [
                 {
                     model: (this.models as any).sequelize.models.province,
-                    as: 'pro',
+                    as: ActionAssociateDatabase.USER_2_PRO,
                     require: true
                 },
                 {
                     model: (this.models as any).sequelize.models.district,
-                    as: 'dis',
+                    as: ActionAssociateDatabase.USER_2_DIS,
                     require: true
                 },
                 {
                     model: (this.models as any).sequelize.models.ward,
-                    as: 'war',
+                    as: ActionAssociateDatabase.USER_2_WAR,
                     require: true
                 }
             ],

@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
 export function boughtbreedsToBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'boughtbreedsToBoughtBreedDetails',
+        as: ActionAssociateDatabase.BOUGHT_BREED_2_BOUGHT_BREED_DETAIL,
         foreignKey: {
             name: 'boughtBreedId',
             field: 'boughtBreedId'
@@ -12,7 +13,7 @@ export function boughtbreedsToBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, a
 
 export function boughtbreedsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'boughtbreedsToUsers',
+        as: ActionAssociateDatabase.BOUGHT_BREED_2_USER,
         foreignKey: {
             name: 'userId',
             field: 'userId'

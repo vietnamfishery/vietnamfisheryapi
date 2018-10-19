@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-
+import { Pond } from './../../components/ponds/ponds';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -46,7 +46,9 @@ export class PingRoute extends BaseRoute {
    * @param next {NextFunction} Execute the next method.
    */
   private async get (req: Request, res: Response, next: NextFunction) {
-    const request = req;
-    res.json({pong: 'pong'});
+    const pond = new Pond();
+    pond.test().then(res$ => {
+        res.json({res$});
+    });
   }
 }

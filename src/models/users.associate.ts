@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
 export function userToRolesUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'userToRolesUser',
+        as: ActionAssociateDatabase.USER_2_ROLE_USER,
         foreignKey: {
             name: 'userId',
             field: 'UserId'
@@ -12,7 +13,7 @@ export function userToRolesUser(thatmodel: Sequeliz.Model<{}, any>, model: Seque
 
 export function userToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'userToPond',
+        as: ActionAssociateDatabase.USER_2_POND,
         foreignKey: {
             name: 'userId',
             field: 'UserId'
@@ -22,7 +23,7 @@ export function userToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
 
 export function userToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'userToCoupon',
+        as: ActionAssociateDatabase.USER_2_COUPON,
         foreignKey: {
             name: 'userId',
             field: 'UserId'
@@ -32,7 +33,7 @@ export function userToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
 
 export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'userToBoughtBreeds',
+        as: ActionAssociateDatabase.USER_2_BOUGHT_BREED,
         foreignKey: {
             name: 'userId',
             field: 'UserId'
@@ -42,7 +43,7 @@ export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Se
 
 export function userToProvince(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'pro',
+        as: ActionAssociateDatabase.USER_2_PRO,
         foreignKey: {
             name: 'province',
             field: 'province'
@@ -52,7 +53,7 @@ export function userToProvince(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
 
 export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'dis',
+        as: ActionAssociateDatabase.USER_2_DIS,
         foreignKey: {
             field: 'district',
             name: 'district'
@@ -62,7 +63,7 @@ export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
 
 export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'war',
+        as: ActionAssociateDatabase.USER_2_WAR,
         foreignKey: {
             name: 'town',
             field: 'town'

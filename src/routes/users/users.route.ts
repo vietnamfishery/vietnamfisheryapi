@@ -95,6 +95,7 @@ export class UserRoute extends BaseRoute {
                         obj[`action`] = 'login';
                         obj[`success`] = true;
                         obj[`token`] = token;
+                        res.set('cookies', token);
                         res.json(obj);
                     } else {
                         res.json({

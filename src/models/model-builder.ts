@@ -82,7 +82,7 @@ export class ModelBuilder {
     }
 
     pondenvironmentAssociate(seasonModel: any) {
-        associations.pondenvironmentsToSeason(this.model, seasonModel);
+        associations.pondenvironmentoToSeason(this.model, seasonModel);
     }
 
     pondprepareAssociate(seasonModel: any, costsModel: any) {

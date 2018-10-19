@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
 export function takecareToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'takecareToUsingveterinary',
+        as: ActionAssociateDatabase.TAKE_CARE_2_USING_VETERINARY,
         foreignKey: {
             name: 'takeCareId',
             field: 'takeCareId'
@@ -12,7 +13,7 @@ export function takecareToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, mo
 
 export function takecareToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'takecareToUsingfoods',
+        as: ActionAssociateDatabase.TAKE_CARE_2_USING_FOOD,
         foreignKey: {
             name: 'takeCareId',
             field: 'takeCareId'
@@ -22,7 +23,7 @@ export function takecareToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: 
 
 export function takecareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'takecareToSeason',
+        as: ActionAssociateDatabase.TAKE_CARE_2_SEASON,
         foreignKey: {
             name: 'seasonId',
             field: 'seasonId'

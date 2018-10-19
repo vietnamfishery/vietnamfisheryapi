@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
 export function storagesToPondpreparedetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'storagesToPondpreparedetails',
+        as: ActionAssociateDatabase.STORAGE_2_POND_PREPARE_DETAILS,
         foreignKey: {
             name: 'storageId',
             field: 'storageId'
@@ -12,7 +13,7 @@ export function storagesToPondpreparedetails(thatmodel: Sequeliz.Model<{}, any>,
 
 export function storagesToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'storagesToMaterial',
+        as: ActionAssociateDatabase.STORAGE_2_MATERIAL,
         foreignKey: {
             name: 'storageId',
             field: 'storageId'
@@ -22,7 +23,7 @@ export function storagesToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Se
 
 export function storagesToPrices(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'storagesToPrices',
+        as: ActionAssociateDatabase.STORAGE_2_PRICE,
         foreignKey: {
             name: 'storageId',
             field: 'storageId'
@@ -32,7 +33,7 @@ export function storagesToPrices(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
 
 export function storagesToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'storagesToUsingfoods',
+        as: ActionAssociateDatabase.STORAGE_2_USING_FOOD,
         foreignKey: {
             name: 'storageId',
             field: 'storageId'
@@ -42,7 +43,7 @@ export function storagesToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: 
 
 export function storagesToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'storagesToUsingveterinary',
+        as: ActionAssociateDatabase.STORAGE_2_USING_VETERINARY,
         foreignKey: {
             name: 'storageId',
             field: 'storageId'

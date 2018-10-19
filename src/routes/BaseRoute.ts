@@ -10,7 +10,5 @@ export abstract class BaseRoute {
     public static path = '/api';
     protected router = Router();
 
-    constructor () {
-        // something with to do
-    }
+    constructor () {}
 }

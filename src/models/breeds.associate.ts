@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
-export function toBoughToBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function breedToBoughBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'toBoughToBreedDetails',
+        as: ActionAssociateDatabase.BREED_2_BOUGHT_BREED_DETAIL,
         foreignKey: {
             name: 'breedId',
             field: 'breedId'
@@ -12,7 +13,7 @@ export function toBoughToBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model:
 
 export function breedsToStockingDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: 'breedsToStockingDetails',
+        as: ActionAssociateDatabase.BREED_2_STOKING_DETAIL,
         foreignKey: {
             name: 'breedId',
             field: 'breedId'

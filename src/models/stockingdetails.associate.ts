@@ -1,8 +1,9 @@
 import * as Sequeliz from 'sequelize';
+import { ActionAssociateDatabase } from '../common';
 
 export function stockingdetailsToStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'stockingdetailsToStocking',
+        as: ActionAssociateDatabase.STOCKING_DETAILS_2_STOCKING,
         foreignKey: {
             name: 'stockingId',
             field: 'stockingId'
@@ -12,7 +13,7 @@ export function stockingdetailsToStocking(thatmodel: Sequeliz.Model<{}, any>, mo
 
 export function stockingdetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: 'stockingdetailsToBreeds',
+        as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED,
         foreignKey: {
             name: 'breedId',
             field: 'breedId'

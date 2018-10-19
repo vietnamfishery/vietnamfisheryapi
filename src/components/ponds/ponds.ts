@@ -5,8 +5,8 @@ import { ActionServer } from '../../common';
 
 export class Pond extends BaseComponent {
     private pondsServices: PondsServices;
-    private latitude: number = null;
-    private longitude: number = null;
+    private pondLatitude: number = null;
+    private pondLongitude: number = null;
     private pondId: string;
     private pondUUId: string;
     private userId: string;
@@ -23,7 +23,7 @@ export class Pond extends BaseComponent {
         this.services = this.pondsServices;
     }
 
-    private set setPondId(pondId) {
+    public set setPondId(pondId) {
         this.pondId = pondId ? pondId : null;
     }
 
@@ -64,11 +64,11 @@ export class Pond extends BaseComponent {
     }
 
     private set setLatitude(val) {
-        this.latitude = val;
+        this.pondLatitude = val;
     }
 
     private set setLongitude(val) {
-        this.longitude = val;
+        this.pondLongitude = val;
     }
 
     public setPond(pondId: string,pondUUId: string,userId: string,pondName: string,pondCreatedDate: Date,pondArea: number,pondDepth: number,createCost: number,status: number,images: string, latitude: number, longitude: number) {
@@ -80,7 +80,7 @@ export class Pond extends BaseComponent {
         this.setPondArea = pondArea;
         this.setPondDepth = pondDepth;
         this.setCreateCost = createCost;
-        this.setStatus = status;
+        this.setStatus = status - 0;
         this.setImages = images;
         this.setLatitude = latitude;
         this.setLongitude = longitude;
@@ -90,6 +90,20 @@ export class Pond extends BaseComponent {
         return new Promise((resolve, reject) => {
             this.pondsServices.getAll(this.getQuery(action, userId)).then((pond: any) => {
                 resolve(pond);
+            });
+        });
+    }
+
+    getById(action, pondId, userId): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.pondsServices.getById(this.getQuery(action, pondId));
+        });
+    }
+
+    test(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.pondsServices.test().then(res => {
+                resolve(res);
             });
         });
     }

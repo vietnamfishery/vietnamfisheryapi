@@ -6,6 +6,7 @@ import { Promise } from '../lib';
 export abstract class BaseServices {
     public conn: DBHelper;
     public models: Sequeliz.Model<{}, any>;
+    public Op: Sequeliz.Operators = Sequeliz.Op;
     constructor(protected optionsModel: IOptionsModelDB = {
         tableName: '',
         attributes: {},
@@ -46,6 +47,15 @@ export abstract class BaseServices {
         return new Promise((resolve, reject) => {
             this.models.create(data).then((record: any) => {
                 resolve(record);
+            });
+        });
+    }
+
+    test(): Promise<any> {
+        const md = this.models;
+        return new Promise((resolve, reject) => {
+            this.models.count().then(res => {
+                resolve(res);
             });
         });
     }

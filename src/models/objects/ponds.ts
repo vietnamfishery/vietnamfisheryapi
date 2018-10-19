@@ -39,6 +39,10 @@ export const pondOptions: any = _.merge({
             type: Sequelize.FLOAT,
             field: 'createCost'
         },
+        pondCreatedDate: {
+            type: Sequelize.DATE,
+            field: 'pondCreatedDate'
+        },
         status: {
             type: Sequelize.INTEGER(11),
             allowNull: false,
@@ -51,11 +55,11 @@ export const pondOptions: any = _.merge({
             field: 'images'
         },
         pondLatitude: {
-            type: Sequelize.FLOAT,
+            type: Sequelize.DOUBLE,
             field: 'pondLatitude'
         },
         pondLongitude: {
-            type: Sequelize.FLOAT,
+            type: Sequelize.DOUBLE,
             field: 'pondLongitude'
         },
         createdBy: {
