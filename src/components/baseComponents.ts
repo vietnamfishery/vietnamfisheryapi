@@ -14,13 +14,19 @@ export class BaseComponent {
                     limit: options.pagination.limit
                 } : null;
                 const order: any = options.order ? {order: options.order} : null;
-                return { ...data, ...pagination, ...order };
+                const attributes: any = options.attributes ? {attributes: options.attributes} : null;
+                return { ...data, ...pagination, ...order, ...attributes };
             case ActionServer.INSERT:
                 return options.data;
             case ActionServer.UPDATE:
                 const data$: any = {where: options.data.primary};
                 const updateFields: any = {fields: this.getFields(options.data)};
                 return { ...data$, ...updateFields };
+            case ActionServer.REGISTER:
+                return {
+                    data: options.data.that,
+                    roles: options.data.roles
+                };
             default:
                 return {};
         }
@@ -77,7 +83,7 @@ export class BaseComponent {
         const that = this;
         if(action === ActionServer.INSERT) {
             return new Promise((resolve, reject) => {
-                that.services.insert(this/*this.getQuery(action,this.getFields(that))*/).then((res: any) => {
+                that.services.insert(this).then((res: any) => {
                     resolve(res);
                 });
             });

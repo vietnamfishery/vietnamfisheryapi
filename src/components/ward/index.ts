@@ -1,1 +1,1 @@
-export * from './ward';
+export * from './Ward';

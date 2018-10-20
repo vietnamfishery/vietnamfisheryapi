@@ -63,9 +63,9 @@ export enum ActionServer {
     INSERT = 'insert',
     UPDATE = 'update',
     REGISTER = 'register',
+    SIGNIN = 'login',
+    SIGNOUT = 'logout',
     ADD_EMPLOYEE = 'registerEmpployees',
-    LOGIN = 'login',
-    LOGOUT = 'logout',
     UPDATEPROFILE = 'updateMyProfile',
     DELETE = 'delete',
     USERINFO = 'getUserInfo',
@@ -179,10 +179,11 @@ export interface IOptionQuery {
     action: ActionServer;
     data?: {
         primary?: object; // xác định thực thế chịu tác dụng của hành động
-    };
+    } | any;
     pagination?: {
         offset: number,
         limit: number
     };
     order?: Array<string|sortType>;
+    attributes?: string;
 }

@@ -54,7 +54,19 @@ export abstract class BaseServices {
     test(): Promise<any> {
         const md = this.models;
         return new Promise((resolve, reject) => {
-            this.models.count().then(res => {
+            this.models.findAndCountAll({
+                where: {
+                    pondName: {
+                        [this.Op.like]: '%thẻ%'
+                    },
+                    [this.Op.and]: {
+                        pondUUId: {
+                            [this.Op.like]: '%2026%'
+                        }
+                    }
+                },
+                attributes: ['pondName']
+            }).then(res => {
                 resolve(res);
             });
         });

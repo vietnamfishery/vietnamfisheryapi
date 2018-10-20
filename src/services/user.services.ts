@@ -17,15 +17,15 @@ export class UserServives extends BaseServices {
         const sequeliz: Sequelize = DBHelper.sequelize;
         return new Promise((resolve, reject) => {
             sequeliz.transaction({autocommit: true},(t: Transaction) => {
-                return this.models.create(entity.user);
+                return this.models.create(entity.data);
             }).catch(e => {
                 return resolve(e);
             }).then((user) => {
                 if(user) {
-                    const userRoles: UserRoles = new UserRoles(user.userId, entity.roles);
+                    const userRoles: UserRoles = new UserRoles();
+                    userRoles.setUserId = user.userId;
+                    userRoles.setRoles = entity.roles;
                     return userRoles.userRolesServices.models.create(userRoles);
-                } else {
-                    return;
                 }
             }).catch(e => {
                 return resolve(e);
