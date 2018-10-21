@@ -6,10 +6,9 @@ import * as uuidv4 from 'uuid/v4';
 // import { LoginHelper } from '../../helpers/login-helpers';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
-import * as constants from '../../common';
 import { GoogleDrive } from '../../googleAPI/drive.google';
-import { ActionServer, defaultImage } from '../../common';
-
+import { ActionServer, secret, defaultImage } from '../../common';
+import { Authentication } from '../../helpers/login-helpers';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -20,6 +19,7 @@ import { ActionServer, defaultImage } from '../../common';
 export class UserRoute extends BaseRoute {
     public static path = '/user';
     private static instance: UserRoute;
+    private user: User = new User();
     /**
      * @class UserRoute
      * @constructor
@@ -42,32 +42,30 @@ export class UserRoute extends BaseRoute {
         // add index page route
         this.router.post('/register', this.signup);
         this.router.post('/login', this.login);
-        this.router.get('/get', this.getUserInfo);
-        // this.router.post('/update', this.updateUserProfile);
-        // this.router.post('/update/password', this.updateUserPassword);
+        this.router.get('/get', Authentication.isLogin, this.getUserInfo);
+        this.router.put('/update', Authentication.isLogin, this.updateUserProfile);
+        this.router.put('/update/password', Authentication.isLogin, this.updateUserPassword);
         // this.router.get('/login-ui', function(req, res) {
         //     res.redirect((req.headers as any).origin);
         // });
     }
 
     private signup = (req: Request, res: Response, next: NextFunction) => {
-        const action = ActionServer.INSERT;
+        const action = ActionServer.REGISTER;
         const { firstname, lastname, username, password } = req.body;
-        const user: User = new User();
-        user.setFirstname = firstname;
-        user.setLastname = lastname;
-        user.setUsername = username;
-        user.setPassword = password;
-        user.register(action).then((value: any) => {
+        this.user.setUserUUId = uuidv4();
+        this.user.setFirstname = firstname;
+        this.user.setLastname = lastname;
+        this.user.setUsername = username;
+        this.user.setPassword = password;
+        this.user.setImages = defaultImage.userImage;
+        this.user.register(action).then((value: any) => {
             if(value.errors) {
                 res.status(200).json({
-                    action,
-                    success: false
+                    success: false,
+                    message: 'Lỗi! Xin vui lòng thử lại.'
                 });
             } else {
-                const obj: any = value;
-                obj[`action`] = action;
-                obj[`success`] = true;
                 res.json({
                     success: true,
                     message: 'Đăng ký thành công!'
@@ -77,12 +75,11 @@ export class UserRoute extends BaseRoute {
     }
 
     private login = (req: Request, res: Response, next: NextFunction) => {
-        const action = ActionServer.SIGNIN;
+        const action = ActionServer.GET;
         const { username, password } = req.body;
-        const user: User = new User();
-        user.setUsername = username;
-        user.setPassword = password;
-        user.login(action).then((user$: any) => {
+        this.user.setUsername = username;
+        this.user.setPassword = password;
+        this.user.login(action).then((user$: any) => {
             if(!user$) {
                 res.json({
                     action: 'login',
@@ -90,10 +87,10 @@ export class UserRoute extends BaseRoute {
                     message: 'Sai tài khoản, mật khẩu, vui long thử lại!'
                 });
             } else {
-                Enscrypts.compare(user.getPassword, user$.password).then((isMatch: boolean) => {
+                Enscrypts.compare(this.user.getPassword, user$.password).then((isMatch: boolean) => {
                     if(isMatch) {
                         delete user$.password;
-                        const token = jwt.sign(user$, constants.secret);
+                        const token = Enscrypts.hashingSync('vietnamfishery', Enscrypts.getSaltSync(Math.floor((Math.random() * 12) + 1))) + '100%<3' + jwt.sign(user$, secret);
                         res.json({
                             success: true,
                             token,
@@ -121,16 +118,15 @@ export class UserRoute extends BaseRoute {
     }
 
     private getUserInfo = (request: Request, response: Response) => {
-        const token: string = request.headers.authorization.split('%')[1];
-        const decodetoken: any = jwt.verify(token,constants.secret);
-        const user: User = new User();
-        user.setUsername = decodetoken.username;
         const action = ActionServer.GET;
-        user.getUserInfo(action).then(user$ => {
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        this.user.setUsername = decodeToken.username;
+        this.user.getUserInfo(action).then(user$ => {
             if(!user$) {
                 response.json({
-                    action: 'login',
-                    success: false
+                    success: false,
+                    message: 'Có lỗi xảy ra vui lòng thử lại!'
                 });
             } else {
                 delete user$[`password`];
@@ -138,101 +134,101 @@ export class UserRoute extends BaseRoute {
             }
         }).catch(err => {
             response.json({
-                action: 'login',
-                success: false
+                success: false,
+                message: 'Có lỗi xảy ra vui lòng thử lại!'
             });
         });
     }
 
-    // private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
-    //     const token: string = request.headers.authorization.split('%')[1];
-    //     const decodetoken = jwt.verify(token,constants.secret);
-    //     const { firstname, lastname, birthday, email, phone, town, district, province, images } = request.body;
-    //     const action = request.files ? actionUserServices.UPLOAD_IMAGE : null;
-    //     if(action === actionUserServices.UPLOAD_IMAGE) {
-    //         GoogleDrive.upload(request,response,next).then((data: any) => {
-    //             if(data.fileId) {
-    //                 const user = new User();
-    //                 user.updateMyProfile().then(res => {
-    //                     if(Array.isArray(res)) {
-    //                         response.status(200).json({
-    //                             action,
-    //                             success: true,
-    //                             fileId: data.fileId
-    //                         });
-    //                     } else {
-    //                         response.status(200).json({
-    //                             action,
-    //                             success: false
-    //                         });
-    //                     }
-    //                 }).catch(e => {
-    //                     response.status(200).json({
-    //                         action,
-    //                         success: false,
-    //                         error: e
-    //                     });
-    //                 });
-    //             } else {
-    //                 response.status(200).json({
-    //                     action,
-    //                     success: false
-    //                 });
-    //             }
-    //         });
-    //     } else {
-    //         const user = new User();
-    //         user.updateMyProfile().then(res => {
-    //             if(Array.isArray(res)) {
-    //                 response.status(200).json({
-    //                     action,
-    //                     success: true
-    //                 });
-    //             } else {
-    //                 response.status(200).json({
-    //                     action,
-    //                     success: false
-    //                 });
-    //             }
-    //         }).catch(e => {
-    //             response.status(200).json({
-    //                 action,
-    //                 success: false,
-    //                 error: e
-    //             });
-    //         });
-    //     }
-    // }
+    private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
+        const action = ActionServer.UPDATE;
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodetoken: any = Authentication.detoken(token);
+        const { firstname, lastname, birthday, email, phone, town, district, province, images } = request.body;
+        this.user.setUser(null,firstname,lastname,decodetoken.username,null,birthday,email,phone,null,town,district,province,null,images,null,null,null,null,null);
+        if(request.files) {
+            GoogleDrive.upload(request,response,next).then((data: any) => {
+                if(data.fileId) {
+                    this.user.setImages = data.fileId;
+                    this.user.updateMyProfile(action).then(res => {
+                        if(Array.isArray(res)) {
+                            response.status(200).json({
+                                success: true,
+                                fileId: data.fileId,
+                                message: 'Hồ sơ đã được cập nhật.'
+                            });
+                        } else {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
+                    });
+                        }
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!',
+                            error: e
+                        });
+                    });
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
+                    });
+                }
+            });
+        } else {
+            this.user.updateMyProfile(action).then(res => {
+                if(Array.isArray(res)) {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Hồ sơ đã được cập nhật.'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
+                    });
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!',
+                    error: e
+                });
+            });
+        }
+    }
 
-    // private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
-    //     const { oldPassword, newPassword } = request.body;
-    //     const action = actionUserServices.CHANGEUSERPASSWORD;
-    //     const token: string = request.headers.authorization.split('%')[1];
-    //     const decodetoken: any = jwt.verify(token,constants.secret);
-    //     const user = new User();
-    //     user.getUserInfo().then((data: any) => {
-    //         Enscrypts.compare(oldPassword, data.password).then((isMatch: boolean) => {
-    //             if(!isMatch) {
-    //                 response.status(200).json({
-    //                     action,
-    //                     success: false,
-    //                     message: 'Sai mật khẩu cũ!'
-    //                 });
-    //             } else {
-    //                 user.changePassword().then((data$: any) => {
-    //                     response.status(200).json({
-    //                         action,
-    //                         success: true
-    //                     });
-    //                 }).catch(e => {
-    //                     response.status(200).json({
-    //                         action,
-    //                         success: false,
-    //                         error: e
-    //                     });
-    //                 });
-    //             }
-    //         });
-    //     });
-    // }
+    private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
+        const action = ActionServer.UPDATE;
+        const { oldPassword, newPassword } = request.body;
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        this.user.setUsername = decodeToken.username;
+        this.user.getUserInfo(ActionServer.GET).then((data: any) => {
+            Enscrypts.compare(oldPassword, data.password).then((isMatch: boolean) => {
+                if(!isMatch) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Sai mật khẩu cũ!'
+                    });
+                } else {
+                    this.user.setPassword = newPassword;
+                    this.user.updateMyProfile(action).then((data$: any) => {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thực hiện thành công!'
+                        });
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Có lỗi xảy ra vui lòng thử lại!',
+                            error: e
+                        });
+                    });
+                }
+            });
+        });
+    }
 }

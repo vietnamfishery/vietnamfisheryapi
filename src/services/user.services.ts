@@ -106,7 +106,7 @@ export class UserServives extends BaseServices {
                     require: true
                 }
             ],
-            attributes: [`userId`, `userUUId`, `firstname`, `lastname`, `username`, `password`, `birthday`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`, `pro.name`,`dis.name`, `war.name`]
+            attributes: [`userId`, `userUUId`, `firstname`, `lastname`, `username`, `password`, `birthday`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`]
         };
         return { ...userQuery, ...include };
     }

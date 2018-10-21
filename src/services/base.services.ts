@@ -51,22 +51,35 @@ export abstract class BaseServices {
         });
     }
 
+    update(entity: any, options: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.models.update(entity, options).then((res: any) => {
+                resolve(res);
+            });
+        });
+    }
+
     test(): Promise<any> {
         const md = this.models;
         return new Promise((resolve, reject) => {
-            this.models.findAndCountAll({
+            const query: any = {
                 where: {
-                    pondName: {
-                        [this.Op.like]: '%thẻ%'
-                    },
-                    [this.Op.and]: {
-                        pondUUId: {
-                            [this.Op.like]: '%2026%'
+                    [this.Op.or]: [
+                        {
+                            pondUUId: {
+                                [this.Op.like]: '%43d1%'
+                            }
+                        },
+                        {
+                            pondName: {
+                                [this.Op.like]: '%thẻ%',
+                            },
                         }
-                    }
+                    ],
                 },
                 attributes: ['pondName']
-            }).then(res => {
+            };
+            this.models.findAll(query).then(res => {
                 resolve(res);
             });
         });

@@ -1,8 +1,11 @@
 import { actionUserServices, ActionServer, IOptionQuery } from '../common';
 import { Promise } from '../lib';
+import { BaseServices } from '../services';
 
 export class BaseComponent {
-    protected services: any;
+    protected services: BaseServices;
+    protected primary: object;
+    protected foreignKey: any;
     public constructor() {}
 
     protected createQuery(options: IOptionQuery) {
@@ -19,7 +22,7 @@ export class BaseComponent {
             case ActionServer.INSERT:
                 return options.data;
             case ActionServer.UPDATE:
-                const data$: any = {where: options.data.primary};
+                const data$: any = {where: options.primary};
                 const updateFields: any = {fields: this.getFields(options.data)};
                 return { ...data$, ...updateFields };
             case ActionServer.REGISTER:
@@ -75,18 +78,46 @@ export class BaseComponent {
         return arr;
     }
 
-    // public getWithForeignkey(obj: any) {
-
-    // }
-
     upsert(action: string): Promise<any> {
-        const that = this;
+        const that: any = this;
         if(action === ActionServer.INSERT) {
             return new Promise((resolve, reject) => {
-                that.services.insert(this).then((res: any) => {
+                this.services.insert(this).then((res: any) => {
                     resolve(res);
                 });
             });
         }
+        if(action === ActionServer.UPDATE) {
+            const query = this.createQuery({
+                action,
+                primary: that.getPrimary,
+                data: this
+            });
+            return new Promise((resolve, reject) => {
+                this.services.update(this, query).then((res: any) => {
+                    resolve(res);
+                });
+            });
+        }
+    }
+
+    gets(action: any, options?: object): Promise<any> {
+        const that: any = this;
+        const query = that.createQuery({
+            action
+        });
+        return new Promise((resolve, reject) => {
+            this.services.getAll(query).then(res => {
+                resolve(res);
+            });
+        });
+    }
+
+    getById(id: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.services.getById(id).then(res => {
+                resolve(res);
+            });
+        });
     }
 }

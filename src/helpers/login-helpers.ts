@@ -1,4 +1,43 @@
-// import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { secret, ActionServer } from '../common';
+import { UserServives } from '../services';
+import { User } from '../components/users';
+import { Enscrypts } from '../lib';
+
+export class Authentication {
+    private userServices: UserServives = new UserServives();
+    private user: User = new User();
+    constructor() {}
+    static isLogin(request: Request, response: Response, next: NextFunction) {
+        const verifyKey = request.headers.authorization.split('100%<3')[0];
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        if(!Enscrypts.compareSync('vietnamfishery', verifyKey)) {
+            response.status(200).json({
+                success: false,
+                message: 'Bạn cần đăng nhập để tiếp tục.'
+            });
+        } else {
+            jwt.verify(token,secret,(err, data) => {
+                if(err) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Bạn cần đăng nhập để tiếp tục.'
+                    });
+                } else {
+                    next();
+                }
+            });
+        }
+    }
+
+    static detoken(token: string) {
+        return jwt.decode(token,{json: true});
+    }
+}
+/**
+ * Phần authen có thể dùng cho MEAN Stack
+ */
 // import * as passport from 'passport';
 // import * as localStrategy from 'passport-local';
 // const LocalStrategy = localStrategy.Strategy;

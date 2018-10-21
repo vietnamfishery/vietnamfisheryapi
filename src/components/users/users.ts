@@ -30,6 +30,12 @@ export class User extends BaseComponent {
         super();
         this.userServices = new UserServives();
         this.services = this.userServices;
+        this.primary = {
+            username: this.getUsername
+        };
+        this.foreignKey = [
+
+        ];
     }
 
     public set setUserUUId(userUUId: string) {
@@ -276,14 +282,15 @@ export class User extends BaseComponent {
         });
     }
 
-    public updateMyProfile(): Promise<User> {
+    public updateMyProfile(action): Promise<User> {
+        const query = this.createQuery({
+            action,
+            primary: {
+                username: this.getUsername
+            }
+        });
         return new Promise((resolve, reject) => {
-            this.userServices.updateMyProfile(this, {
-                where: {
-                    username: this.username
-                },
-                fields: this.getFields(this)
-            }).then(res => {
+            this.userServices.updateMyProfile(this, query).then(res => {
                 resolve(res);
             });
         });

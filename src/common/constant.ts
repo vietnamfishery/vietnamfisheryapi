@@ -62,14 +62,11 @@ export enum ActionServer {
     AUTH = 'authorzation',
     INSERT = 'insert',
     UPDATE = 'update',
+    DELETE = 'delete',
     REGISTER = 'register',
     SIGNIN = 'login',
     SIGNOUT = 'logout',
     ADD_EMPLOYEE = 'registerEmpployees',
-    UPDATEPROFILE = 'updateMyProfile',
-    DELETE = 'delete',
-    USERINFO = 'getUserInfo',
-    CHANGEUSERPASSWORD = 'updateUserPassword',
     UPLOAD_IMAGE = 'uploadImage'
 }
 
@@ -177,9 +174,8 @@ export enum sortType {
 
 export interface IOptionQuery {
     action: ActionServer;
-    data?: {
-        primary?: object; // xác định thực thế chịu tác dụng của hành động
-    } | any;
+    data?: any;
+    primary?: object; // xác định thực thế chịu tác dụng của hành động
     pagination?: {
         offset: number,
         limit: number

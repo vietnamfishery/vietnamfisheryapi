@@ -1,7 +1,8 @@
 import { BaseComponent } from '../baseComponents';
 import { PondsServices } from '../../services';
 import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
+import { ActionServer, IOptionQuery } from '../../common';
+import { merge } from 'lodash';
 
 export class Pond extends BaseComponent {
     private pondsServices: PondsServices;
@@ -21,6 +22,9 @@ export class Pond extends BaseComponent {
         super();
         this.pondsServices = new PondsServices();
         this.services = this.pondsServices;
+        this.primary = {
+            pondId: this.getPondId
+        };
     }
 
     public set setPondId(pondId) {
@@ -71,7 +75,7 @@ export class Pond extends BaseComponent {
         this.pondLongitude = val;
     }
 
-    public setPond(pondId: string,pondUUId: string,userId: string,pondName: string,pondCreatedDate: Date,pondArea: number,pondDepth: number,createCost: number,status: number,images: string, latitude: number, longitude: number) {
+    public setPond(pondId: string, pondUUId: string, userId: string, pondName: string, pondCreatedDate: Date, pondArea: number, pondDepth: number, createCost: number, status: number, images: string, latitude: number, longitude: number) {
         this.setPondId = pondId;
         this.setPondUUId = pondUUId;
         this.setUserId = userId;
@@ -80,7 +84,7 @@ export class Pond extends BaseComponent {
         this.setPondArea = pondArea;
         this.setPondDepth = pondDepth;
         this.setCreateCost = createCost;
-        this.setStatus = status - 0;
+        this.setStatus = status || status === 0 ? status * 1 : null;
         this.setImages = images;
         this.setLatitude = latitude;
         this.setLongitude = longitude;
@@ -134,6 +138,18 @@ export class Pond extends BaseComponent {
         return this.pondLongitude;
     }
 
+    public get getPrimary(): object {
+        return {
+            pondId: this.getPondId
+        };
+    }
+
+    public get getForgeinKey(): object {
+        return {
+            userId: this.getUserId
+        };
+    }
+
     public getAll(action, userId): Promise<any> {
         return new Promise((resolve, reject) => {
             this.pondsServices.getAll(this.getQuery(action, userId)).then((pond: any) => {
@@ -142,11 +158,24 @@ export class Pond extends BaseComponent {
         });
     }
 
-    getById(action, pondId, userId): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.pondsServices.getById(this.getQuery(action, pondId));
-        });
+    createQuery(options: IOptionQuery) {
+        switch (options.action) {
+            case ActionServer.GET:
+                return merge(super.createQuery(options),{
+                    where: this.getForgeinKey
+                },{
+                    where: this.getPrimary
+                });
+            default:
+                return super.createQuery(options);
+        }
     }
+
+    // getById(action, pondId, userId): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         this.pondsServices.getById(this.getQuery(action, pondId));
+    //     });
+    // }
 
     test(): Promise<any> {
         return new Promise((resolve, reject) => {
