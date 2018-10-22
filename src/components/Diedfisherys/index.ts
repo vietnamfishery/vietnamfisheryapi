@@ -1,1 +1,1 @@
-export * from './Diedfisherys';
+export * from './DiedFisherys';

@@ -7,10 +7,6 @@ import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 
 /**
- * @api {get} /ping Ping Request customer object
- * @apiName Ping
- * @apiGroup Ping
- *
  * @apiSuccess {String} type Json Type.
  */
 export class StorageRoute extends BaseRoute {
@@ -70,7 +66,7 @@ export class StorageRoute extends BaseRoute {
         const decodetoken: any = Authentication.detoken(token);
         this.storage.setUserId = decodetoken.userId;
         this.storage.gets(action).then((storages: any[]) => {
-            if (!storage) {
+            if (!storages) {
                 response.status(200).json({
                     success: false,
                     message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
@@ -95,7 +91,7 @@ export class StorageRoute extends BaseRoute {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         this.storage.setUserId = decodetoken.userId;
-        this.storage.getById(pondId).then((storage: any) => {
+        this.storage.getById(storageId).then((storage: any) => {
             if (!storage) {
                 response.status(200).json({
                     success: false,
