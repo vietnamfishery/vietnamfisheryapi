@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
 export const couponOptions: any = _.merge({
-    tableName: 'coupon'
+    tableName: 'coupons'
 },
 {
     attributes: {
