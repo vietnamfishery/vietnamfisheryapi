@@ -37,7 +37,7 @@ export class SeasonRoute extends BaseRoute {
         logger.info('[SeasonRoute] Creating season route.');
         this.router.post('/add', Authentication.isLogin, this.addSeason);
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
-        this.router.get('/get/:pondId', Authentication.isLogin, this.getSeasonById);
+        this.router.get('/get/:seasonId', Authentication.isLogin, this.getSeasonById);
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
     }
 
@@ -49,7 +49,7 @@ export class SeasonRoute extends BaseRoute {
             if(res) {
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm ao thành công!'
+                    message: 'Thêm vụ thành công!'
                 });
             }
         }).catch(e => {

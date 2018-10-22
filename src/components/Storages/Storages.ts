@@ -7,6 +7,7 @@ export class Storages extends BaseComponent {
     private storegeServices: StoregeServices;
     private storageId: number;
     private storageUUId: string;
+    private userId: number;
     private unitName: string;
     private unitType: number;
     private description: string;
@@ -24,6 +25,10 @@ export class Storages extends BaseComponent {
         this.storageUUId = storageUUId;
     }
 
+    public set setUserId(userId) {
+        this.userId = userId;
+    }
+
     public set setUnitName(unitName) {
         this.unitName = unitName;
     }
@@ -36,9 +41,10 @@ export class Storages extends BaseComponent {
         this.description = description;
     }
 
-    public setStorages(storageId: number, storageUUId: string, unitName: string, unitType: number, description: string) {
+    public setStorages(storageId: number, storageUUId: string, userId: number, unitName: string, unitType: number, description: string) {
         this.setStorageId = storageId;
         this.setStorageUUId = storageUUId;
+        this.setUserId = userId;
         this.setUnitName = unitName;
         this.setUnitType = unitType;
         this.setDescription = description;
@@ -50,6 +56,10 @@ export class Storages extends BaseComponent {
 
     public get getStorageUUId(): string {
         return this.storageUUId;
+    }
+
+    public get getUserId(): number {
+        return this.userId;
     }
 
     public get getUnitName(): string {
