@@ -45,11 +45,6 @@ export const breedOptions: any = _.merge({
             },
             field: 'createdDate'
         },
-        updatedBy: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            field: 'updatedBy'
-        },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
