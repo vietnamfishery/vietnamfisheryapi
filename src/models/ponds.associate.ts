@@ -30,3 +30,13 @@ export function pondsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
         }
     });
 }
+
+export function pondsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+        foreignKey: {
+            name: 'pondId',
+            field: 'pondId'
+        }
+    });
+}

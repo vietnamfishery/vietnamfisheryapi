@@ -4,24 +4,24 @@ import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
 export const materialOptions: any = _.merge({
-    tableName: 'material'
+    tableName: 'materials'
 },
 {
     attributes: {
+        materialId : {
+            autoIncrement: true,
+            type: Sequelize.BIGINT(20),
+            primaryKey: true,
+            field: 'materialId'
+        },
         materialUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             field: 'materialUUId'
         },
-        couponId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'couponId'
-        },
-        storageId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'storageId'
+        itemName: {
+            type: Sequelize.STRING(100),
+            field: 'itemName'
         },
         provider: {
             type: Sequelize.STRING(100),

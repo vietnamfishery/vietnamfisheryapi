@@ -113,6 +113,7 @@ export enum ActionAssociateDatabase {
     POND_2_POND_USER_ROLE = 'pondUserRoles',
     POND_2_SEASON = 'pondsToSeason',
     POND_2_USER = 'ponds',
+    POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
     //
     POND_USER_ROLE_2_USER_ROLE = 'pondUserRoles',
     POND_USER_ROLE_2_POND = 'pondUserRolesPond',
@@ -120,6 +121,9 @@ export enum ActionAssociateDatabase {
     PRICE_2_STORAGE = 'prices',
     //
     PROVINCE_2_USER = 'provinceToUser',
+    //
+    SEASON_AND_POND_2_SEASON = 'Seasons',
+    SEASON_AND_POND_2_POND = 'Ponds',
     //
     SEASON_2_POND = 'seasons',
     SEASON_2_POND_DIARY = 'seasonToPonddiary',
@@ -130,6 +134,7 @@ export enum ActionAssociateDatabase {
     SEASON_2_POND_ENVIRONMENT = 'seasonToPondenvironments',
     SEASON_2_STOCKING = 'seasonToStocking',
     SEASON_2_HARVETS = 'seasonToHarvest',
+    SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
     //
     STOCKING_2_STOCKING_DETAILS = 'stockingToStockingdetails',
     STOCKING_2_SEASON = 'stockings',

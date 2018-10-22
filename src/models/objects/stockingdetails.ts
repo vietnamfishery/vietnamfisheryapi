@@ -24,10 +24,6 @@ export const stockingdetailOptions: any = _.merge({
             primaryKey: true,
             field: 'stockingId'
         },
-        costOfStocking: {
-            type: Sequelize.FLOAT,
-            field: 'costOfStocking'
-        },
         stockingQuantity: {
             type: Sequelize.BIGINT(20),
             field: 'stockingQuantity'

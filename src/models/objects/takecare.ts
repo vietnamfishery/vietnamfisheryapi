@@ -19,9 +19,9 @@ export const takecareOptions: any = _.merge({
             unique: true,
             field: 'takeCareUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            field: 'seasonAndPondId'
         },
         takeCareName: {
             type: Sequelize.STRING(100),

@@ -53,7 +53,8 @@ export class PondRoute extends BaseRoute {
             if(res) {
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm ao thành công!'
+                    message: 'Thêm ao thành công!',
+                    pond: res
                 });
             }
         }).catch(e => {

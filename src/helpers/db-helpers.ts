@@ -184,7 +184,7 @@ export default class DBHelper {
     public get pondsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`userOptions`]);
+        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`userOptions`], this.models[`seasonandpondOptions`]);
         return md;
     }
 
@@ -263,7 +263,18 @@ export default class DBHelper {
             this.models[`diedfisherysOptions`],
             this.models[`pondenvironmentsOptions`],
             this.models[`stockingOptions`],
-            this.models[`harvestdetailOptions`]
+            this.models[`harvestdetailOptions`],
+            this.models[`seasonandpondOptions`]
+        );
+        return md;
+    }
+
+    public get seasonAndPondModel() {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.seasonAndPondAssocite(
+            this.models[`seasonOptions`],
+            this.models[`pondOptions`]
         );
         return md;
     }

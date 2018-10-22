@@ -1,11 +1,11 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
-import { seasonOptions } from '../models/objects';
+import { seasonandpondOptions } from '../models/objects';
 
-export class SeasonServices extends BaseServices {
-    protected static optionsModel: IOptionsModelDB = seasonOptions;
+export class SeasonAndPondServices extends BaseServices {
+    protected static optionsModel: IOptionsModelDB = seasonandpondOptions;
     constructor() {
-        super(SeasonServices.optionsModel);
-        this.models = this.conn.seasonModel;
+        super(SeasonAndPondServices.optionsModel);
+        this.models = this.conn.seasonAndPondModel;
     }
 }

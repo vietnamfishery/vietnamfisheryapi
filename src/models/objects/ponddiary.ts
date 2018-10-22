@@ -19,9 +19,9 @@ export const ponddiaryOptions: any = _.merge({
             unique: true,
             field: 'pondDiaryUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            field: 'seasonAndPondId'
         },
         pondId: {
             type: Sequelize.BIGINT(20),

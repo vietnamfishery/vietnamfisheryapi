@@ -90,3 +90,13 @@ export function seasonToHarvest(thatmodel: Sequeliz.Model<{}, any>, model: Seque
         }
     });
 }
+
+export function seasonToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.SEASON_2_SEASON_AND_POND,
+        foreignKey: {
+            name: 'seasonId',
+            field: 'seasonId'
+        }
+    });
+}

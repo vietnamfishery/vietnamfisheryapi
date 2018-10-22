@@ -13,10 +13,10 @@ export const usingveterinaryOptions: any = _.merge({
             unique: true,
             field: 'usingVeterinaryUUId'
         },
-        storageId: {
+        materialId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'storageId'
+            field: 'materialId'
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),

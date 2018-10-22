@@ -19,9 +19,9 @@ export const pondenvironmentsOptions: any = _.merge({
             unique: true,
             field: 'pondEnvironmentUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            field: 'seasonAndPondId'
         },
         oxyMorning: {
             type: Sequelize.FLOAT,

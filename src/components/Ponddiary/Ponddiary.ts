@@ -109,7 +109,8 @@ export class PondDiary extends BaseComponent {
 
     public get getForgeinKey(): object {
         return {
-            pondId: this.getPondId
+            pondId: this.getPondId,
+            seasonId: this.getSeasonId
         };
     }
 }

@@ -19,9 +19,9 @@ export const seasonOptions: any = _.merge({
             unique: true,
             field: 'seasonUUId'
         },
-        pondId: {
+        userId: {
             type: Sequelize.BIGINT(20),
-            field: 'pondId'
+            field: 'userId'
         },
         seasonName: {
             type: Sequelize.STRING(100),

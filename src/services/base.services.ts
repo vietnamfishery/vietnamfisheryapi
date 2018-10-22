@@ -64,6 +64,9 @@ export abstract class BaseServices {
         return new Promise((resolve, reject) => {
             const query: any = {
                 where: {
+                    pondName: {
+                        [this.Op.like]: '%thẻ%',
+                    },
                     [this.Op.or]: [
                         {
                             pondUUId: {

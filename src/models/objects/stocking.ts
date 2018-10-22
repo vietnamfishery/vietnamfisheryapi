@@ -19,9 +19,9 @@ export const stockingOptions: any = _.merge({
             unique: true,
             field: 'stockingUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            field: 'seasonAndPondId'
         },
         notes: {
             type: Sequelize.TEXT,

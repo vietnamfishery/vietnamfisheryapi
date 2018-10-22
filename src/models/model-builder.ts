@@ -95,10 +95,11 @@ export class ModelBuilder {
         associations.pondpreparedetailsToStorages(this.model, storagesModel);
     }
 
-    pondsAssociate(ponduserrolesModel: any, seasonModel: any, usersModel: any) {
+    pondsAssociate(ponduserrolesModel: any, seasonModel: any, usersModel: any, seasonandpondModel: any) {
         associations.pondsToponduserroles(this.model, ponduserrolesModel);
         associations.pondsToSeason(this.model, seasonModel);
         associations.pondsToUsers(this.model, usersModel);
+        associations.pondsToSeasonAndPond(this.model, seasonandpondModel);
     }
 
     pricesAssociate(storagesModel: any) {
@@ -159,7 +160,8 @@ export class ModelBuilder {
         diedfisherysModel: any,
         pondenvironmentsModel: any,
         stockingModel: any,
-        harvestModel: any
+        harvestModel: any,
+        seasonAndPondModel: any
     ) {
         associations.seasonToPonds(this.model, pondsModel);
         associations.seasonToPonddiary(this.model, ponddiaryModel);
@@ -170,6 +172,15 @@ export class ModelBuilder {
         associations.seasonToPondenvironments(this.model, pondenvironmentsModel);
         associations.seasonToStocking(this.model, stockingModel);
         associations.seasonToHarvest(this.model, harvestModel);
+        associations.seasonToSeasonAndPond(this.model, seasonAndPondModel);
+    }
+
+    seasonAndPondAssocite(
+        seasonModel: any,
+        pondsModel: any
+    ) {
+        associations.withSeason(this.model, seasonModel);
+        associations.withPond(this.model, pondsModel);
     }
 
     provinceAssociate(userModel: any) {

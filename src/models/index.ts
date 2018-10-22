@@ -17,6 +17,7 @@ export * from './ponduserroles.associate';
 export * from './prices.associate';
 export * from './ponduserroles.associate';
 export * from './season.associate';
+export * from './seasonandpond.associate';
 export * from './stocking.associate';
 export * from './stockingdetails.associate';
 export * from './storages.associate';

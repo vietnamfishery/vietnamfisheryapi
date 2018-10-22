@@ -21,13 +21,11 @@ export const pondpreparedetailOptions: any = _.merge({
         },
         pondPrepareId: {
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
             field: 'pondPrepareId'
         },
-        storageId: {
+        materialId: {
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'storageId'
+            field: 'materialId'
         },
         quantity: {
             type: Sequelize.FLOAT,
