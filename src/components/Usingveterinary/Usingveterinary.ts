@@ -3,7 +3,7 @@ import { UsingVeterinaryServices } from '../../services'; // import services
 import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
-export class Usingveterinary extends BaseComponent {
+export class UsingVeterinary extends BaseComponent {
     private usingVeterinaryServices: UsingVeterinaryServices;
     private usingVeterinaryUUId: string;
     private storageId: number;

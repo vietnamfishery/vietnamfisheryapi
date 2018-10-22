@@ -1,1 +1,1 @@
-export * from './Ponddiary';
+export * from './pondDiary';

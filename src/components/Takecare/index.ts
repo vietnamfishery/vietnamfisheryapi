@@ -1,1 +1,1 @@
-export * from './Takecare';
+export * from './takeCare';

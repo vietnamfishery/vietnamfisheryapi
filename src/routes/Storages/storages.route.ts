@@ -1,4 +1,4 @@
-import { Storages } from '../../components';
+import { Storage } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
@@ -12,7 +12,7 @@ import { Authentication } from '../../helpers/login-helpers';
 export class StorageRoute extends BaseRoute {
     public static path = '/storages';
     private static instance: StorageRoute;
-    private storage: Storages = new Storages();
+    private storage: Storage = new Storage();
     /**
      * @class StorageRoute
      * @constructor

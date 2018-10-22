@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { Pond } from './../../components/ponds/ponds';
+import { Pond } from '../../components';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping

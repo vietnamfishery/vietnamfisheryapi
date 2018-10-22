@@ -4,7 +4,7 @@ import { userOptions } from '../models/objects';
 import { Promise } from '../lib';
 import DBHelper from '../helpers/db-helpers';
 import { Sequelize, Transaction } from 'sequelize';
-import { UserRoles } from '../components/userRoles';
+import { UserRole } from '../components/userRole';
 import { ActionAssociateDatabase } from '../common';
 
 export class UserServives extends BaseServices {
@@ -22,7 +22,7 @@ export class UserServives extends BaseServices {
                 return resolve(e);
             }).then((user) => {
                 if(user) {
-                    const userRoles: UserRoles = new UserRoles();
+                    const userRoles: UserRole = new UserRole();
                     userRoles.setUserId = user.userId;
                     userRoles.setRoles = entity.roles;
                     return userRoles.userRolesServices.models.create(userRoles);

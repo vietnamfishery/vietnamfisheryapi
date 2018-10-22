@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { User } from '../../components/Users';
+import { User } from '../../components';
 import * as uuidv4 from 'uuid/v4';
 // import { LoginHelper } from '../../helpers/login-helpers';
 import { Enscrypts } from '../../lib';

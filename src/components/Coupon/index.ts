@@ -1,1 +1,1 @@
-export * from './Coupon';
+export * from './coupon';

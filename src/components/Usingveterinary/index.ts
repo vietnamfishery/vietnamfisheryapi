@@ -1,1 +1,1 @@
-export * from './Usingveterinary';
+export * from './usingVeterinary';

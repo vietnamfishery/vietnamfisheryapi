@@ -3,7 +3,7 @@ import { TakeCareServices } from '../../services'; // import services
 import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
-export class Takecare extends BaseComponent {
+export class TakeCare extends BaseComponent {
     private takeCareServices: TakeCareServices;
     private takeCareId: number;
     private takeCareUUId: string;

@@ -3,7 +3,7 @@ import { PondPrepareServices } from '../../services'; // import services
 import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
-export class Pondprepare extends BaseComponent {
+export class PondPrepare extends BaseComponent {
     private pondPrepareServices: PondPrepareServices;
     private pondPrepareId: number;
     private pondPrepareUUId: string;

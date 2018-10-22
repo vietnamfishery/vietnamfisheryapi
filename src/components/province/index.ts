@@ -1,1 +1,1 @@
-export * from './Province';
+export * from './province';

@@ -3,11 +3,12 @@ import { PondDiaryServices } from '../../services'; // import services
 import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
-export class Ponddiary extends BaseComponent {
+export class PondDiary extends BaseComponent {
     private pondDiaryServices: PondDiaryServices;
     private pondDiaryId: number;
     private pondDiaryUUId: string;
     private seasonId: number;
+    private pondId: number;
     private fisheryQuantity: number;
     private healthOfFishery: string;
     private pondVolume: number;
@@ -28,6 +29,10 @@ export class Ponddiary extends BaseComponent {
 
     public set setSeasonId(seasonId) {
         this.seasonId = seasonId;
+    }
+
+    public set setPondId(pondId) {
+        this.pondId = pondId;
     }
 
     public set setFisheryQuantity(fisheryQuantity) {
@@ -72,6 +77,10 @@ export class Ponddiary extends BaseComponent {
         return this.pondDiaryUUId;
     }
 
+    public get getPondId(): number {
+        return this.pondId;
+    }
+
     public get getSeasonId(): number {
         return this.seasonId;
     }
@@ -92,4 +101,15 @@ export class Ponddiary extends BaseComponent {
         return this.diedFishery;
     }
 
+    public get getPrimary(): object {
+        return {
+            pondDiaryId: this.getPondDiaryId
+        };
+    }
+
+    public get getForgeinKey(): object {
+        return {
+            pondId: this.getPondId
+        };
+    }
 }

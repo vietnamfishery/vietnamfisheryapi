@@ -1,1 +1,1 @@
-export * from './Material';
+export * from './material';

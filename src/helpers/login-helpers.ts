@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { secret, ActionServer } from '../common';
 import { UserServives } from '../services';
-import { User } from '../components/users';
+import { User } from '../components/user';
 import { Enscrypts } from '../lib';
 
 export class Authentication {

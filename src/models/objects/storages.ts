@@ -19,6 +19,10 @@ export const storagesOptions: any = _.merge({
             unique: true,
             field: 'storageUUId'
         },
+        userId: {
+            type: Sequelize.BIGINT(20),
+            fields: 'userId'
+        },
         unitName: {
             type: Sequelize.STRING(50),
             field: 'unitName'

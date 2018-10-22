@@ -49,7 +49,8 @@ export class SeasonRoute extends BaseRoute {
             if(res) {
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm vụ thành công!'
+                    message: 'Thêm vụ thành công!',
+                    season: res
                 });
             }
         }).catch(e => {

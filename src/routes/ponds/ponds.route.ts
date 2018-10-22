@@ -1,4 +1,4 @@
-import { Pond } from './../../components/ponds/ponds';
+import { Pond } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';

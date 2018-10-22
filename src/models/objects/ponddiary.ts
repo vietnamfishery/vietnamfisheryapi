@@ -23,6 +23,10 @@ export const ponddiaryOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             field: 'seasonId'
         },
+        pondId: {
+            type: Sequelize.BIGINT(20),
+            fields: 'pondId'
+        },
         fisheryQuantity: {
             type: Sequelize.FLOAT,
             field: 'fisheryQuantity'
