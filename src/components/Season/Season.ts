@@ -58,4 +58,16 @@ export class Season extends BaseComponent {
     public get getSeasonName(): string {
         return this.seasonName;
     }
+
+    public get getPrimary(): any {
+        return {
+            seasonId: this.getSeasonId
+        };
+    }
+
+    public get getForeignKey(): any {
+        return {
+            pondId: this.getPondId
+        };
+    }
 }

@@ -84,4 +84,18 @@ export abstract class BaseServices {
             });
         });
     }
+
+    findAndCountAll(query: any): Promise<any> {
+        return new Promise((resolve, reject) => {
+            if(query) {
+                this.models.findAndCountAll(query).then((res: any) => {
+                    resolve(res);
+                });
+            } else {
+                this.models.findAndCountAll().then((res: any) => {
+                    resolve(res);
+                });
+            }
+        });
+    }
 }

@@ -11,6 +11,7 @@ import { ProvinceRoute } from './province';
 import { DistrictRoute } from './district';
 import { WardRoute } from './ward';
 import { PondRoute } from './ponds';
+import { SeasonRoute } from './seasons';
 
 /**
  * / route
@@ -60,6 +61,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(DistrictRoute.path, DistrictRoute.router);
         this.router.use(WardRoute.path, WardRoute.router);
         this.router.use(PondRoute.path, PondRoute.router);
+        this.router.use(SeasonRoute.path, SeasonRoute.router);
     }
 
     /**

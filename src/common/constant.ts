@@ -180,6 +180,7 @@ export interface IOptionQuery {
         offset: number,
         limit: number
     };
+    count?: boolean;
     order?: Array<string|sortType>;
     attributes?: string;
 }
