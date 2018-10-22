@@ -19,9 +19,9 @@ export const growthOptions: any = _.merge({
             unique: true,
             field: 'growthUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            field: 'seasonAndPondId'
         },
         averageDensity: {
             type: Sequelize.FLOAT,
