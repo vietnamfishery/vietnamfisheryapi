@@ -18,9 +18,9 @@ export const couponOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             field: 'userId'
         },
-        itemId: {
+        materialId: {
             type: Sequelize.BIGINT(20),
-            field: 'itemId'
+            field: 'materialId'
         },
         itemUUId: {
             type: Sequelize.STRING(36),

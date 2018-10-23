@@ -1,12 +1,12 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function growthsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function growthsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.GROWTH_2_SEASON,
+        as: ActionAssociateDatabase.GROWTH_2_SEASON_AND_POND,
         foreignKey: {
-            name: 'seasonId',
-            field: 'seasonId'
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
         }
     });
 }

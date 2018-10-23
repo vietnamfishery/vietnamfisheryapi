@@ -56,11 +56,11 @@ export class ModelBuilder {
     }
 
     diedfisherysAssociate(seasonModel: any) {
-        associations.diedfisherysToSeason(this.model, seasonModel);
+        associations.diedfisherysToSeasonAndPond(this.model, seasonModel);
     }
 
     growthsAssociate(seasonModel: any) {
-        associations.growthsToSeason(this.model, seasonModel);
+        associations.growthsToSeasonAndPond(this.model, seasonModel);
     }
 
     harvestdetailsAssociate(harvestsModel: any) {
@@ -69,7 +69,7 @@ export class ModelBuilder {
 
     harvestsAssociate(harvestDetailsModel: any, seasonModel: any) {
         associations.harvestsToHarvestDetails(this.model, harvestDetailsModel);
-        associations.harvestsToSeason(this.model, seasonModel);
+        associations.harvestsToSeasonAndPond(this.model, seasonModel);
     }
 
     materialAssociate(couponModel: any, storagesModel: any) {
@@ -78,16 +78,16 @@ export class ModelBuilder {
     }
 
     ponddiaryAssociate(seasonModel: any) {
-        associations.ponddiaryToSeason(this.model, seasonModel);
+        associations.ponddiaryToSeasonAndPond(this.model, seasonModel);
     }
 
     pondenvironmentAssociate(seasonModel: any) {
-        associations.pondenvironmentoToSeason(this.model, seasonModel);
+        associations.pondenvironmentoToSeasonAndPond(this.model, seasonModel);
     }
 
     pondprepareAssociate(seasonModel: any, costsModel: any) {
         associations.pondprepareToCosts(this.model, costsModel);
-        associations.pondprepareToSeason(this.model, seasonModel);
+        associations.pondprepareToSeasonAndPond(this.model, seasonModel);
     }
 
     pondpreparedetailsAssociate(pondPrepareModel: any, storagesModel: any) {

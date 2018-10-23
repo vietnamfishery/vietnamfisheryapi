@@ -11,12 +11,12 @@ export function harvestsToHarvestDetails(thatmodel: Sequeliz.Model<{}, any>, mod
     });
 }
 
-export function harvestsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function harvestsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.HARVEST_2_SEASON,
         foreignKey: {
-            name: 'seasonId',
-            field: 'seasonId'
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
         }
     });
 }

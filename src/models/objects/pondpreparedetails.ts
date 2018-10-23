@@ -23,9 +23,9 @@ export const pondpreparedetailOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             field: 'pondPrepareId'
         },
-        materialId: {
+        storageId: {
             type: Sequelize.BIGINT(20),
-            field: 'materialId'
+            field: 'storageId'
         },
         quantity: {
             type: Sequelize.FLOAT,

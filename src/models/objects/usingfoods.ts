@@ -13,10 +13,10 @@ export const usingfoodOptions: any = _.merge({
             unique: true,
             field: 'usingFoodUUId'
         },
-        materialId: {
+        storageId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'materialId'
+            field: 'storageId'
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),
