@@ -131,6 +131,8 @@ export enum ActionAssociateDatabase {
     SEASON_AND_POND_2_HARVEST = 'harvests',
     SEASON_AND_POND_2_POND_DIARY = 'pondDiary',
     SEASON_AND_POND_2_POND_PREPARE = 'pondPrepare',
+    SEASON_AND_POND_2_TAKE_CARE = 'SNPToTakeCare',
+    SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
     //
     SEASON_2_POND = 'seasons',
     SEASON_2_POND_DIARY = 'seasonToPonddiary',
@@ -158,7 +160,7 @@ export enum ActionAssociateDatabase {
     //
     TAKE_CARE_2_USING_FOOD = 'takecareToUsingfoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
-    TAKE_CARE_2_SEASON = 'takecares',
+    TAKE_CARE_2_SEASON_AND_POND = 'takecares',
     //
     USER_ROLES_2_USER = 'userRoles',
     USER_ROLES_2_POND_USER_ROLE = 'userrolesPondUserRoles',

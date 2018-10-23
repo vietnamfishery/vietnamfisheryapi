@@ -11,22 +11,12 @@ export function stockingToStockingdetails(thatmodel: Sequeliz.Model<{}, any>, mo
     });
 }
 
-export function stockingToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function stockingToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.STOCKING_2_SEASON,
         foreignKey: {
-            name: 'seasonId',
-            field: 'seasonId'
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
         }
     });
-}
-
-export function stockingToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    // return thatmodel.belongsTo(model, {
-    //     as: ActionAssociateDatabase.STOCKING_2_SEASON,
-    //     foreignKey: {
-    //         name: 'seasonId',
-    //         field: 'seasonId'
-    //     }
-    // });
 }

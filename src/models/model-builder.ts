@@ -9,18 +9,22 @@ export class ModelBuilder {
         userrolesModel: any,
         pondsModel: any,
         couponModel: any,
+        seasonModel: any,
         boughtbreedsModel: any,
+        storageModel: any,
         provinceModel: any,
         districtModel: any,
         wardModel: any,
     ) {
         associations.userToRolesUser(this.model, userrolesModel);
         associations.userToPond(this.model, pondsModel);
+        associations.userToSeason(this.model, seasonModel);
         associations.userToCoupon(this.model, couponModel);
         associations.userToBoughtBreeds(this.model, boughtbreedsModel);
         associations.userToProvince(this.model, provinceModel);
         associations.userToDistrict(this.model, districtModel);
         associations.userToWard(this.model, wardModel);
+        associations.userToStorage(this.model, storageModel);
     }
 
     userRolesAssociate(
@@ -55,21 +59,21 @@ export class ModelBuilder {
         associations.couponToUsers(this.model, usersModel);
     }
 
-    diedfisherysAssociate(seasonModel: any) {
-        associations.diedfisherysToSeasonAndPond(this.model, seasonModel);
+    diedfisherysAssociate(seasonAndModel: any) {
+        associations.diedfisherysToSeasonAndPond(this.model, seasonAndModel);
     }
 
-    growthsAssociate(seasonModel: any) {
-        associations.growthsToSeasonAndPond(this.model, seasonModel);
+    growthsAssociate(seasonAndModel: any) {
+        associations.growthsToSeasonAndPond(this.model, seasonAndModel);
     }
 
     harvestdetailsAssociate(harvestsModel: any) {
         associations.harvestdetailsToHarvests(this.model, harvestsModel);
     }
 
-    harvestsAssociate(harvestDetailsModel: any, seasonModel: any) {
+    harvestsAssociate(harvestDetailsModel: any, seasonAndModel: any) {
         associations.harvestsToHarvestDetails(this.model, harvestDetailsModel);
-        associations.harvestsToSeasonAndPond(this.model, seasonModel);
+        associations.harvestsToSeasonAndPond(this.model, seasonAndModel);
     }
 
     materialAssociate(couponModel: any, storagesModel: any) {
@@ -77,17 +81,18 @@ export class ModelBuilder {
         associations.materialToStorages(this.model, storagesModel);
     }
 
-    ponddiaryAssociate(seasonModel: any) {
-        associations.ponddiaryToSeasonAndPond(this.model, seasonModel);
+    ponddiaryAssociate(seasonAndModel: any) {
+        associations.ponddiaryToSeasonAndPond(this.model, seasonAndModel);
     }
 
-    pondenvironmentAssociate(seasonModel: any) {
-        associations.pondenvironmentoToSeasonAndPond(this.model, seasonModel);
+    pondenvironmentAssociate(seasonAndModel: any) {
+        associations.pondenvironmentoToSeasonAndPond(this.model, seasonAndModel);
     }
 
-    pondprepareAssociate(seasonModel: any, costsModel: any) {
+    pondprepareAssociate(seasonAndModel: any, costsModel: any, pondPrepareDetailModel: any) {
         associations.pondprepareToCosts(this.model, costsModel);
-        associations.pondprepareToSeasonAndPond(this.model, seasonModel);
+        associations.pondprepareToPondPrepareDetails(this.model, pondPrepareDetailModel);
+        associations.pondprepareToSeasonAndPond(this.model, seasonAndModel);
     }
 
     pondpreparedetailsAssociate(pondPrepareModel: any, storagesModel: any) {
@@ -95,10 +100,8 @@ export class ModelBuilder {
         associations.pondpreparedetailsToStorages(this.model, storagesModel);
     }
 
-    pondsAssociate(ponduserrolesModel: any, seasonModel: any, seasonandpondModel: any) {
+    pondsAssociate(ponduserrolesModel: any, seasonandpondModel: any) {
         associations.pondsToponduserroles(this.model, ponduserrolesModel);
-        associations.pondsToSeason(this.model, seasonModel);
-        // associations.pondsToUsers(this.model, usersModel);
         associations.pondsToSeasonAndPond(this.model, seasonandpondModel);
     }
 
@@ -121,10 +124,10 @@ export class ModelBuilder {
         associations.usingfoodsToTakecare(this.model, takecareModel);
     }
 
-    takecareAssociate(usingveterinaryModel: any, usingfoodsModel: any, seasonModel: any) {
+    takecareAssociate(usingveterinaryModel: any, usingfoodsModel: any, seasonAndPondModel: any) {
         associations.takecareToUsingveterinary(this.model, usingveterinaryModel);
         associations.takecareToUsingfoods(this.model, usingfoodsModel);
-        associations.takecareToSeason(this.model, seasonModel);
+        associations.takecareToSNP(this.model, seasonAndPondModel);
     }
 
     storagesAssociate(
@@ -132,13 +135,15 @@ export class ModelBuilder {
         MaterialsModel: any,
         PricesModel: any,
         UsingfoodsModel: any,
-        UsingveterinaryModel: any
+        UsingveterinaryModel: any,
+        userModel: any
     ) {
         associations.storagesToPondpreparedetails(this.model, pondpreparedetailsModel);
         associations.storagesToMaterial(this.model, MaterialsModel);
         associations.storagesToPrices(this.model, PricesModel);
         associations.storagesToUsingfoods(this.model, UsingfoodsModel);
         associations.storagesToUsingveterinary(this.model, UsingveterinaryModel);
+        associations.storagesToUser(this.model, userModel);
     }
 
     stockingdetailsAssociate(stockingModel: any, breedsModel: any) {
@@ -146,41 +151,41 @@ export class ModelBuilder {
         associations.stockingdetailsToBreeds(this.model, breedsModel);
     }
 
-    stockingAssociate(stockingdetailsModel: any, seasonModel: any) {
+    stockingAssociate(stockingdetailsModel: any, seasonAndPondModel: any) {
         associations.stockingToStockingdetails(this.model, stockingdetailsModel);
-        associations.stockingToSeason(this.model, seasonModel);
+        associations.stockingToSNP(this.model, seasonAndPondModel);
     }
 
-    // seasonAssociate(
-    //     pondsModel: any,
-    //     ponddiaryModel: any,
-    //     pondprepareModel: any,
-    //     takecareModel: any,
-    //     growthsModel: any,
-    //     diedfisherysModel: any,
-    //     pondenvironmentsModel: any,
-    //     stockingModel: any,
-    //     harvestModel: any,
-    //     seasonAndPondModel: any
-    // ) {
-    //     associations.seasonToPonds(this.model, pondsModel);
-    //     associations.seasonToPonddiary(this.model, ponddiaryModel);
-    //     associations.seasonToPondprepare(this.model, pondprepareModel);
-    //     associations.seasonToTakecare(this.model, takecareModel);
-    //     associations.seasonToGrowths(this.model, growthsModel);
-    //     associations.seasonToDiedfisherys(this.model, diedfisherysModel);
-    //     associations.seasonToPondenvironments(this.model, pondenvironmentsModel);
-    //     associations.seasonToStocking(this.model, stockingModel);
-    //     associations.seasonToHarvest(this.model, harvestModel);
-    //     associations.seasonToSeasonAndPond(this.model, seasonAndPondModel);
-    // }
-
-    seasonAndPondAssocite(
-        seasonModel: any,
-        pondsModel: any
+    seasonAssociate(
+        userModel: any,
+        seasonAndPondModel: any
     ) {
-        associations.withSeason(this.model, seasonModel);
+        associations.seasonToSNP(this.model, seasonAndPondModel);
+        associations.seasonToUser(this.model, userModel);
+    }
+
+    seasonAndPondAssociate(
+        seasonAndPondModel: any,
+        pondsModel: any,
+        diedFishModel: any,
+        growthModel: any,
+        harvestModel: any,
+        pondDiary: any,
+        pondPrepareModel: any,
+        pondEnvironmentModel: any,
+        takeCareModel: any,
+        stockingModel: any
+    ) {
+        associations.withSeason(this.model, seasonAndPondModel);
         associations.withPond(this.model, pondsModel);
+        associations.withDiedFish(this.model, diedFishModel);
+        associations.withGrowths(this.model, growthModel);
+        associations.withHarvest(this.model, harvestModel);
+        associations.withPondDiary(this.model, pondDiary);
+        associations.withPondPrepare(this.model, pondPrepareModel);
+        associations.withPondEnv(this.model, pondEnvironmentModel);
+        associations.withTakeCare(this.model, takeCareModel);
+        associations.withStocking(this.model, stockingModel);
     }
 
     provinceAssociate(userModel: any) {

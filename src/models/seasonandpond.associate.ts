@@ -11,6 +11,16 @@ export function withSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
+export function withPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+        foreignKey: {
+            name: 'pondId',
+            field: 'pondId'
+        }
+    });
+}
+
 export function withDiedFish(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_AND_POND_2_DIED_FISH,
@@ -23,7 +33,7 @@ export function withDiedFish(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
 
 export function withGrowths(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.SEASON_AND_POND_2_DIED_FISH,
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_GROWTH,
         foreignKey: {
             name: 'seasonAndPondId',
             field: 'seasonAndPondId'
@@ -61,16 +71,6 @@ export function withPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Seque
     });
 }
 
-export function withPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
-        foreignKey: {
-            name: 'pondId',
-            field: 'pondId'
-        }
-    });
-}
-
 export function withPondEnv(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
@@ -81,9 +81,9 @@ export function withPondEnv(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
     });
 }
 
-export function withGrowth(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function withTakeCare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_TAKE_CARE,
         foreignKey: {
             name: 'seasonAndPondId',
             field: 'seasonAndPondId'
@@ -91,22 +91,12 @@ export function withGrowth(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
-export function SNPToTakeCare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    // return thatmodel.hasMany(model, {
-    //     as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
-    //     foreignKey: {
-    //         name: 'seasonAndPondId',
-    //         field: 'seasonAndPondId'
-    //     }
-    // });
-}
-
-export function SNPToStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    // return thatmodel.hasMany(model, {
-    //     as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
-    //     foreignKey: {
-    //         name: 'seasonAndPondId',
-    //         field: 'seasonAndPondId'
-    //     }
-    // });
+export function withStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_STOCKING,
+        foreignKey: {
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
+        }
+    });
 }

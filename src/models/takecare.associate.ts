@@ -21,22 +21,12 @@ export function takecareToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
-export function takecareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function takecareToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.TAKE_CARE_2_SEASON,
+        as: ActionAssociateDatabase.TAKE_CARE_2_SEASON_AND_POND,
         foreignKey: {
-            name: 'seasonId',
-            field: 'seasonId'
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
         }
     });
-}
-
-export function takecareToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    // return thatmodel.belongsTo(model, {
-    //     as: ActionAssociateDatabase.TAKE_CARE_2_SEASON,
-    //     foreignKey: {
-    //         name: 'seasonId',
-    //         field: 'seasonId'
-    //     }
-    // });
 }
