@@ -54,10 +54,12 @@ export default class DBHelper {
             this.models[`userrolesOptions`],
             this.models[`pondOptions`],
             this.models[`couponOptions`],
+            this.models[`seasonOptions`],
             this.models[`boughtbreedOptions`],
+            this.models[`storageOptions`],
             this.models[`provinceOptions`],
             this.models[`districtOptions`],
-            this.models[`wardOptions`]
+            this.models[`wardOptions`],
         );
         return md;
     }
@@ -121,14 +123,14 @@ export default class DBHelper {
     public get diedfisherysModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.diedfisherysAssociate(this.models[`seasonOptions`]);
+        modelBuilder.diedfisherysAssociate(this.models[`seasonandpondOptions`]);
         return md;
     }
 
     public get growthsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.growthsAssociate(this.models[`seasonOptions`]);
+        modelBuilder.growthsAssociate(this.models[`seasonandpondOptions`]);
         return md;
     }
 
@@ -142,7 +144,7 @@ export default class DBHelper {
     public get harvestModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.harvestsAssociate(this.models[`harvestdetailOptions`], this.models[`seasonOptions`]);
+        modelBuilder.harvestsAssociate(this.models[`harvestdetailOptions`], this.models[`seasonandpondOptions`]);
         return md;
     }
 
@@ -163,14 +165,18 @@ export default class DBHelper {
     public get pondenvironmentsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondenvironmentAssociate(this.models[`seasonOptions`]);
+        modelBuilder.pondenvironmentAssociate(this.models[`seasonandpondOptions`]);
         return md;
     }
 
     public get pondprepareModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondprepareAssociate(this.models[`seasonOptions`], this.models[`costsOptions`]);
+        modelBuilder.pondprepareAssociate(
+            this.models[`seasonandpondOptions`],
+            this.models[`costsOptions`],
+            this.models[`pondpreparedetailOptions`]
+        );
         return md;
     }
 
@@ -184,7 +190,10 @@ export default class DBHelper {
     public get pondsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`seasonandpondOptions`]);
+        modelBuilder.pondsAssociate(
+            this.models[`ponduserrolesOptions`],
+            this.models[`seasonandpondOptions`]
+        );
         return md;
     }
 
@@ -198,83 +207,112 @@ export default class DBHelper {
     public get ponduserrolesModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.ponduserrolesAssociate(this.models[`userrolesOptions`], this.models[`pondOptions`]);
+        modelBuilder.ponduserrolesAssociate(
+            this.models[`userrolesOptions`],
+            this.models[`pondOptions`]
+        );
         return md;
     }
 
     public get userRolesModel() {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.userRolesAssociate(this.models[`userOptions`], this.models[`ponduserrolesOptions`]);
+        modelBuilder.userRolesAssociate(
+            this.models[`userOptions`],
+            this.models[`ponduserrolesOptions`]
+        );
         return md;
     }
 
     public get usingveterinaryModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.usingveterinaryAssociate(this.models[`storagesOptions`], this.models[`takecareOptions`]);
+        modelBuilder.usingveterinaryAssociate(
+            this.models[`storagesOptions`],
+            this.models[`takecareOptions`]
+        );
         return md;
     }
 
     public get usingfoodsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.usingfoodsAssociate(this.models[`storagesOptions`], this.models[`takecareOptions`]);
+        modelBuilder.usingfoodsAssociate(
+            this.models[`storagesOptions`],
+            this.models[`takecareOptions`]
+        );
         return md;
     }
 
     public get takecareModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.takecareAssociate(this.models[`usingveterinaryOptions`], this.models[`usingfoodOptions`], this.models[`seasonOptions`]);
+        modelBuilder.takecareAssociate(
+            this.models[`usingveterinaryOptions`],
+            this.models[`usingfoodOptions`],
+            this.models[`seasonandpondOptions`]
+        );
         return md;
     }
 
     public get storagesModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.storagesAssociate(this.models[`pondpreparedetailOptions`],this.models[`materialOptions`],this.models[`pricesOptions`], this.models[`usingfoodOptions`],this.models[`usingveterinaryOptions`]);
+        modelBuilder.storagesAssociate(
+            this.models[`pondpreparedetailOptions`],
+            this.models[`materialOptions`],
+            this.models[`pricesOptions`],
+            this.models[`usingfoodOptions`],
+            this.models[`usingveterinaryOptions`],
+            this.models[`userOptions`],
+        );
         return md;
     }
 
     public get stockingdetailsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.stockingdetailsAssociate(this.models[`stockingOptions`],this.models[`breedOptions`]);
+        modelBuilder.stockingdetailsAssociate(
+            this.models[`stockingOptions`],
+            this.models[`breedOptions`]
+        );
         return md;
     }
 
     public get stockingModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.stockingAssociate(this.models[`stockingdetailOptions`], this.models[`seasonOptions`]);
+        modelBuilder.stockingAssociate(
+            this.models[`stockingdetailOptions`],
+            this.models[`seasonandpondOptions`]
+        );
         return md;
     }
 
     public get seasonModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        // modelBuilder.seasonAssociate(
-        //     this.models[`pondOptions`],
-        //     this.models[`ponddiaryOptions`],
-        //     this.models[`pondprepareOptions`],
-        //     this.models[`takecareOptions`],
-        //     this.models[`growthOptions`],
-        //     this.models[`diedfisherysOptions`],
-        //     this.models[`pondenvironmentsOptions`],
-        //     this.models[`stockingOptions`],
-        //     this.models[`harvestdetailOptions`],
-        //     this.models[`seasonandpondOptions`]
-        // );
+        modelBuilder.seasonAssociate(
+            this.models[`userOptions`],
+            this.models[`seasonandpondOptions`]
+        );
         return md;
     }
 
     public get seasonAndPondModel() {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.seasonAndPondAssocite(
-            this.models[`seasonOptions`],
-            this.models[`pondOptions`]
+        modelBuilder.seasonAndPondAssociate(
+            this.models[`seasonandpondOptions`],
+            this.models[`pondOptions`],
+            this.models[`diedfisherysOptions`],
+            this.models[`growthOptions`],
+            this.models[`harvestOptions`],
+            this.models[`ponddiaryOptions`],
+            this.models[`pondprepareOptions`],
+            this.models[`pondenvironmentsOptions`],
+            this.models[`takecareOptions`],
+            this.models[`stockingOptions`],
         );
         return md;
     }

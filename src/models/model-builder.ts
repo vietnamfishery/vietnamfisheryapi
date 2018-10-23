@@ -132,17 +132,17 @@ export class ModelBuilder {
 
     storagesAssociate(
         pondpreparedetailsModel: any,
-        MaterialsModel: any,
-        PricesModel: any,
-        UsingfoodsModel: any,
-        UsingveterinaryModel: any,
+        materialsModel: any,
+        pricesModel: any,
+        usingfoodsModel: any,
+        usingveterinaryModel: any,
         userModel: any
     ) {
         associations.storagesToPondpreparedetails(this.model, pondpreparedetailsModel);
-        associations.storagesToMaterial(this.model, MaterialsModel);
-        associations.storagesToPrices(this.model, PricesModel);
-        associations.storagesToUsingfoods(this.model, UsingfoodsModel);
-        associations.storagesToUsingveterinary(this.model, UsingveterinaryModel);
+        associations.storagesToMaterial(this.model, materialsModel);
+        associations.storagesToPrices(this.model, pricesModel);
+        associations.storagesToUsingfoods(this.model, usingfoodsModel);
+        associations.storagesToUsingveterinary(this.model, usingveterinaryModel);
         associations.storagesToUser(this.model, userModel);
     }
 
