@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { Pond } from '../../components';
+import { PondUserRolesServices, UserRolesServices } from '../../services';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -36,6 +37,8 @@ export class PingRoute extends BaseRoute {
 
     // add index page route
     this.router.get('/', this.get);
+    this.router.get('/pr', this.getpr);
+    this.router.get('/ura', this.getura);
   }
 
   /**
@@ -48,6 +51,20 @@ export class PingRoute extends BaseRoute {
   private async get (req: Request, res: Response, next: NextFunction) {
     const pond = new Pond();
     pond.test().then(res$ => {
+        res.json({res$});
+    });
+  }
+
+  private async getpr (req: Request, res: Response, next: NextFunction) {
+    const pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
+    pondUserRolesServices.testpr().then(res$ => {
+        res.json({res$});
+    });
+  }
+
+  private async getura (req: Request, res: Response, next: NextFunction) {
+    const userRolesServices: UserRolesServices = new UserRolesServices();
+    userRolesServices.testUserAssociate().then(res$ => {
         res.json({res$});
     });
   }

@@ -12,65 +12,65 @@ export const userOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'userId'
+            // field: 'userId'
         },
         userUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'userUUId'
+            // field: 'userUUId'
         },
         firstname: {
             type: Sequelize.STRING(50),
-            field: 'firstname'
+            // field: 'firstname'
         },
         lastname: {
             type: Sequelize.STRING(50),
-            field: 'lastname'
+            // field: 'lastname'
         },
         username: {
             type: Sequelize.STRING(50),
             unique: true,
-            field: 'username'
+            // field: 'username'
         },
         password: {
             type: Sequelize.STRING(100),
-            field: 'password'
+            // field: 'password'
         },
         birthday: {
             type: Sequelize.DATE,
             allowNull: true,
-            field: 'birthday'
+            // field: 'birthday'
         },
         town: {
             type: Sequelize.STRING(20),
             allowNull: true,
-            field: 'town'
+            // field: 'town'
         },
         district: {
             type: Sequelize.STRING(20),
             allowNull: true,
-            field: 'district'
+            // field: 'district'
         },
         province: {
             type: Sequelize.STRING(20),
             allowNull: true,
-            field: 'province'
+            // field: 'province'
         },
         status: {
             type: Sequelize.INTEGER(1),
             allowNull: false,
             defaultValue: 0,
-            field: 'status'
+            // field: 'status'
         },
         phone: {
             type: Sequelize.STRING(12),
             allowNull: true,
-            field: 'phone'
+            // field: 'phone'
         },
         email: {
             type: Sequelize.STRING(100),
             allowNull: true,
-            field: 'email'
+            // field: 'email'
         },
         images: {
             type: Sequelize.TEXT({ length: '1000' }),
@@ -80,7 +80,7 @@ export const userOptions: any = _.merge({
         createdBy: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -88,12 +88,12 @@ export const userOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -101,13 +101,13 @@ export const userOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

@@ -56,7 +56,7 @@ export default class DBHelper {
             this.models[`couponOptions`],
             this.models[`seasonOptions`],
             this.models[`boughtbreedOptions`],
-            this.models[`storageOptions`],
+            // this.models[`storageOptions`],
             this.models[`provinceOptions`],
             this.models[`districtOptions`],
             this.models[`wardOptions`],
@@ -264,7 +264,7 @@ export default class DBHelper {
             this.models[`pricesOptions`],
             this.models[`usingfoodOptions`],
             this.models[`usingveterinaryOptions`],
-            this.models[`userOptions`],
+            this.models[`userOptions`]
         );
         return md;
     }

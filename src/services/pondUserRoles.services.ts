@@ -8,4 +8,19 @@ export class PondUserRolesServices extends BaseServices {
         super(PondUserRolesServices.optionsModel);
         this.models = this.conn.ponduserrolesModel;
     }
+    testpr = (): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            const query: any = {
+                include: [
+                    {
+                        model: (this.models as any).sequelize.models.userroles,
+                        // as: 'userroles'
+                    }
+                ]
+            };
+            this.models.findAll(query).then(res => {
+                resolve(res);
+            });
+        });
+    }
 }

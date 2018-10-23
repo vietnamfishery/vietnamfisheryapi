@@ -42,7 +42,7 @@ export function storagesToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: 
 }
 
 export function storagesToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.belongsTo(model, {
+    return thatmodel.hasOne(model, {
         as: ActionAssociateDatabase.STORAGE_2_USER,
         foreignKey: {
             name: 'userId',

@@ -12,15 +12,16 @@ export const userrolesOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             primaryKey: true,
             autoIncrement: true,
-            field: 'rolesId'
+            // field: 'rolesId'
         },
         userId: {
             type: Sequelize.BIGINT(20),
-            field: 'userId'
+            unique: true
+            // field: 'userId'
         },
         roles: {
             type: Sequelize.INTEGER(11),
-            field: 'roles'
+            // field: 'roles'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -28,18 +29,18 @@ export const userrolesOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

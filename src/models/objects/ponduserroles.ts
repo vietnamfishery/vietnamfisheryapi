@@ -10,7 +10,6 @@ export const ponduserrolesOptions: any = _.merge({
         attributes: {
             rolesId: {
                 type: Sequelize.BIGINT(20),
-                primaryKey: true,
                 field: 'rolesId'
             },
             pondId: {
@@ -18,6 +17,12 @@ export const ponduserrolesOptions: any = _.merge({
                 primaryKey: true,
                 unique: true,
                 field: 'pondId'
+            },
+            isDeleted: {
+                type: Sequelize.INTEGER(1),
+                allowNull: true,
+                defaultValue: 0,
+                field: 'isDeleted'
             }
         },
         options: {

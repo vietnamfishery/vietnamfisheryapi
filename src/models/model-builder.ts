@@ -11,7 +11,7 @@ export class ModelBuilder {
         couponModel: any,
         seasonModel: any,
         boughtbreedsModel: any,
-        storageModel: any,
+        // storageModel: any,
         provinceModel: any,
         districtModel: any,
         wardModel: any,
@@ -24,7 +24,7 @@ export class ModelBuilder {
         associations.userToProvince(this.model, provinceModel);
         associations.userToDistrict(this.model, districtModel);
         associations.userToWard(this.model, wardModel);
-        associations.userToStorage(this.model, storageModel);
+        // associations.userToStorage(this.model, storageModel);
     }
 
     userRolesAssociate(
@@ -109,7 +109,10 @@ export class ModelBuilder {
         associations.pricesToStorages(this.model, storagesModel);
     }
 
-    ponduserrolesAssociate(userRolesModel: any, pondsModel: any) {
+    ponduserrolesAssociate(
+        userRolesModel: any,
+        pondsModel: any
+    ) {
         associations.ponduserrolesToUserRoles(this.model, userRolesModel);
         associations.ponduserrolesToPond(this.model, pondsModel);
     }

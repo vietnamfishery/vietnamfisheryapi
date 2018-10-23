@@ -14,7 +14,7 @@ export class PondsServices extends BaseServices {
         this.models = this.conn.pondsModel;
     }
 
-    test(): Promise<any> {
+    test = (): Promise<any> => {
         const md = this.models;
         return new Promise((resolve, reject) => {
             const query: any = {
@@ -22,13 +22,24 @@ export class PondsServices extends BaseServices {
                     {
                         model: this.pondUserRolesServices.models,
                         as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                        attributes: ['rolesId', 'pondId'],
+                        required: true,
                         include: [
                             {
                                 model: this.userRolesServices.models,
-                                as: ActionAssociateDatabase.POND_USER_ROLE_2_USER_ROLE
+                                // as: ActionAssociateDatabase.POND_USER_ROLE_2_USER_ROLE
+                                include: [
+                                    {
+                                        model: (this.models as any).sequelize.models.users,
+                                        as: ActionAssociateDatabase.USER_ROLES_2_USER,
+                                        where: {
+                                            userId: 103
+                                        }
+                                    }
+                                ]
                             }
                         ]
-                    },
+                    }
                 ]
                 // attributes: ['pondName']
             };

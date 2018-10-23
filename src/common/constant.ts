@@ -76,7 +76,7 @@ export enum ActionAssociateDatabase {
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
-    BOUGHT_BREED_2_USER = 'user',
+    BOUGHT_BREED_2_USER = 'users',
     //
     BREED_2_BOUGHT_BREED_DETAIL = 'breedsToBoughBreedDetails',
     BREED_2_STOKING_DETAIL = 'breedsToStockingDetails',
@@ -117,7 +117,7 @@ export enum ActionAssociateDatabase {
     POND_2_USER = 'ponds',
     POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
     //
-    POND_USER_ROLE_2_USER_ROLE = 'pondUserRoles',
+    POND_USER_ROLE_2_USER_ROLE = 'userroles',
     POND_USER_ROLE_2_POND = 'pondUserRolesPond',
     //
     PRICE_2_STORAGE = 'prices',
@@ -125,17 +125,17 @@ export enum ActionAssociateDatabase {
     PROVINCE_2_USER = 'provinceToUser',
     //
     SEASON_AND_POND_2_SEASON = 'seasons',
-    SEASON_AND_POND_2_POND = 'ponds',
+    SEASON_AND_POND_2_POND = 'toPonds',
     SEASON_AND_POND_2_GROWTH = 'seasonNPondToGrowth',
     SEASON_AND_POND_2_DIED_FISH = 'diedFishSeason',
-    SEASON_AND_POND_2_HARVEST = 'harvests',
+    SEASON_AND_POND_2_HARVEST = 'toHarvests',
     SEASON_AND_POND_2_POND_DIARY = 'pondDiary',
     SEASON_AND_POND_2_POND_PREPARE = 'pondPrepare',
     SEASON_AND_POND_2_TAKE_CARE = 'SNPToTakeCare',
     SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
     SEASON_AND_POND_2_POND_ENV = 'SeasonAndPondToPondEnv',
     //
-    SEASON_2_USER = 'users',
+    SEASON_2_USER = 'usersSeason',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
     //
     STOCKING_2_STOCKING_DETAILS = 'stockingToStockingdetails',
@@ -153,12 +153,12 @@ export enum ActionAssociateDatabase {
     //
     TAKE_CARE_2_USING_FOOD = 'takecareToUsingfoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
-    TAKE_CARE_2_SEASON_AND_POND = 'takecares',
     //
-    USER_ROLES_2_USER = 'userRoles',
+    TAKE_CARE_2_SEASON_AND_POND = 'takecares',
+    USER_ROLES_2_USER = 'users',
     USER_ROLES_2_POND_USER_ROLE = 'userrolesPondUserRoles',
     //
-    USER_2_ROLE_USER = 'userToRolesUser',
+    USER_2_ROLE_USER = 'users',
     USER_2_POND = 'userToPond',
     USER_2_COUPON = 'userToCoupon',
     USER_2_SEASON = 'userToSeason',
@@ -191,6 +191,6 @@ export interface IOptionQuery {
         limit: number
     };
     count?: boolean;
-    order?: Array<string|sortType>;
+    order?: Array<string | sortType>;
     attributes?: string;
 }

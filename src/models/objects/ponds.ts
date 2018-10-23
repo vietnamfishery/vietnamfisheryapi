@@ -12,56 +12,56 @@ export const pondOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'pondId'
+            // field: 'pondId'
         },
         pondUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'pondUUId'
+            // field: 'pondUUId'
         },
         pondName: {
             type: Sequelize.STRING(50),
-            field: 'pondName'
+            // field: 'pondName'
         },
         pondArea: {
             type: Sequelize.FLOAT,
-            field: 'pondArea'
+            // field: 'pondArea'
         },
         pondDepth: {
             type: Sequelize.FLOAT,
-            field: 'pondDepth'
+            // field: 'pondDepth'
         },
         createCost: {
             type: Sequelize.FLOAT,
-            field: 'createCost'
+            // field: 'createCost'
         },
         pondCreatedDate: {
             type: Sequelize.DATE,
-            field: 'pondCreatedDate'
+            // field: 'pondCreatedDate'
         },
         status: {
             type: Sequelize.INTEGER(11),
             allowNull: false,
             defaultValue: 0,
-            field: 'status'
+            // field: 'status'
         },
         images: {
             type: Sequelize.TEXT({ length: '1000' }),
             allowNull: true,
-            field: 'images'
+            // field: 'images'
         },
         pondLatitude: {
             type: Sequelize.DOUBLE,
-            field: 'pondLatitude'
+            // field: 'pondLatitude'
         },
         pondLongitude: {
             type: Sequelize.DOUBLE,
-            field: 'pondLongitude'
+            // field: 'pondLongitude'
         },
         createdBy: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -69,12 +69,12 @@ export const pondOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -82,13 +82,13 @@ export const pondOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {
