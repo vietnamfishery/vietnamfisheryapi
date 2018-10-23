@@ -3,7 +3,7 @@ import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
-export const storageOptions: any = _.merge({
+export const storagesOptions: any = _.merge({
     tableName: 'storages'
 },
 {
