@@ -95,16 +95,16 @@ export enum ActionAssociateDatabase {
     HARVEST_DETAIL_2_HARVEST = 'detailsHarvest',
     //
     HARVEST_2_HARVEST_DETAILS = 'harvestsToHarvestDetails',
-    HARVEST_2_SEASON = 'harvests',
+    HARVEST_2_SEASON_AND_POND = 'harvests',
     //
     MATERIAL_2_COUPON = 'materialCoupons',
     MATERIAL_2_STORAGE = 'materialStorages',
     //
-    POND_DIARY_2_SEASON = 'pondDiarys',
+    POND_DIARY_2_SEASON_AND_POND = 'pondDiarys',
     //
-    POND_ENVIRONMENT_2_SEASON = 'pondEnvironments',
+    POND_ENVIRONMENT_2_SEASON_AND_POND = 'pondEnvironments',
     //
-    POND_PREPARE_2_SEASON = 'pondPrepares',
+    POND_PREPARE_2_SEASON_AND_POND = 'pondPrepares',
     POND_PREPARE_2_COST = 'pondprepareToCosts',
     POND_PREPARE_2_POND_PREPARE_DETAILS = 'pondprepareToPondPrepareDetails',
     //
@@ -133,20 +133,13 @@ export enum ActionAssociateDatabase {
     SEASON_AND_POND_2_POND_PREPARE = 'pondPrepare',
     SEASON_AND_POND_2_TAKE_CARE = 'SNPToTakeCare',
     SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
+    SEASON_AND_POND_2_POND_ENV = 'SeasonAndPondToPondEnv',
     //
-    SEASON_2_POND = 'seasons',
-    SEASON_2_POND_DIARY = 'seasonToPonddiary',
-    SEASON_2_POND_PREPARE = 'seasonToPondprepare',
-    SEASON_2_TAKE_CARE = 'seasonToTakecare',
-    SEASON_2_GROWTH = 'seasonToGrowths',
-    SEASON_2_DIED_FISHERY = 'seasonToDiedfisherys',
-    SEASON_2_POND_ENVIRONMENT = 'seasonToPondenvironments',
-    SEASON_2_STOCKING = 'seasonToStocking',
-    SEASON_2_HARVETS = 'seasonToHarvest',
+    SEASON_2_USER = 'users',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
     //
     STOCKING_2_STOCKING_DETAILS = 'stockingToStockingdetails',
-    STOCKING_2_SEASON = 'stockings',
+    STOCKING_2_SEASON_AND_POND = 'stockings',
     //
     STOCKING_DETAILS_2_STOCKING = 'stockingDetails',
     STOCKING_DETAILS_2_BREED = 'stockingDetailsBreeds',

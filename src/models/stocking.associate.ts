@@ -13,7 +13,7 @@ export function stockingToStockingdetails(thatmodel: Sequeliz.Model<{}, any>, mo
 
 export function stockingToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.STOCKING_2_SEASON,
+        as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
         foreignKey: {
             name: 'seasonAndPondId',
             field: 'seasonAndPondId'
