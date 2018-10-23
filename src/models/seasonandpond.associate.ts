@@ -20,3 +20,13 @@ export function withPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Mod
         }
     });
 }
+
+export function withGrowth(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+        foreignKey: {
+            name: 'seasonAndPondId',
+            field: 'seasonAndPondId'
+        }
+    });
+}

@@ -14,10 +14,6 @@ export const pondOptions: any = _.merge({
             primaryKey: true,
             field: 'pondId'
         },
-        userId: {
-            type: Sequelize.BIGINT(20),
-            field: 'userId'
-        },
         pondUUId: {
             type: Sequelize.STRING(36),
             unique: true,

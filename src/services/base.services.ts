@@ -2,6 +2,7 @@ import * as Sequeliz from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
 import { IOptionsModelDB } from '../interfaces';
 import { Promise } from '../lib';
+import { ActionAssociateDatabase } from '../common';
 
 export abstract class BaseServices {
     public conn: DBHelper;
@@ -54,35 +55,6 @@ export abstract class BaseServices {
     update(entity: any, options: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.models.update(entity, options).then((res: any) => {
-                resolve(res);
-            });
-        });
-    }
-
-    test(): Promise<any> {
-        const md = this.models;
-        return new Promise((resolve, reject) => {
-            const query: any = {
-                where: {
-                    pondName: {
-                        [this.Op.like]: '%thẻ%',
-                    },
-                    [this.Op.or]: [
-                        {
-                            pondUUId: {
-                                [this.Op.like]: '%43d1%'
-                            }
-                        },
-                        {
-                            pondName: {
-                                [this.Op.like]: '%thẻ%',
-                            },
-                        }
-                    ],
-                },
-                attributes: ['pondName']
-            };
-            this.models.findAll(query).then(res => {
                 resolve(res);
             });
         });

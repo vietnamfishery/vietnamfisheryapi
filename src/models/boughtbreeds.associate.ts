@@ -12,7 +12,7 @@ export function boughtbreedsToBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, a
 }
 
 export function boughtbreedsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
+    return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.BOUGHT_BREED_2_USER,
         foreignKey: {
             name: 'userId',

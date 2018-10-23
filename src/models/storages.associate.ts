@@ -41,6 +41,16 @@ export function storagesToUsingfoods(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
+export function storagesToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.STORAGE_2_USER,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
 export function storagesToUsingveterinary(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.STORAGE_2_USING_VETERINARY,

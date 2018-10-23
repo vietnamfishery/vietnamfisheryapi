@@ -21,15 +21,15 @@ export function pondsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
     });
 }
 
-export function pondsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.POND_2_USER,
-        foreignKey: {
-            name: 'userId',
-            field: 'userId'
-        }
-    });
-}
+// export function pondsToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+//     return thatmodel.belongsTo(model, {
+//         as: ActionAssociateDatabase.POND_2_USER,
+//         foreignKey: {
+//             name: 'userId',
+//             field: 'userId'
+//         }
+//     });
+// }
 
 export function pondsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {

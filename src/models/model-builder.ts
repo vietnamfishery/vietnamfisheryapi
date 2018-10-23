@@ -95,10 +95,10 @@ export class ModelBuilder {
         associations.pondpreparedetailsToStorages(this.model, storagesModel);
     }
 
-    pondsAssociate(ponduserrolesModel: any, seasonModel: any, usersModel: any, seasonandpondModel: any) {
+    pondsAssociate(ponduserrolesModel: any, seasonModel: any, seasonandpondModel: any) {
         associations.pondsToponduserroles(this.model, ponduserrolesModel);
         associations.pondsToSeason(this.model, seasonModel);
-        associations.pondsToUsers(this.model, usersModel);
+        // associations.pondsToUsers(this.model, usersModel);
         associations.pondsToSeasonAndPond(this.model, seasonandpondModel);
     }
 
@@ -151,29 +151,29 @@ export class ModelBuilder {
         associations.stockingToSeason(this.model, seasonModel);
     }
 
-    seasonAssociate(
-        pondsModel: any,
-        ponddiaryModel: any,
-        pondprepareModel: any,
-        takecareModel: any,
-        growthsModel: any,
-        diedfisherysModel: any,
-        pondenvironmentsModel: any,
-        stockingModel: any,
-        harvestModel: any,
-        seasonAndPondModel: any
-    ) {
-        associations.seasonToPonds(this.model, pondsModel);
-        associations.seasonToPonddiary(this.model, ponddiaryModel);
-        associations.seasonToPondprepare(this.model, pondprepareModel);
-        associations.seasonToTakecare(this.model, takecareModel);
-        associations.seasonToGrowths(this.model, growthsModel);
-        associations.seasonToDiedfisherys(this.model, diedfisherysModel);
-        associations.seasonToPondenvironments(this.model, pondenvironmentsModel);
-        associations.seasonToStocking(this.model, stockingModel);
-        associations.seasonToHarvest(this.model, harvestModel);
-        associations.seasonToSeasonAndPond(this.model, seasonAndPondModel);
-    }
+    // seasonAssociate(
+    //     pondsModel: any,
+    //     ponddiaryModel: any,
+    //     pondprepareModel: any,
+    //     takecareModel: any,
+    //     growthsModel: any,
+    //     diedfisherysModel: any,
+    //     pondenvironmentsModel: any,
+    //     stockingModel: any,
+    //     harvestModel: any,
+    //     seasonAndPondModel: any
+    // ) {
+    //     associations.seasonToPonds(this.model, pondsModel);
+    //     associations.seasonToPonddiary(this.model, ponddiaryModel);
+    //     associations.seasonToPondprepare(this.model, pondprepareModel);
+    //     associations.seasonToTakecare(this.model, takecareModel);
+    //     associations.seasonToGrowths(this.model, growthsModel);
+    //     associations.seasonToDiedfisherys(this.model, diedfisherysModel);
+    //     associations.seasonToPondenvironments(this.model, pondenvironmentsModel);
+    //     associations.seasonToStocking(this.model, stockingModel);
+    //     associations.seasonToHarvest(this.model, harvestModel);
+    //     associations.seasonToSeasonAndPond(this.model, seasonAndPondModel);
+    // }
 
     seasonAndPondAssocite(
         seasonModel: any,

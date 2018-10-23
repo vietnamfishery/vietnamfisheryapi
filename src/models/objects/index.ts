@@ -3,7 +3,7 @@ export * from './boughtbreeddetails';
 export * from './boughtbreeds';
 export * from './breeds';
 export * from './costs';
-export * from './coupon';
+export * from './coupons';
 export * from './diedfisherys';
 export * from './district';
 export * from './growths';

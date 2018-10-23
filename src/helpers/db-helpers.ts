@@ -184,7 +184,7 @@ export default class DBHelper {
     public get pondsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`userOptions`], this.models[`seasonandpondOptions`]);
+        modelBuilder.pondsAssociate(this.models[`ponduserrolesOptions`], this.models[`seasonOptions`], this.models[`seasonandpondOptions`]);
         return md;
     }
 
@@ -254,18 +254,18 @@ export default class DBHelper {
     public get seasonModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.seasonAssociate(
-            this.models[`pondOptions`],
-            this.models[`ponddiaryOptions`],
-            this.models[`pondprepareOptions`],
-            this.models[`takecareOptions`],
-            this.models[`growthOptions`],
-            this.models[`diedfisherysOptions`],
-            this.models[`pondenvironmentsOptions`],
-            this.models[`stockingOptions`],
-            this.models[`harvestdetailOptions`],
-            this.models[`seasonandpondOptions`]
-        );
+        // modelBuilder.seasonAssociate(
+        //     this.models[`pondOptions`],
+        //     this.models[`ponddiaryOptions`],
+        //     this.models[`pondprepareOptions`],
+        //     this.models[`takecareOptions`],
+        //     this.models[`growthOptions`],
+        //     this.models[`diedfisherysOptions`],
+        //     this.models[`pondenvironmentsOptions`],
+        //     this.models[`stockingOptions`],
+        //     this.models[`harvestdetailOptions`],
+        //     this.models[`seasonandpondOptions`]
+        // );
         return md;
     }
 

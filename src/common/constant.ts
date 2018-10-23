@@ -76,7 +76,7 @@ export enum ActionAssociateDatabase {
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
-    BOUGHT_BREED_2_USER = 'boughtbreedsToUsers',
+    BOUGHT_BREED_2_USER = 'user',
     //
     BREED_2_BOUGHT_BREED_DETAIL = 'breedsToBoughBreedDetails',
     BREED_2_STOKING_DETAIL = 'breedsToStockingDetails',
@@ -122,8 +122,9 @@ export enum ActionAssociateDatabase {
     //
     PROVINCE_2_USER = 'provinceToUser',
     //
-    SEASON_AND_POND_2_SEASON = 'Seasons',
-    SEASON_AND_POND_2_POND = 'Ponds',
+    SEASON_AND_POND_2_SEASON = 'seasons',
+    SEASON_AND_POND_2_POND = 'ponds',
+    SEASON_AND_POND_2_GROWTH = 'seasonNPondToGrowth',
     //
     SEASON_2_POND = 'seasons',
     SEASON_2_POND_DIARY = 'seasonToPonddiary',
@@ -147,6 +148,7 @@ export enum ActionAssociateDatabase {
     STORAGE_2_PRICE = 'storagesToPrices',
     STORAGE_2_USING_FOOD = 'storagesToUsingfoods',
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
+    STORAGE_2_USER = 'storages',
     //
     TAKE_CARE_2_USING_FOOD = 'takecareToUsingfoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
@@ -158,10 +160,12 @@ export enum ActionAssociateDatabase {
     USER_2_ROLE_USER = 'userToRolesUser',
     USER_2_POND = 'userToPond',
     USER_2_COUPON = 'userToCoupon',
+    USER_2_SEASON = 'userToSeason',
     USER_2_BOUGHT_BREED = 'userToBoughtBreeds',
     USER_2_PRO = 'provinces',
     USER_2_DIS = 'districts',
     USER_2_WAR = 'wards',
+    USER_2_STORAGE = 'userToStorage',
     //
     USING_FOOD_2_STORAGE = 'usingFoodsStorages',
     USING_FOOD_2_TAKE_CARE = 'usingFoodsTakeCare',

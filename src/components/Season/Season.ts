@@ -7,7 +7,7 @@ export class Season extends BaseComponent {
     private seasonServices: SeasonServices;
     private seasonId: number;
     private seasonUUId: string;
-    private pondId: number;
+    private userId: number;
     private seasonName: string;
     constructor() {
         super();
@@ -23,8 +23,8 @@ export class Season extends BaseComponent {
         this.seasonUUId = seasonUUId;
     }
 
-    public set setPondId(pondId) {
-        this.pondId = pondId;
+    public set setUserId(userId) {
+        this.userId = userId;
     }
 
     public set setSeasonName(seasonName) {
@@ -34,12 +34,12 @@ export class Season extends BaseComponent {
     public setSeason(
         seasonId: number,
         seasonUUId: string,
-        pondId: number,
+        userId: number,
         seasonName: string
     ) {
         this.setSeasonId = seasonId;
         this.setSeasonUUId = seasonUUId;
-        this.setPondId = pondId;
+        this.setUserId = userId;
         this.setSeasonName = seasonName;
     }
 
@@ -51,8 +51,8 @@ export class Season extends BaseComponent {
         return this.seasonUUId;
     }
 
-    public get getPondId(): number {
-        return this.pondId;
+    public get getUserId(): number {
+        return this.userId;
     }
 
     public get getSeasonName(): string {
@@ -67,7 +67,7 @@ export class Season extends BaseComponent {
 
     public get getForeignKey(): any {
         return {
-            pondId: this.getPondId
+            userId: this.getUserId
         };
     }
 }

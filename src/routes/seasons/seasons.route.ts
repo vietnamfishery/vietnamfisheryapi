@@ -2,7 +2,7 @@ import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage, ActionServer } from '../../common';
+import { ActionServer } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 
@@ -43,8 +43,10 @@ export class SeasonRoute extends BaseRoute {
 
     private addSeason = (request: Request, response: Response, next: NextFunction) => {
         const action = ActionServer.INSERT;
-        const { pondId, seasonName } = request.body;
-        this.season.setSeason(null, uuidv4(), pondId, seasonName);
+        const { seasonName } = request.body;
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        this.season.setSeason(null, uuidv4(), decodeToken.userId, seasonName);
         this.season.upsert(action).then((res: any) => {
             if(res) {
                 response.status(200).json({
@@ -65,7 +67,6 @@ export class SeasonRoute extends BaseRoute {
 
     private getSeasons = (request: Request, response: Response, next: NextFunction) => {
         const action = ActionServer.GET;
-        this.season.setPondId = request.params.pondId;
         this.season.gets(action).then(season => {
             response.status(200).json({
                 success: true,

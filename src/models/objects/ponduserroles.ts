@@ -21,6 +21,7 @@ export const ponduserrolesOptions: any = _.merge({
             }
         },
         options: {
-            //
+            defaultScope: {},
+            scopes: {}
         }
     }, _.cloneDeep(baseModel));
