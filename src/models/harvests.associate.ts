@@ -13,7 +13,7 @@ export function harvestsToHarvestDetails(thatmodel: Sequeliz.Model<{}, any>, mod
 
 export function harvestsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.HARVEST_2_SEASON,
+        as: ActionAssociateDatabase.HARVEST_2_SEASON_AND_POND,
         foreignKey: {
             name: 'seasonAndPondId',
             field: 'seasonAndPondId'

@@ -73,7 +73,7 @@ export function withPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Seque
 
 export function withPondEnv(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+        as: ActionAssociateDatabase.SEASON_AND_POND_2_POND_ENV,
         foreignKey: {
             name: 'seasonAndPondId',
             field: 'seasonAndPondId'
