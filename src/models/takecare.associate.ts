@@ -30,3 +30,13 @@ export function takecareToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
         }
     });
 }
+
+export function takecareToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    // return thatmodel.belongsTo(model, {
+    //     as: ActionAssociateDatabase.TAKE_CARE_2_SEASON,
+    //     foreignKey: {
+    //         name: 'seasonId',
+    //         field: 'seasonId'
+    //     }
+    // });
+}

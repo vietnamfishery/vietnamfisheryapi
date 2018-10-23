@@ -41,15 +41,15 @@ export function seasonToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
 //     });
 // }
 
-// export function seasonToTakecare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-//     return thatmodel.hasMany(model, {
-//         as: ActionAssociateDatabase.SEASON_2_TAKE_CARE,
-//         foreignKey: {
-//             name: 'seasonId',
-//             field: 'seasonId'
-//         }
-//     });
-// }
+export function seasonToTakecare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.SEASON_2_TAKE_CARE,
+        foreignKey: {
+            name: 'seasonId',
+            field: 'seasonId'
+        }
+    });
+}
 
 // export function seasonToGrowths(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
 //     return thatmodel.hasMany(model, {

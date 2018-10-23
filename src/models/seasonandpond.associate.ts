@@ -30,3 +30,23 @@ export function withGrowth(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
         }
     });
 }
+
+export function SNPToTakeCare(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    // return thatmodel.hasMany(model, {
+    //     as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+    //     foreignKey: {
+    //         name: 'seasonAndPondId',
+    //         field: 'seasonAndPondId'
+    //     }
+    // });
+}
+
+export function SNPToStocking(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    // return thatmodel.hasMany(model, {
+    //     as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+    //     foreignKey: {
+    //         name: 'seasonAndPondId',
+    //         field: 'seasonAndPondId'
+    //     }
+    // });
+}
