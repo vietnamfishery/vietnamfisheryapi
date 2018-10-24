@@ -12,29 +12,27 @@ export const pricesOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'priceId'
+            // field: 'priceId'
         },
         priceUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'priceUUId'
+            allowNull: false,
+            // field: 'priceUUId'
         },
-        storageId: {
+        seasonId: {
             type: Sequelize.BIGINT(20),
-            field: 'storageId'
+            unique: true,
+            allowNull: false,
+            // field: 'seasonId'
         },
-        quantity: {
-            type: Sequelize.FLOAT,
-            field: 'quantity'
+        totalCost: {
+            type: Sequelize.DOUBLE,
+            // field: 'totalCost'
         },
-        unit: {
-            type: Sequelize.INTEGER(1),
-            allowNull: true,
-            field: 'unit'
-        },
-        value: {
-            type: Sequelize.FLOAT,
-            field: 'value'
+        totalProfit: {
+            type: Sequelize.DOUBLE,
+            // field: 'totalProfit'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -42,13 +40,12 @@ export const pricesOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

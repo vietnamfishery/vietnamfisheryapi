@@ -10,15 +10,19 @@ export const seasonandpondOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'seasonAndPondId'
+            // field: 'seasonAndPondId'
         },
         seasonId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            allowNull: false,
+            unique: true,
+            // field: 'seasonId'
         },
         pondId: {
             type: Sequelize.BIGINT(20),
-            field: 'pondId'
+            allowNull: false,
+            unique: true,
+            // field: 'pondId'
         }
     },
     options: {

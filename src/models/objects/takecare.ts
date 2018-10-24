@@ -12,24 +12,26 @@ export const takecareOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'takeCareId'
+            // field: 'takeCareId'
         },
         takeCareUUId: {
             type: Sequelize.STRING(36),
+            allowNull: false,
             unique: true,
-            field: 'takeCareUUId'
+            // field: 'takeCareUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         takeCareName: {
             type: Sequelize.STRING(100),
-            field: 'takeCareName'
+            // field: 'takeCareName'
         },
         takeType: {
             type: Sequelize.INTEGER(1),
-            field: 'takeType'
+            // field: 'takeType'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -37,13 +39,12 @@ export const takecareOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

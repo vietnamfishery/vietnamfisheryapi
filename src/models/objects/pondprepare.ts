@@ -12,30 +12,31 @@ export const pondprepareOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'pondPrepareId'
+            // field: 'pondPrepareId'
         },
         pondPrepareUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'pondPrepareUUId'
+            allowNull: false,
+            // field: 'pondPrepareUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         pondprepareName: {
             type: Sequelize.STRING(50),
-            field: 'pondprepareName'
+            // field: 'pondprepareName'
         },
         notes: {
             type: Sequelize.TEXT,
             allowNull: true,
-            field: 'notes'
+            // field: 'notes'
         },
         createdBy: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            field: 'createdBy'
+            type: Sequelize.STRING(36),
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -43,12 +44,11 @@ export const pondprepareOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            field: 'updatedBy'
+            type: Sequelize.STRING(36),
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -56,13 +56,12 @@ export const pondprepareOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

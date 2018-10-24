@@ -8,38 +8,44 @@ export const usingfoodOptions: any = _.merge({
 },
 {
     attributes: {
-        usingFoodUUId: {
-            type: Sequelize.STRING(36),
-            unique: true,
-            field: 'usingFoodUUId'
-        },
-        storageId: {
+        usingFoodId: {
+            autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'storageId'
+            // field: 'usingFoodId'
+        },
+        usingFoodUUId: {
+            type: Sequelize.STRING(36),
+            allowNull: false,
+            unique: true,
+            // field: 'usingFoodUUId'
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            unique: true,
-            field: 'takeCareId'
+            allowNull: false,
+            // field: 'takeCareId'
+        },
+        materialId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'materialId'
         },
         massOfFishery: {
             type: Sequelize.FLOAT,
-            field: 'massOfFishery'
+            // field: 'massOfFishery'
         },
         feedingRate: {
             type: Sequelize.FLOAT,
-            field: 'feedingRate'
+            // field: 'feedingRate'
         },
         totalFood: {
             type: Sequelize.FLOAT,
-            field: 'totalFood'
+            // field: 'totalFood'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -47,13 +53,12 @@ export const usingfoodOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

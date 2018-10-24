@@ -12,39 +12,41 @@ export const diedfisherysOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'diedFisheryId'
+            // field: 'diedFisheryId'
         },
         diedFisheryUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'diedFisheryUUId'
+            allowNull: false,
+            // field: 'diedFisheryUUId'
         },
-        seasonId: {
+        seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         card: {
             type: Sequelize.STRING(100),
-            field: 'card'
+            // field: 'card'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         solutions: {
             type: Sequelize.TEXT,
             allowNull: true,
-            field: 'solutions'
+            // field: 'solutions'
         },
         employee: {
             type: Sequelize.STRING(50),
             allowNull: true,
-            field: 'employee'
+            // field: 'employee'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -52,12 +54,12 @@ export const diedfisherysOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -65,13 +67,12 @@ export const diedfisherysOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

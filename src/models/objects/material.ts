@@ -12,60 +12,57 @@ export const materialOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'materialId'
+            // field: 'materialId'
         },
         materialUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'materialUUId'
+            allowNull: false,
+            // field: 'materialUUId'
         },
         itemName: {
             type: Sequelize.STRING(100),
-            field: 'itemName'
+            // field: 'itemName'
         },
         provider: {
             type: Sequelize.STRING(100),
-            allowNull: true,
-            field: 'provider'
+            // field: 'provider'
         },
         providerAddress: {
             type: Sequelize.STRING,
-            allowNull: true,
-            field: 'providerAddress'
+            // field: 'providerAddress'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         unit: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
-            field: 'unit'
+            // field: 'unit'
         },
         unitPrice: {
             type: Sequelize.FLOAT,
-            field: 'unitPrice'
+            // field: 'unitPrice'
         },
         dom: {
             type: Sequelize.DATE,
             allowNull: true,
-            field: 'dom'
+            // field: 'dom'
         },
         ed: {
             type: Sequelize.DATE,
             allowNull: true,
-            field: 'ed'
+            // field: 'ed'
         },
         prodcutionBatch: {
             type: Sequelize.STRING(100),
             allowNull: true,
-            field: 'prodcutionBatch'
+            // field: 'prodcutionBatch'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

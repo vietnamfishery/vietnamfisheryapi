@@ -11,15 +11,15 @@ export const provinceOptions: any = _.merge({
         provinceid: {
             type: Sequelize.STRING(5),
             primaryKey: true,
-            field: 'provinceid'
+            // field: 'provinceid'
         },
         name: {
             type: Sequelize.STRING(100),
-            field: 'name'
+            // field: 'name'
         },
         type: {
             type: Sequelize.STRING(30),
-            field: 'type'
+            // field: 'type'
         }
     },
     options: {

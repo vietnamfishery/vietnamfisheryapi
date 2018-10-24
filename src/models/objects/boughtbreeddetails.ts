@@ -11,36 +11,36 @@ export const boughtbreeddetailsOptions: any = _.merge({
         boughtBreedDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'boughtBreedDetailUUId'
+            allowNull: false,
+            // field: 'boughtBreedDetailUUId'
         },
         boughtBreedId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'boughtBreedId'
-        },
-        breedId: {
-            type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            field: 'breedId'
+            // field: 'boughtBreedId'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         unitPrice: {
             type: Sequelize.FLOAT,
-            field: 'unitPrice'
+            // field: 'unitPrice'
         },
         soldAddress: {
             type: Sequelize.STRING,
             allowNull: true,
-            field: 'soldAddress'
+            // field: 'soldAddress'
+        },
+        notes: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            // field: 'notes'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

@@ -10,39 +10,39 @@ export const stockingdetailOptions: any = _.merge({
     attributes: {
         stockingDetailUUId: {
             type: Sequelize.STRING(36),
+            allowNull: false,
             unique: true,
-            field: 'stockingDetailUUId'
+            // field: 'stockingDetailUUId'
         },
         breedId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'breedId'
+            // field: 'breedId'
         },
         stockingId: {
-            autoIncrement: true,
+            // autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'stockingId'
+            // field: 'stockingId'
         },
         stockingQuantity: {
             type: Sequelize.BIGINT(20),
-            field: 'stockingQuantity'
+            // field: 'stockingQuantity'
         },
         phFirst: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'phFirst'
+            // field: 'phFirst'
         },
         salinityFirst: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'salinityFirst'
+            // field: 'salinityFirst'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

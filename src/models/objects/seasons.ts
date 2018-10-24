@@ -12,20 +12,27 @@ export const seasonOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'seasonId'
+            // field: 'seasonId'
         },
         seasonUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'seasonUUId'
+            allowNull: false,
+            // field: 'seasonUUId'
         },
         userId: {
             type: Sequelize.BIGINT(20),
-            field: 'userId'
+            allowNull: false,
+            // field: 'userId'
         },
         seasonName: {
             type: Sequelize.STRING(100),
-            field: 'seasonName'
+            // field: 'seasonName'
+        },
+        status: {
+            type: Sequelize.INTEGER(1),
+            defaultValue: 0,
+            // field: 'seasonName'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -33,13 +40,12 @@ export const seasonOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

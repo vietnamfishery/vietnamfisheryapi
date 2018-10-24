@@ -12,21 +12,23 @@ export const stockingOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'stockingId'
+            // field: 'stockingId'
         },
         stockingUUId: {
             type: Sequelize.STRING(36),
+            allowNull: false,
             unique: true,
-            field: 'stockingUUId'
+            // field: 'stockingUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         notes: {
             type: Sequelize.TEXT,
             allowNull: true,
-            field: 'notes'
+            // field: 'notes'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -34,13 +36,11 @@ export const stockingOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
-            type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

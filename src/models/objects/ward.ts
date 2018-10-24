@@ -9,23 +9,24 @@ export const wardOptions: any = _.merge({
         wardid: {
             type: Sequelize.STRING(5),
             primaryKey: true,
-            field: 'wardid'
+            // field: 'wardid'
         },
         name: {
             type: Sequelize.STRING(100),
-            field: 'name'
+            // field: 'name'
         },
         type: {
             type: Sequelize.STRING(30),
-            field: 'type'
+            // field: 'type'
         },
         location: {
             type: Sequelize.STRING(30),
-            field: 'location'
+            // field: 'location'
         },
         districtid: {
             type: Sequelize.STRING(5),
-            field: 'districtid'
+            allowNull: false,
+            // field: 'districtid'
         }
     },
     options: {

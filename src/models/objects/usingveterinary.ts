@@ -8,56 +8,62 @@ export const usingveterinaryOptions: any = _.merge({
 },
 {
     attributes: {
-        usingVeterinaryUUId: {
-            type: Sequelize.STRING(36),
-            unique: true,
-            field: 'usingVeterinaryUUId'
-        },
-        storageId: {
+        usingVeterinaryId: {
+            autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'storageId'
+            // field: 'usingVeterinaryId'
+        },
+        usingVeterinaryUUId: {
+            type: Sequelize.STRING(36),
+            allowNull: false,
+            unique: true,
+            // field: 'usingVeterinaryUUId'
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            unique: true,
-            field: 'takeCareId'
+            allowNull: false,
+            // field: 'takeCareId'
+        },
+        materialId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'materialId'
         },
         causesNSymptoms: {
             type: Sequelize.STRING,
-            field: 'causesNSymptoms'
+            // field: 'causesNSymptoms'
         },
         averageSize: {
             type: Sequelize.FLOAT,
-            field: 'averageSize'
+            // field: 'averageSize'
         },
         totalBiomass: {
             type: Sequelize.FLOAT,
-            field: 'totalBiomass'
+            // field: 'totalBiomass'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         result: {
             type: Sequelize.STRING(100),
-            field: 'result'
+            // field: 'result'
         },
         latestHarvestDate: {
             type: Sequelize.INTEGER(11),
             allowNull: true,
-            field: 'latestHarvestDate'
+            // field: 'latestHarvestDate'
         },
         mentor: {
             type: Sequelize.STRING(50),
             allowNull: true,
-            field: 'mentor'
+            // field: 'mentor'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -65,13 +71,12 @@ export const usingveterinaryOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

@@ -12,37 +12,39 @@ export const growthOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'growthId'
+            // field: 'growthId'
         },
         growthUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'growthUUId'
+            allowNull: false,
+            // field: 'growthUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         averageDensity: {
             type: Sequelize.FLOAT,
-            field: 'averageDensity'
+            // field: 'averageDensity'
         },
         averageMass: {
             type: Sequelize.FLOAT,
-            field: 'averageMass'
+            // field: 'averageMass'
         },
         speedOdGrowth: {
             type: Sequelize.FLOAT,
-            field: 'speedOdGrowth'
+            // field: 'speedOdGrowth'
         },
         livingRatio: {
             type: Sequelize.FLOAT,
-            field: 'livingRatio'
+            // field: 'livingRatio'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -50,12 +52,12 @@ export const growthOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -63,13 +65,12 @@ export const growthOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {
