@@ -12,27 +12,34 @@ export const couponOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'couponId'
+            // field: 'couponId'
         },
-        userId: {
+        // userId: {
+        //     type: Sequelize.BIGINT(20),
+        //     field: 'userId'
+        // },
+        seasonId: {
             type: Sequelize.BIGINT(20),
-            field: 'userId'
+            // field: 'seasonId',
+            allowNull: false,
         },
         materialId: {
             type: Sequelize.BIGINT(20),
-            field: 'materialId'
-        },
-        itemUUId: {
-            type: Sequelize.STRING(36),
-            field: 'itemUUId'
+            // field: 'materialId',
+            allowNull: false,
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         unitPrices: {
             type: Sequelize.DOUBLE,
-            field: 'unitPrices'
+            // field: 'unitPrices'
+        },
+        providerInfo: {
+            type: Sequelize.STRING,
+            // field: 'providerInfo',
+            allowNull: true,
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -40,13 +47,12 @@ export const couponOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

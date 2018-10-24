@@ -16,6 +16,7 @@ export const userrolesOptions: any = _.merge({
         },
         userId: {
             type: Sequelize.BIGINT(20),
+            allowNull: false,
             unique: true
             // field: 'userId'
         },
@@ -32,13 +33,12 @@ export const userrolesOptions: any = _.merge({
             // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
             // field: 'updatedBy'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
             // field: 'isDeleted'
         }

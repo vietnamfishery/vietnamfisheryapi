@@ -12,66 +12,68 @@ export const pondenvironmentsOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'pondEnvironmentId'
+            // field: 'pondEnvironmentId'
         },
         pondEnvironmentUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'pondEnvironmentUUId'
+            allowNull: false,
+            // field: 'pondEnvironmentUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         oxyMorning: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'oxyMorning'
+            // field: 'oxyMorning'
         },
         oxyAfternoon: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'oxyAfternoon'
+            // field: 'oxyAfternoon'
         },
         phMorning: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'phMorning'
+            // field: 'phMorning'
         },
         phAfternoon: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'phAfternoon'
+            // field: 'phAfternoon'
         },
         transparent: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'transparent'
+            // field: 'transparent'
         },
         salinity: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'salinity'
+            // field: 'salinity'
         },
         h2s: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'h2s'
+            // field: 'h2s'
         },
         nh3: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'nh3'
+            // field: 'nh3'
         },
         bazo: {
             type: Sequelize.FLOAT,
             allowNull: true,
-            field: 'bazo'
+            // field: 'bazo'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -79,12 +81,12 @@ export const pondenvironmentsOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -92,13 +94,12 @@ export const pondenvironmentsOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

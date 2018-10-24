@@ -9,23 +9,24 @@ export const districtOptions: any = _.merge({
         districtid: {
             type: Sequelize.STRING(5),
             primaryKey: true,
-            field: 'districtid'
+            // field: 'districtid'
         },
         name: {
             type: Sequelize.STRING(100),
-            field: 'name'
+            // field: 'name'
         },
         type: {
             type: Sequelize.STRING(30),
-            field: 'type'
+            // field: 'type'
         },
         location: {
             type: Sequelize.STRING(30),
-            field: 'location'
+            // field: 'location'
         },
         provinceid: {
             type: Sequelize.STRING(5),
-            field: 'provinceid'
+            allowNull: false,
+            // field: 'provinceid'
         }
     },
     options: {

@@ -12,38 +12,40 @@ export const costsOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'costId'
+            // field: 'costId'
         },
         costUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'costUUId'
+            allowNull: false,
+            // field: 'costUUId'
         },
         pondPrepareId: {
             type: Sequelize.BIGINT(20),
-            field: 'pondPrepareId'
+            allowNull: false,
+            // field: 'pondPrepareId'
         },
         label: {
             type: Sequelize.STRING(100),
-            field: 'label'
+            // field: 'label'
         },
         value: {
             type: Sequelize.FLOAT,
-            field: 'value'
+            // field: 'value'
         },
         responsible: {
             type: Sequelize.STRING(100),
-            field: 'responsible'
+            // field: 'responsible'
         },
         notes: {
             type: Sequelize.TEXT,
             allowNull: true,
-            field: 'notes'
+            // field: 'notes'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -51,12 +53,12 @@ export const costsOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -64,13 +66,12 @@ export const costsOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

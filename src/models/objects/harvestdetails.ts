@@ -11,30 +11,26 @@ export const harvestdetailOptions: any = _.merge({
         harvestIdDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            field: 'harvestIdDetailUUId'
+            allowNull: false,
+            // field: 'harvestIdDetailUUId'
         },
         harvestId: {
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'harvestId'
-        },
-        breedName: {
-            type: Sequelize.STRING(80),
-            field: 'breedName'
+            // field: 'harvestId'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            field: 'quantity'
+            // field: 'quantity'
         },
         unitPrice: {
             type: Sequelize.FLOAT,
-            field: 'unitPrice'
+            // field: 'unitPrice'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

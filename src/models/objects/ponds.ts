@@ -17,6 +17,7 @@ export const pondOptions: any = _.merge({
         pondUUId: {
             type: Sequelize.STRING(36),
             unique: true,
+            allowNull: false,
             // field: 'pondUUId'
         },
         pondName: {
@@ -35,12 +36,8 @@ export const pondOptions: any = _.merge({
             type: Sequelize.FLOAT,
             // field: 'createCost'
         },
-        pondCreatedDate: {
-            type: Sequelize.DATE,
-            // field: 'pondCreatedDate'
-        },
         status: {
-            type: Sequelize.INTEGER(11),
+            type: Sequelize.INTEGER(1),
             allowNull: false,
             defaultValue: 0,
             // field: 'status'
@@ -52,14 +49,20 @@ export const pondOptions: any = _.merge({
         },
         pondLatitude: {
             type: Sequelize.DOUBLE,
+            allowNull: true,
             // field: 'pondLatitude'
         },
         pondLongitude: {
             type: Sequelize.DOUBLE,
+            allowNull: true,
             // field: 'pondLongitude'
         },
+        pondCreatedDate: {
+            type: Sequelize.DATE,
+            // field: 'pondCreatedDate'
+        },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
             // field: 'createdBy'
         },
@@ -72,7 +75,7 @@ export const pondOptions: any = _.merge({
             // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
             // field: 'updatedBy'
         },
@@ -86,7 +89,6 @@ export const pondOptions: any = _.merge({
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
             // field: 'isDeleted'
         }

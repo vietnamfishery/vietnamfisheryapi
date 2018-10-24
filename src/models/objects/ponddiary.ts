@@ -12,42 +12,39 @@ export const ponddiaryOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            field: 'pondDiaryId'
+            // field: 'pondDiaryId'
         },
         pondDiaryUUId: {
             type: Sequelize.STRING(36),
+            allowNull: false,
             unique: true,
-            field: 'pondDiaryUUId'
+            // field: 'pondDiaryUUId'
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            field: 'seasonAndPondId'
-        },
-        pondId: {
-            type: Sequelize.BIGINT(20),
-            fields: 'pondId'
+            allowNull: false,
+            // field: 'seasonAndPondId'
         },
         fisheryQuantity: {
             type: Sequelize.FLOAT,
-            field: 'fisheryQuantity'
+            // field: 'fisheryQuantity'
         },
         healthOfFishery: {
-            type: Sequelize.STRING,
-            field: 'healthOfFishery'
+            type: Sequelize.STRING(36),
+            // field: 'healthOfFishery'
         },
         pondVolume: {
             type: Sequelize.FLOAT,
-            field: 'pondVolume'
+            // field: 'pondVolume'
         },
         diedFishery: {
             type: Sequelize.INTEGER(11),
-            unique: true,
-            field: 'diedFishery'
+            // field: 'diedFishery'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'createdBy'
+            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -55,12 +52,12 @@ export const ponddiaryOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'createdDate'
+            // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
-            field: 'updatedBy'
+            // field: 'updatedBy'
         },
         updatedDate: {
             type: Sequelize.DATE,
@@ -68,13 +65,12 @@ export const ponddiaryOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            field: 'updatedDate'
+            // field: 'updatedDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
-            field: 'isDeleted'
+            // field: 'isDeleted'
         }
     },
     options: {

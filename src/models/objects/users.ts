@@ -16,6 +16,7 @@ export const userOptions: any = _.merge({
         },
         userUUId: {
             type: Sequelize.STRING(36),
+            allowNull: false,
             unique: true,
             // field: 'userUUId'
         },
@@ -27,8 +28,19 @@ export const userOptions: any = _.merge({
             type: Sequelize.STRING(50),
             // field: 'lastname'
         },
+        birthday: {
+            type: Sequelize.DATE,
+            allowNull: true,
+            // field: 'birthday'
+        },
+        addressContact: {
+            type: Sequelize.STRING,
+            allowNull: true,
+            // field: 'addressContact'
+        },
         username: {
             type: Sequelize.STRING(50),
+            allowNull: false,
             unique: true,
             // field: 'username'
         },
@@ -36,23 +48,18 @@ export const userOptions: any = _.merge({
             type: Sequelize.STRING(100),
             // field: 'password'
         },
-        birthday: {
-            type: Sequelize.DATE,
-            allowNull: true,
-            // field: 'birthday'
-        },
         town: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(50),
             allowNull: true,
             // field: 'town'
         },
         district: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(50),
             allowNull: true,
             // field: 'district'
         },
         province: {
-            type: Sequelize.STRING(20),
+            type: Sequelize.STRING(5),
             allowNull: true,
             // field: 'province'
         },
@@ -63,7 +70,7 @@ export const userOptions: any = _.merge({
             // field: 'status'
         },
         phone: {
-            type: Sequelize.STRING(12),
+            type: Sequelize.STRING(15),
             allowNull: true,
             // field: 'phone'
         },
@@ -75,10 +82,10 @@ export const userOptions: any = _.merge({
         images: {
             type: Sequelize.TEXT({ length: '1000' }),
             allowNull: true,
-            field: 'images'
+            // field: 'images'
         },
         createdBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
             // field: 'createdBy'
         },
@@ -91,7 +98,7 @@ export const userOptions: any = _.merge({
             // field: 'createdDate'
         },
         updatedBy: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(36),
             allowNull: true,
             // field: 'updatedBy'
         },
@@ -105,7 +112,6 @@ export const userOptions: any = _.merge({
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
-            allowNull: true,
             defaultValue: 0,
             // field: 'isDeleted'
         }
