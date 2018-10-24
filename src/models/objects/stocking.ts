@@ -39,6 +39,7 @@ export const stockingOptions: any = _.merge({
             // field: 'createdDate'
         },
         isDeleted: {
+            type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
             // field: 'isDeleted'

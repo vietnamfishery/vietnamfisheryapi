@@ -23,7 +23,7 @@ export function seasonToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
 
 export function seasonToPrice(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.SEASON_2_COUPON,
+        as: ActionAssociateDatabase.SEASON_2_PRICE,
         foreignKey: {
             name: 'seasonId',
             field: 'seasonId'
