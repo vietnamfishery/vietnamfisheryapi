@@ -40,6 +40,7 @@ export const stockingOptions: any = _.merge({
         },
         isDeleted: {
             defaultValue: 0,
+            allowNull: true
             // field: 'isDeleted'
         }
     },

@@ -1,7 +1,7 @@
 import * as Sequelize from 'sequelize';
 import * as _ from 'lodash';
 
-export const seasonandpondOptions: any = _.merge({
+export const seasonAndPondOptions: any = _.merge({
     tableName: 'seasonandpond'
 },
 {

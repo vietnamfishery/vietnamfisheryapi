@@ -61,6 +61,7 @@ export const pondprepareOptions: any = _.merge({
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
+            allowNull: true
             // field: 'isDeleted'
         }
     },

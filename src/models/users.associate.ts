@@ -80,13 +80,3 @@ export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
         }
     });
 }
-
-// export function userToStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-//     return thatmodel.belongsTo(model, {
-//         as: ActionAssociateDatabase.USER_2_STORAGE,
-//         foreignKey: {
-//             name: 'userId',
-//             field: 'userId'
-//         }
-//     });
-// }

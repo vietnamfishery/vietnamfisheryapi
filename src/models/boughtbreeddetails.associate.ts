@@ -11,8 +11,6 @@ export function boughtbreeddetailsToBoughtBreeds(thatmodel: Sequeliz.Model<{}, a
     });
 }
 
-//
-
 export function boughtbreeddetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.BOUGHT_BREED_DETAIL_2_BREED,
@@ -22,3 +20,5 @@ export function boughtbreeddetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, m
         }
     });
 }
+
+//

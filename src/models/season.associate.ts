@@ -21,7 +21,7 @@ export function seasonToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
     });
 }
 
-export function seasonTopPrice(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function seasonToPrice(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_2_COUPON,
         foreignKey: {
