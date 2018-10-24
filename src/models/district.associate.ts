@@ -10,3 +10,5 @@ export function districtToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
         }
     });
 }
+
+//

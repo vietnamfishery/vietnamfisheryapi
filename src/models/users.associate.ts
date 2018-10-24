@@ -1,6 +1,16 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
+export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.USER_2_DIS,
+        foreignKey: {
+            field: 'district',
+            name: 'district'
+        }
+    });
+}
+
 export function userToRolesUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.USER_2_ROLE_USER,
@@ -14,16 +24,6 @@ export function userToRolesUser(thatmodel: Sequeliz.Model<{}, any>, model: Seque
 export function userToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.USER_2_POND,
-        foreignKey: {
-            name: 'userId',
-            field: 'userId'
-        }
-    });
-}
-
-export function userToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_SEASON,
         foreignKey: {
             name: 'userId',
             field: 'userId'
@@ -61,12 +61,12 @@ export function userToProvince(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
     });
 }
 
-export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.USER_2_DIS,
+export function userToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_SEASON,
         foreignKey: {
-            field: 'district',
-            name: 'district'
+            name: 'userId',
+            field: 'userId'
         }
     });
 }

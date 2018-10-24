@@ -20,3 +20,5 @@ export function harvestsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, mode
         }
     });
 }
+
+//

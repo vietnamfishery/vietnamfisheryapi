@@ -77,13 +77,15 @@ export enum ActionAssociateDatabase {
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
     BOUGHT_BREED_2_USER = 'users',
+    BOUGHT_BREED_2_BREED = 'breed',
     //
-    BREED_2_BOUGHT_BREED_DETAIL = 'breedsToBoughBreedDetails',
-    BREED_2_STOKING_DETAIL = 'breedsToStockingDetails',
+    BREED_2_BOUGHT_BREED = 'boughBreed',
+    BREED_2_STOKING_DETAIL = 'stockingDetails',
     //
     COST_2_POND_PREPARE = 'costs',
     //
-    COUPON_2_MATERIAL = 'couponToMaterial',
+    COUPON_2_MATERIAL = 'material',
+    COUPON_2_SEASON = 'season',
     COUPON_2_USER = 'coupons',
     //
     DIED_FISHERY_2_SEASON_AND_POND = 'diedFish',
@@ -92,24 +94,27 @@ export enum ActionAssociateDatabase {
     //
     GROWTH_2_SEASON_AND_POND = 'growths',
     //
-    HARVEST_DETAIL_2_HARVEST = 'detailsHarvest',
+    HARVEST_DETAIL_2_HARVEST = 'harvestDetail',
     //
-    HARVEST_2_HARVEST_DETAILS = 'harvestsToHarvestDetails',
+    HARVEST_2_HARVEST_DETAILS = 'harvest',
     HARVEST_2_SEASON_AND_POND = 'harvests',
     //
-    MATERIAL_2_COUPON = 'materialCoupons',
+    MATERIAL_2_COUPON = 'coupon',
+    MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
     MATERIAL_2_STORAGE = 'materialStorages',
+    MATERIAL_2_USING_FOOD = 'usingFoods',
+    MATERIAL_2_USING_VETERINARY = 'usingVeterinay',
     //
     POND_DIARY_2_SEASON_AND_POND = 'pondDiarys',
     //
-    POND_ENVIRONMENT_2_SEASON_AND_POND = 'pondEnvironments',
+    POND_ENVIRONMENT_2_SEASON_AND_POND = 'environments',
     //
     POND_PREPARE_2_SEASON_AND_POND = 'pondPrepares',
-    POND_PREPARE_2_COST = 'pondprepareToCosts',
+    POND_PREPARE_2_COST = 'pondPrepare',
     POND_PREPARE_2_POND_PREPARE_DETAILS = 'pondprepareToPondPrepareDetails',
     //
     POND_PREPARE_DETAIL_2_POND_PREPARE = 'detailPondPrepare',
-    POND_PREPARE_DETAIL_2_STORAGE = 'detailStorages',
+    POND_PREPARE_DETAIL_2_MATERIAL = 'pondPrepares',
     POND_PREPARE_DETAIL_2_COST = 'detailCost',
     //
     POND_2_POND_USER_ROLE = 'pondUserRoles',
@@ -117,28 +122,32 @@ export enum ActionAssociateDatabase {
     POND_2_USER = 'ponds',
     POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
     //
-    POND_USER_ROLE_2_USER_ROLE = 'userroles',
-    POND_USER_ROLE_2_POND = 'pondUserRolesPond',
+    POND_USER_ROLE_2_USER_ROLE = 'pondUserRolesWithUserRoles',
+    POND_USER_ROLE_2_POND = 'pondUserRoles',
     //
-    PRICE_2_STORAGE = 'prices',
+    PRICE_2_SEASON = 'prices',
     //
     PROVINCE_2_USER = 'provinceToUser',
     //
     SEASON_AND_POND_2_SEASON = 'seasons',
-    SEASON_AND_POND_2_POND = 'toPonds',
+    SEASON_AND_POND_2_POND = 'ponds',
     SEASON_AND_POND_2_GROWTH = 'seasonNPondToGrowth',
     SEASON_AND_POND_2_DIED_FISH = 'diedFishSeason',
     SEASON_AND_POND_2_HARVEST = 'toHarvests',
-    SEASON_AND_POND_2_POND_DIARY = 'pondDiary',
-    SEASON_AND_POND_2_POND_PREPARE = 'pondPrepare',
-    SEASON_AND_POND_2_TAKE_CARE = 'SNPToTakeCare',
+    SEASON_AND_POND_2_POND_DIARY = 'seasonWithDiary',
+    SEASON_AND_POND_2_POND_PREPARE = 'withPondPrepare',
+    SEASON_AND_POND_2_TAKE_CARE = 'takeCares',
     SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
-    SEASON_AND_POND_2_POND_ENV = 'SeasonAndPondToPondEnv',
+    SEASON_AND_POND_2_POND_ENV = 'seasonWithEnvironment',
+    SEASON_2_BOUGHT_BREED = 'boughtBreed',
+    SEASON_2_COUPON = 'coupon',
+    SEASON_2_PRICE = 'price',
     //
-    SEASON_2_USER = 'usersSeason',
+    SEASON_2_USER = 'seasons',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
+    SEASON_2_STORAGE = 'storage',
     //
-    STOCKING_2_STOCKING_DETAILS = 'stockingToStockingdetails',
+    STOCKING_2_STOCKING_DETAILS = 'stockingDetails',
     STOCKING_2_SEASON_AND_POND = 'stockings',
     //
     STOCKING_DETAILS_2_STOCKING = 'stockingDetails',
@@ -146,17 +155,18 @@ export enum ActionAssociateDatabase {
     //
     STORAGE_2_POND_PREPARE_DETAILS = 'storagesToPondpreparedetails',
     STORAGE_2_MATERIAL = 'storagesToMaterial',
+    STORAGE_2_SEASON = 'storagesToSeason',
     STORAGE_2_PRICE = 'storagesToPrices',
     STORAGE_2_USING_FOOD = 'storagesToUsingfoods',
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
     STORAGE_2_USER = 'storages',
     //
-    TAKE_CARE_2_USING_FOOD = 'takecareToUsingfoods',
+    TAKE_CARE_2_USING_FOOD = 'usingFoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
-    //
     TAKE_CARE_2_SEASON_AND_POND = 'takecares',
+    //
     USER_ROLES_2_USER = 'users',
-    USER_ROLES_2_POND_USER_ROLE = 'userrolesPondUserRoles',
+    USER_ROLES_2_POND_USER_ROLE = 'userRoles',
     //
     USER_2_ROLE_USER = 'users',
     USER_2_POND = 'userToPond',
@@ -168,10 +178,10 @@ export enum ActionAssociateDatabase {
     USER_2_WAR = 'wards',
     USER_2_STORAGE = 'userToStorage',
     //
-    USING_FOOD_2_STORAGE = 'usingFoodsStorages',
-    USING_FOOD_2_TAKE_CARE = 'usingFoodsTakeCare',
+    USING_FOOD_2_MATERIAL = 'usingFoodsMaterial',
+    USING_FOOD_2_TAKE_CARE = 'usingFoods',
     //
-    USING_VETERINARY_2_STORAGE = 'usingVeterinaryStorages',
+    USING_VETERINARY_2_MATERIAL = 'usingVeterinaryMaterial',
     USING_VETERINARY_2_TAKE_CARE = 'usingVeterinaryTakeCare',
     //
     WARD_2_USER = 'wardToUser',

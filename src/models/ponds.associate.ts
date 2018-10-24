@@ -1,7 +1,7 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function pondsToPondUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasOne(model, {
         as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
         foreignKey: {
@@ -10,6 +10,8 @@ export function pondsToponduserroles(thatmodel: Sequeliz.Model<{}, any>, model: 
         }
     });
 }
+
+//
 
 export function pondsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {

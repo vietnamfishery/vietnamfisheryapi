@@ -10,3 +10,5 @@ export function harvestdetailsToHarvests(thatmodel: Sequeliz.Model<{}, any>, mod
         }
     });
 }
+
+//

@@ -1,12 +1,12 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function usingfoodsToStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function usingfoodsToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.USING_FOOD_2_STORAGE,
+        as: ActionAssociateDatabase.USING_FOOD_2_MATERIAL,
         foreignKey: {
-            name: 'storageId',
-            field: 'storageId'
+            name: 'materialId',
+            field: 'materialId'
         }
     });
 }
@@ -20,3 +20,5 @@ export function usingfoodsToTakecare(thatmodel: Sequeliz.Model<{}, any>, model: 
         }
     });
 }
+
+//

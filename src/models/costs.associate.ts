@@ -10,3 +10,5 @@ export function costsToPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model: Se
         }
     });
 }
+
+//

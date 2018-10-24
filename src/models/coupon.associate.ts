@@ -1,15 +1,27 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function couponToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.COUPON_2_MATERIAL,
+export function couponToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.COUPON_2_SEASON,
         foreignKey: {
-            name: 'couponId',
-            field: 'couponId'
+            name: 'seasonId',
+            field: 'seasonId'
         }
     });
 }
+
+export function couponToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.COUPON_2_MATERIAL,
+        foreignKey: {
+            name: 'materialId',
+            field: 'materialId'
+        }
+    });
+}
+
+//
 
 export function couponToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
