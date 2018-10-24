@@ -110,4 +110,24 @@ export class UserServives extends BaseServices {
         };
         return { ...userQuery, ...include };
     }
+
+    getSeasonWithUser(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const query: any = {
+                include: [
+                    {
+                        model: (this.models as any).sequelize.models.seasons,
+                        as: ActionAssociateDatabase.USER_2_SEASON,
+                        limit: 1,
+                        order: [
+                            ['seasonId', 'DESC']
+                        ]
+                    }
+                ]
+            };
+            this.models.findAll(query).then(res => {
+                resolve(res);
+            });
+        });
+    }
 }

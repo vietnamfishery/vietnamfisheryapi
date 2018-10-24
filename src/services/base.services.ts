@@ -8,6 +8,7 @@ export abstract class BaseServices {
     public conn: DBHelper;
     public models: Sequeliz.Model<{}, any>;
     public Op: Sequeliz.Operators = Sequeliz.Op;
+    public fn: Sequeliz.fn;
     constructor(protected optionsModel: IOptionsModelDB = {
         tableName: '',
         attributes: {},

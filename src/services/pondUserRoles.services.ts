@@ -15,6 +15,7 @@ export class PondUserRolesServices extends BaseServices {
                     {
                         model: (this.models as any).sequelize.models.userroles,
                         // as: 'userroles'
+                        limit: 1
                     }
                 ]
             };

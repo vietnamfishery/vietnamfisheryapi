@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
 export const seasonOptions: any = _.merge({
-    tableName: 'season'
+    tableName: 'seasons'
 },
 {
     attributes: {

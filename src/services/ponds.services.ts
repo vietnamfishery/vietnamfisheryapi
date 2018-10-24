@@ -27,7 +27,6 @@ export class PondsServices extends BaseServices {
                         include: [
                             {
                                 model: this.userRolesServices.models,
-                                // as: ActionAssociateDatabase.POND_USER_ROLE_2_USER_ROLE
                                 include: [
                                     {
                                         model: (this.models as any).sequelize.models.users,
@@ -36,7 +35,17 @@ export class PondsServices extends BaseServices {
                                             userId: 103
                                         }
                                     }
-                                ]
+                                ],
+                                where: {
+                                    [this.Op.or]: [
+                                        {
+                                            roles: 0
+                                        },
+                                        {
+                                            roles: 1
+                                        }
+                                    ]
+                                }
                             }
                         ]
                     }
