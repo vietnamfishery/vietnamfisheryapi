@@ -29,6 +29,7 @@ export const harvestdetailOptions: any = _.merge({
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
+            allowNull: true,
             defaultValue: 0,
             // field: 'isDeleted'
         }
