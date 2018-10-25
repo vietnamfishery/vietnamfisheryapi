@@ -7,7 +7,7 @@ import { ActionAssociateDatabase } from './';
 const getUserWithUsername: any = {
     where: {
         username: `nvh`
-    }
+    },
 };
 
 /**

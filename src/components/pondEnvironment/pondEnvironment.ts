@@ -7,7 +7,7 @@ export class PondEnvironment extends BaseComponent {
     private pondEnvironmentsServices: PondEnvironmentsServices;
     private pondEnvironmentId: number;
     private pondEnvironmentUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private oxyMorning: number;
     private oxyAfternoon: number;
     private phMorning: number;
@@ -17,6 +17,11 @@ export class PondEnvironment extends BaseComponent {
     private h2s: number;
     private nh3: number;
     private bazo: number;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pondEnvironmentsServices = new PondEnvironmentsServices();
@@ -31,8 +36,8 @@ export class PondEnvironment extends BaseComponent {
         this.pondEnvironmentUUId = pondEnvironmentUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setOxyMorning(oxyMorning) {
@@ -71,10 +76,30 @@ export class PondEnvironment extends BaseComponent {
         this.bazo = bazo;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setPondenvironments(
         pondEnvironmentId: number,
         pondEnvironmentUUId: string,
-        seasonId: number,
+        seasonAndPondId: number,
         oxyMorning: number,
         oxyAfternoon: number,
         phMorning: number,
@@ -83,11 +108,16 @@ export class PondEnvironment extends BaseComponent {
         salinity: number,
         h2s: number,
         nh3: number,
-        bazo: number
+        bazo: number,
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
     ) {
         this.setPondEnvironmentId = pondEnvironmentId;
         this.setPondEnvironmentUUId = pondEnvironmentUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId = seasonAndPondId;
         this.setOxyMorning = oxyMorning;
         this.setOxyAfternoon = oxyAfternoon;
         this.setPhMorning = phMorning;
@@ -97,6 +127,11 @@ export class PondEnvironment extends BaseComponent {
         this.setH2s = h2s;
         this.setNh3 = nh3;
         this.setBazo = bazo;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setUpdatedBy = updatedBy;
+        this.setUpdatedDate = updatedDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPondEnvironmentId(): number {
@@ -107,8 +142,8 @@ export class PondEnvironment extends BaseComponent {
         return this.pondEnvironmentUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getOxyMorning(): number {
@@ -147,4 +182,23 @@ export class PondEnvironment extends BaseComponent {
         return this.bazo;
     }
 
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

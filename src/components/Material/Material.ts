@@ -5,9 +5,9 @@ import { ActionServer } from '../../common';
 
 export class Material extends BaseComponent {
     private materialServives: MaterialServives;
+    private materialId: number;
     private materialUUId: string;
-    private couponId: number;
-    private storageId: number;
+    private itemName: string;
     private provider: string;
     private providerAddress: string;
     private quantity: number;
@@ -16,22 +16,24 @@ export class Material extends BaseComponent {
     private dom: Date;
     private ed: Date;
     private productionBatch: string;
+    private description: string;
+    private isDeleted: number;
     constructor() {
         super();
         this.materialServives = new MaterialServives();
         this.services = this.materialServives;
     }
 
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
+    }
+
     public set setMaterialUUId(materialUUId) {
         this.materialUUId = materialUUId;
     }
 
-    public set setCouponId(couponId) {
-        this.couponId = couponId;
-    }
-
-    public set setStorageId(storageId) {
-        this.storageId = storageId;
+    public set setItemName(itemName) {
+        this.itemName = itemName;
     }
 
     public set setProvider(provider) {
@@ -66,22 +68,32 @@ export class Material extends BaseComponent {
         this.productionBatch = productionBatch;
     }
 
+    public set setDescription(description) {
+        this.description = description;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
     public setMaterial(
+        materialId: number,
         materialUUId: string,
-        couponId: number,
+        itemName: string,
         storageId: number,
         provider: string,
         providerAddress: string,
         quantity: number,
         unit: number,
         unitPrice: number,
-        dom: Date,
-        ed: Date,
-        productionBatch: string
+        dom?: Date,
+        ed?: Date,
+        productionBatch?: string,
+        description?: string,
+        isDeleted?: number
     ) {
+        this.setMaterialId = materialId;
         this.setMaterialUUId = materialUUId;
-        this.setCouponId = couponId;
-        this.setStorageId = storageId;
+        this.setItemName = itemName;
         this.setProvider = provider;
         this.setProviderAddress = providerAddress;
         this.setQuantity = quantity;
@@ -90,18 +102,20 @@ export class Material extends BaseComponent {
         this.setDom = dom;
         this.setEd = ed;
         this.setProductionBatch = productionBatch;
+        this.setDescription = description;
+        this.setIsDeleted = isDeleted;
+    }
+
+    public get getMaterialId(): number {
+        return this.materialId;
     }
 
     public get getMaterialUUId(): string {
         return this.materialUUId;
     }
 
-    public get getCouponId(): number {
-        return this.couponId;
-    }
-
-    public get getStorageId(): number {
-        return this.storageId;
+    public get getItemName(): string {
+        return this.itemName;
     }
 
     public get getProvider(): string {
@@ -134,5 +148,13 @@ export class Material extends BaseComponent {
 
     public get getProdcutionBatch(): string {
         return this.productionBatch;
+    }
+
+    public get getDescription(): string {
+        return this.description;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

@@ -7,8 +7,10 @@ export class Harvest extends BaseComponent {
     private harvestsServives: HarvestsServives;
     private harvestId: number;
     private harvestUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private harvestName: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.harvestsServives = new HarvestsServives();
@@ -23,19 +25,36 @@ export class Harvest extends BaseComponent {
         this.harvestUUId = harvestUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setHarvestName(harvestName) {
         this.harvestName = harvestName;
     }
 
-    public setHarvests(harvestId: number, harvestUUId: string, seasonId: number, harvestName: string) {
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public setHarvests(
+        harvestId: number,
+        harvestUUId: string,
+        seasonAndPondId: number,
+        harvestName: string,
+        createdDate?: Date,
+        isDeleted?: number
+    ) {
         this.setHarvestId = harvestId;
         this.setHarvestUUId = harvestUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId = seasonAndPondId;
         this.setHarvestName = harvestName;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getHarvestId(): number {
@@ -46,12 +65,19 @@ export class Harvest extends BaseComponent {
         return this.harvestUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getsetSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getHarvestName(): string {
         return this.harvestName;
     }
 
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

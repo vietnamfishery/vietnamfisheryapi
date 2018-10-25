@@ -12,6 +12,11 @@ export class Cost extends BaseComponent {
     private value: number;
     private responsible: string;
     private notes: string;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.costsServives = new CostsServives();
@@ -46,14 +51,52 @@ export class Cost extends BaseComponent {
         this.notes = notes;
     }
 
-    public setCost(costId: number, costUUId: string, pondPrepareId: number, label: string, value: number, responsible: string, notes: string) {
-        this.setCostId = costId;
-        this.setCostUUId = costUUId;
-        this.setPondPrepareId = pondPrepareId;
-        this.setLabel = label;
-        this.setValue = value;
-        this.setResponsible = responsible;
-        this.setNotes = notes;
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public setCost(
+            costId: number,
+            costUUId: string,
+            pondPrepareId: number,
+            label: string,
+            value: number,
+            responsible: string,
+            notes: string,
+            createdBy?: string,
+            createdDate?: Date,
+            updatedBy?: string,
+            updatedDate?: Date,
+            isDeleted?: number
+        ) {
+            this.setCostId = costId;
+            this.setCostUUId = costUUId;
+            this.setPondPrepareId = pondPrepareId;
+            this.setLabel = label;
+            this.setValue = value;
+            this.setResponsible = responsible;
+            this.setNotes = notes;
+            this.setCreatedBy = createdBy;
+            this.setCreatedDate = createdDate;
+            this.setUpdatedBy = updatedBy;
+            this.setUpdatedDate = updatedDate;
+            this.setIsDeleted = isDeleted;
     }
 
     public get getCostId(): number {
@@ -84,4 +127,23 @@ export class Cost extends BaseComponent {
         return this.notes;
     }
 
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

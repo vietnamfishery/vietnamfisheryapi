@@ -7,12 +7,16 @@ export class PondDiary extends BaseComponent {
     private pondDiaryServices: PondDiaryServices;
     private pondDiaryId: number;
     private pondDiaryUUId: string;
-    private seasonId: number;
-    private pondId: number;
+    private seasonAndPondId: number;
     private fisheryQuantity: number;
     private healthOfFishery: string;
     private pondVolume: number;
     private diedFishery: number;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pondDiaryServices = new PondDiaryServices();
@@ -27,12 +31,8 @@ export class PondDiary extends BaseComponent {
         this.pondDiaryUUId = pondDiaryUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
-    }
-
-    public set setPondId(pondId) {
-        this.pondId = pondId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setFisheryQuantity(fisheryQuantity) {
@@ -51,22 +51,52 @@ export class PondDiary extends BaseComponent {
         this.diedFishery = diedFishery;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setPonddiary(
         pondDiaryId: number,
         pondDiaryUUId: string,
-        seasonId: number,
+        seasonAndPondId: number,
         fisheryQuantity: number,
         healthOfFishery: string,
         pondVolume: number,
-        diedFishery: number
+        diedFishery: number,
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
     ) {
         this.setPondDiaryId = pondDiaryId;
         this.setPondDiaryUUId = pondDiaryUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId= seasonAndPondId;
         this.setFisheryQuantity = fisheryQuantity;
         this.setHealthOfFishery = healthOfFishery;
         this.setPondVolume = pondVolume;
         this.setDiedFishery = diedFishery;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setUpdatedBy = updatedBy;
+        this.setUpdatedDate = updatedDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPondDiaryId(): number {
@@ -77,12 +107,8 @@ export class PondDiary extends BaseComponent {
         return this.pondDiaryUUId;
     }
 
-    public get getPondId(): number {
-        return this.pondId;
-    }
-
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getFisheryQuantity(): number {
@@ -107,10 +133,30 @@ export class PondDiary extends BaseComponent {
         };
     }
 
-    public get getForgeinKey(): object {
-        return {
-            pondId: this.getPondId,
-            seasonId: this.getSeasonId
-        };
+    public get getCreatedBy(): string {
+        return this.createdBy;
     }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
+
+    // public get getForgeinKey(): object {
+    //     return {
+    //         pondId: this.getPondId,
+    //         seasonId: this.getSeasonId
+    //     };
+    // }
 }

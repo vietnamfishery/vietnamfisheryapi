@@ -7,8 +7,10 @@ export class Stocking extends BaseComponent {
     private stockingServices: StockingServices;
     private stockingId: number;
     private stockingUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private notes: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.stockingServices = new StockingServices();
@@ -23,24 +25,36 @@ export class Stocking extends BaseComponent {
         this.stockingUUId = stockingUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setNotes(notes) {
         this.notes = notes;
     }
 
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setStocking(
         stockingId: number,
         stockingUUId: string,
-        seasonId: number,
-        notes: string
+        seasonAndPondId: number,
+        notes: string,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
         this.setStockingId = stockingId;
         this.setStockingUUId = stockingUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId = seasonAndPondId;
         this.setNotes = notes;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getStockingId(): number {
@@ -51,11 +65,19 @@ export class Stocking extends BaseComponent {
         return this.stockingUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getNotes(): string {
         return this.notes;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

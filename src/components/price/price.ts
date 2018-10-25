@@ -7,10 +7,11 @@ export class Price extends BaseComponent {
     private pricesServices: PricesServices;
     private priceId: number;
     private priceUUId: string;
-    private storageId: number;
-    private quantity: number;
-    private unit: number;
-    private value: number;
+    private seasonId: number;
+    private totalCost: number;
+    private totalProfit: number;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pricesServices = new PricesServices();
@@ -25,36 +26,42 @@ export class Price extends BaseComponent {
         this.priceUUId = priceUUId;
     }
 
-    public set setStorageId(storageId) {
-        this.storageId = storageId;
+    public set setSeasonId(seasonId) {
+        this.seasonId = seasonId;
     }
 
-    public set setQuantity(quantity) {
-        this.quantity = quantity;
+    public set setTotalCost(totalCost) {
+        this.totalCost = totalCost;
     }
 
-    public set setUnit(unit) {
-        this.unit = unit;
+    public set setTotalProfit(totalProfit) {
+        this.totalProfit = totalProfit;
     }
 
-    public set setValue(value) {
-        this.value = value;
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public setPrices(
         priceId: number,
         priceUUId: string,
-        storageId: number,
-        quantity: number,
-        unit: number,
-        value: number
+        seasonId: number,
+        totalCost: number,
+        totalProfit: number,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
         this.setPriceId = priceId;
         this.setPriceUUId = priceUUId;
-        this.setStorageId = storageId;
-        this.setQuantity = quantity;
-        this.setUnit = unit;
-        this.setValue = value;
+        this.setSeasonId = seasonId;
+        this.setTotalCost = totalCost;
+        this.setTotalProfit = totalProfit;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPriceId(): number {
@@ -65,20 +72,23 @@ export class Price extends BaseComponent {
         return this.priceUUId;
     }
 
-    public get getStorageId(): number {
-        return this.storageId;
+    public get getSeasonId(): number {
+        return this.seasonId;
     }
 
-    public get getQuantity(): number {
-        return this.quantity;
+    public get getTotalCost(): number {
+        return this.totalCost;
     }
 
-    public get getUnit(): number {
-        return this.unit;
+    public get getTotalProfit(): number {
+        return this.totalProfit;
     }
 
-    public get getValue(): number {
-        return this.value;
+    public get getCreatedDate(): Date {
+        return this.createdDate;
     }
 
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

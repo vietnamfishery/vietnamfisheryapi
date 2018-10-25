@@ -11,6 +11,8 @@ export class Breed extends BaseComponent {
     private loopOfBreed: number;
     private testingAgency: string;
     private descriptions: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.breedServives = new BreedServives();
@@ -41,13 +43,23 @@ export class Breed extends BaseComponent {
         this.descriptions = descriptions;
     }
 
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setBreed(
         breedId: number,
         breedUUId: string,
         breedName: string,
         loopOfBreed: number,
         testingAgency: string,
-        descriptions: string
+        descriptions: string,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
         this.setBreedId = breedId;
         this.setBreedUUId = breedUUId;
@@ -55,6 +67,8 @@ export class Breed extends BaseComponent {
         this.setLoopOfBreed = loopOfBreed;
         this.setTestingAgency = testingAgency;
         this.setDescriptions = descriptions;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getBreedId(): number {
@@ -79,5 +93,11 @@ export class Breed extends BaseComponent {
 
     public get getDescriptions(): string {
         return this.descriptions;
+    }
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

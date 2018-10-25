@@ -7,9 +7,11 @@ export class TakeCare extends BaseComponent {
     private takeCareServices: TakeCareServices;
     private takeCareId: number;
     private takeCareUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private takeCareName: string;
     private takeType: number;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.takeCareServices = new TakeCareServices();
@@ -24,8 +26,8 @@ export class TakeCare extends BaseComponent {
         this.takeCareUUId = takeCareUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setTakeCareName(takeCareName) {
@@ -36,12 +38,22 @@ export class TakeCare extends BaseComponent {
         this.takeType = takeType;
     }
 
-    public setTakecare(takeCareId: number, takeCareUUId: string, seasonId: number, takeCareName: string, takeType: number) {
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public setTakecare(takeCareId: number, takeCareUUId: string, seasonAndPondId: number, takeCareName: string, takeType: number, createdDate?: Date, isDeleted?: number) {
         this.setTakeCareId = takeCareId;
         this.setTakeCareUUId = takeCareUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId= seasonAndPondId;
         this.setTakeCareName = takeCareName;
         this.setTakeType = takeType;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getTakeCareId(): number {
@@ -52,8 +64,8 @@ export class TakeCare extends BaseComponent {
         return this.takeCareUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getTakeCareName(): string {
@@ -62,5 +74,13 @@ export class TakeCare extends BaseComponent {
 
     public get getTakeType(): number {
         return this.takeType;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

@@ -5,24 +5,32 @@ import { ActionServer } from '../../common';
 
 export class UsingFood extends BaseComponent {
     private usingFoodsServices: UsingFoodsServices;
+    private usingFoodId: number;
     private usingFoodUUId: string;
-    private storageId: number;
     private takeCareId: number;
+    private materialId: number;
     private massOfFishery: number;
     private feedingRate: number;
     private totalFood: number;
+    private createdBy: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.usingFoodsServices = new UsingFoodsServices();
         this.services = this.usingFoodsServices;
     }
 
+    public set setUsingFoodId(usingFoodId) {
+        this.usingFoodId = usingFoodId;
+    }
+
     public set setUsingFoodUUId(usingFoodUUId) {
         this.usingFoodUUId = usingFoodUUId;
     }
 
-    public set setStorageId(storageId) {
-        this.storageId = storageId;
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
     }
 
     public set setTakeCareId(takeCareId) {
@@ -41,28 +49,52 @@ export class UsingFood extends BaseComponent {
         this.totalFood = totalFood;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setUsingfoods(
+        usingFoodId: number,
         usingFoodUUId: string,
-        storageId: number,
+        materialId: number,
         takeCareId: number,
         massOfFishery: number,
         feedingRate: number,
-        totalFood: number
+        totalFood: number,
+        createdBy?: string,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
+        this.setUsingFoodId = usingFoodId;
         this.setUsingFoodUUId = usingFoodUUId;
-        this.setStorageId = storageId;
         this.setTakeCareId = takeCareId;
+        this.setMaterialId = materialId;
         this.setMassOfFishery = massOfFishery;
         this.setFeedingRate = feedingRate;
         this.setTotalFood = totalFood;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
+    }
+
+    public get getUsingFoodId(): number {
+        return this.usingFoodId;
     }
 
     public get getUsingFoodUUId(): string {
         return this.usingFoodUUId;
     }
 
-    public get getStorageId(): number {
-        return this.storageId;
+    public get getMaterialId(): number {
+        return this.materialId;
     }
 
     public get getTakeCareId(): number {
@@ -79,5 +111,17 @@ export class UsingFood extends BaseComponent {
 
     public get getTotalFood(): number {
         return this.totalFood;
+    }
+
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }
