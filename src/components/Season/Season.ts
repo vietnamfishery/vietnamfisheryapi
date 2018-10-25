@@ -95,13 +95,19 @@ export class Season extends BaseComponent {
 
     public get getPrimary(): any {
         return {
-            seasonId: this.getSeasonId
+            seasonId: this.seasonId
         };
     }
 
-    public get getForeignKey(): any {
-        return {
-            userId: this.getUserId
-        };
+    public get getStatus(): number {
+        return this.status;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

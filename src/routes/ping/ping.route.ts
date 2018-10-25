@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { Pond } from '../../components';
-import { PondUserRolesServices, UserRolesServices, UserServives, SeasonServices } from '../../services';
+import { PondUserRolesServices, UserRolesServices, UserServives, SeasonServices, PondsServices } from '../../services';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -36,6 +36,7 @@ export class PingRoute extends BaseRoute {
 
         // add index page route
         this.router.get('/', this.get);
+        this.router.get('/all', this.getAll);
         this.router.get('/pr', this.getpr);
         this.router.get('/ura', this.getura);
         this.router.get('/UserAndSeason', this.userAndSeason);
@@ -52,6 +53,13 @@ export class PingRoute extends BaseRoute {
     private async get(req: Request, res: Response, next: NextFunction) {
         const pond = new Pond();
         pond.test().then(res$ => {
+            res.json({ res$ });
+        });
+    }
+
+    private async getAll(req: Request, res: Response, next: NextFunction) {
+        const pondsServices: PondsServices = new PondsServices();
+        pondsServices.testAll().then(res$ => {
             res.json({ res$ });
         });
     }

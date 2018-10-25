@@ -45,9 +45,6 @@ export class UserRoute extends BaseRoute {
         this.router.get('/get', Authentication.isLogin, this.getUserInfo);
         this.router.put('/update', Authentication.isLogin, this.updateUserProfile);
         this.router.put('/update/password', Authentication.isLogin, this.updateUserPassword);
-        // this.router.get('/login-ui', function(req, res) {
-        //     res.redirect((req.headers as any).origin);
-        // });
     }
 
     private signup = (req: Request, res: Response, next: NextFunction) => {

@@ -58,4 +58,16 @@ export class PondsServices extends BaseServices {
             });
         });
     }
+
+    testAll = (): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            this.models.findOne({
+                order: [
+                    ['createdDate', 'DESC']
+                ]
+            }).then(res => {
+                resolve(res);
+            });
+        });
+    }
 }

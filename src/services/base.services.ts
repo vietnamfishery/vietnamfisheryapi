@@ -29,7 +29,7 @@ export abstract class BaseServices {
         });
     }
 
-    public getAll(query: any): Promise<any[]> {
+    public getAll(query: any, options: any): Promise<any[]> {
         if(query) {
             return new Promise((resolve, reject) => {
                 this.models.findAll(query).then((obj: any[]) => {
@@ -53,9 +53,13 @@ export abstract class BaseServices {
         });
     }
 
-    update(entity: any, options: any): Promise<any> {
+    update(value: any): Promise<any> {
+        const md: any = this.models;
+        const where: any = {};
         return new Promise((resolve, reject) => {
-            this.models.update(entity, options).then((res: any) => {
+            const primaryFieldName: string = md.primaryKeyField;
+            where[primaryFieldName] = value[primaryFieldName];
+            this.models.update(value, {where}).then((res: any) => {
                 resolve(res);
             });
         });
