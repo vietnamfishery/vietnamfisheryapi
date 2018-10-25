@@ -27,7 +27,6 @@ export class SeasonsAndPond extends BaseComponent {
         this.pondId = pondId;
     }
 
-
     public setSeason(
         seasonAndPondId: number,
         seasonId: number,
