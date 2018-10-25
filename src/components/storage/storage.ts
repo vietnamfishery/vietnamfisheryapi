@@ -7,10 +7,11 @@ export class Storage extends BaseComponent {
     private storegeServices: StoregeServices;
     private storageId: number;
     private storageUUId: string;
-    private userId: number;
-    private unitName: string;
-    private unitType: number;
-    private description: string;
+    private materialId: number;
+    private seasonId: number;
+    private quantityStorages: number;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.storegeServices = new StoregeServices();
@@ -25,29 +26,34 @@ export class Storage extends BaseComponent {
         this.storageUUId = storageUUId;
     }
 
-    public set setUserId(userId) {
-        this.userId = userId;
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
     }
 
-    public set setUnitName(unitName) {
-        this.unitName = unitName;
+    public set setSeasonId(seasonId) {
+        this.seasonId = seasonId;
     }
 
-    public set setUnitType(unitType) {
-        this.unitType = unitType;
+    public set setQuantityStorages(quantityStorages) {
+        this.quantityStorages = quantityStorages;
     }
 
-    public set setDescription(description) {
-        this.description = description;
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
     }
 
-    public setStorages(storageId: number, storageUUId: string, userId: number, unitName: string, unitType: number, description: string) {
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public setStorages(storageId: number, storageUUId: string, materialId: number, seasonId: number, quantityStorages: number, createdDate?: Date, isDeleted?: number) {
         this.setStorageId = storageId;
         this.setStorageUUId = storageUUId;
-        this.setUserId = userId;
-        this.setUnitName = unitName;
-        this.setUnitType = unitType;
-        this.setDescription = description;
+        this.setMaterialId = materialId;
+        this.setSeasonId = seasonId;
+        this.setQuantityStorages = quantityStorages;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getStorageId(): number {
@@ -58,19 +64,23 @@ export class Storage extends BaseComponent {
         return this.storageUUId;
     }
 
-    public get getUserId(): number {
-        return this.userId;
+    public get getMaterialId(): number {
+        return this.materialId;
     }
 
-    public get getUnitName(): string {
-        return this.unitName;
+    public get getSeasonId(): number {
+        return this.seasonId;
     }
 
-    public get getUnitType(): number {
-        return this.unitType;
+    public get getQuantityStorages(): number {
+        return this.quantityStorages;
     }
 
-    public get getDescription(): string {
-        return this.description;
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

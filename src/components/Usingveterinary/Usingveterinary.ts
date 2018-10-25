@@ -5,9 +5,10 @@ import { ActionServer } from '../../common';
 
 export class UsingVeterinary extends BaseComponent {
     private usingVeterinaryServices: UsingVeterinaryServices;
+    private usingVeterinaryId: number;
     private usingVeterinaryUUId: string;
-    private storageId: number;
     private takeCareId: number;
+    private materialId: number;
     private causesNSymptoms: string;
     private averageSize: number;
     private totalBiomass: number;
@@ -15,22 +16,29 @@ export class UsingVeterinary extends BaseComponent {
     private result: string;
     private latestHarvestDate: number;
     private mentor: string;
+    private createdBy: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.usingVeterinaryServices = new UsingVeterinaryServices();
         this.services = this.usingVeterinaryServices;
     }
 
+    public set setUsingVeterinaryId(usingVeterinaryId) {
+        this.usingVeterinaryId = usingVeterinaryId;
+    }
+
     public set setUsingVeterinaryUUId(usingVeterinaryUUId) {
         this.usingVeterinaryUUId = usingVeterinaryUUId;
     }
 
-    public set setStorageId(storageId) {
-        this.storageId = storageId;
-    }
-
     public set setTakeCareId(takeCareId) {
         this.takeCareId = takeCareId;
+    }
+
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
     }
 
     public set setCausesNSymptoms(causesNSymptoms) {
@@ -61,20 +69,37 @@ export class UsingVeterinary extends BaseComponent {
         this.mentor = mentor;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setUsingveterinary(
+        usingVeterinaryId: number,
         usingVeterinaryUUId: string,
-        storageId: number,
         takeCareId: number,
+        materialId: number,
         causesNSymptoms: string,
         averageSize: number,
         totalBiomass: number,
         quantity: number,
         result: string,
         latestHarvestDate: number,
-        mentor: string
+        mentor: string,
+        createdBy?: string,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
+        this.setUsingVeterinaryId = usingVeterinaryId;
         this.setUsingVeterinaryUUId = usingVeterinaryUUId;
-        this.setStorageId = storageId;
+        this.setMaterialId = materialId;
         this.setTakeCareId = takeCareId;
         this.setCausesNSymptoms = causesNSymptoms;
         this.setAverageSize = averageSize;
@@ -83,18 +108,25 @@ export class UsingVeterinary extends BaseComponent {
         this.setResult = result;
         this.setLatestHarvestDate = latestHarvestDate;
         this.setMentor = mentor;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
+    }
+
+    public get getUsingVeterinaryId(): number {
+        return this.usingVeterinaryId;
     }
 
     public get getUsingVeterinaryUUId(): string {
         return this.usingVeterinaryUUId;
     }
 
-    public get getStorageId(): number {
-        return this.storageId;
-    }
-
     public get getTakeCareId(): number {
         return this.takeCareId;
+    }
+
+    public get getMaterialId(): number {
+        return this.materialId;
     }
 
     public get getCausesNSymptoms(): string {
@@ -123,5 +155,17 @@ export class UsingVeterinary extends BaseComponent {
 
     public get getMentor(): string {
         return this.mentor;
+    }
+
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

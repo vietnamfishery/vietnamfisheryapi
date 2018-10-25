@@ -8,9 +8,7 @@ export class Pond extends BaseComponent {
     private pondsServices: PondsServices;
     private pondId: number;
     private pondUUId: string;
-    private userId: number;
     private pondName: string;
-    private pondCreatedDate: Date;
     private pondArea: number;
     private pondDepth: number;
     private createCost: number;
@@ -18,6 +16,12 @@ export class Pond extends BaseComponent {
     private images: string;
     private pondLatitude: number = null;
     private pondLongitude: number = null;
+    private pondCreatedDate: Date;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pondsServices = new PondsServices();
@@ -33,10 +37,6 @@ export class Pond extends BaseComponent {
 
     public set setPondUUId(pondUUId) {
         this.pondUUId = pondUUId;
-    }
-
-    public set setUserId(userId) {
-        this.userId = userId;
     }
 
     public set setPondName(pondName) {
@@ -67,27 +67,68 @@ export class Pond extends BaseComponent {
         this.images = images;
     }
 
-    public set setLatitude(val) {
+    public set setPondLatitude(val) {
         this.pondLatitude = val;
     }
 
-    public set setLongitude(val) {
+    public set setPondLongitude(val) {
         this.pondLongitude = val;
     }
 
-    public setPond(pondId: string, pondUUId: string, userId: string, pondName: string, pondCreatedDate: Date, pondArea: number, pondDepth: number, createCost: number, status: number, images: string, latitude: number, longitude: number) {
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
+    public setPond(
+        pondId: string,
+        pondUUId: string,
+        pondName: string,
+        pondArea: number,
+        pondDepth: number,
+        createCost: number,
+        status: number,
+        images?: string,
+        pondLatitude?: number,
+        pondLongitude?: number,
+        pondCreatedDate?: Date,
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
+    ) {
         this.setPondId = pondId;
         this.setPondUUId = pondUUId;
-        this.setUserId = userId;
         this.setPondName = pondName;
-        this.setPondCreatedDate = pondCreatedDate;
         this.setPondArea = pondArea;
         this.setPondDepth = pondDepth;
         this.setCreateCost = createCost;
         this.setStatus = status || status === 0 ? status * 1 : null;
         this.setImages = images;
-        this.setLatitude = latitude;
-        this.setLongitude = longitude;
+        this.setPondLatitude = pondLatitude;
+        this.setPondLongitude = pondLongitude;
+        this.setPondCreatedDate = pondCreatedDate;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setUpdatedBy = updatedBy;
+        this.setUpdatedDate = updatedDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPondId(): number {
@@ -98,16 +139,8 @@ export class Pond extends BaseComponent {
         return this.pondUUId;
     }
 
-    public get getUserId(): number {
-        return this.userId;
-    }
-
     public get getPondName(): string {
         return this.pondName;
-    }
-
-    public get getPondCreatedDate(): Date {
-        return this.pondCreatedDate;
     }
 
     public get getPondArea(): number {
@@ -138,15 +171,33 @@ export class Pond extends BaseComponent {
         return this.pondLongitude;
     }
 
+    public get getPondCreatedDate(): Date {
+        return this.pondCreatedDate;
+    }
+
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
+
     public get getPrimary(): object {
         return {
             pondId: this.getPondId
-        };
-    }
-
-    public get getForgeinKey(): object {
-        return {
-            userId: this.getUserId
         };
     }
 
@@ -162,7 +213,7 @@ export class Pond extends BaseComponent {
         switch (options.action) {
             case ActionServer.GET:
                 return merge(super.createQuery(options),{
-                    where: this.getForgeinKey
+                    // where: this.getForgeinKey
                 },{
                     where: this.getPrimary
                 });

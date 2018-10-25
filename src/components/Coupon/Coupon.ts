@@ -6,10 +6,13 @@ import { ActionServer } from '../../common';
 export class Coupon extends BaseComponent {
     private couponServives: CouponServives;
     private couponId: number;
-    private couponUUId: string;
-    private userId: number;
-    private couponName: string;
-    private couponType: number;
+    private seasonId: number;
+    private materialId: number;
+    private quantity: number;
+    private unitPrices: number;
+    private providerInfo: string;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.couponServives = new CouponServives();
@@ -20,54 +23,83 @@ export class Coupon extends BaseComponent {
         this.couponId = couponId;
     }
 
-    public set setCouponUUId(couponUUId) {
-        this.couponUUId = couponUUId;
+    public set setSeasonId(seasonId) {
+        this.seasonId = seasonId;
     }
 
-    public set setUserId(userId) {
-        this.userId = userId;
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
     }
 
-    public set setCouponName(couponName) {
-        this.couponName = couponName;
+    public set setQuantity(quantity) {
+        this.quantity = quantity;
     }
 
-    public set setCouponType(couponType) {
-        this.couponType = couponType;
+    public set setUnitPrices(unitPrices) {
+        this.unitPrices = unitPrices;
+    }
+
+    public set setProviderInfo(providerInfo) {
+        this.providerInfo = providerInfo;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public setCoupon(
         couponId: number,
-        couponUUId: string,
-        userId: number,
-        couponName: string,
-        couponType: number
+        seasonId: number,
+        materialId: number,
+        quantity: number,
+        unitPrices: number,
+        providerInfo?: string,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
         this.setCouponId = couponId;
-        this.setCouponUUId = couponUUId;
-        this.setUserId = userId;
-        this.setCouponName = couponName;
-        this.setCouponType = couponType;
+        this.setSeasonId = seasonId;
+        this.setMaterialId = materialId;
+        this.setQuantity = quantity;
+        this.setUnitPrices = unitPrices;
+        this.setProviderInfo = providerInfo;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getCouponId(): number {
         return this.couponId;
     }
 
-    public get getCouponUUId(): string {
-        return this.couponUUId;
+    public get getSeasonId (): number {
+        return this.seasonId;
     }
 
-    public get getUserId(): number {
-        return this.userId;
+    public get getMaterialId (): number {
+        return this.materialId;
     }
 
-    public get getCouponName(): string {
-        return this.couponName;
+    public get getQuantity (): number {
+        return this.quantity;
     }
 
-    public get getCouponType(): number {
-        return this.couponType;
+    public get getUnitPrices (): number {
+        return this.unitPrices;
     }
 
+    public get getProviderInfo (): string {
+        return this.providerInfo;
+    }
+
+    public get getCreatedDate (): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted (): number {
+        return this.isDeleted;
+    }
 }

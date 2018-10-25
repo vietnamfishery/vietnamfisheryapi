@@ -7,11 +7,16 @@ export class DiedFishery extends BaseComponent {
     private diedFisherysServives: DiedFisherysServives;
     private diedFisheryId: number;
     private diedFisheryUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private card: string;
     private quantity: number;
     private solutions: string;
     private employee: string;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.diedFisherysServives = new DiedFisherysServives();
@@ -26,8 +31,8 @@ export class DiedFishery extends BaseComponent {
         this.diedFisheryUUId = diedFisheryUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setCard(card) {
@@ -46,22 +51,52 @@ export class DiedFishery extends BaseComponent {
         this.employee = employee;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setDiedfisherys(
         diedFisheryId: number,
         diedFisheryUUId: string,
-        seasonId: number,
+        seasonAndPondId: number,
         card: string,
         quantity: number,
-        solutions: string,
-        employee: string
+        solutions?: string,
+        employee?: string,
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
     ) {
         this.setDiedFisheryId = diedFisheryId;
         this.setDiedFisheryUUId = diedFisheryUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId = seasonAndPondId;
         this.setCard = card;
         this.setQuantity = quantity;
         this.setSolutions = solutions;
         this.setEmployee = employee;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setUpdatedBy = updatedBy;
+        this.setUpdatedDate = updatedDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getDiedFisheryId(): number {
@@ -72,8 +107,8 @@ export class DiedFishery extends BaseComponent {
         return this.diedFisheryUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getCard(): string {
@@ -92,4 +127,23 @@ export class DiedFishery extends BaseComponent {
         return this.employee;
     }
 
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

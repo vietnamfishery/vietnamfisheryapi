@@ -7,9 +7,14 @@ export class PondPrepare extends BaseComponent {
     private pondPrepareServices: PondPrepareServices;
     private pondPrepareId: number;
     private pondPrepareUUId: string;
-    private seasonId: number;
+    private seasonAndPondId: number;
     private pondprepareName: string;
     private notes: string;
+    private createdBy: string;
+    private createdDate: Date;
+    private updatedBy: string;
+    private updatedDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pondPrepareServices = new PondPrepareServices();
@@ -24,8 +29,8 @@ export class PondPrepare extends BaseComponent {
         this.pondPrepareUUId = pondPrepareUUId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setSeasonAndPondId(seasonAndPondId) {
+        this.seasonAndPondId = seasonAndPondId;
     }
 
     public set setPondprepareName(pondprepareName) {
@@ -36,18 +41,48 @@ export class PondPrepare extends BaseComponent {
         this.notes = notes;
     }
 
+    public set setCreatedBy(createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setUpdatedBy(updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public set setUpdatedDate(updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setPondprepare(
         pondPrepareId: number,
         pondPrepareUUId: string,
-        seasonId: number,
+        seasonAndPondId: number,
         pondprepareName: string,
-        notes: string
+        notes: string,
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
     ) {
         this.setPondPrepareId = pondPrepareId;
         this.setPondPrepareUUId = pondPrepareUUId;
-        this.setSeasonId = seasonId;
+        this.setSeasonAndPondId = seasonAndPondId;
         this.setPondprepareName = pondprepareName;
         this.setNotes = notes;
+        this.setCreatedBy = createdBy;
+        this.setCreatedDate = createdDate;
+        this.setUpdatedBy = updatedBy;
+        this.setUpdatedDate = updatedDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPondPrepareId(): number {
@@ -58,8 +93,8 @@ export class PondPrepare extends BaseComponent {
         return this.pondPrepareUUId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getSeasonAndPondId(): number {
+        return this.seasonAndPondId;
     }
 
     public get getPondprepareName(): string {
@@ -68,6 +103,26 @@ export class PondPrepare extends BaseComponent {
 
     public get getNotes(): string {
         return this.notes;
+    }
+
+    public get getCreatedBy(): string {
+        return this.createdBy;
+    }
+
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getUpdatedBy(): string {
+        return this.updatedBy;
+    }
+
+    public get getUpdatedDate(): Date {
+        return this.updatedDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 
 }

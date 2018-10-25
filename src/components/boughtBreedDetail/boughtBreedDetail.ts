@@ -7,10 +7,11 @@ export class BoughtBreedDetail extends BaseComponent {
     private boughtBreedDetailsServives: BoughtBreedDetailsServives;
     private boughtBreedDetailUUId: string;
     private boughtBreedId: number;
-    private breedId: number;
     private quantity: number;
     private unitPrice: number;
     private soldAddress: string;
+    private notes: string;
+    private isDeleted: number;
     constructor() {
         super();
         this.boughtBreedDetailsServives = new BoughtBreedDetailsServives();
@@ -25,10 +26,6 @@ export class BoughtBreedDetail extends BaseComponent {
         this.boughtBreedId = boughtBreedId;
     }
 
-    public set setBreedId(breedId) {
-        this.breedId = breedId;
-    }
-
     public set setQuantity(quantity) {
         this.quantity = quantity;
     }
@@ -41,20 +38,29 @@ export class BoughtBreedDetail extends BaseComponent {
         this.soldAddress = soldAddress;
     }
 
+    public set setNotes(notes) {
+        this.notes = notes;
+    }
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setBoughtBreedDetails(
         boughtBreedDetailUUId: string,
         boughtBreedId: number,
-        breedId: number,
         quantity: number,
         unitPrice: number,
-        soldAddress: string
+        soldAddress: string,
+        notes: string,
+        isDeleted?: number
     ) {
         this.setBoughtBreedDetailUUId = boughtBreedDetailUUId;
         this.setBoughtBreedId = boughtBreedId;
-        this.setBreedId = breedId;
         this.setQuantity = quantity;
         this.setUnitPrice = unitPrice;
         this.setSoldAddress = soldAddress;
+        this.setNotes = notes;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getBoughtBreedDetailUUId(): string {
@@ -63,10 +69,6 @@ export class BoughtBreedDetail extends BaseComponent {
 
     public get getBoughtBreedId(): number {
         return this.boughtBreedId;
-    }
-
-    public get getBreedId(): number {
-        return this.breedId;
     }
 
     public get getQuantity(): number {
@@ -79,5 +81,12 @@ export class BoughtBreedDetail extends BaseComponent {
 
     public get getSoldAddress(): string {
         return this.soldAddress;
+    }
+
+    public get getNotes(): string {
+        return this.notes;
+    }
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

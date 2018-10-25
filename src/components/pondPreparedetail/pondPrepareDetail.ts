@@ -5,11 +5,13 @@ import { ActionServer } from '../../common';
 
 export class PondPrepareDetail extends BaseComponent {
     private pondPrepareDetailsServices: PondPrepareDetailsServices;
-    private pondPrepareDetailUUId: string;
-    private pondPrepareId: number;
-    private storageId: number;
     private pondPrepareDetailId: number;
+    private pondPrepareDetailUUId: string;
+    private materialId: number;
+    private pondPrepareId: number;
     private quantity: number;
+    private createdDate: Date;
+    private isDeleted: number;
     constructor() {
         super();
         this.pondPrepareDetailsServices = new PondPrepareDetailsServices();
@@ -28,26 +30,38 @@ export class PondPrepareDetail extends BaseComponent {
         this.pondPrepareId = pondPrepareId;
     }
 
-    public set setStorageId(storageId) {
-        this.storageId = storageId;
+    public set setMaterialId(materialId) {
+        this.materialId = materialId;
     }
 
     public set setQuantity(quantity) {
         this.quantity = quantity;
     }
 
+    public set setCreatedDate(createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setPondpreparedetails(
         pondPrepareDetailUUId: string,
         pondPrepareId: number,
-        storageId: number,
+        materialId: number,
         pondPrepareDetailId: number,
-        quantity: number
+        quantity: number,
+        createdDate?: Date,
+        isDeleted?: number
     ) {
         this.setPondPrepareDetailUUId = pondPrepareDetailUUId;
         this.setPondPrepareId = pondPrepareId;
-        this.setStorageId = storageId;
+        this.setMaterialId = materialId;
         this.setPondPrepareDetailId = pondPrepareDetailId;
         this.setQuantity = quantity;
+        this.setCreatedDate = createdDate;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getPondPrepareDetailUUId(): string {
@@ -58,8 +72,8 @@ export class PondPrepareDetail extends BaseComponent {
         return this.pondPrepareId;
     }
 
-    public get getStorageId(): number {
-        return this.storageId;
+    public get getMaterialId(): number {
+        return this.materialId;
     }
 
     public get getPondPrepareDetailId(): number {
@@ -70,4 +84,11 @@ export class PondPrepareDetail extends BaseComponent {
         return this.quantity;
     }
 
+    public get getCreatedDate(): Date {
+        return this.createdDate;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

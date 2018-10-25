@@ -7,9 +7,9 @@ export class HarvestDetail extends BaseComponent {
     private harvestDetailsServives: HarvestDetailsServives;
     private harvestDetailUUId: string;
     private harvestId: number;
-    private breedName: string;
     private quantity: number;
     private unitPrice: number;
+    private isDeleted: number;
     constructor() {
         super();
         this.harvestDetailsServives = new HarvestDetailsServives();
@@ -24,10 +24,6 @@ export class HarvestDetail extends BaseComponent {
         this.harvestId = harvestId;
     }
 
-    public set setBreedName(breedName) {
-        this.breedName = breedName;
-    }
-
     public set setQuantity(quantity) {
         this.quantity = quantity;
     }
@@ -36,18 +32,22 @@ export class HarvestDetail extends BaseComponent {
         this.unitPrice = unitPrice;
     }
 
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setHarvestdetails(
         harvestIdDetailUUId: string,
         harvestId: number,
-        breedName: string,
         quantity: number,
-        unitPrice: number
+        unitPrice: number,
+        isDeleted?: number
     ) {
         this.setHarvestIdDetailUUId = harvestIdDetailUUId;
         this.setHarvestId = harvestId;
-        this.setBreedName = breedName;
         this.setQuantity = quantity;
         this.setUnitPrice = unitPrice;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getHarvestDetailUUId(): string {
@@ -58,10 +58,6 @@ export class HarvestDetail extends BaseComponent {
         return this.harvestId;
     }
 
-    public get getBreedName(): string {
-        return this.breedName;
-    }
-
     public get getQuantity(): number {
         return this.quantity;
     }
@@ -70,4 +66,7 @@ export class HarvestDetail extends BaseComponent {
         return this.unitPrice;
     }
 
+    public get getIsDeleted(): number {
+        return this.isDeleted;
+    }
 }

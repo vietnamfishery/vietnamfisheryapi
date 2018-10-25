@@ -8,10 +8,10 @@ export class StockingDetail extends BaseComponent {
     private stockingDetailUUId: string;
     private breedId: number;
     private stockingId: number;
-    private costOfStocking: number;
     private stockingQuantity: number;
     private phFirst: number;
     private salinityFirst: number;
+    private isDeleted: number;
     constructor() {
         super();
         this.stockingDetailsServices = new StockingDetailsServices();
@@ -30,10 +30,6 @@ export class StockingDetail extends BaseComponent {
         this.stockingId = stockingId;
     }
 
-    public set setCostOfStocking(costOfStocking) {
-        this.costOfStocking = costOfStocking;
-    }
-
     public set setStockingQuantity(stockingQuantity) {
         this.stockingQuantity = stockingQuantity;
     }
@@ -46,22 +42,26 @@ export class StockingDetail extends BaseComponent {
         this.salinityFirst = salinityFirst;
     }
 
+    public set setIsDeleted(isDeleted) {
+        this.isDeleted = isDeleted;
+    }
+
     public setStockingdetails(
         stockingDetailUUId: string,
         breedId: number,
         stockingId: number,
-        costOfStocking: number,
         stockingQuantity: number,
         phFirst: number,
-        salinityFirst: number
+        salinityFirst: number,
+        isDeleted?: number
     ) {
         this.setStockingDetailUUId = stockingDetailUUId;
         this.setBreedId = breedId;
         this.setStockingId = stockingId;
-        this.setCostOfStocking = costOfStocking;
         this.setStockingQuantity = stockingQuantity;
         this.setPhFirst = phFirst;
         this.setSalinityFirst = salinityFirst;
+        this.setIsDeleted = isDeleted;
     }
 
     public get getStockingDetailUUId(): string {
@@ -76,10 +76,6 @@ export class StockingDetail extends BaseComponent {
         return this.stockingId;
     }
 
-    public get getCostOfStocking(): number {
-        return this.costOfStocking;
-    }
-
     public get getStockingQuantity(): number {
         return this.stockingQuantity;
     }
@@ -90,5 +86,9 @@ export class StockingDetail extends BaseComponent {
 
     public get getSalinityFirst(): number {
         return this.salinityFirst;
+    }
+
+    public get getIsDeleted(): number {
+        return this.isDeleted;
     }
 }

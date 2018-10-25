@@ -6,19 +6,20 @@ import { ActionServer } from '../../common';
 
 export class User extends BaseComponent {
     private userServices: UserServives;
+    private userId: number;
     private userUUId: string;
     private firstname: string;
     private lastname: string;
+    private birthday: Date;
+    private addressContact: string;
     private username: string;
     private password: string;
-    private birthday: Date;
-    private email: string;
-    private phone: string;
-    private address: string;
     private town: string;
     private district: string;
     private province: string;
     private status: number;
+    private phone: string;
+    private email: string;
     private images: string;
     private createdBy: string;
     private createdDate: Date;
@@ -36,6 +37,10 @@ export class User extends BaseComponent {
         this.foreignKey = [
 
         ];
+    }
+
+    public set setUserId(userId: number) {
+        this.userId = userId;
     }
 
     public set setUserUUId(userUUId: string) {
@@ -70,8 +75,8 @@ export class User extends BaseComponent {
         this.phone = phone;
     }
 
-    public set setAddress(address: string) {
-        this.address = address;
+    public set setAddressContact(addressContact: string) {
+        this.addressContact = addressContact;
     }
 
     public set setTown(town: string) {
@@ -115,6 +120,7 @@ export class User extends BaseComponent {
     }
 
     public setUser(
+        userId: number,
         userUUId: string,
         firstname: string,
         lastname: string,
@@ -123,18 +129,19 @@ export class User extends BaseComponent {
         birthday: Date,
         email: string,
         phone: string,
-        address: string,
+        addressContact: string,
         town: string,
         district: string,
         province: string,
         status: number,
         images: string,
-        createdBy: string,
-        createdDate: Date,
-        updatedBy: string,
-        updatedDate: Date,
-        isDeleted: number
+        createdBy?: string,
+        createdDate?: Date,
+        updatedBy?: string,
+        updatedDate?: Date,
+        isDeleted?: number
     ) {
+        this.setUserId = userId;
         this.setUserUUId = userUUId;
         this.setFirstname = firstname;
         this.setLastname = lastname;
@@ -143,7 +150,7 @@ export class User extends BaseComponent {
         this.setBirthday = birthday;
         this.setEmail = email;
         this.setPhone = phone;
-        this.setAddress = address;
+        this.setAddressContact = addressContact;
         this.setTown = town;
         this.setDistrict = district;
         this.setProvince = province;
@@ -154,6 +161,10 @@ export class User extends BaseComponent {
         this.setUpdatedBy = updatedBy;
         this.setUpdatedDate = updatedDate;
         this.setIsDeleted = isDeleted;
+    }
+
+    public get getUserId() {
+        return this.userId;
     }
 
     public get getUserUUId() {
@@ -188,8 +199,8 @@ export class User extends BaseComponent {
         return this.phone;
     }
 
-    public get getAddress() {
-        return this.address;
+    public get getAddressContact() {
+        return this.addressContact;
     }
 
     public get getTown() {
