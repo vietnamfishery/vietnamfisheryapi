@@ -22,3 +22,13 @@ export function pondsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: 
         }
     });
 }
+
+export function pondsToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.POND_2_USER,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}

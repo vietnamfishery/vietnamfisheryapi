@@ -96,9 +96,10 @@ export class ModelBuilder {
         associations.pondpreparedetailsToPondPrepare(this.model, pondPrepareModel);
     }
 
-    pondsAssociate(pondUserRolesModel: any, seasonAndPondModel: any) {
+    pondsAssociate(pondUserRolesModel: any, seasonAndPondModel: any, userModel: any,) {
         associations.pondsToPondUserRoles(this.model, pondUserRolesModel);
         associations.pondsToSeasonAndPond(this.model, seasonAndPondModel);
+        associations.pondsToUser(this.model, userModel);
     }
 
     ponduserrolesAssociate(

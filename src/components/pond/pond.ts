@@ -8,6 +8,7 @@ export class Pond extends BaseComponent {
     private pondsServices: PondsServices;
     private pondId: number;
     private pondUUId: string;
+    private userId: number;
     private pondName: string;
     private pondArea: number;
     private pondDepth: number;
@@ -37,6 +38,10 @@ export class Pond extends BaseComponent {
 
     public set setPondUUId(pondUUId) {
         this.pondUUId = pondUUId;
+    }
+
+    public set setUserId(userId) {
+        this.userId = userId;
     }
 
     public set setPondName(pondName) {
@@ -98,6 +103,7 @@ export class Pond extends BaseComponent {
     public setPond(
         pondId: string,
         pondUUId: string,
+        userId: number,
         pondName: string,
         pondArea: number,
         pondDepth: number,
@@ -115,6 +121,7 @@ export class Pond extends BaseComponent {
     ) {
         this.setPondId = pondId;
         this.setPondUUId = pondUUId;
+        this.setUserId = userId;
         this.setPondName = pondName;
         this.setPondArea = pondArea;
         this.setPondDepth = pondDepth;
@@ -137,6 +144,10 @@ export class Pond extends BaseComponent {
 
     public get getPondUUId(): string {
         return this.pondUUId;
+    }
+
+    public get getUserId(): number {
+        return this.userId;
     }
 
     public get getPondName(): string {

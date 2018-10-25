@@ -213,7 +213,8 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.pondsAssociate(
             this.models[`ponduserrolesOptions`],
-            this.models[`seasonAndPondOptions`]
+            this.models[`seasonAndPondOptions`],
+            this.models[`userOptions`]
         );
         return md;
     }

@@ -20,6 +20,11 @@ export const pondOptions: any = _.merge({
             allowNull: false,
             // field: 'pondUUId'
         },
+        userId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'userId'
+        },
         pondName: {
             type: Sequelize.STRING(50),
             // field: 'pondName'
