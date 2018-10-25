@@ -98,16 +98,4 @@ export class Season extends BaseComponent {
             seasonId: this.seasonId
         };
     }
-
-    public get getStatus(): number {
-        return this.status;
-    }
-
-    public get getCreatedDate(): Date {
-        return this.createdDate;
-    }
-
-    public get getIsDeleted(): number {
-        return this.isDeleted;
-    }
 }

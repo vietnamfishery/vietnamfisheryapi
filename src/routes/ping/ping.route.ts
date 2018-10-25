@@ -40,7 +40,7 @@ export class PingRoute extends BaseRoute {
         this.router.get('/pr', this.getpr);
         this.router.get('/ura', this.getura);
         this.router.get('/UserAndSeason', this.userAndSeason);
-        this.router.get('/SeasonWithUser', this.seasonWithUser);
+        // this.router.get('/SeasonWithUser', this.seasonWithUser);
     }
 
     /**
@@ -85,10 +85,10 @@ export class PingRoute extends BaseRoute {
         });
     }
 
-    private async seasonWithUser(req: Request, res: Response, next: NextFunction) {
-        const seasonServices: SeasonServices = new SeasonServices();
-        seasonServices.seasonWithUser().then(res$ => {
-            res.json({ res$ });
-        });
-    }
+    // private async seasonWithUser(req: Request, res: Response, next: NextFunction) {
+    //     const seasonServices: SeasonServices = new SeasonServices();
+    //     seasonServices.getAll().then(res$ => {
+    //         res.json({ res$ });
+    //     });
+    // }
 }
