@@ -2,7 +2,7 @@ import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer } from '../../common';
+import { ActionServer, ISearchOptions } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 
@@ -42,12 +42,11 @@ export class SeasonRoute extends BaseRoute {
     }
 
     private addSeason = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.INSERT;
         const { seasonName } = request.body;
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodeToken: any = Authentication.detoken(token);
-        this.season.setSeason(null, uuidv4(), decodeToken.userId, seasonName);
-        this.season.upsert(action).then((res: any) => {
+        this.season.setSeason(null, uuidv4(), decodeToken.userId, seasonName, 0);
+        this.season.insert().then((res: any) => {
             if(res) {
                 response.status(200).json({
                     success: true,
@@ -66,12 +65,33 @@ export class SeasonRoute extends BaseRoute {
     }
 
     private getSeasons = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.GET;
-        this.season.gets(action).then(season => {
-            response.status(200).json({
-                success: true,
-                season
-            });
+        const { pageSizes, pageIndex, sortBy, between, count } = request.headers;
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        const options: any = {
+            userId: decodeToken.userId,
+        };
+        const action: any = {
+            method: request.method,
+            pageSizes,
+            pageIndex,
+            sortBy,
+            between,
+            count
+        };
+        this.season.gets(action, options).then(season => {
+            if(season.length > 0) {
+                response.status(200).json({
+                    success: true,
+                    season
+                });
+
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Bạn chưa có ao, vui lòng tạo một ao để tiếp tục!'
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,
@@ -99,16 +119,15 @@ export class SeasonRoute extends BaseRoute {
     }
 
     private updateSeason = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.UPDATE;
-        const { seasonId, pondId, seasonName } = request.body;
+        const { seasonId, seasonName, status } = request.body;
         if(!seasonId) {
             response.status(200).json({
                 success: false,
                 message: 'Hành động không được phép, vui lòng thử lại sau!'
             });
         } else {
-            this.season.setSeason(seasonId, null, pondId, seasonName);
-            this.season.upsert(action).then((res: any) => {
+            this.season.setSeason(seasonId, null, null, seasonName, status);
+            this.season.update().then((res: any) => {
                 if(!res) {
                     response.status(200).json({
                         success: false,

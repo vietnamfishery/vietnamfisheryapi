@@ -1,6 +1,7 @@
 import { BaseServices } from './base.services';
 import { IOptionsModelDB } from '../interfaces';
 import { seasonOptions } from '../models/objects';
+import { Promise } from '../lib';
 import { ActionAssociateDatabase } from '../common';
 
 export class SeasonServices extends BaseServices {
@@ -10,23 +11,12 @@ export class SeasonServices extends BaseServices {
         this.models = this.conn.seasonModel;
     }
 
-    seasonWithUser(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const query: any = {
-                include: [
-                    {
-                        model: (this.models as any).sequelize.models.users,
-                        as: ActionAssociateDatabase.SEASON_2_USER,
-                        where: {
-                            userId: 103
-                        }
-                    },
-                ],
-                limit: 1,
-                order: [
-                    ['seasonId', 'DESC']
-                ]
+    getAll(criteria: any, options: any): Promise<any[]> {
+        return new Promise((resolve,reject) => {
+            const where: any = {
+                userId: options.userId
             };
+            const query: any = { ...criteria, where };
             this.models.findAll(query).then(res => {
                 resolve(res);
             });

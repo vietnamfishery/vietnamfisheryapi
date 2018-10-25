@@ -57,8 +57,22 @@ export enum defaultImage {
     pondImage = '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W'
 }
 
+export interface ISearchOptions {
+    pageSizes?: string;
+    pageIndex?: string;
+    // order?: Array<[]>;
+    orderBy?: string;
+    orderType?: string;
+    between?: string[];
+    count?: string;
+    userId?: string;
+    method: string;
+}
+
 export enum ActionServer {
-    GET = 'select',
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
     AUTH = 'authorzation',
     INSERT = 'insert',
     UPDATE = 'update',
@@ -193,7 +207,7 @@ export enum sortType {
 }
 
 export interface IOptionQuery {
-    action: ActionServer;
+    action?: ActionServer;
     data?: any;
     primary?: object; // xác định thực thế chịu tác dụng của hành động
     pagination?: {

@@ -1,4 +1,4 @@
-import { actionUserServices, ActionServer, IOptionQuery } from '../common';
+import { actionUserServices, ActionServer, IOptionQuery, ISearchOptions } from '../common';
 import { Promise } from '../lib';
 import { BaseServices } from '../services';
 
@@ -8,106 +8,78 @@ export class BaseComponent {
     protected foreignKey: any;
     public constructor() {}
 
-    protected createQuery(options: IOptionQuery) {
-        switch(options.action) {
+    protected createQuery(options: ISearchOptions) {
+        switch(options.method) {
             case ActionServer.GET:
-                const data: any = options.data ? {where: options.data} : null;
-                const pagination: any = options.pagination ? {
-                    offset: options.pagination.offset,
-                    limit: options.pagination.limit
-                } : null;
-                const order: any = options.order ? {order: options.order} : null;
-                const attributes: any = options.attributes ? {attributes: options.attributes} : null;
-                return { ...data, ...pagination, ...order, ...attributes };
-            case ActionServer.INSERT:
-                return options.data;
-            case ActionServer.UPDATE:
-                const data$: any = {where: options.primary};
-                const updateFields: any = {fields: this.getFields(options.data)};
-                return { ...data$, ...updateFields };
-            case ActionServer.REGISTER:
-                return {
-                    data: options.data.that,
-                    roles: options.data.roles
-                };
+                const offset: any = options.pageIndex ? Number(options.pageIndex) - 1 : null;
+                const limit: any = options.pageSizes ? Number(options.pageSizes) : null;
+                const order: any[] = options.orderBy && options.orderType ? [
+                    [options.orderBy,options.orderType]
+                ] : options.orderBy && !options.orderType ? [
+                    [options.orderBy]
+                ] : null;
+                return { ...offset, ...limit, ...order };
             default:
                 return {};
         }
     }
 
-    protected getQuery(...args: any[]): any {
-        const action: string = args[0] || null;
-
-        switch(action) {
-            case actionUserServices.REGISTER:
-                return {
-                    user: args[1],
-                    roles: args[2]
-                };
-            case actionUserServices.LOGIN:
-                return {
-                    where: args[1]
-                };
-            case actionUserServices.USERINFO:
-                return {
-                    where: args[1]
-                };
-            case ActionServer.AUTH:
-                return {
-                    where: {
-                        userId: args[1] // tham so thu 2 la userId
-                    }
-                };
-            case ActionServer.INSERT:
-                return {
-                    fields: args[1]
-                };
-            default:
-                return null;
-        }
-    }
-
+    /**
+     * remove null and undefine field, usually use to update action
+     * @param obj
+     */
     protected getFields(obj: any): string[] {
-        const that = this;
-        const arr: string[] = [];
+        const that: any = this;
+        const object: any = {};
         for(const key in obj) {
-            if(that[key] !== null && that[key] !== undefined && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function') {
-                arr.push(key);
+            if(that[key] !== null && that[key] !== undefined && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^[get].+$/) && that[key].toString().match(/[0-9]+$/)) {
+                const types = typeof that[key];
+                console.log(types);
+                if(that[key] || that[key].toString().match(/[0-9]+$/)) {
+                    object[key] = that[key];
+                }
             }
         }
-        return arr;
+        return object;
     }
 
-    upsert(action: string): Promise<any> {
-        const that: any = this;
-        if(action === ActionServer.INSERT) {
-            return new Promise((resolve, reject) => {
-                this.services.insert(this).then((res: any) => {
-                    resolve(res);
-                });
-            });
-        }
-        if(action === ActionServer.UPDATE) {
-            const query = this.createQuery({
-                action,
-                primary: that.getPrimary,
-                data: this
-            });
-            return new Promise((resolve, reject) => {
-                this.services.update(this, query).then((res: any) => {
-                    resolve(res);
-                });
-            });
-        }
-    }
+    // upsert(action: any): Promise<any> {
+    //     const that: any = this;
+    //     if(action === ActionServer.UPDATE) {
+    //         const query = {};
+    //         // this.createQuery({
+    //         //     action,
+    //         //     primary: that.getPrimary,
+    //         //     data: this
+    //         // });
+    //         // return new Promise((resolve, reject) => {
+    //         //     this.services.update(this, query).then((res: any) => {
+    //         //         resolve(res);
+    //         //     });
+    //         // });
+    //     }
+    // }
 
-    gets(action: any, options?: object): Promise<any> {
-        const that: any = this;
-        const query = that.createQuery({
-            action
-        });
+    insert(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.services.getAll(query).then(res => {
+            this.services.insert(this).then((res: any) => {
+                resolve(res);
+            });
+        });
+    }
+
+    update(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.services.update(this.getFields(this)).then(res => {
+                resolve(res);
+            });
+        });
+    }
+
+    gets(action: any, options: ISearchOptions): Promise<any> {
+        const query = this.createQuery(action);
+        return new Promise((resolve, reject) => {
+            this.services.getAll(query, options).then(res => {
                 resolve(res);
             });
         });
