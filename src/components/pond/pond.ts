@@ -201,26 +201,26 @@ export class Pond extends BaseComponent {
         };
     }
 
-    public getAll(action, userId): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.pondsServices.getAll(this.getQuery(action, userId)).then((pond: any) => {
-                resolve(pond);
-            });
-        });
-    }
+    // public getAll(action, userId): Promise<any> {
+    //     return new Promise((resolve, reject) => {
+    //         this.pondsServices.getAll(this.getQuery(action, userId)).then((pond: any) => {
+    //             resolve(pond);
+    //         });
+    //     });
+    // }
 
-    createQuery(options: IOptionQuery) {
-        switch (options.action) {
-            case ActionServer.GET:
-                return merge(super.createQuery(options),{
-                    // where: this.getForgeinKey
-                },{
-                    where: this.getPrimary
-                });
-            default:
-                return super.createQuery(options);
-        }
-    }
+    // createQuery(options: IOptionQuery) {
+    //     switch (options.action) {
+    //         case ActionServer.GET:
+    //             return merge(super.createQuery(options),{
+    //                 // where: this.getForgeinKey
+    //             },{
+    //                 where: this.getPrimary
+    //             });
+    //         default:
+    //             return super.createQuery(options);
+    //     }
+    // }
 
     // getById(action, pondId, userId): Promise<any> {
     //     return new Promise((resolve, reject) => {
