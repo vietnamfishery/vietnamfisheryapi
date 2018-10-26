@@ -46,22 +46,29 @@ export class PondRoute extends BaseRoute {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-        pond.insert(employee).then((res: any) => {
-            if(res) {
-                response.status(200).json({
-                    success: true,
-                    message: 'Thêm ao thành công!',
-                });
-            }
-        }).catch(e => {
-            if(e) {
-                response.status(200).json({
-                    success: false,
-                    message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-                });
-            }
-        });
+        if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
+            });
+        } else {
+            pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
+            pond.insert(employee).then((res: any) => {
+                if(res) {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Thêm ao thành công!',
+                    });
+                }
+            }).catch(e => {
+                if(e) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
+                    });
+                }
+            });
+        }
     }
 
     private getPonds = (request: Request, response: Response, next: NextFunction) => {
@@ -72,7 +79,7 @@ export class PondRoute extends BaseRoute {
             userId: decodetoken.userId
         }).then( async (res: any) => {
             const endData = [];
-            for(const e of res) {
+            for(const e of res.ponds) {
                 e[`images`] = await GoogleDrive.delayGetFileById(e.images);
                 endData.push(e);
             }

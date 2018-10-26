@@ -1,4 +1,4 @@
-import { Pond, UserRole } from '../../components';
+import { Pond, UserRole, PondUserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
@@ -34,23 +34,22 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private init() {
         logger.info('[PondUserRolesRoute] Creating ping route.');
-        // this.router.post('/add', Authentication.isLogin, this.addPond);
+        this.router.post('/add', Authentication.isLogin, this.addRoles);
+        this.router.put('/update', Authentication.isLogin, this.updateRoles);
         // this.router.get('/gets', Authentication.isLogin, this.getPonds);
         // this.router.get('/get/:pondUserRolesId', Authentication.isLogin, this.getPondById);
-        // this.router.put('/update', Authentication.isLogin, this.updatePond);
     }
 
-    private addPond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-        pond.insert(employee).then((res: any) => {
+    private addRoles = (request: Request, response: Response, next: NextFunction) => {
+        const pondUserRole: PondUserRole = new PondUserRole();
+        const { userId, pondId } = request.body;
+        pondUserRole.setUserId = userId;
+        pondUserRole.setPondId = pondId;
+        pondUserRole.insert().then((res: any) => {
             if(res) {
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm ao thành công!',
+                    message: 'Phân quyền thành công!',
                 });
             }
         }).catch(e => {
@@ -61,6 +60,36 @@ export class PondUserRolesRoute extends BaseRoute {
                 });
             }
         });
+    }
+
+    private updateRoles = (request: Request, response: Response, next: NextFunction) => {
+        const pondUserRole: PondUserRole = new PondUserRole();
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodetoken: any = Authentication.detoken(token);
+        const {pondUserRolesId, userId, pondId } = request.body;
+        if(!pondId || !userId || pondUserRolesId) {
+            response.status(200).json({
+                success: false,
+                message: 'Hành động không được phép, vui lòng thử lại sau!'
+            });
+        } else {
+            pondUserRole.setPondUserRolesId = pondUserRolesId;
+            pondUserRole.setUserId = userId;
+            pondUserRole.setPondId = pondId;
+            pondUserRole.update().then((res: any) => {
+                if(!res) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Cập nhật thành công!'
+                    });
+                }
+            });
+        }
     }
 
     private getPonds = async (request: Request, response: Response, next: NextFunction) => {
@@ -100,32 +129,4 @@ export class PondUserRolesRoute extends BaseRoute {
             });
         });
     }
-
-    // private updatePond = (request: Request, response: Response, next: NextFunction) => {
-    //     const action = ActionServer.UPDATE;
-    //     const token: string = request.headers.authorization.split('100%<3')[1];
-    //     const decodetoken: any = Authentication.detoken(token);
-    //     const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, pondStatus } = request.body;
-    //     if(!pondId) {
-    //         response.status(200).json({
-    //             success: false,
-    //             message: 'Hành động không được phép, vui lòng thử lại sau!'
-    //         });
-    //     } else {
-    //         this.pond.setPond(pondId, null, decodetoken.userId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondStatus, images || defaultImage.pondImage, pondLatitude, pondLongitude);
-    //         this.pond.upsert(action).then((res: any) => {
-    //             if(!res) {
-    //                 response.status(200).json({
-    //                     success: false,
-    //                     message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-    //                 });
-    //             } else {
-    //                 response.status(200).json({
-    //                     success: true,
-    //                     message: 'Cập nhật thành công!'
-    //                 });
-    //             }
-    //         });
-    //     }
-    // }
 }
