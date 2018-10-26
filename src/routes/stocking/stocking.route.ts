@@ -14,11 +14,11 @@ import { Authentication } from '../../helpers/login-helpers';
  *
  * @apiSuccess {String} type Json Type.
  */
-export class PondRoute extends BaseRoute {
-    public static path = '/ponds';
-    private static instance: PondRoute;
+export class StockingRoute extends BaseRoute {
+    public static path = '/stocking';
+    private static instance: StockingRoute;
     /**
-     * @class PondRoute
+     * @class StockingRoute
      * @constructor
      */
     private constructor() {
@@ -27,14 +27,14 @@ export class PondRoute extends BaseRoute {
     }
 
     static get router() {
-        if (!PondRoute.instance) {
-            PondRoute.instance = new PondRoute();
+        if (!StockingRoute.instance) {
+            StockingRoute.instance = new StockingRoute();
         }
-        return PondRoute.instance.router;
+        return StockingRoute.instance.router;
     }
 
     private init() {
-        logger.info('[PondRoute] Creating ping route.');
+        logger.info('[StockingRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addPond);
         this.router.get('/gets', Authentication.isLogin, this.getPonds);
         this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
@@ -108,7 +108,7 @@ export class PondRoute extends BaseRoute {
                 });
             } else {
                 const p: any = pond$;
-                p.pond[`images`] = await GoogleDrive.delayGetFileById(p.pond.images);
+                p[`images`] = await GoogleDrive.delayGetFileById(pond$.images);
                 response.status(200).json(p);
             }
         }).catch(e => {

@@ -42,10 +42,9 @@ export class PondDiaryRoute extends BaseRoute {
     }
 
     private addPondDiary = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.INSERT;
-        const { seasonId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery } = request.body;
-        this.pondDiary.setPonddiary(null, uuidv4(), seasonId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery);
-        this.pondDiary.upsert(action).then((res: any) => {
+        const { seasonAndPondId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery } = request.body;
+        this.pondDiary.setPonddiary(null, uuidv4(), seasonAndPondId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery);
+        this.pondDiary.insert().then((res: any) => {
             if(res) {
                 response.status(200).json({
                     success: true,
@@ -62,23 +61,32 @@ export class PondDiaryRoute extends BaseRoute {
         });
     }
 
-    private getPondDiaries = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.GET;
-        this.pondDiary.setPondId = request.params.pondId;
-        this.pondDiary.gets(action).then(season => {
-            response.status(200).json({
-                success: true,
-                season
-            });
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                error: e,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
-            });
-        });
+    /**
+     * Get theo tháng, theo user join từ vự
+     * @param request
+     * @param response
+     * @param next
+     */
+    private getPondDiaries = async (request: Request, response: Response, next: NextFunction) => {
+        // const action = ActionServer.GET;
+        // this.pondDiary.setPondId = request.params.pondId;
+        // this.pondDiary.gets(action).then(season => {
+        //     response.status(200).json({
+        //         success: true,
+        //         season
+        //     });
+        // }).catch(e => {
+        //     response.status(200).json({
+        //         success: false,
+        //         error: e,
+        //         message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
+        //     });
+        // });
     }
 
+    /**
+     * Get theo lần ghi
+     */
     private getPondDiaryById = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId } = request.params;
         this.pondDiary.getById(seasonId).then((season: any) => {
@@ -96,29 +104,17 @@ export class PondDiaryRoute extends BaseRoute {
         });
     }
 
+    /**
+     * get theo ngày
+     */
+    private getPondDiaryByDay = async (request: Request, response: Response, next: NextFunction) => {
+        //
+    }
+
+    /**
+     * Sửa đổi
+     */
     private updatePondDiary = (request: Request, response: Response, next: NextFunction) => {
-        const action = ActionServer.UPDATE;
-        const { seasonId, pondId, seasonName } = request.body;
-        if(!seasonId) {
-            response.status(200).json({
-                success: false,
-                message: 'Hành động không được phép, vui lòng thử lại sau!'
-            });
-        } else {
-            this.pondDiary.setSeason(seasonId, null, pondId, seasonName);
-            this.pondDiary.upsert(action).then((res: any) => {
-                if(!res) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Cập nhật thành công!'
-                    });
-                }
-            });
-        }
+        //
     }
 }
