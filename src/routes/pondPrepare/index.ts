@@ -1,1 +1,1 @@
-export * from './pondDiary.route';
+export * from './pondPrepare.route';
