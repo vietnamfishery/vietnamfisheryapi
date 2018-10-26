@@ -4,7 +4,6 @@ import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { defaultImage } from '../../common';
 import * as uuidv4 from 'uuid/v4';
-import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
 
 /**
@@ -14,11 +13,11 @@ import { Authentication } from '../../helpers/login-helpers';
  *
  * @apiSuccess {String} type Json Type.
  */
-export class PondRoute extends BaseRoute {
-    public static path = '/ponds';
-    private static instance: PondRoute;
+export class PondUserRolesRoute extends BaseRoute {
+    public static path = '/pondUserRoles';
+    private static instance: PondUserRolesRoute;
     /**
-     * @class PondRoute
+     * @class PondUserRolesRoute
      * @constructor
      */
     private constructor() {
@@ -27,18 +26,18 @@ export class PondRoute extends BaseRoute {
     }
 
     static get router() {
-        if (!PondRoute.instance) {
-            PondRoute.instance = new PondRoute();
+        if (!PondUserRolesRoute.instance) {
+            PondUserRolesRoute.instance = new PondUserRolesRoute();
         }
-        return PondRoute.instance.router;
+        return PondUserRolesRoute.instance.router;
     }
 
     private init() {
-        logger.info('[PondRoute] Creating ping route.');
-        this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.get('/gets', Authentication.isLogin, this.getPonds);
-        this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
-        this.router.put('/update', Authentication.isLogin, this.updatePond);
+        logger.info('[PondUserRolesRoute] Creating ping route.');
+        // this.router.post('/add', Authentication.isLogin, this.addPond);
+        // this.router.get('/gets', Authentication.isLogin, this.getPonds);
+        // this.router.get('/get/:pondUserRolesId', Authentication.isLogin, this.getPondById);
+        // this.router.put('/update', Authentication.isLogin, this.updatePond);
     }
 
     private addPond = (request: Request, response: Response, next: NextFunction) => {
@@ -64,22 +63,14 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private getPonds = (request: Request, response: Response, next: NextFunction) => {
+    private getPonds = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         pond.pondsServices.get({
             userId: decodetoken.userId
-        }).then( async (res: any) => {
-            const endData = [];
-            for(const e of res) {
-                e[`images`] = await GoogleDrive.delayGetFileById(e.images);
-                endData.push(e);
-            }
-            response.status(200).json({
-                success: true,
-                ponds: endData
-            });
+        }).then((res: any) => {
+            response.status(200).json(res);
         }).catch(e => {
             response.status(200).json({
                 success: false,
@@ -93,16 +84,14 @@ export class PondRoute extends BaseRoute {
         const { pondId } = request.params;
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
-        pond.getById(pondId, decodetoken.userId).then( async (pond$: any) => {
+        pond.getById(pondId, decodetoken.userId).then((pond$: any) => {
             if(!pond$) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
                 });
             } else {
-                const p: any = pond$;
-                p[`images`] = await GoogleDrive.delayGetFileById(pond$.images);
-                response.status(200).json(p);
+                response.status(200).json(pond$);
             }
         }).catch(e => {
             response.status(200).json({
@@ -112,31 +101,31 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private updatePond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondId) {
-            response.status(200).json({
-                success: false,
-                message: 'Hành động không được phép, vui lòng thử lại sau!'
-            });
-        } else {
-            pond.setPond(pondId, undefined, decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-            pond.update().then((res: any) => {
-                if(!res) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Cập nhật thành công!'
-                    });
-                }
-            });
-        }
-    }
+    // private updatePond = (request: Request, response: Response, next: NextFunction) => {
+    //     const action = ActionServer.UPDATE;
+    //     const token: string = request.headers.authorization.split('100%<3')[1];
+    //     const decodetoken: any = Authentication.detoken(token);
+    //     const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, pondStatus } = request.body;
+    //     if(!pondId) {
+    //         response.status(200).json({
+    //             success: false,
+    //             message: 'Hành động không được phép, vui lòng thử lại sau!'
+    //         });
+    //     } else {
+    //         this.pond.setPond(pondId, null, decodetoken.userId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondStatus, images || defaultImage.pondImage, pondLatitude, pondLongitude);
+    //         this.pond.upsert(action).then((res: any) => {
+    //             if(!res) {
+    //                 response.status(200).json({
+    //                     success: false,
+    //                     message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
+    //                 });
+    //             } else {
+    //                 response.status(200).json({
+    //                     success: true,
+    //                     message: 'Cập nhật thành công!'
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
 }
