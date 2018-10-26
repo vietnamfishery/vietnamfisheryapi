@@ -35,8 +35,8 @@ export class PondUserRolesRoute extends BaseRoute {
     private init() {
         logger.info('[PondUserRolesRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addRoles);
+        this.router.get('/gets', Authentication.isLogin, this.getRoles);
         this.router.put('/update', Authentication.isLogin, this.updateRoles);
-        // this.router.get('/gets', Authentication.isLogin, this.getPonds);
         // this.router.get('/get/:pondUserRolesId', Authentication.isLogin, this.getPondById);
     }
 
@@ -62,10 +62,25 @@ export class PondUserRolesRoute extends BaseRoute {
         });
     }
 
+    private getRoles = async (request: Request, response: Response, next: NextFunction) => {
+        const pond: Pond = new Pond();
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodetoken: any = Authentication.detoken(token);
+        pond.pondsServices.get({
+            userId: decodetoken.userId
+        }).then((res: any) => {
+            response.status(200).json(res);
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
+            });
+        });
+    }
+
     private updateRoles = (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
         const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
         const {pondUserRolesId, userId, pondId } = request.body;
         if(!pondId || !userId || pondUserRolesId) {
             response.status(200).json({
@@ -90,22 +105,6 @@ export class PondUserRolesRoute extends BaseRoute {
                 }
             });
         }
-    }
-
-    private getPonds = async (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        pond.pondsServices.get({
-            userId: decodetoken.userId
-        }).then((res: any) => {
-            response.status(200).json(res);
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
-            });
-        });
     }
 
     private getPondById = (request: Request, response: Response, next: NextFunction) => {

@@ -18,6 +18,7 @@ export * from './pond';
 export * from './price';
 export * from './province';
 export * from './season';
+export * from './seasonsAndPond';
 export * from './stocking';
 export * from './stockingDetail';
 export * from './storage';
