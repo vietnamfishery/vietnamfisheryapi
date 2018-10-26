@@ -8,16 +8,30 @@ export const ponduserrolesOptions: any = _.merge({
 },
     {
         attributes: {
-            rolesId: {
+            pondUserRolesId: {
                 type: Sequelize.BIGINT(20),
+                autoIncrement: true,
+                primaryKey: true,
                 allowNull: false,
                 // field: 'rolesId'
             },
-            pondId: {
+            userId: {
                 type: Sequelize.BIGINT(20),
-                primaryKey: true,
                 unique: true,
                 // field: 'pondId'
+            },
+            pondId: {
+                type: Sequelize.BIGINT(20),
+                unique: true,
+                // field: 'pondId'
+            },
+            createdDate: {
+                type: Sequelize.DATE,
+                allowNull: true,
+                defaultValue: () => {
+                    return DateUtil.getUTCDateTime();
+                },
+                // field: 'createdDate'
             },
             isDeleted: {
                 type: Sequelize.INTEGER(1),

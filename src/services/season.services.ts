@@ -11,12 +11,12 @@ export class SeasonServices extends BaseServices {
         this.models = this.conn.seasonModel;
     }
 
-    getAll(criteria: any, options: any): Promise<any[]> {
+    getAll(options: any, criteria: any): Promise<any[]> {
         return new Promise((resolve,reject) => {
             const where: any = {
-                userId: options.userId
+                userId: criteria.userId
             };
-            const query: any = { ...criteria, where };
+            const query: any = { ...options, where };
             this.models.findAll(query).then(res => {
                 resolve(res);
             });

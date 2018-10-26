@@ -11,12 +11,12 @@ export function ponduserrolesToPond(thatmodel: Sequeliz.Model<{}, any>, model: S
     });
 }
 
-export function ponduserrolesToUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function ponduserrolesToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.POND_USER_ROLE_2_USER_ROLE,
+        as: ActionAssociateDatabase.POND_USER_ROLE_2_USER,
         foreignKey: {
-            name: 'rolesId',
-            field: 'rolesId'
+            name: 'userId',
+            field: 'userId'
         }
     });
 }

@@ -5,7 +5,7 @@ import { ActionServer, IOptionQuery } from '../../common';
 import { merge } from 'lodash';
 
 export class Pond extends BaseComponent {
-    private pondsServices: PondsServices;
+    public pondsServices: PondsServices;
     private pondId: number;
     private pondUUId: string;
     private userId: number;
@@ -210,6 +210,17 @@ export class Pond extends BaseComponent {
         return {
             pondId: this.getPondId
         };
+    }
+
+    insert(employee?: number): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.pondsServices.insert({
+                pond: this,
+                userId: employee ? employee : this.getUserId
+            }).then((res: any) => {
+                resolve(res);
+            });
+        });
     }
 
     // public getAll(action, userId): Promise<any> {

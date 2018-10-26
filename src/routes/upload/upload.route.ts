@@ -38,15 +38,4 @@ export class UploadRoute extends BaseRoute {
         logger.info('[UploadRoute] Creating upload route.');
         this.router.post('/image', GoogleDrive.upload);
     }
-
-    private uploadImages(request: Request, response: Response, next: NextFunction) {
-        const image: any = request.files.image;
-        const buff: Buffer = image.data as Buffer;
-        const stream: Stream = CustomStream.BufferToStream(buff);
-        stream.on('data', (chunk: Buffer) => {
-            fs.createWriteStream(path.join(__dirname, `./${ image.name }`)).write(chunk);
-        }).on('end', () => {
-            response.json({});
-        });
-    }
 }

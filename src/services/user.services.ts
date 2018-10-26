@@ -4,7 +4,7 @@ import { userOptions } from '../models/objects';
 import { Promise } from '../lib';
 import DBHelper from '../helpers/db-helpers';
 import { Sequelize, Transaction } from 'sequelize';
-import { UserRole } from '../components/userRole';
+import { UserRole } from '../components';
 import { ActionAssociateDatabase } from '../common';
 
 export class UserServives extends BaseServices {
@@ -13,11 +13,12 @@ export class UserServives extends BaseServices {
         super(UserServives.optionsModel);
         this.models = this.conn.usersModel;
     }
+
     public register(entity: any): Promise<any> {
         const sequeliz: Sequelize = DBHelper.sequelize;
         return new Promise((resolve, reject) => {
             sequeliz.transaction({autocommit: true},(t: Transaction) => {
-                return this.models.create(entity.data);
+                return this.models.create(entity.user);
             }).catch(e => {
                 return resolve(e);
             }).then((user) => {
@@ -36,9 +37,9 @@ export class UserServives extends BaseServices {
         });
     }
 
-    public getUserByUsername(userQuery: any): Promise<any> {
+    public getUserByUsername(userCriteria: any): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.models.findOne(userQuery).then((user: any) => {
+            this.models.findOne(this.joinQuery(this.getQuery(userCriteria.getUsername))).then((user: any) => {
                 if(user) {
                     resolve(user.dataValues);
                 } else {
@@ -62,19 +63,6 @@ export class UserServives extends BaseServices {
         return new Promise((resolve, reject) => {
             this.models.update(entity, options).then((user: any) => {
                 resolve(user);
-            });
-        });
-    }
-
-    public getUserInfo(userQuery: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            const query: any = this.joinQuery(userQuery);
-            this.models.findOne(query).then((user: any) => {
-                if(user) {
-                    resolve(user.dataValues);
-                } else {
-                    resolve(user);
-                }
             });
         });
     }
@@ -129,5 +117,13 @@ export class UserServives extends BaseServices {
                 resolve(res);
             });
         });
+    }
+
+    getQuery(username: any): any {
+        return {
+            where: {
+                username
+            }
+        };
     }
 }

@@ -2,7 +2,7 @@ import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
 export function pondsToPondUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasOne(model, {
+    return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
         foreignKey: {
             name: 'pondId',

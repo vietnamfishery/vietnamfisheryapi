@@ -103,10 +103,10 @@ export class ModelBuilder {
     }
 
     ponduserrolesAssociate(
-        userRolesModel: any,
+        userModel: any,
         pondsModel: any
     ) {
-        associations.ponduserrolesToUserRoles(this.model, userRolesModel);
+        associations.ponduserrolesToUser(this.model, userModel);
         associations.ponduserrolesToPond(this.model, pondsModel);
     }
 

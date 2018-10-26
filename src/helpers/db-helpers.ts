@@ -51,13 +51,13 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.usersAssociate(
+            this.models[`districtOptions`],
             this.models[`userrolesOptions`],
             this.models[`pondOptions`],
             this.models[`couponOptions`],
-            this.models[`seasonOptions`],
             this.models[`boughtbreedOptions`],
             this.models[`provinceOptions`],
-            this.models[`districtOptions`],
+            this.models[`seasonOptions`],
             this.models[`wardOptions`]
         );
         return md;
@@ -230,7 +230,7 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.ponduserrolesAssociate(
-            this.models[`userrolesOptions`],
+            this.models[`userOptions`],
             this.models[`pondOptions`]
         );
         return md;

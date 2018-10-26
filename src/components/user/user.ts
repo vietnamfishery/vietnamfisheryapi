@@ -243,81 +243,46 @@ export class User extends BaseComponent {
         return this.isDeleted;
     }
 
-    // public register(action: string, roles?: number): Promise<User> {
-    //     if(action === ActionServer.REGISTER && !roles) {
-    //         return new Promise((resolve, reject) => {
-    //             Enscrypts.getSalt(12).then(salt => {
-    //                 Enscrypts.hashing(this.password, salt).then(hash => {
-    //                     this.setPassword = hash;
-    //                     const query = this.createQuery({
-    //                         action,
-    //                         data: {
-    //                             that: this,
-    //                             roles: 0
-    //                         }
-    //                     });
-    //                     this.userServices.register(query).then((user: User) => {
-    //                         resolve(user);
-    //                     });
-    //                 });
-    //             });
-    //         });
-    //     }
-    // }
+    public register(action: any, roles?: number): Promise<User> {
+        if(action.method === ActionServer.POST && !roles) {
+            return new Promise((resolve, reject) => {
+                Enscrypts.getSalt(Math.floor((Math.random() * 12) + 1)).then(salt => {
+                    Enscrypts.hashing(this.password, salt).then(hash => {
+                        this.setPassword = hash;
+                        this.userServices.register({
+                            user: this,
+                            roles: roles ? roles : 0
+                        }).then(res => {
+                            resolve(res);
+                        });
+                    });
+                });
+            });
+        }
+    }
 
-    // public login(action: ActionServer): Promise<User> {
-    //     const query = this.createQuery({
-    //         action,
-    //         data: {
-    //             username: this.getUsername
-    //         }
-    //     });
-    //     return new Promise((resolve, reject) => {
-    //         this.userServices.getUserByUsername(query).then((user$: User) => {
-    //             resolve(user$);
-    //         });
-    //     });
-    // }
+    public login(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.userServices.getUserByUsername(this).then((user$: User) => {
+                resolve(user$);
+            });
+        });
+    }
 
-    // public getUserInfo(action: ActionServer): Promise<User> {
-    //     const query = this.createQuery({
-    //         action,
-    //         data: {
-    //             username: this.getUsername
-    //         }
-    //     });
-    //     return new Promise((resolve, reject) => {
-    //         this.userServices.getUserInfo(query).then((user$: User) => {
-    //             resolve(user$);
-    //         });
-    //     });
-    // }
-
-    // public updateMyProfile(action): Promise<User> {
-    //     const query = this.createQuery({
-    //         action,
-    //         primary: {
-    //             username: this.getUsername
-    //         }
-    //     });
-    //     return new Promise((resolve, reject) => {
-    //         this.userServices.updateMyProfile(this, query).then(res => {
-    //             resolve(res);
-    //         });
-    //     });
-    // }
+    public updateMyProfile(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.userServices.update(this.getFields(this)).then(res => {
+                resolve(res);
+            });
+        });
+    }
 
     public changePassword(): Promise<any> {
         return new Promise((resolve, reject) => {
-            Enscrypts.getSalt(12).then((salt: string) => {
+            Enscrypts.getSalt(Math.floor((Math.random() * 12) + 1)).then((salt: string) => {
                 Enscrypts.hashing(this.password, salt).then((hash: string) => {
                     this.password = hash;
-                    this.userServices.changePassword(this, {
-                        where: {
-                            username: this.username
-                        },
-                        fields: this.getFields(this)
-                    }).then((res: any) => {
+                    this.userServices.update(this.getFields(this)).then((res: any) => {
                         resolve(res);
                     });
                 });

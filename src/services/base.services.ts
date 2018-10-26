@@ -17,7 +17,7 @@ export abstract class BaseServices {
         this.conn = new DBHelper(this.optionsModel);
     }
 
-    public getById(id: any): Promise<{}> {
+    public getById(id: any, userId?: number): Promise<{}> {
         return new Promise((resolve, reject) => {
             this.models.findById(id).then((obj: any) => {
                 if (obj) {
@@ -29,16 +29,32 @@ export abstract class BaseServices {
         });
     }
 
-    public getAll(query: any, options: any): Promise<any[]> {
+    public getAll(query: any, options?: any): Promise<any[]> {
         if(query) {
             return new Promise((resolve, reject) => {
-                this.models.findAll(query).then((obj: any[]) => {
+                this.models.findAll(this.getQuery(query)).then((obj: any[]) => {
                     resolve(obj);
                 });
             });
         } else {
             return new Promise((resolve, reject) => {
                 this.models.findAll().then((obj: any[]) => {
+                    resolve(obj);
+                });
+            });
+        }
+    }
+
+    public get(query: any, options?: any): Promise<any[]> {
+        if(query) {
+            return new Promise((resolve, reject) => {
+                this.models.findOne(this.getQuery(query)).then((obj: any[]) => {
+                    resolve(obj);
+                });
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                this.models.findOne().then((obj: any[]) => {
                     resolve(obj);
                 });
             });
@@ -77,5 +93,11 @@ export abstract class BaseServices {
                 });
             }
         });
+    }
+
+    getQuery(criteria: object): object {
+        return {
+            where: criteria
+        };
     }
 }

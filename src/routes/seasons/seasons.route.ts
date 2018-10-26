@@ -68,10 +68,10 @@ export class SeasonRoute extends BaseRoute {
         const { pageSizes, pageIndex, sortBy, between, count } = request.headers;
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodeToken: any = Authentication.detoken(token);
-        const options: any = {
+        const criteria: any = {
             userId: decodeToken.userId,
         };
-        const action: any = {
+        const options: any = {
             method: request.method,
             pageSizes,
             pageIndex,
@@ -79,7 +79,7 @@ export class SeasonRoute extends BaseRoute {
             between,
             count
         };
-        this.season.gets(action, options).then(season => {
+        this.season.gets(options, criteria).then(season => {
             if(season.length > 0) {
                 response.status(200).json({
                     success: true,

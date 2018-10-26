@@ -32,10 +32,8 @@ export class BaseComponent {
         const that: any = this;
         const object: any = {};
         for(const key in obj) {
-            if(that[key] !== null && that[key] !== undefined && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^[get].+$/) && that[key].toString().match(/[0-9]+$/)) {
-                const types = typeof that[key];
-                console.log(types);
-                if(that[key] || that[key].toString().match(/[0-9]+$/)) {
+            if(that[key] !== null && that[key] !== undefined && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^ge[t].+$/) || that[key] === 0) {
+                if(that[key] || that[key] === 0) {
                     object[key] = that[key];
                 }
             }
@@ -76,18 +74,18 @@ export class BaseComponent {
         });
     }
 
-    gets(action: any, options: ISearchOptions): Promise<any> {
-        const query = this.createQuery(action);
+    gets(options: ISearchOptions, criteria: any): Promise<any> {
+        const gotOptions = this.createQuery(options);
         return new Promise((resolve, reject) => {
-            this.services.getAll(query, options).then(res => {
+            this.services.getAll(gotOptions, criteria).then(res => {
                 resolve(res);
             });
         });
     }
 
-    getById(id: number): Promise<any> {
+    getById(pondId: number, userId?: number): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.services.getById(id).then(res => {
+            this.services.getById(pondId,userId).then(res => {
                 resolve(res);
             });
         });

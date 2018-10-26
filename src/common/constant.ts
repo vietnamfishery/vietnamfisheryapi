@@ -104,7 +104,7 @@ export enum ActionAssociateDatabase {
     //
     DIED_FISHERY_2_SEASON_AND_POND = 'diedFish',
     //
-    DISTRICT_2_USER = 'districtToUser',
+    DISTRICT_2_USER = 'districtsToUser',
     //
     GROWTH_2_SEASON_AND_POND = 'growths',
     //
@@ -136,12 +136,12 @@ export enum ActionAssociateDatabase {
     POND_2_USER = 'ponds',
     POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
     //
-    POND_USER_ROLE_2_USER_ROLE = 'pondUserRolesWithUserRoles',
-    POND_USER_ROLE_2_POND = 'pondUserRoles',
+    POND_USER_ROLE_2_USER = 'user',
+    POND_USER_ROLE_2_POND = 'pond',
     //
     PRICE_2_SEASON = 'prices',
     //
-    PROVINCE_2_USER = 'provinceToUser',
+    PROVINCE_2_USER = 'provinces',
     //
     SEASON_AND_POND_2_SEASON = 'seasons',
     SEASON_AND_POND_2_POND = 'ponds',
@@ -198,7 +198,7 @@ export enum ActionAssociateDatabase {
     USING_VETERINARY_2_MATERIAL = 'usingVeterinaryMaterial',
     USING_VETERINARY_2_TAKE_CARE = 'usingVeterinaryTakeCare',
     //
-    WARD_2_USER = 'wardToUser',
+    WARD_2_USER = 'wards',
 }
 
 export enum sortType {

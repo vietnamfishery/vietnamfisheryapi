@@ -42,13 +42,11 @@ export class GoogleDrive {
             }, (err, file) => {
                 if (err) {
                     resolve({
-                        action: 'upload',
                         success: false,
                         message: 'Can not upload files. Please try again later.'
                     });
                 } else {
                     resolve({
-                        action: 'upload',
                         success: true,
                         message: 'Upload file successful!',
                         fileId: file.data.id
@@ -68,7 +66,6 @@ export class GoogleDrive {
             responseType: 'arraybuffer'
         }, (err, file: any) => {
             if (err) {
-                console.log(err);
                 response.status(200).json({ error: err.toString() });
             }
             if (file) {

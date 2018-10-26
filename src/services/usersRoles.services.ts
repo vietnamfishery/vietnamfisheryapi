@@ -25,4 +25,10 @@ export class UserRolesServices extends BaseServices {
             });
         });
     }
+
+    getQuery(criteria: any): any {
+        return {
+            where: criteria
+        };
+    }
 }
