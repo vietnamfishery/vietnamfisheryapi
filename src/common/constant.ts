@@ -123,12 +123,12 @@ export enum ActionAssociateDatabase {
     //
     POND_ENVIRONMENT_2_SEASON_AND_POND = 'environments',
     //
-    POND_PREPARE_2_SEASON_AND_POND = 'pondPrepares',
+    POND_PREPARE_2_SEASON_AND_POND = 'seasonAndPond',
     POND_PREPARE_2_COST = 'pondPrepare',
-    POND_PREPARE_2_POND_PREPARE_DETAILS = 'pondprepareToPondPrepareDetails',
+    POND_PREPARE_2_POND_PREPARE_DETAILS = 'details',
     //
     POND_PREPARE_DETAIL_2_POND_PREPARE = 'detailPondPrepare',
-    POND_PREPARE_DETAIL_2_MATERIAL = 'pondPrepares',
+    POND_PREPARE_DETAIL_2_MATERIAL = 'material',
     POND_PREPARE_DETAIL_2_COST = 'detailCost',
     //
     POND_2_POND_USER_ROLE = 'pondUserRoles',

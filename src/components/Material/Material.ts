@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Material extends BaseComponent {
-    private materialServives: MaterialServives;
+    public materialServives: MaterialServives;
     private materialId: number;
     private materialUUId: string;
     private itemName: string;

@@ -28,7 +28,7 @@ export class BaseComponent {
      * remove null and undefine field, usually use to update action
      * @param obj
      */
-    protected getFields(obj: any): string[] {
+    public getFields(obj: any): string[] {
         const that: any = this;
         const object: any = {};
         for(const key in obj) {

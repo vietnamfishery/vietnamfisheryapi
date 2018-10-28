@@ -1,10 +1,8 @@
 import { BaseComponent } from '../baseComponents';
 import { PondPrepareDetailsServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class PondPrepareDetail extends BaseComponent {
-    private pondPrepareDetailsServices: PondPrepareDetailsServices;
+    public pondPrepareDetailsServices: PondPrepareDetailsServices;
     private pondPrepareDetailId: number;
     private pondPrepareDetailUUId: string;
     private materialId: number;
@@ -47,10 +45,10 @@ export class PondPrepareDetail extends BaseComponent {
     }
 
     public setPondpreparedetails(
+        pondPrepareDetailId: number,
         pondPrepareDetailUUId: string,
         pondPrepareId: number,
         materialId: number,
-        pondPrepareDetailId: number,
         quantity: number,
         createdDate?: Date,
         isDeleted?: number

@@ -5,8 +5,8 @@ export function pondpreparedetailsToMaterial(thatmodel: Sequeliz.Model<{}, any>,
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.POND_PREPARE_DETAIL_2_MATERIAL,
         foreignKey: {
-            name: 'storageId',
-            field: 'storageId'
+            name: 'materialId',
+            field: 'materialId'
         }
     });
 }

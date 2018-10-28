@@ -29,11 +29,11 @@ export const pondprepareOptions: any = _.merge({
             type: Sequelize.STRING(50),
             // field: 'pondprepareName'
         },
-        notes: {
-            type: Sequelize.TEXT,
-            allowNull: true,
-            // field: 'notes'
-        },
+        // notes: {
+        //     type: Sequelize.TEXT,
+        //     allowNull: true,
+        //     // field: 'notes'
+        // },
         createdBy: {
             type: Sequelize.STRING(36),
             // field: 'createdBy'
@@ -66,6 +66,6 @@ export const pondprepareOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'pondprepare'
     }
 }, _.cloneDeep(baseModel));

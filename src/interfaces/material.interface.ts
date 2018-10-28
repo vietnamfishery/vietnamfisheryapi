@@ -9,6 +9,6 @@ export interface IMaterial {
     unitPrice: number;
     dom: Date;
     ed: Date;
-    prodcutionBatch: string;
+    productionBatch: string;
     isDeleted: number;
 }
