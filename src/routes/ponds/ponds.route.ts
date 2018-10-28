@@ -46,7 +46,7 @@ export class PondRoute extends BaseRoute {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
+        if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !status) {
             response.status(200).json({
                 success: false,
                 message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
