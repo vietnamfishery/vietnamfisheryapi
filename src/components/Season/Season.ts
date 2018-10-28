@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Season extends BaseComponent {
-    private seasonServices: SeasonServices;
+    public seasonServices: SeasonServices;
     private seasonId: number;
     private seasonUUId: string;
     private userId: number;

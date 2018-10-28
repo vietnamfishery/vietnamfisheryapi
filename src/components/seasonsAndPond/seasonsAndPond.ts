@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class SeasonsAndPond extends BaseComponent {
-    private seasonAndPondServices: SeasonAndPondServices;
+    public seasonAndPondServices: SeasonAndPondServices;
     private seasonAndPondId: number;
     private seasonId: number;
     private pondId: number;

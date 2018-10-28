@@ -54,10 +54,10 @@ export const materialOptions: any = _.merge({
             allowNull: true,
             // field: 'ed'
         },
-        prodcutionBatch: {
+        productionBatch: {
             type: Sequelize.STRING(100),
             allowNull: true,
-            // field: 'prodcutionBatch'
+            // field: 'productionBatch'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),

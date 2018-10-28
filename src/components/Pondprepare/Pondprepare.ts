@@ -4,12 +4,11 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class PondPrepare extends BaseComponent {
-    private pondPrepareServices: PondPrepareServices;
+    public pondPrepareServices: PondPrepareServices;
     private pondPrepareId: number;
     private pondPrepareUUId: string;
     private seasonAndPondId: number;
     private pondprepareName: string;
-    private notes: string;
     private createdBy: string;
     private createdDate: Date;
     private updatedBy: string;
@@ -37,10 +36,6 @@ export class PondPrepare extends BaseComponent {
         this.pondprepareName = pondprepareName;
     }
 
-    public set setNotes(notes) {
-        this.notes = notes;
-    }
-
     public set setCreatedBy(createdBy) {
         this.createdBy = createdBy;
     }
@@ -66,7 +61,6 @@ export class PondPrepare extends BaseComponent {
         pondPrepareUUId: string,
         seasonAndPondId: number,
         pondprepareName: string,
-        notes: string,
         createdBy?: string,
         createdDate?: Date,
         updatedBy?: string,
@@ -77,7 +71,6 @@ export class PondPrepare extends BaseComponent {
         this.setPondPrepareUUId = pondPrepareUUId;
         this.setSeasonAndPondId = seasonAndPondId;
         this.setPondprepareName = pondprepareName;
-        this.setNotes = notes;
         this.setCreatedBy = createdBy;
         this.setCreatedDate = createdDate;
         this.setUpdatedBy = updatedBy;
@@ -99,10 +92,6 @@ export class PondPrepare extends BaseComponent {
 
     public get getPondprepareName(): string {
         return this.pondprepareName;
-    }
-
-    public get getNotes(): string {
-        return this.notes;
     }
 
     public get getCreatedBy(): string {

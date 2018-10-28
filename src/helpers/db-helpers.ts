@@ -332,7 +332,7 @@ export default class DBHelper {
             this.models[`pondenvironmentsOptions`],
             this.models[`pondprepareOptions`],
             this.models[`pondOptions`],
-            this.models[`seasonAndPondOptions`],
+            this.models[`seasonOptions`],
             this.models[`stockingOptions`],
             this.models[`takecareOptions`]
         );

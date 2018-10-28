@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import * as _ from 'lodash';
 
 export const seasonAndPondOptions: any = _.merge({
-    tableName: 'seasonandpond'
+    tableName: 'seasonsandpond'
 },
 {
     attributes: {
@@ -26,6 +26,10 @@ export const seasonAndPondOptions: any = _.merge({
         }
     },
     options: {
-        //
+        createdAt: false,
+        updatedAt: false,
+        deletedAt: false,
+        hooks: {},
+        tableName: 'seasonsandpond'
     }
 });
