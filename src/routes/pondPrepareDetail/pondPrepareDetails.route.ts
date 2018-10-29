@@ -1,8 +1,8 @@
 import { PondPrepare, PondPrepareDetail, Material } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, PondsServices, PondPrepareServices, SeasonAndPondServices } from '../../services';
+import { logger, PondPrepareServices, PondPrepareDetailsServices, MaterialServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer, ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 import { Sequelize, Transaction } from 'sequelize';
@@ -15,15 +15,14 @@ import DBHelper from '../../helpers/db-helpers';
  *
  * @apiSuccess {String} type Json Type.
  */
-export class PondPrepareRoute extends BaseRoute {
-    public static path = '/PondPrepares';
-    private static instance: PondPrepareRoute;
-    private seasonServices: SeasonServices = new SeasonServices();
-    private pondsServices: PondsServices = new PondsServices();
+export class PondPrepareDetailRoute extends BaseRoute {
+    public static path = '/PondPrepareDetails';
+    private static instance: PondPrepareDetailRoute;
+    private pondPrepareDetailsServices: PondPrepareDetailsServices = new PondPrepareDetailsServices();
     private pondPrepareServices: PondPrepareServices = new PondPrepareServices();
-    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
+    private materialServices: MaterialServives = new MaterialServives();
     /**
-     * @class PondPrepareRoute
+     * @class PondPrepareDetailRoute
      * @constructor
      */
     private constructor() {
@@ -32,17 +31,17 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     static get router() {
-        if (!PondPrepareRoute.instance) {
-            PondPrepareRoute.instance = new PondPrepareRoute();
+        if (!PondPrepareDetailRoute.instance) {
+            PondPrepareDetailRoute.instance = new PondPrepareDetailRoute();
         }
-        return PondPrepareRoute.instance.router;
+        return PondPrepareDetailRoute.instance.router;
     }
 
     private init() {
-        logger.info('[PondPrepareRoute] Creating season route.');
-        this.router.post('/add', Authentication.isLogin, this.addPondPondPrepare);
-        this.router.post('/gets', Authentication.isLogin, this.getPondPrepares);
-        this.router.get('/get/:seasonId', Authentication.isLogin, this.getById);
+        logger.info('[PondPrepareDetailRoute] Creating season route.');
+        this.router.post('/add', Authentication.isLogin, this.addDetail);
+        // this.router.get('/gets', Authentication.isLogin, this.getPondPrepareDetails);
+        this.router.get('/get', Authentication.isLogin, this.getById);
         this.router.put('/update', Authentication.isLogin, this.updatePondPrepare);
     }
 
@@ -50,7 +49,7 @@ export class PondPrepareRoute extends BaseRoute {
      * Thêm lần chuẩn bị
      * @params [seasonAndPondId, pondprepareName, notes?, materialId]
      */
-    private addPondPondPrepare = (request: Request, response: Response, next: NextFunction) => {
+    private addDetail = async (request: Request, response: Response, next: NextFunction) => {
         const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
         const { pondPrepareId, materialId, quantity } = request.body;
         pondPrepareDetail.setPondpreparedetails(undefined, uuidv4(), pondPrepareId, materialId, quantity);
@@ -64,12 +63,6 @@ export class PondPrepareRoute extends BaseRoute {
                     materialId
                 },
                 transaction: t
-            }).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Trong kho không đủ số lượng, vui lòng kiểm tra lại, cảm ơn!.'
-                });
-                t.rollback();
             }).then(async () => {
                 return pondPrepareDetail.pondPrepareDetailsServices.models.create(pondPrepareDetail, { transaction: t }).then(() => {
                     response.status(200).json({
@@ -83,38 +76,47 @@ export class PondPrepareRoute extends BaseRoute {
                         message: 'Có lỗi xảy ra, chưa thêm được nhật ký chuẩn bị, xin thử lại, cảm ơn!'
                     });
                 });
+            }).catch(e => {
+                t.rollback();
+                response.status(200).json({
+                    success: false,
+                    message: 'Trong kho không đủ số lượng, vui lòng kiểm tra lại, cảm ơn!'
+                });
             });
         });
     }
 
-    private getPondPrepares = (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId, pondId } = request.body;
-        this.pondPrepareServices.models.findAll({
+    // private getPondPrepareDetails = (request: Request, response: Response, next: NextFunction) => {
+    // }
+
+    private getById = (request: Request, response: Response, next: NextFunction) => {
+        const { pondprepareid } = request.headers;
+        this.pondPrepareDetailsServices.models.findAll({
             include: [
                 {
-                    model: this.seasonAndPondServices.models,
-                    as: ActionAssociateDatabase.POND_PREPARE_2_SEASON_AND_POND,
+                    model: this.materialServices.models,
+                    as: ActionAssociateDatabase.POND_PREPARE_DETAIL_2_MATERIAL
+                },
+                {
+                    model: this.pondPrepareServices.models,
+                    as: ActionAssociateDatabase.POND_PREPARE_DETAIL_2_POND_PREPARE,
                     where: {
-                        seasonId,
-                        [this.seasonAndPondServices.Op.and] : {
-                            pondId
-                        }
+                        pondPrepareId: pondprepareid
                     }
                 }
             ]
-        }).then((res) => {
-            const r = res;
-            response.status(200).json({res});
+        }).then((pondPrepareDetail: any) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                pondPrepareDetail
+            });
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi, vui lòng thử lại sau.'
+                message: 'Không tìm thấy thông tin, vui lòng kiểm tra lại, cảm ơn!'
             });
         });
-    }
-
-    private getById = (request: Request, response: Response, next: NextFunction) => {
-        //
     }
 
     private updatePondPrepare = (request: Request, response: Response, next: NextFunction) => {

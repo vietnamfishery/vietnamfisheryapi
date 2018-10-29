@@ -10,8 +10,14 @@ export class Authentication {
     private user: User = new User();
     constructor() {}
     static isLogin(request: Request, response: Response, next: NextFunction) {
-        const verifyKey = request.headers.authorization.split('100%<3')[0];
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const verifyKey = request.headers.authorization ? request.headers.authorization.split('100%<3')[0] : null;
+        const token: string = request.headers.authorization ? request.headers.authorization.split('100%<3')[1]: null;
+        if(!verifyKey || !token) {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi đăng nhập!'
+            });
+        } else
         if(!Enscrypts.compareSync('vietnamfishery', verifyKey)) {
             response.status(200).json({
                 success: false,

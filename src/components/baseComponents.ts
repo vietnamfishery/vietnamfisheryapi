@@ -83,9 +83,9 @@ export class BaseComponent {
         });
     }
 
-    getById(pondId: number, userId?: number): Promise<any> {
+    getById(id: number, userId?: number): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.services.getById(pondId,userId).then(res => {
+            this.services.getById(id,userId).then(res => {
                 resolve(res);
             });
         });

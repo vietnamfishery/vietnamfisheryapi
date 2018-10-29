@@ -127,7 +127,7 @@ export enum ActionAssociateDatabase {
     POND_PREPARE_2_COST = 'pondPrepare',
     POND_PREPARE_2_POND_PREPARE_DETAILS = 'details',
     //
-    POND_PREPARE_DETAIL_2_POND_PREPARE = 'detailPondPrepare',
+    POND_PREPARE_DETAIL_2_POND_PREPARE = 'pondPrepare',
     POND_PREPARE_DETAIL_2_MATERIAL = 'material',
     POND_PREPARE_DETAIL_2_COST = 'detailCost',
     //

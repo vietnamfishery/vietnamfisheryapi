@@ -152,10 +152,13 @@ export class PondPrepareRoute extends BaseRoute {
         });
     }
 
+    /**
+     * Chức năng click vào 1 đợt chuẩn bị cụ thể
+     */
     private getById = (request: Request, response: Response, next: NextFunction) => {
-        const { pondPrepareId } = request.headers;
+        const { pondprepareid } = request.headers;
         const pondPrepare: PondPrepare = new PondPrepare();
-        pondPrepare.setPondPrepareId = pondPrepareId;
+        pondPrepare.setPondPrepareId = pondprepareid;
         pondPrepare.getById(pondPrepare.getPondPrepareId).then(res => {
             response.status(200).json({
                 success: true,
@@ -170,7 +173,31 @@ export class PondPrepareRoute extends BaseRoute {
         });
     }
 
+    /**
+     * Update tên vụ
+     */
     private updatePondPrepare = (request: Request, response: Response, next: NextFunction) => {
-        //
+        const pondPrepare: PondPrepare = new PondPrepare();
+        const { pondPrepareId, pondprepareName } = request.body;
+        if(!pondPrepareId) {
+            response.status(200).json({
+                success: false,
+                message: 'Hành động không khuyến khích, vui lòng quay lại sau.'
+            });
+            return response.end();
+        }
+        pondPrepare.setPondPrepareId = pondPrepareId;
+        pondPrepare.setPondprepareName = pondprepareName;
+        pondPrepare.update().then(res => {
+            response.status(200).json({
+                success: true,
+                message: 'Cập nhật thành công.'
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau, cảm ơn!'
+            });
+        });
     }
 }
