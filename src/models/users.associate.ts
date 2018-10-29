@@ -80,3 +80,13 @@ export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
         }
     });
 }
+
+export function userToStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_WAR,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}

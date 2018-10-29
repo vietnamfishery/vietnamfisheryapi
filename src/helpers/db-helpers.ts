@@ -126,7 +126,6 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.couponAssociate(
-            this.models[`seasonOptions`],
             this.models[`materialOptions`],
             this.models[`userOptions`]
         );
@@ -282,7 +281,7 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.storagesAssociate(
             this.models[`materialOptions`],
-            this.models[`seasonOptions`]
+            this.models[`userOptions`]
         );
         return md;
     }

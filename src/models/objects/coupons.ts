@@ -12,34 +12,10 @@ export const couponOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            // field: 'couponId'
         },
-        // userId: {
-        //     type: Sequelize.BIGINT(20),
-        //     field: 'userId'
-        // },
-        seasonId: {
+        userId: {
             type: Sequelize.BIGINT(20),
-            // field: 'seasonId',
             allowNull: false,
-        },
-        materialId: {
-            type: Sequelize.BIGINT(20),
-            // field: 'materialId',
-            allowNull: false,
-        },
-        quantity: {
-            type: Sequelize.FLOAT,
-            // field: 'quantity'
-        },
-        unitPrices: {
-            type: Sequelize.DOUBLE,
-            // field: 'unitPrices'
-        },
-        providerInfo: {
-            type: Sequelize.STRING,
-            // field: 'providerInfo',
-            allowNull: true,
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -47,16 +23,14 @@ export const couponOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            // field: 'isDeleted'
         }
     },
     options: {
-        //
+        tableName: 'coupons'
     }
 }, _.cloneDeep(baseModel));

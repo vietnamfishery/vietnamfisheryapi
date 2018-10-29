@@ -1,15 +1,17 @@
 import { BaseComponent } from '../baseComponents';
 import { StoregeServices } from '../../services'; // import services
 import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class Storage extends BaseComponent {
-    private storegeServices: StoregeServices;
+    public storegeServices: StoregeServices;
     private storageId: number;
     private storageUUId: string;
-    private materialId: number;
-    private seasonId: number;
+    private userId: number;
+    private productName: string;
     private quantityStorages: number;
+    private unit: number;
+    private type: number;
+    private descriptions: string;
     private createdDate: Date;
     private isDeleted: number;
     constructor() {
@@ -18,40 +20,66 @@ export class Storage extends BaseComponent {
         this.services = this.storegeServices;
     }
 
-    public set setStorageId(storageId) {
+    public set setStorageId(storageId: number) {
         this.storageId = storageId;
     }
 
-    public set setStorageUUId(storageUUId) {
+    public set setStorageUUId(storageUUId: string) {
         this.storageUUId = storageUUId;
     }
 
-    public set setMaterialId(materialId) {
-        this.materialId = materialId;
+    public set setUserId(userId: number) {
+        this.userId = userId;
     }
 
-    public set setSeasonId(seasonId) {
-        this.seasonId = seasonId;
+    public set setProductName(productName: string) {
+        this.productName = productName;
     }
 
-    public set setQuantityStorages(quantityStorages) {
+    public set setQuantityStorages(quantityStorages: number) {
         this.quantityStorages = quantityStorages;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setUnit(unit: number) {
+        this.unit = unit;
+    }
+
+    public set setType(type: number) {
+        this.type = type;
+    }
+
+    public set setDescriptions(descriptions: string) {
+        this.descriptions = descriptions;
+    }
+
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 
-    public setStorages(storageId: number, storageUUId: string, materialId: number, seasonId: number, quantityStorages: number, createdDate?: Date, isDeleted?: number) {
+    public setStorages(
+        storageId: number,
+        storageUUId: string,
+        userId: number,
+        productName: string,
+        quantityStorages: number,
+        unit: number,
+        type: number,
+        descriptions?: string,
+        createdDate?: Date,
+        isDeleted?: number
+    ) {
         this.setStorageId = storageId;
         this.setStorageUUId = storageUUId;
-        this.setMaterialId = materialId;
-        this.setSeasonId = seasonId;
+        this.setUserId = userId;
+        this.setProductName = productName;
         this.setQuantityStorages = quantityStorages;
+        this.setUnit = unit;
+        this.setType = type;
+        this.setDescriptions = descriptions;
         this.setCreatedDate = createdDate;
         this.setIsDeleted = isDeleted;
     }
@@ -64,16 +92,28 @@ export class Storage extends BaseComponent {
         return this.storageUUId;
     }
 
-    public get getMaterialId(): number {
-        return this.materialId;
+    public get getUserId(): number {
+        return this.userId;
     }
 
-    public get getSeasonId(): number {
-        return this.seasonId;
+    public get getProductName(): string {
+        return this.productName;
     }
 
     public get getQuantityStorages(): number {
         return this.quantityStorages;
+    }
+
+    public get getUnit(): number {
+        return this.unit;
+    }
+
+    public get getType(): number {
+        return this.type;
+    }
+
+    public get getDescriptions(): string {
+        return this.descriptions;
     }
 
     public get getCreatedDate(): Date {

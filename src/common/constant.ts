@@ -98,9 +98,9 @@ export enum ActionAssociateDatabase {
     //
     COST_2_POND_PREPARE = 'costs',
     //
-    COUPON_2_MATERIAL = 'material',
+    COUPON_2_MATERIAL = 'materials',
     COUPON_2_SEASON = 'season',
-    COUPON_2_USER = 'coupons',
+    COUPON_2_USER = 'user',
     //
     DIED_FISHERY_2_SEASON_AND_POND = 'diedFish',
     //
@@ -115,7 +115,7 @@ export enum ActionAssociateDatabase {
     //
     MATERIAL_2_COUPON = 'coupon',
     MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
-    MATERIAL_2_STORAGE = 'materialStorages',
+    MATERIAL_2_STORAGE = 'storage',
     MATERIAL_2_USING_FOOD = 'usingFoods',
     MATERIAL_2_USING_VETERINARY = 'usingVeterinay',
     //
@@ -168,12 +168,12 @@ export enum ActionAssociateDatabase {
     STOCKING_DETAILS_2_BREED = 'stockingDetailsBreeds',
     //
     STORAGE_2_POND_PREPARE_DETAILS = 'storagesToPondpreparedetails',
-    STORAGE_2_MATERIAL = 'storagesToMaterial',
+    STORAGE_2_MATERIAL = 'materials',
     STORAGE_2_SEASON = 'storagesToSeason',
     STORAGE_2_PRICE = 'storagesToPrices',
     STORAGE_2_USING_FOOD = 'storagesToUsingfoods',
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
-    STORAGE_2_USER = 'storages',
+    STORAGE_2_USER = 'user',
     //
     TAKE_CARE_2_USING_FOOD = 'usingFoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
@@ -184,7 +184,7 @@ export enum ActionAssociateDatabase {
     //
     USER_2_ROLE_USER = 'users',
     USER_2_POND = 'userToPond',
-    USER_2_COUPON = 'userToCoupon',
+    USER_2_COUPON = 'coupons',
     USER_2_SEASON = 'userToSeason',
     USER_2_BOUGHT_BREED = 'userToBoughtBreeds',
     USER_2_PRO = 'provinces',

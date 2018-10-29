@@ -33,11 +33,9 @@ export class ModelBuilder {
     }
 
     couponAssociate(
-        seasonModel: any,
         materialModel: any,
         usersModel: any
     ) {
-        associations.couponToSeason(this.model, seasonModel);
         associations.couponToMaterial(this.model, materialModel);
         associations.couponToUsers(this.model, usersModel);
     }
@@ -127,11 +125,9 @@ export class ModelBuilder {
         storageModel: any
     ) {
         associations.seasonToBoughtBreed(this.model, boughtBreedModel);
-        associations.seasonToCoupon(this.model, couponModel);
         associations.seasonToPrice(this.model, priceModel);
         associations.seasonToUser(this.model, userModel);
         associations.seasonToSNP(this.model, seasonAndPondModel);
-        associations.seasonToStorage(this.model, storageModel);
     }
 
     seasonAndPondAssociate(
@@ -170,10 +166,10 @@ export class ModelBuilder {
 
     storagesAssociate(
         materialsModel: any,
-        seasonModel: any
+        userModel: any
     ) {
         associations.storagesToMaterial(this.model, materialsModel);
-        associations.storagesToSeason(this.model, seasonModel);
+        associations.storagesToUser(this.model, userModel);
     }
 
     takecareAssociate(usingveterinaryModel: any, usingfoodsModel: any, seasonAndPondModel: any) {

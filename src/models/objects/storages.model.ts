@@ -12,27 +12,34 @@ export const storagesOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            // field: 'storageId'
         },
         storageUUId: {
             type: Sequelize.STRING(36),
             allowNull: false,
             unique: true,
-            // field: 'storageUUId'
         },
-        materialId: {
+        userId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'materialId'
         },
-        seasonId: {
-            type: Sequelize.BIGINT(20),
+        productName: {
+            type: Sequelize.STRING(100),
             allowNull: false,
-            // field: 'seasonId'
         },
         quantityStorages: {
             type: Sequelize.FLOAT,
-            // field: 'quantityStorages'
+            allowNull: false,
+        },
+        unit: {
+            type: Sequelize.INTEGER(1),
+            allowNull: false,
+        },
+        type: {
+            type: Sequelize.INTEGER(1)
+        },
+        descriptions: {
+            type: Sequelize.TEXT,
+            allowNull: true
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -40,16 +47,14 @@ export const storagesOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
-            // field: 'isDeleted'
         }
     },
     options: {
-        //
+        tableName: 'storages'
     }
 }, _.cloneDeep(baseModel));
