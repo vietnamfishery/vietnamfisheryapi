@@ -33,3 +33,11 @@ nhập hàng:
     thêm: 
         - chưa có trong kho: storages -> coupon -> materials
         - đã có trong kho: coupon -> materials && storage update khi nào cũng được
+
+
+    phân quyền ao:
+        thêm nhân viên (thêm 1 user)
+        -> thêm quyền cho user đó(quản lý ao or kho)
+        -> chia ao cho user (kiểm tra bên user role có quyền ao hay không -> có thì insert else thông báo cho người dùng là nv này chưa có quyền uản lý ao)
+
+    

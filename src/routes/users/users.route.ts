@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, UserRolesServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { User } from '../../components';
+import { User, UserRole } from '../../components';
 import * as uuidv4 from 'uuid/v4';
 // import { LoginHelper } from '../../helpers/login-helpers';
 import { Enscrypts } from '../../lib';
@@ -9,6 +9,8 @@ import * as jwt from 'jsonwebtoken';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { ActionServer, secret, defaultImage } from '../../common';
 import { Authentication } from '../../helpers/login-helpers';
+import { Sequelize, Transaction } from 'sequelize';
+import DBHelper from '../../helpers/db-helpers';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -19,6 +21,8 @@ import { Authentication } from '../../helpers/login-helpers';
 export class UserRoute extends BaseRoute {
     public static path = '/user';
     private static instance: UserRoute;
+    private sequeliz: Sequelize = DBHelper.sequelize;
+    private userRolesServices: UserRolesServices = new UserRolesServices();
     /**
      * @class UserRoute
      * @constructor
@@ -45,6 +49,7 @@ export class UserRoute extends BaseRoute {
         this.router.get('/getWithUpdate', Authentication.isLogin, this.getUserInfoWithUpdate);
         this.router.put('/update', Authentication.isLogin, this.updateUserProfile);
         this.router.put('/update/password', Authentication.isLogin, this.updateUserPassword);
+        this.router.post('/register/employee', Authentication.isLogin, this.regiterWithRoles);
     }
 
     private register = (request: Request, response: Response, next: NextFunction) => {
@@ -59,7 +64,7 @@ export class UserRoute extends BaseRoute {
         user.setUsername = username;
         user.setPassword = password;
         user.setImages = defaultImage.userImage;
-        user.register(action).then((value: any) => {
+        user.register().then((value: any) => {
             if(value.errors) {
                 response.status(200).json({
                     success: false,
@@ -252,6 +257,37 @@ export class UserRoute extends BaseRoute {
                         });
                     });
                 }
+            });
+        });
+    }
+
+    regiterWithRoles = async (request: Request, response: Response, next: NextFunction) => {
+        const user: User = new User();
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        const { username, password, firstname, lastname, roles } = request.body;
+        user.setUser(null, uuidv4(), firstname, lastname, username, user.hashPassword(password));
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
+            user.userServices.models.create(user, {
+                transaction: t
+            }).then(async (u: any) => {
+                const userRoles: UserRole = new UserRole();
+                userRoles.setUserRoles(null, u.userId, decodeToken.userId, roles);
+                this.userRolesServices.models.create(userRoles, {
+                    transaction: t
+                }).then(async (r: any) => {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Đăng ký thành công!'
+                    });
+                    t.commit();
+                });
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Tên người dùng đã tồn tại, vui lòng kiểm tra và thử lại!'
+                });
+                t.rollback();
             });
         });
     }

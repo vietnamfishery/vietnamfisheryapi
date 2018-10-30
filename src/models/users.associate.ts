@@ -81,9 +81,19 @@ export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
-export function userToStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function userToRolesBoss(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_WAR,
+        as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
+export function userToOwnerStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasOne(model, {
+        as: ActionAssociateDatabase.USER_2_OWNER_STORAGE,
         foreignKey: {
             name: 'userId',
             field: 'userId'

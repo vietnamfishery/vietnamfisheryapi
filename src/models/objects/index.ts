@@ -23,6 +23,7 @@ export * from './seasonandpond';
 export * from './stocking';
 export * from './stockingdetails';
 export * from './storages.model';
+export * from './storageOwner.model';
 export * from './takecare';
 export * from './users';
 export * from './userRoles';

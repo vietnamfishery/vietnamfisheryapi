@@ -21,6 +21,7 @@ export * from './seasonandpond.associate';
 export * from './stocking.associate';
 export * from './stockingdetails.associate';
 export * from './storages.associate';
+export * from './storageOwner.associate';
 export * from './takecare.associate';
 export * from './users.associate';
 export * from './userRoles.associate';
