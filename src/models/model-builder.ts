@@ -166,10 +166,18 @@ export class ModelBuilder {
 
     storagesAssociate(
         materialsModel: any,
-        userModel: any
+        storageOwnerModel: any
     ) {
         associations.storagesToMaterial(this.model, materialsModel);
-        associations.storagesToUser(this.model, userModel);
+        associations.storagesToOwner(this.model, storageOwnerModel);
+    }
+
+    storageOwnerAssociate(
+        storageModel: any,
+        userModel: any
+    ) {
+        associations.ownerToStorage(this.model, storageModel);
+        associations.ownerToUser(this.model, userModel);
     }
 
     takecareAssociate(usingveterinaryModel: any, usingfoodsModel: any, seasonAndPondModel: any) {
@@ -184,6 +192,7 @@ export class ModelBuilder {
     ) {
         associations.userrolesPondUserRoles(this.model, pondUserRolesModel);
         associations.userrolesToUsers(this.model, userModel);
+        associations.userrolesToUsersBoss(this.model, userModel);
     }
 
     usersAssociate(
@@ -195,6 +204,7 @@ export class ModelBuilder {
         provinceModel: any,
         seasonModel: any,
         wardModel: any,
+        ownerStorageModel: any
     ) {
         associations.userToDistrict(this.model, districtModel);
         associations.userToRolesUser(this.model, rolesUserModel);
@@ -204,6 +214,8 @@ export class ModelBuilder {
         associations.userToProvince(this.model, provinceModel);
         associations.userToSeason(this.model, seasonModel);
         associations.userToWard(this.model, wardModel);
+        associations.userToRolesBoss(this.model, rolesUserModel);
+        associations.userToOwnerStorage(this.model, ownerStorageModel);
     }
 
     usingfoodsAssociate(materialModel: any, takecareModel: any) {

@@ -173,13 +173,17 @@ export enum ActionAssociateDatabase {
     STORAGE_2_PRICE = 'storagesToPrices',
     STORAGE_2_USING_FOOD = 'storagesToUsingfoods',
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
-    STORAGE_2_USER = 'user',
+    STORAGE_2_OWNER = 'owner',
+    //
+    OWNER_TO_STORAGE = 'owner',
+    OWNER_TO_USER = 'user',
     //
     TAKE_CARE_2_USING_FOOD = 'usingFoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
     TAKE_CARE_2_SEASON_AND_POND = 'takecares',
     //
     USER_ROLES_2_USER = 'users',
+    USER_ROLES_2_USER_BOSS = 'boss',
     USER_ROLES_2_POND_USER_ROLE = 'userRoles',
     //
     USER_2_ROLE_USER = 'users',
@@ -190,7 +194,8 @@ export enum ActionAssociateDatabase {
     USER_2_PRO = 'provinces',
     USER_2_DIS = 'districts',
     USER_2_WAR = 'wards',
-    USER_2_STORAGE = 'userToStorage',
+    USER_2_ROLES_BOSS = 'boss',
+    USER_2_OWNER_STORAGE = 'user',
     //
     USING_FOOD_2_MATERIAL = 'usingFoodsMaterial',
     USING_FOOD_2_TAKE_CARE = 'usingFoods',

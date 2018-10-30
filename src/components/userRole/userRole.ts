@@ -5,6 +5,7 @@ export class UserRole extends BaseComponent {
     public userRolesServices: UserRolesServices;
     private rolesId: number;
     private userId: number;
+    private bossId: number;
     private roles: number;
     private createdDate: Date;
     private updatedBy: string;
@@ -22,6 +23,10 @@ export class UserRole extends BaseComponent {
 
     public set setUserId(userId) {
         this.userId = userId;
+    }
+
+    public set setBossId(bossId) {
+        this.bossId = bossId;
     }
 
     public set setRoles(roles) {
@@ -43,6 +48,7 @@ export class UserRole extends BaseComponent {
     public setUserRoles(
         rolesId: number,
         userId: number,
+        bossId: number,
         roles: number,
         createdDate?: Date,
         updatedBy?: string,
@@ -50,6 +56,7 @@ export class UserRole extends BaseComponent {
     ) {
         this.setRolesId = rolesId;
         this.setUserId = userId;
+        this.setBossId = bossId;
         this.setRoles = roles;
         this.setCreatedDate = createdDate;
         this.setUpdatedBy = updatedBy;
@@ -62,6 +69,10 @@ export class UserRole extends BaseComponent {
 
     public get getUserId(): number {
         return this.userId;
+    }
+
+    public get getBossId(): number {
+        return this.bossId;
     }
 
     public get getRoles(): number {

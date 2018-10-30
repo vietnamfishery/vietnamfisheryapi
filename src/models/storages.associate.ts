@@ -1,12 +1,12 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function storagesToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function storagesToOwner(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.STORAGE_2_USER,
+        as: ActionAssociateDatabase.STORAGE_2_OWNER,
         foreignKey: {
-            name: 'userId',
-            field: 'userId'
+            name: 'storageOwnerId',
+            field: 'storageOwnerId'
         }
     });
 }

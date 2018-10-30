@@ -21,4 +21,14 @@ export function userrolesToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
     });
 }
 
+export function userrolesToUsersBoss(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
+        foreignKey: {
+            name: 'bossId',
+            field: 'bossId'
+        }
+    });
+}
+
 //

@@ -25,6 +25,7 @@ export * from './season.services';
 export * from './stocking-details.services';
 export * from './stocking.services';
 export * from './storages.services';
+export * from './storagesOwner.services';
 export * from './take-care.services';
 export * from './user.services';
 export * from './usersRoles.services';
