@@ -1,5 +1,4 @@
 import * as Sequelize from 'sequelize';
-import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
 import { baseModel } from './base.model';
 

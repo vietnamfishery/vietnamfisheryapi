@@ -18,7 +18,7 @@ export const storagesOptions: any = _.merge({
             allowNull: false,
             unique: true,
         },
-        userId: {
+        ownerId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
         },

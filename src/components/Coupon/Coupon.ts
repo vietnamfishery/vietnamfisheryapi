@@ -3,7 +3,7 @@ import { CouponServives } from '../../services'; // import services
 import { Promise } from '../../lib';
 
 export class Coupon extends BaseComponent {
-    private couponServives: CouponServives;
+    public couponServives: CouponServives;
     private couponId: number;
     private userId: number;
     private createdDate: Date;

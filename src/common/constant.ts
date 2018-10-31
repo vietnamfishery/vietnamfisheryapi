@@ -175,7 +175,7 @@ export enum ActionAssociateDatabase {
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
     STORAGE_2_OWNER = 'owner',
     //
-    OWNER_TO_STORAGE = 'owner',
+    OWNER_TO_STORAGE = 'storages',
     OWNER_TO_USER = 'user',
     //
     TAKE_CARE_2_USING_FOOD = 'usingFoods',

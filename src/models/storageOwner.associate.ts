@@ -3,16 +3,16 @@ import { ActionAssociateDatabase } from '../common';
 
 export function ownerToStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.STORAGE_2_OWNER,
+        as: ActionAssociateDatabase.OWNER_TO_STORAGE,
         foreignKey: {
-            name: 'storageOwnerId',
-            field: 'storageOwnerId'
+            name: 'ownerId',
+            field: 'ownerId'
         }
     });
 }
 
 export function ownerToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
+    return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.OWNER_TO_USER,
         foreignKey: {
             name: 'userId',
