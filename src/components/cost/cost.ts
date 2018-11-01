@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Cost extends BaseComponent {
-    private costsServives: CostsServives;
+    public costsServives: CostsServives;
     private costId: number;
     private costUUId: string;
     private pondPrepareId: number;

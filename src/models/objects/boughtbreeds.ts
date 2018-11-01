@@ -20,20 +20,15 @@ export const boughtbreedOptions: any = _.merge({
             allowNull: false,
             // field: 'boughtBreedUUId'
         },
-        breedId: {
+        userId: {
             type: Sequelize.BIGINT(20),
-            // field: 'breedId',
-            unique: true,
             allowNull: false,
+            // field: 'userId',
         },
         seasonId: {
             type: Sequelize.BIGINT(20),
-            // field: 'seasonId',
             allowNull: false,
-        },
-        quantityStorages: {
-            type: Sequelize.FLOAT,
-            // field: 'quantityStorages',
+            // field: 'seasonId',
         },
         createdBy: {
             type: Sequelize.STRING(36),
@@ -56,6 +51,6 @@ export const boughtbreedOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'boughtbreeds'
     }
 }, _.cloneDeep(baseModel));

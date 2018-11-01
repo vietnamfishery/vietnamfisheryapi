@@ -12,19 +12,19 @@ export class ModelBuilder {
 
     boughtbreedsAssociate(
         boughtBreedDetailsModel: any,
-        breedModel: any,
-        seasonModel: any
+        seasonModel: any,
+        usersModel: any
     ) {
         associations.boughtbreedsToBoughtBreedDetails(this.model, boughtBreedDetailsModel);
-        associations.boughtbreedsToBreeds(this.model, breedModel);
         associations.boughtbreedsToSeason(this.model, seasonModel);
+        associations.boughtbreedsToUser(this.model, usersModel);
     }
 
     breedsAssociate(
         boughtBreedDetailsModel: any,
         stockingDetailsModel: any
     ) {
-        associations.boughtbreedsToBoughtBreedDetails(this.model, boughtBreedDetailsModel);
+        associations.breedToBoughBreedDetails(this.model, boughtBreedDetailsModel);
         associations.breedsToStockingDetails(this.model, stockingDetailsModel);
     }
 

@@ -1,11 +1,13 @@
-import { Pond, UserRole } from '../../components';
+import { Pond, UserRole, Harvest, Season, SeasonsAndPond } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, SeasonAndPondServices, HarvestsServives, HarvestDetailsServives, StockingServices, StockingDetailsServices, BreedServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage } from '../../common';
+import { defaultImage, ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
+import { Sequelize, Transaction } from 'sequelize';
+import DBHelper from '../../helpers/db-helpers';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -14,11 +16,18 @@ import { Authentication } from '../../helpers/login-helpers';
  *
  * @apiSuccess {String} type Json Type.
  */
-export class StockingRoute extends BaseRoute {
-    public static path = '/stocking';
-    private static instance: StockingRoute;
+export class HarvestRoute extends BaseRoute {
+    public static path = '/harvest';
+    private static instance: HarvestRoute;
+    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
+    private harvestsServives: HarvestsServives = new HarvestsServives();
+    private harvestDetailsServives: HarvestDetailsServives = new HarvestDetailsServives();
+    private stockingServices: StockingServices = new StockingServices();
+    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    private breedServives: BreedServives = new BreedServives();
+
     /**
-     * @class StockingRoute
+     * @class HarvestRoute
      * @constructor
      */
     private constructor() {
@@ -27,123 +36,70 @@ export class StockingRoute extends BaseRoute {
     }
 
     static get router() {
-        if (!StockingRoute.instance) {
-            StockingRoute.instance = new StockingRoute();
+        if (!HarvestRoute.instance) {
+            HarvestRoute.instance = new HarvestRoute();
         }
-        return StockingRoute.instance.router;
+        return HarvestRoute.instance.router;
     }
 
     private init() {
-        logger.info('[StockingRoute] Creating ping route.');
-        this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.get('/gets', Authentication.isLogin, this.getPonds);
-        this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
-        this.router.put('/update', Authentication.isLogin, this.updatePond);
+        logger.info('[HarvestRoute] Creating ping route.');
+        // this.router.post('/add', Authentication.isLogin, this.addPond);
+        this.router.post('/gets', Authentication.isLogin, this.getHarvest);
+        // this.router.get('/get', Authentication.isLogin, this.getHarvestById);
     }
 
-    private addPond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
-            response.status(200).json({
-                success: false,
-                message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-            });
-        } else {
-            pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-            pond.insert(employee).then((res: any) => {
-                if(res) {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm ao thành công!',
-                    });
+    // Get harvest
+    private getHarvest = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId } = request.body;
+        this.harvestsServives.models.findAll({
+            include: [
+                {
+                    model: this.harvestDetailsServives.models,
+                    as: ActionAssociateDatabase.HARVEST_2_HARVEST_DETAILS
+                },
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.HARVEST_2_SEASON_AND_POND,
+                    where: {
+                        seasonId,
+                        [this.harvestsServives.Op.and]: {
+                            pondId
+                        }
+                    },
+                    include: [
+                        {
+                            model: this.stockingServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_STOCKING,
+                            include: [
+                                {
+                                    model: this.stockingDetailsServices.models,
+                                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
+                                    include: [
+                                        {
+                                            model: this.breedServives.models,
+                                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
                 }
-            }).catch(e => {
-                if(e) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-                    });
-                }
-            });
-        }
-    }
-
-    private getPonds = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        pond.pondsServices.get({
-            userId: decodetoken.userId
-        }).then( async (res: any) => {
-            const endData = [];
-            for(const e of res.ponds) {
-                e[`images`] = await GoogleDrive.delayGetFileById(e.images);
-                endData.push(e);
-            }
+            ]
+        }).then((res) => {
             response.status(200).json({
                 success: true,
-                ponds: endData
+                message: '',
+                harvest: res
             });
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
+                message: 'Lỗi, vui lòng thử lại sau.',
+                error: e
             });
+            throw e;
         });
-    }
-
-    private getPondById = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const { pondId } = request.params;
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        pond.getById(pondId, decodetoken.userId).then( async (pond$: any) => {
-            if(!pond$) {
-                response.status(200).json({
-                    success: false,
-                    message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
-                });
-            } else {
-                const p: any = pond$;
-                p[`images`] = await GoogleDrive.delayGetFileById(pond$.images);
-                response.status(200).json(p);
-            }
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Bạn không có quyền truy cập api này!'
-            });
-        });
-    }
-
-    private updatePond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondId) {
-            response.status(200).json({
-                success: false,
-                message: 'Hành động không được phép, vui lòng thử lại sau!'
-            });
-        } else {
-            pond.setPond(pondId, undefined, decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-            pond.update().then((res: any) => {
-                if(!res) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Cập nhật thành công!'
-                    });
-                }
-            });
-        }
     }
 }

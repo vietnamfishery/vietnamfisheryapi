@@ -8,7 +8,7 @@ export const harvestdetailOptions: any = _.merge({
 },
 {
     attributes: {
-        harvestIdDetailUUId: {
+        harvestDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             allowNull: false,
@@ -35,6 +35,6 @@ export const harvestdetailOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'harvestdetails'
     }
 }, _.cloneDeep(baseModel));

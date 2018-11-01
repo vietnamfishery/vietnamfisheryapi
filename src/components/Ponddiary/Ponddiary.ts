@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class PondDiary extends BaseComponent {
-    private pondDiaryServices: PondDiaryServices;
+    public pondDiaryServices: PondDiaryServices;
     private pondDiaryId: number;
     private pondDiaryUUId: string;
     private seasonAndPondId: number;

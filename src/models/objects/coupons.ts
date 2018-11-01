@@ -12,10 +12,12 @@ export const couponOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
+            // field: 'couponId'
         },
         userId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
+            // field: 'userId'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -23,11 +25,13 @@ export const couponOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
+            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
+            // field: 'isDeleted'
         }
     },
     options: {

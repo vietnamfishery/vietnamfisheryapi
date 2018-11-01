@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Growth extends BaseComponent {
-    private growthsServives: GrowthsServives;
+    public growthsServives: GrowthsServives;
     private growthId: number;
     private growthUUId: string;
     private seasonAndPondId: number;

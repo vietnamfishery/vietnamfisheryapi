@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Harvest extends BaseComponent {
-    private harvestsServives: HarvestsServives;
+    public harvestsServives: HarvestsServives;
     private harvestId: number;
     private harvestUUId: string;
     private seasonAndPondId: number;

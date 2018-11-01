@@ -49,6 +49,6 @@ export const takecareOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'takecare'
     }
 }, _.cloneDeep(baseModel));

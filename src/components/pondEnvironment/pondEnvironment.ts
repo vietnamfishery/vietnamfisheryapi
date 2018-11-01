@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class PondEnvironment extends BaseComponent {
-    private pondEnvironmentsServices: PondEnvironmentsServices;
+    public pondEnvironmentsServices: PondEnvironmentsServices;
     private pondEnvironmentId: number;
     private pondEnvironmentUUId: string;
     private seasonAndPondId: number;

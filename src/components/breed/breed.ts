@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class Breed extends BaseComponent {
-    private breedServives: BreedServives;
+    public breedServives: BreedServives;
     private breedId: number;
     private breedUUId: string;
     private breedName: string;

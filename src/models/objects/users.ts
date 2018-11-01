@@ -118,6 +118,6 @@ export const userOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'users'
     }
 }, _.cloneDeep(baseModel));

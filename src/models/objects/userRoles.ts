@@ -49,6 +49,6 @@ export const userrolesOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'userroles'
     }
 }, _.cloneDeep(baseModel));

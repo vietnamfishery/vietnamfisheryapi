@@ -11,6 +11,8 @@ export function seasonToBoughtBreed(thatmodel: Sequeliz.Model<{}, any>, model: S
     });
 }
 
+//
+
 export function seasonToPrice(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_2_PRICE,

@@ -43,7 +43,8 @@ export class SeasonRoute extends BaseRoute {
     private init() {
         logger.info('[SeasonRoute] Creating season route.');
         this.router.post('/add', Authentication.isLogin, this.addSeason);
-        this.router.post('/getPondOfSeason', Authentication.isLogin, this.getPondOfSeasonByID);
+        this.router.post('/getPondOfSeason', Authentication.isLogin, this.getpondOfSeasonById);
+        // this.router.post('/getpondNotInSeason', Authentication.isLogin, this.getpondNotInSeasonById);
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
         this.router.get('/get/:seasonId', Authentication.isLogin, this.getSeasonById);
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
@@ -125,8 +126,9 @@ export class SeasonRoute extends BaseRoute {
             }
         });
     }
-//  Get pond of id season
-    private getPondOfSeasonByID = (request: Request, response: Response, next: NextFunction) => {
+
+    // Get pond of id season
+    private getpondOfSeasonById = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId } = request.body;
         this.seasonAndPondServices.models.findAll({
             include: [
@@ -142,7 +144,6 @@ export class SeasonRoute extends BaseRoute {
                         {
                             model: this.stockingDetailsServices.models,
                             as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
-                            required: false,
                             include: [
                                 {
                                     model: this.breedServives.models,
@@ -155,18 +156,17 @@ export class SeasonRoute extends BaseRoute {
                 },
                 {
                     model: this.seasonServices.models,
-                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
-                    where: {
-                        seasonId
-                    },
-                    attributes: ['seasonId', 'seasonName']
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON
                 }
-            ]
+            ],
+            where: {
+                seasonId
+            }
         }).then((res) => {
             response.status(200).json({
                 success: true,
                 message: '',
-                PondOfSeasonByID: res
+                pondOfSeasonById: res
             });
         }).catch(e => {
             response.status(200).json({
@@ -177,7 +177,40 @@ export class SeasonRoute extends BaseRoute {
             throw e;
         });
     }
-
+    
+    // Get pond not in seasonId
+    // private getpondNotInSeasonById = (request: Request, response: Response, next: NextFunction) => {
+    //     const { seasonId } = request.body;
+    //     this.pondsServices.models.findAll({
+    //         include: [
+    //             {
+    //                 model: this.seasonAndPondServices.models,
+    //                 as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+    //                 where: {
+    //                     seasonId,
+    //                     [this.pondsServices.Op.and]: {
+    //                         pondId: {
+    //                             [this.pondsServices.Op.notIn]: pondId
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         ]
+    //     }).then((res) => {
+    //         response.status(200).json({
+    //             success: true,
+    //             message: '',
+    //             pondNotInSeasonById: res
+    //         });
+    //     }).catch(e => {
+    //         response.status(200).json({
+    //             success: false,
+    //             message: 'Lỗi, vui lòng thử lại sau.',
+    //             error: e
+    //         });
+    //         throw e;
+    //     });
+    // }
     private updateSeason = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, seasonName, status } = request.body;
         if (!seasonId) {

@@ -1,5 +1,4 @@
 import * as Sequelize from 'sequelize';
-import { DateUtil } from '../../lib';
 import * as _ from 'lodash';
 import { baseModel } from './base.model';
 
@@ -8,6 +7,12 @@ export const boughtbreeddetailsOptions: any = _.merge({
 },
 {
     attributes: {
+        boughtBreedDetailId: {
+            autoIncrement: true,
+            type: Sequelize.BIGINT(20),
+            primaryKey: true,
+            // field: 'boughtBreedDetailId'
+        },
         boughtBreedDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
@@ -16,8 +21,13 @@ export const boughtbreeddetailsOptions: any = _.merge({
         },
         boughtBreedId: {
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
+            allowNull: false,
             // field: 'boughtBreedId'
+        },
+        breedId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'breedId'
         },
         quantity: {
             type: Sequelize.FLOAT,
@@ -45,6 +55,6 @@ export const boughtbreeddetailsOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'boughtbreeddetails'
     }
 }, _.cloneDeep(baseModel));

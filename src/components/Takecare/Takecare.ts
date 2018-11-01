@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class TakeCare extends BaseComponent {
-    private takeCareServices: TakeCareServices;
+    public takeCareServices: TakeCareServices;
     private takeCareId: number;
     private takeCareUUId: string;
     private seasonAndPondId: number;

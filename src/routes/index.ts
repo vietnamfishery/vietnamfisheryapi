@@ -16,6 +16,9 @@ import { PondPrepareRoute } from './pondPrepare';
 import { PondPrepareDetailRoute } from './pondPrepareDetail';
 import { StorageRoute } from './storages';
 import { StockingRoute } from './stocking';
+import { DiedFisheryRoute } from './diedfisherys';
+import { GrowthsRoute } from './growths';
+import { HarvestRoute } from './harvest';
 
 /**
  * / route
@@ -70,6 +73,9 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(PondPrepareDetailRoute.path, PondPrepareDetailRoute.router);
         this.router.use(StorageRoute.path, StorageRoute.router);
         this.router.use(StockingRoute.path, StockingRoute.router);
+        this.router.use(DiedFisheryRoute.path, DiedFisheryRoute.router);
+        this.router.use(GrowthsRoute.path, GrowthsRoute.router);
+        this.router.use(HarvestRoute.path, HarvestRoute.router);
     }
 
     /**

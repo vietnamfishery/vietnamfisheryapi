@@ -2,7 +2,7 @@ import { Pond, UserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger, SeasonServices, PondsServices, SeasonAndPondServices, StockingServices, StockingDetailsServices, BreedServives, BoughtBreedDetailsServives, BoughtBreedServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage, ActionAssociateDatabase } from '../../common';
+import { defaultImage, ActionAssociateDatabase, actionUserServices } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
@@ -44,64 +44,67 @@ export class StockingRoute extends BaseRoute {
     private init() {
         logger.info('[StockingRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addPond);
-        // this.router.post('/gets', Authentication.isLogin, this.getStocking);
+        this.router.post('/gets', Authentication.isLogin, this.getStocking);
         this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
         this.router.put('/update', Authentication.isLogin, this.updatePond);
     }
 
     // Get stocking
-    // private getStocking = (request: Request, response: Response, next: NextFunction) => {
-    //     const { seasonId, pondId } = request.body;
-    //     this.stockingServices.models.findAll({
-    //         include: [
-    //             {
-    //                 model: this.stockingDetailsServices.models,
-    //                 as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
-    //                 include: [
-    //                     {
-    //                         model: this.breedServives.models,
-    //                         as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED
-    //                     }
-    //                 ]
-    //             },
-    //             {
-    //                 model: this.seasonAndPondServices.models,
-    //                 as: ActionAssociateDatabase.POND_PREPARE_2_SEASON_AND_POND,
-    //                 include: [
-    //                     {
-    //                         model: this.seasonServices.models,
-    //                         as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
-    //                         where: {
-    //                             seasonId
-    //                         },
-    //                         attributes: ['seasonName']
-    //                     },
-    //                     {
-    //                         model: this.pondsServices.models,
-    //                         as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
-    //                         where: {
-    //                             pondId
-    //                         },
-    //                         attributes: ['pondName']
-    //                     }
-    //                 ]
-    //             }
-    //         ]
-    //     }).then((res) => {
-    //         response.status(200).json({
-    //             success: true,
-    //             message: '',
-    //             Stocking: res
-    //         });
-    //     }).catch(e => {
-    //         response.status(200).json({
-    //             success: false,
-    //             message: 'Lỗi, vui lòng thử lại sau.',
-    //             error: e
-    //         });
-    //         throw e;
-    //     });
-    // }
+    private getStocking = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId } = request.body;
+        this.stockingServices.models.findAll({
+            include: [
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
+                    where: {
+                        seasonId,
+                        [this.stockingServices.Op.and]: {
+                            pondId
+                        }
+                    }
+                },
+                {
+                    model: this.stockingDetailsServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
+                    include: [
+                        {
+                            model: this.breedServives.models,
+                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED,
+                            include: [
+                                {
+                                    model: this.boughtBreedDetailsServives.models,
+                                    as: ActionAssociateDatabase.BREED_2_BOUGHT_BREED_DETAIL,
+                                    include: [
+                                        {
+                                            model: this.boughtBreedServives.models,
+                                            as: ActionAssociateDatabase.BOUGHT_BREED_DETAIL_2_BOUGHT_BREED,
+                                            where: {
+                                                seasonId
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }).then((res) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                stockings: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi, vui lòng thử lại sau.',
+                error: e
+            });
+            throw e;
+        });
+    }
 
     private addPond = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();

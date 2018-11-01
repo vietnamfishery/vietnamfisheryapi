@@ -104,6 +104,6 @@ export const pondenvironmentsOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'pondenvironments'
     }
 }, _.cloneDeep(baseModel));

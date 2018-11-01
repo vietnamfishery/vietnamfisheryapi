@@ -54,6 +54,6 @@ export const breedOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'breeds'
     }
 }, _.cloneDeep(baseModel));

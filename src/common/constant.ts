@@ -86,14 +86,14 @@ export enum ActionServer {
 
 export enum ActionAssociateDatabase {
     //
-    BOUGHT_BREED_DETAIL_2_BOUGHT_BREED = 'detailBoughtBreed',
+    BOUGHT_BREED_DETAIL_2_BOUGHT_BREED = 'boughtBreeds',
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
     BOUGHT_BREED_2_USER = 'users',
-    BOUGHT_BREED_2_BREED = 'breed',
+    BOUGHT_BREED_2_SEASON = 'season',
     //
-    BREED_2_BOUGHT_BREED = 'boughBreed',
+    BREED_2_BOUGHT_BREED_DETAIL = 'boughBreedDetail',
     BREED_2_STOKING_DETAIL = 'stockingDetails',
     //
     COST_2_POND_PREPARE = 'costs',
@@ -106,12 +106,12 @@ export enum ActionAssociateDatabase {
     //
     DISTRICT_2_USER = 'districtsToUser',
     //
-    GROWTH_2_SEASON_AND_POND = 'growths',
+    GROWTH_2_SEASON_AND_POND = 'seasonAndPond',
     //
     HARVEST_DETAIL_2_HARVEST = 'harvestDetail',
     //
     HARVEST_2_HARVEST_DETAILS = 'harvest',
-    HARVEST_2_SEASON_AND_POND = 'harvests',
+    HARVEST_2_SEASON_AND_POND = 'harvestSNP',
     //
     MATERIAL_2_COUPON = 'coupon',
     MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
@@ -162,7 +162,7 @@ export enum ActionAssociateDatabase {
     SEASON_2_STORAGE = 'storage',
     //
     STOCKING_2_STOCKING_DETAILS = 'stockingDetails',
-    STOCKING_2_SEASON_AND_POND = 'stockings',
+    STOCKING_2_SEASON_AND_POND = 'seasonAndPond',
     //
     STOCKING_DETAILS_2_STOCKING = 'stockingDetails',
     STOCKING_DETAILS_2_BREED = 'stockingDetailsBreeds',

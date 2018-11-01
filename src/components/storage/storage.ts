@@ -1,6 +1,7 @@
 import { BaseComponent } from '../baseComponents';
 import { StoregeServices } from '../../services'; // import services
 import { Promise } from '../../lib';
+import { ActionServer } from '../../common';
 
 export class Storage extends BaseComponent {
     public storegeServices: StoregeServices;
@@ -20,43 +21,43 @@ export class Storage extends BaseComponent {
         this.services = this.storegeServices;
     }
 
-    public set setStorageId(storageId: number) {
+    public set setStorageId(storageId) {
         this.storageId = storageId;
     }
 
-    public set setStorageUUId(storageUUId: string) {
+    public set setStorageUUId(storageUUId) {
         this.storageUUId = storageUUId;
     }
 
-    public set setUserId(userId: number) {
+    public set setUserId(userId) {
         this.userId = userId;
     }
 
-    public set setProductName(productName: string) {
+    public set setProductName(productName) {
         this.productName = productName;
     }
 
-    public set setQuantityStorages(quantityStorages: number) {
+    public set setQuantityStorages(quantityStorages) {
         this.quantityStorages = quantityStorages;
     }
 
-    public set setUnit(unit: number) {
+    public set setUnit(unit) {
         this.unit = unit;
     }
 
-    public set setType(type: number) {
+    public set setType(type) {
         this.type = type;
     }
 
-    public set setDescriptions(descriptions: string) {
+    public set setDescriptions(descriptions) {
         this.descriptions = descriptions;
     }
 
-    public set setCreatedDate(createdDate: Date) {
+    public set setCreatedDate(createdDate) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted: number) {
+    public set setIsDeleted(isDeleted) {
         this.isDeleted = isDeleted;
     }
 
@@ -68,7 +69,7 @@ export class Storage extends BaseComponent {
         quantityStorages: number,
         unit: number,
         type: number,
-        descriptions?: string,
+        descriptions: string,
         createdDate?: Date,
         isDeleted?: number
     ) {
