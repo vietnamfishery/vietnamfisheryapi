@@ -1,8 +1,8 @@
 import { Pond, UserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, SeasonServices, PondsServices, SeasonAndPondServices, StockingServices, StockingDetailsServices, BreedServives, BoughtBreedDetailsServives, BoughtBreedServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage } from '../../common';
+import { defaultImage, ActionAssociateDatabase, actionUserServices } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
@@ -17,6 +17,14 @@ import { Authentication } from '../../helpers/login-helpers';
 export class StockingRoute extends BaseRoute {
     public static path = '/stocking';
     private static instance: StockingRoute;
+    private seasonServices: SeasonServices = new SeasonServices();
+    private pondsServices: PondsServices = new PondsServices();
+    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
+    private stockingServices: StockingServices = new StockingServices();
+    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    private breedServives: BreedServives = new BreedServives();
+    private boughtBreedDetailsServives: BoughtBreedDetailsServives = new BoughtBreedDetailsServives();
+    private boughtBreedServives: BoughtBreedServives = new BoughtBreedServives();
     /**
      * @class StockingRoute
      * @constructor
@@ -36,9 +44,66 @@ export class StockingRoute extends BaseRoute {
     private init() {
         logger.info('[StockingRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.get('/gets', Authentication.isLogin, this.getPonds);
+        this.router.post('/gets', Authentication.isLogin, this.getStocking);
         this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
         this.router.put('/update', Authentication.isLogin, this.updatePond);
+    }
+
+    // Get stocking
+    private getStocking = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId } = request.body;
+        this.stockingServices.models.findAll({
+            include: [
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
+                    where: {
+                        seasonId,
+                        [this.stockingServices.Op.and]: {
+                            pondId
+                        }
+                    }
+                },
+                {
+                    model: this.stockingDetailsServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
+                    include: [
+                        {
+                            model: this.breedServives.models,
+                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED,
+                            include: [
+                                {
+                                    model: this.boughtBreedDetailsServives.models,
+                                    as: ActionAssociateDatabase.BREED_2_BOUGHT_BREED_DETAIL,
+                                    include: [
+                                        {
+                                            model: this.boughtBreedServives.models,
+                                            as: ActionAssociateDatabase.BOUGHT_BREED_DETAIL_2_BOUGHT_BREED,
+                                            where: {
+                                                seasonId
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }).then((res) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                stockings: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi, vui lòng thử lại sau.',
+                error: e
+            });
+            throw e;
+        });
     }
 
     private addPond = (request: Request, response: Response, next: NextFunction) => {
@@ -46,7 +111,7 @@ export class StockingRoute extends BaseRoute {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
+        if (!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
             response.status(200).json({
                 success: false,
                 message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
@@ -54,14 +119,14 @@ export class StockingRoute extends BaseRoute {
         } else {
             pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
             pond.insert(employee).then((res: any) => {
-                if(res) {
+                if (res) {
                     response.status(200).json({
                         success: true,
                         message: 'Thêm ao thành công!',
                     });
                 }
             }).catch(e => {
-                if(e) {
+                if (e) {
                     response.status(200).json({
                         success: false,
                         message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
@@ -77,9 +142,9 @@ export class StockingRoute extends BaseRoute {
         const decodetoken: any = Authentication.detoken(token);
         pond.pondsServices.get({
             userId: decodetoken.userId
-        }).then( async (res: any) => {
+        }).then(async (res: any) => {
             const endData = [];
-            for(const e of res.ponds) {
+            for (const e of res.ponds) {
                 e[`images`] = await GoogleDrive.delayGetFileById(e.images);
                 endData.push(e);
             }
@@ -100,8 +165,8 @@ export class StockingRoute extends BaseRoute {
         const { pondId } = request.params;
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
-        pond.getById(pondId, decodetoken.userId).then( async (pond$: any) => {
-            if(!pond$) {
+        pond.getById(pondId, decodetoken.userId).then(async (pond$: any) => {
+            if (!pond$) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
@@ -124,7 +189,7 @@ export class StockingRoute extends BaseRoute {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodetoken: any = Authentication.detoken(token);
         const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if(!pondId) {
+        if (!pondId) {
             response.status(200).json({
                 success: false,
                 message: 'Hành động không được phép, vui lòng thử lại sau!'
@@ -132,7 +197,7 @@ export class StockingRoute extends BaseRoute {
         } else {
             pond.setPond(pondId, undefined, decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
             pond.update().then((res: any) => {
-                if(!res) {
+                if (!res) {
                     response.status(200).json({
                         success: false,
                         message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'

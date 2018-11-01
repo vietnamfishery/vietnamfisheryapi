@@ -1,6 +1,7 @@
 export * from './boughtbreeddetails.associate';
 export * from './boughtbreeds.associate';
 export * from './breeds.associate';
+export * from './ownerBreed.associate';
 export * from './costs.associate';
 export * from './coupon.associate';
 export * from './diedfisherys.associate';
@@ -21,6 +22,7 @@ export * from './seasonandpond.associate';
 export * from './stocking.associate';
 export * from './stockingdetails.associate';
 export * from './storages.associate';
+export * from './storageOwner.associate';
 export * from './takecare.associate';
 export * from './users.associate';
 export * from './userRoles.associate';

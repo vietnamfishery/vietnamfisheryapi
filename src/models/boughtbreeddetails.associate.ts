@@ -20,5 +20,3 @@ export function boughtbreeddetailsToBreeds(thatmodel: Sequeliz.Model<{}, any>, m
         }
     });
 }
-
-//

@@ -86,36 +86,37 @@ export enum ActionServer {
 
 export enum ActionAssociateDatabase {
     //
-    BOUGHT_BREED_DETAIL_2_BOUGHT_BREED = 'detailBoughtBreed',
+    BOUGHT_BREED_DETAIL_2_BOUGHT_BREED = 'boughtBreeds',
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
     BOUGHT_BREED_2_USER = 'users',
-    BOUGHT_BREED_2_BREED = 'breed',
+    BOUGHT_BREED_2_SEASON = 'season',
     //
-    BREED_2_BOUGHT_BREED = 'boughBreed',
+    BREED_2_BOUGHT_BREED_DETAIL = 'boughBreedDetail',
     BREED_2_STOKING_DETAIL = 'stockingDetails',
+    BREED_2_OWNER_BREED = 'owner',
     //
     COST_2_POND_PREPARE = 'costs',
     //
-    COUPON_2_MATERIAL = 'material',
+    COUPON_2_MATERIAL = 'materials',
     COUPON_2_SEASON = 'season',
-    COUPON_2_USER = 'coupons',
+    COUPON_2_USER = 'user',
     //
     DIED_FISHERY_2_SEASON_AND_POND = 'diedFish',
     //
     DISTRICT_2_USER = 'districtsToUser',
     //
-    GROWTH_2_SEASON_AND_POND = 'growths',
+    GROWTH_2_SEASON_AND_POND = 'seasonAndPond',
     //
     HARVEST_DETAIL_2_HARVEST = 'harvestDetail',
     //
     HARVEST_2_HARVEST_DETAILS = 'harvest',
-    HARVEST_2_SEASON_AND_POND = 'harvests',
+    HARVEST_2_SEASON_AND_POND = 'harvestSNP',
     //
     MATERIAL_2_COUPON = 'coupon',
     MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
-    MATERIAL_2_STORAGE = 'materialStorages',
+    MATERIAL_2_STORAGE = 'storage',
     MATERIAL_2_USING_FOOD = 'usingFoods',
     MATERIAL_2_USING_VETERINARY = 'usingVeterinay',
     //
@@ -162,35 +163,44 @@ export enum ActionAssociateDatabase {
     SEASON_2_STORAGE = 'storage',
     //
     STOCKING_2_STOCKING_DETAILS = 'stockingDetails',
-    STOCKING_2_SEASON_AND_POND = 'stockings',
+    STOCKING_2_SEASON_AND_POND = 'seasonAndPond',
     //
     STOCKING_DETAILS_2_STOCKING = 'stockingDetails',
     STOCKING_DETAILS_2_BREED = 'stockingDetailsBreeds',
     //
     STORAGE_2_POND_PREPARE_DETAILS = 'storagesToPondpreparedetails',
-    STORAGE_2_MATERIAL = 'storagesToMaterial',
+    STORAGE_2_MATERIAL = 'materials',
     STORAGE_2_SEASON = 'storagesToSeason',
     STORAGE_2_PRICE = 'storagesToPrices',
     STORAGE_2_USING_FOOD = 'storagesToUsingfoods',
     STORAGE_2_USING_VETERINARY = 'storagesToUsingveterinary',
-    STORAGE_2_USER = 'storages',
+    STORAGE_2_OWNER = 'owner',
+    //
+    OWNER_TO_STORAGE = 'storages',
+    OWNER_TO_USER = 'user',
+    //
+    OWNER_BREED_TO_BREED = 'breeds',
+    OWNER_BREED_TO_USER = 'user',
     //
     TAKE_CARE_2_USING_FOOD = 'usingFoods',
     TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
     TAKE_CARE_2_SEASON_AND_POND = 'takecares',
     //
     USER_ROLES_2_USER = 'users',
+    USER_ROLES_2_USER_BOSS = 'boss',
     USER_ROLES_2_POND_USER_ROLE = 'userRoles',
     //
-    USER_2_ROLE_USER = 'users',
+    USER_2_ROLE_USER = 'roles',
     USER_2_POND = 'userToPond',
-    USER_2_COUPON = 'userToCoupon',
+    USER_2_COUPON = 'coupons',
     USER_2_SEASON = 'userToSeason',
     USER_2_BOUGHT_BREED = 'userToBoughtBreeds',
     USER_2_PRO = 'provinces',
     USER_2_DIS = 'districts',
     USER_2_WAR = 'wards',
-    USER_2_STORAGE = 'userToStorage',
+    USER_2_ROLES_BOSS = 'boss',
+    USER_2_OWNER_STORAGE = 'user',
+    USER_2_OWNER_BREED = 'ownerBreed',
     //
     USING_FOOD_2_MATERIAL = 'usingFoodsMaterial',
     USING_FOOD_2_TAKE_CARE = 'usingFoods',

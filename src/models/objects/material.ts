@@ -20,9 +20,15 @@ export const materialOptions: any = _.merge({
             allowNull: false,
             // field: 'materialUUId'
         },
-        itemName: {
-            type: Sequelize.STRING(100),
-            // field: 'itemName'
+        couponId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'couponId'
+        },
+        storageId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'storageId'
         },
         provider: {
             type: Sequelize.STRING(100),
@@ -44,21 +50,6 @@ export const materialOptions: any = _.merge({
             type: Sequelize.FLOAT,
             // field: 'unitPrice'
         },
-        dom: {
-            type: Sequelize.DATE,
-            allowNull: true,
-            // field: 'dom'
-        },
-        ed: {
-            type: Sequelize.DATE,
-            allowNull: true,
-            // field: 'ed'
-        },
-        productionBatch: {
-            type: Sequelize.STRING(100),
-            allowNull: true,
-            // field: 'productionBatch'
-        },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
@@ -67,6 +58,6 @@ export const materialOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'materials'
     }
 }, _.cloneDeep(baseModel));

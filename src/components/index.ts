@@ -1,6 +1,7 @@
 export * from './boughtBreed';
 export * from './boughtBreedDetail';
 export * from './breed';
+export * from './breedOwner';
 export * from './cost';
 export * from './coupon';
 export * from './diedFishery';
@@ -22,6 +23,7 @@ export * from './seasonsAndPond';
 export * from './stocking';
 export * from './stockingDetail';
 export * from './storage';
+export * from './storageOwner';
 export * from './takeCare';
 export * from './userRole';
 export * from './user';

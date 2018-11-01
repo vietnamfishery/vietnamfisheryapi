@@ -2,11 +2,11 @@ import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
 export function materialToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
+    return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.MATERIAL_2_COUPON,
         foreignKey: {
-            name: 'materialId',
-            field: 'materialId'
+            name: 'couponId',
+            field: 'couponId'
         }
     });
 }
@@ -22,11 +22,11 @@ export function materialToPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model:
 }
 
 export function materialToStorages(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasOne(model, {
+    return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.MATERIAL_2_STORAGE,
         foreignKey: {
-            name: 'materialId',
-            field: 'materialId'
+            name: 'storageId',
+            field: 'storageId'
         }
     });
 }

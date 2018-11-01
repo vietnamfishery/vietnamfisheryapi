@@ -5,7 +5,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class User extends BaseComponent {
-    private userServices: UserServives;
+    public userServices: UserServives;
     private userId: number;
     private userUUId: string;
     private firstname: string;
@@ -126,15 +126,15 @@ export class User extends BaseComponent {
         lastname: string,
         username: string,
         password: string,
-        birthday: Date,
-        email: string,
-        phone: string,
-        addressContact: string,
-        town: string,
-        district: string,
-        province: string,
-        status: number,
-        images: string,
+        birthday?: Date,
+        email?: string,
+        phone?: string,
+        addressContact?: string,
+        town?: string,
+        district?: string,
+        province?: string,
+        status?: number,
+        images?: string,
         createdBy?: string,
         createdDate?: Date,
         updatedBy?: string,
@@ -243,22 +243,17 @@ export class User extends BaseComponent {
         return this.isDeleted;
     }
 
-    public register(action: any, roles?: number): Promise<User> {
-        if(action.method === ActionServer.POST && !roles) {
-            return new Promise((resolve, reject) => {
-                Enscrypts.getSalt(Math.floor((Math.random() * 12) + 1)).then(salt => {
-                    Enscrypts.hashing(this.password, salt).then(hash => {
-                        this.setPassword = hash;
-                        this.userServices.register({
-                            user: this,
-                            roles: roles ? roles : 0
-                        }).then(res => {
-                            resolve(res);
-                        });
+    public register(): Promise<User> {
+        return new Promise((resolve, reject) => {
+            Enscrypts.getSalt(Math.floor((Math.random() * 12) + 1)).then(salt => {
+                Enscrypts.hashing(this.password, salt).then(hash => {
+                    this.setPassword = hash;
+                    this.userServices.register(this).then(res => {
+                        resolve(res);
                     });
                 });
             });
-        }
+        });
     }
 
     public login(): Promise<User> {
@@ -288,5 +283,10 @@ export class User extends BaseComponent {
                 });
             });
         });
+    }
+
+    public hashPassword = (pass: string): string => {
+        const salt = Enscrypts.getSaltSync(Math.floor((Math.random() * 12) + 1));
+        return Enscrypts.hashingSync(pass, salt);
     }
 }

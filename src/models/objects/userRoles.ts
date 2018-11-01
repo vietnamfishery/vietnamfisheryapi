@@ -14,10 +14,14 @@ export const userrolesOptions: any = _.merge({
             autoIncrement: true,
             // field: 'rolesId'
         },
+        bossId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+            // field: 'userId'
+        },
         userId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            unique: true
             // field: 'userId'
         },
         roles: {
@@ -45,6 +49,6 @@ export const userrolesOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'userroles'
     }
 }, _.cloneDeep(baseModel));

@@ -50,6 +50,6 @@ export const pricesOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'prices'
     }
 }, _.cloneDeep(baseModel));

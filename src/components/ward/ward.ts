@@ -3,7 +3,7 @@ import { WardServices } from '../../services';
 import { Promise } from '../../lib';
 
 export class Ward extends BaseComponent {
-    private wardServices: WardServices;
+    public wardServices: WardServices;
     private wardid: string;
     private name: string;
     private type: string;

@@ -50,6 +50,7 @@ export const pondpreparedetailOptions: any = _.merge({
         }
     },
     options: {
+        tableName: 'pondpreparedetails',
         createdBy: false,
         updatedBy: false
     }

@@ -4,11 +4,11 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class DiedFishery extends BaseComponent {
-    private diedFisherysServives: DiedFisherysServives;
+    public diedFisherysServives: DiedFisherysServives;
     private diedFisheryId: number;
     private diedFisheryUUId: string;
     private seasonAndPondId: number;
-    private card: string;
+    private card: number;
     private quantity: number;
     private solutions: string;
     private employee: string;
@@ -75,7 +75,7 @@ export class DiedFishery extends BaseComponent {
         diedFisheryId: number,
         diedFisheryUUId: string,
         seasonAndPondId: number,
-        card: string,
+        card: number,
         quantity: number,
         solutions?: string,
         employee?: string,
@@ -111,7 +111,7 @@ export class DiedFishery extends BaseComponent {
         return this.seasonAndPondId;
     }
 
-    public get getCard(): string {
+    public get getCard(): number {
         return this.card;
     }
 

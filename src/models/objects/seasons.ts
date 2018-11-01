@@ -50,6 +50,6 @@ export const seasonOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'seasons'
     }
 }, _.cloneDeep(baseModel));

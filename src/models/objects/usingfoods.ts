@@ -63,6 +63,6 @@ export const usingfoodOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'usingfoods'
     }
 }, _.cloneDeep(baseModel));

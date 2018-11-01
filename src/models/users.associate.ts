@@ -1,6 +1,18 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
+export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_BOUGHT_BREED,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
+//
+
 export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.USER_2_DIS,
@@ -41,16 +53,6 @@ export function userToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
     });
 }
 
-export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_BOUGHT_BREED,
-        foreignKey: {
-            name: 'userId',
-            field: 'userId'
-        }
-    });
-}
-
 export function userToProvince(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.USER_2_PRO,
@@ -77,6 +79,36 @@ export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
         foreignKey: {
             name: 'town',
             field: 'town'
+        }
+    });
+}
+
+export function userToRolesBoss(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
+export function userToOwnerStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasOne(model, {
+        as: ActionAssociateDatabase.USER_2_OWNER_STORAGE,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
+export function userToOwnerBreed(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasOne(model, {
+        as: ActionAssociateDatabase.USER_2_OWNER_BREED,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
         }
     });
 }

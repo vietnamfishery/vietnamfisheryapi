@@ -41,6 +41,7 @@ export const ponduserrolesOptions: any = _.merge({
             }
         },
         options: {
+            tableName: 'ponduserroles',
             defaultScope: {},
             scopes: {}
         }

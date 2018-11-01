@@ -17,3 +17,27 @@ GET = đang gặp vấn đề về create câu query kèm nhiều điều kiện
 ALTER TABLE storages ADD userId bigint(20) NOT null;
 ALTER TABLE storages add FOREIGN KEY (userId) REFERENCES users(userId);
 `
+
+
+nhập hàng:
+    - giống
+    - trang thiết bị
+    - thức ăn   -Tên, đơn vị tính, số lượng, hdsd?, nhà cung cấp, thông tin nhà cung cấp, người nhập
+    - thuốc
+
+
+    Kho:                    Mã SP, Tên, số lượng, hdsd, loại.
+    Phiếu nhập:             Mã phiếu nhập, Ngày nhập, người nhập
+    Chi tiết phiếu nhập:    Mã phiếu nhập, Mã SP,  Đơn vị tính, số lượng nhập, giá nhập, nhà cc, thông tin nhà cung cấp
+
+    thêm: 
+        - chưa có trong kho: storages -> coupon -> materials
+        - đã có trong kho: coupon -> materials && storage update khi nào cũng được
+
+
+    phân quyền ao:
+        thêm nhân viên (thêm 1 user)
+        -> thêm quyền cho user đó(quản lý ao or kho)
+        -> chia ao cho user (kiểm tra bên user role có quyền ao hay không -> có thì insert else thông báo cho người dùng là nv này chưa có quyền uản lý ao)
+
+    

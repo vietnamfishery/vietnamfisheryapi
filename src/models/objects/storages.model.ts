@@ -20,19 +20,30 @@ export const storagesOptions: any = _.merge({
             unique: true,
             // field: 'storageUUId'
         },
-        materialId: {
+        ownerId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'materialId'
+            // field: 'userId'
         },
-        seasonId: {
-            type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'seasonId'
+        productName: {
+            type: Sequelize.STRING(100),
+            // field: 'productName'
         },
         quantityStorages: {
             type: Sequelize.FLOAT,
             // field: 'quantityStorages'
+        },
+        unit: {
+            type: Sequelize.INTEGER(1),
+            // field: 'unit'
+        },
+        type: {
+            type: Sequelize.INTEGER(1),
+            // field: 'type'
+        },
+        descriptions: {
+            type: Sequelize.TEXT,
+            // field: 'descriptions'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -50,6 +61,6 @@ export const storagesOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'storages'
     }
 }, _.cloneDeep(baseModel));

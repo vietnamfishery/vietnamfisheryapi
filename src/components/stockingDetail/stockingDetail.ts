@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class StockingDetail extends BaseComponent {
-    private stockingDetailsServices: StockingDetailsServices;
+    public stockingDetailsServices: StockingDetailsServices;
     private stockingDetailUUId: string;
     private breedId: number;
     private stockingId: number;

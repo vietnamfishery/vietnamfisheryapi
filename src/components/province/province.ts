@@ -3,7 +3,7 @@ import { ProvinceServices } from '../../services';
 import { Promise } from '../../lib';
 
 export class Province extends BaseComponent {
-    private provinceServices: ProvinceServices;
+    public provinceServices: ProvinceServices;
     private provinceid: string;
     private name: string;
     private type: string;

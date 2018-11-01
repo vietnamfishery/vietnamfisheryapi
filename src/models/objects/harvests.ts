@@ -45,6 +45,6 @@ export const harvestOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'harvests'
     }
 }, _.cloneDeep(baseModel));

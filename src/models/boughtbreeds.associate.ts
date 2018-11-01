@@ -11,22 +11,22 @@ export function boughtbreedsToBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, a
     });
 }
 
-export function boughtbreedsToBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function boughtbreedsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.BOUGHT_BREED_2_USER,
+        as: ActionAssociateDatabase.BOUGHT_BREED_2_SEASON,
         foreignKey: {
-            name: 'breedId',
-            field: 'breedId'
+            name: 'seasonId',
+            field: 'seasonId'
         }
     });
 }
 
-export function boughtbreedsToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function boughtbreedsToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.BOUGHT_BREED_2_USER,
         foreignKey: {
-            name: 'seasonId',
-            field: 'seasonId'
+            name: 'userId',
+            field: 'userId'
         }
     });
 }
