@@ -7,10 +7,9 @@ export class Breed extends BaseComponent {
     public breedServives: BreedServives;
     private breedId: number;
     private breedUUId: string;
+    private ownerId: number;
     private breedName: string;
-    private loopOfBreed: number;
-    private testingAgency: string;
-    private descriptions: string;
+    private totalQuantity: number;
     private createdDate: Date;
     private isDeleted: number;
     constructor() {
@@ -27,22 +26,17 @@ export class Breed extends BaseComponent {
         this.breedUUId = breedUUId;
     }
 
+    public set setOwnerId(userId: number) {
+        this.ownerId = userId;
+    }
+
     public set setBreedName(breedName) {
         this.breedName = breedName;
     }
 
-    public set setLoopOfBreed(loopOfBreed) {
-        this.loopOfBreed = loopOfBreed;
+    public set setTotalQuantity(totalQuantity) {
+        this.totalQuantity = totalQuantity;
     }
-
-    public set setTestingAgency(testingAgency) {
-        this.testingAgency = testingAgency;
-    }
-
-    public set setDescriptions(descriptions) {
-        this.descriptions = descriptions;
-    }
-
     public set setCreatedDate(createdDate) {
         this.createdDate = createdDate;
     }
@@ -54,19 +48,17 @@ export class Breed extends BaseComponent {
     public setBreed(
         breedId: number,
         breedUUId: string,
+        ownerId: number,
         breedName: string,
-        loopOfBreed: number,
-        testingAgency: string,
-        descriptions: string,
+        totalQuantity: number,
         createdDate?: Date,
         isDeleted?: number
     ) {
         this.setBreedId = breedId;
         this.setBreedUUId = breedUUId;
+        this.setOwnerId = ownerId;
         this.setBreedName = breedName;
-        this.setLoopOfBreed = loopOfBreed;
-        this.setTestingAgency = testingAgency;
-        this.setDescriptions = descriptions;
+        this.setTotalQuantity = totalQuantity;
         this.setCreatedDate = createdDate;
         this.setIsDeleted = isDeleted;
     }
@@ -79,20 +71,16 @@ export class Breed extends BaseComponent {
         return this.breedUUId;
     }
 
+    public get getOwnerId(): number {
+        return this.ownerId;
+    }
+
     public get getBreedName(): string {
         return this.breedName;
     }
 
-    public get getLoopOfBreed(): number {
-        return this.loopOfBreed;
-    }
-
-    public get getTestingAgency(): string {
-        return this.testingAgency;
-    }
-
-    public get getDescriptions(): string {
-        return this.descriptions;
+    public get getTotalQuantity(): number {
+        return this.totalQuantity;
     }
     public get getCreatedDate(): Date {
         return this.createdDate;

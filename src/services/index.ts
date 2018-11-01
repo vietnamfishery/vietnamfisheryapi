@@ -5,6 +5,7 @@ export * from './user.services';
 export * from './bought-breed-details.services';
 export * from './bought-breeds.services';
 export * from './breeds.services';
+export * from './breedOwner.services';
 export * from './costs.services';
 export * from './coupon.services';
 export * from './died-fisherys.services';

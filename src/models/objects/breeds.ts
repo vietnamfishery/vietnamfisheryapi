@@ -20,23 +20,16 @@ export const breedOptions: any = _.merge({
             allowNull: false,
             // field: 'breedUUId'
         },
+        ownerId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+        },
         breedName: {
             type: Sequelize.STRING(80),
             // field: 'breedName'
         },
-        loopOfBreed: {
-            type: Sequelize.INTEGER(11),
-            // field: 'loopOfBreed'
-        },
-        testingAgency: {
-            type: Sequelize.STRING,
-            allowNull: true,
-            // field: 'testingAgency'
-        },
-        descriptions: {
-            type: Sequelize.TEXT,
-            allowNull: true,
-            // field: 'descriptions'
+        totalQuantity: {
+            type: Sequelize.BIGINT(20),
         },
         createdDate: {
             type: Sequelize.DATE,

@@ -248,7 +248,7 @@ export class User extends BaseComponent {
             Enscrypts.getSalt(Math.floor((Math.random() * 12) + 1)).then(salt => {
                 Enscrypts.hashing(this.password, salt).then(hash => {
                     this.setPassword = hash;
-                    this.userServices.insert(this).then(res => {
+                    this.userServices.register(this).then(res => {
                         resolve(res);
                     });
                 });

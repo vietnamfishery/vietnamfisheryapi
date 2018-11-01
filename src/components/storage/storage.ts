@@ -93,7 +93,7 @@ export class Storage extends BaseComponent {
         return this.storageUUId;
     }
 
-    public get getUserId(): number {
+    public get getOwnerId(): number {
         return this.ownerId;
     }
 

@@ -10,6 +10,7 @@ export * from './growths';
 export * from './harvestdetails';
 export * from './harvests';
 export * from './material';
+export * from './ownerBreed.model';
 export * from './ponddiary';
 export * from './pondenvironments';
 export * from './pondprepare';

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserRolesServices } from '../../services';
+import { logger, UserRolesServices, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { User, UserRole } from '../../components';
+import { User, UserRole, OwnerBreed, OwnerStorage } from '../../components';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
-// import { LoginHelper } from '../../helpers/login-helpers';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
 import { GoogleDrive } from '../../googleAPI/drive.google';
-import { ActionServer, secret, defaultImage } from '../../common';
+import { secret, defaultImage } from '../../common';
 import { Authentication } from '../../helpers/login-helpers';
 import { Sequelize, Transaction } from 'sequelize';
 import DBHelper from '../../helpers/db-helpers';
@@ -23,6 +23,7 @@ export class UserRoute extends BaseRoute {
     private static instance: UserRoute;
     private sequeliz: Sequelize = DBHelper.sequelize;
     private userRolesServices: UserRolesServices = new UserRolesServices();
+    private userServives: UserServives = new UserServives();
     /**
      * @class UserRoute
      * @constructor
@@ -49,32 +50,84 @@ export class UserRoute extends BaseRoute {
         this.router.get('/getWithUpdate', Authentication.isLogin, this.getUserInfoWithUpdate);
         this.router.put('/update', Authentication.isLogin, this.updateUserProfile);
         this.router.put('/update/password', Authentication.isLogin, this.updateUserPassword);
-        this.router.post('/register/employee', Authentication.isLogin, this.regiterWithRoles);
+        this.router.post('/register/employee', Authentication.isLogin, this.regiterEmployee);
+        this.router.get('/gets/employees', Authentication.isLogin, this.getEmployee);
+        this.router.get('/get/employee', Authentication.isLogin, this.getEmplyeeById);
+        this.router.put('/update/employee', Authentication.isLogin, this.updateEmployee);
+        this.router.post('/insert/employee/role', Authentication.isLogin, this.insertOnlyRole);
     }
 
-    private register = (request: Request, response: Response, next: NextFunction) => {
+    private register = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { firstname, lastname, username, password } = request.body;
-        const action: any = {
-            method: request.method
-        };
         user.setUserUUId = uuidv4();
         user.setFirstname = firstname;
         user.setLastname = lastname;
         user.setUsername = username;
-        user.setPassword = password;
+        const hash = user.hashPassword(password);
+        user.setPassword = hash;
         user.setImages = defaultImage.userImage;
-        user.register().then((value: any) => {
-            if(value.errors) {
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
+            const userCreated: any = await user.userServices.models.create(user, {
+                transaction: t
+            }).catch(e => {
                 response.status(200).json({
                     success: false,
-                    message: 'Lỗi! Xin vui lòng thử lại.'
+                    message: 'Tên người dùng đã được sử dụng, vui lòng thử tên khác.'
                 });
-            } else {
-                response.json({
-                    success: true,
-                    message: 'Đăng ký thành công!'
+                t.rollback();
+            });
+            if(userCreated.userId) {
+                const userRoles: UserRole = new UserRole();
+                userRoles.setUserRoles(null, userCreated.userId, userCreated.userId, 0);
+                const role: any = await userRoles.userRolesServices.models.create(userRoles, {
+                    transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                    });
+                    t.rollback();
                 });
+                if(role.userId) {
+                    const ownerStorage: OwnerStorage = new OwnerStorage();
+                    ownerStorage.setOwnerStorages(null, userCreated.userId);
+                    ownerStorage.storegeOwnwerServices.models.create(ownerStorage, {
+                        transaction: t
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                        });
+                        t.rollback();
+                    }).then(async (oStorage: any) => {
+                        const ownerBreed: OwnerBreed = new OwnerBreed();
+                        ownerBreed.setOwnerBreed(null, userCreated.userId);
+                        const owner: any = await ownerBreed.breedOwnwerServices.models.create(ownerBreed, {
+                            transaction: t
+                        }).catch(e => {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                            });
+                            t.rollback();
+                        });
+                        if(owner) {
+                            response.status(200).json({
+                                success: true,
+                                message: 'Tạo tài khoản thành công, vui lòng đợi trong khi chúng tôi chuyển bạn về trang trước...'
+                            });
+                            t.commit();
+                        } else {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                            });
+                            t.rollback();
+                        }
+                    });
+
+                }
             }
         });
     }
@@ -261,33 +314,160 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    regiterWithRoles = async (request: Request, response: Response, next: NextFunction) => {
+    regiterEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodeToken: any = Authentication.detoken(token);
         const { username, password, firstname, lastname, roles } = request.body;
-        user.setUser(null, uuidv4(), firstname, lastname, username, user.hashPassword(password));
+        user.setUserUUId = uuidv4();
+        user.setFirstname = firstname;
+        user.setLastname = lastname;
+        user.setUsername = username;
+        const hash = user.hashPassword(password);
+        user.setPassword = hash;
+        user.setImages = defaultImage.userImage;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
-            user.userServices.models.create(user, {
+            const userCreated: any = await user.userServices.models.create(user, {
                 transaction: t
-            }).then(async (u: any) => {
-                const userRoles: UserRole = new UserRole();
-                userRoles.setUserRoles(null, u.userId, decodeToken.userId, roles);
-                this.userRolesServices.models.create(userRoles, {
-                    transaction: t
-                }).then(async (r: any) => {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Đăng ký thành công!'
-                    });
-                    t.commit();
-                });
             }).catch(e => {
                 response.status(200).json({
                     success: false,
-                    message: 'Tên người dùng đã tồn tại, vui lòng kiểm tra và thử lại!'
+                    message: 'Tên người dùng đã được sử dụng, vui lòng thử tên khác.'
+                });
+            });
+            if(userCreated) {
+                const userRoles: UserRole = new UserRole();
+                userRoles.setUserRoles(null, decodeToken.userId, userCreated.userId, roles);
+                const role: any = await userRoles.userRolesServices.models.create(userRoles, {
+                    transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                    });
+                    t.rollback();
+                });
+                if(role) {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Tạo tài khoản thành công, vui lòng đợi trong khi chúng tôi chuyển bạn về trang trước...'
+                    });
+                    t.commit();
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                    });
+                    t.rollback();
+                }
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
                 });
                 t.rollback();
+            }
+        });
+    }
+
+    getEmployee = async (request: Request, response: Response, next: NextFunction) => {
+        const user: User = new User();
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodetoken: any = Authentication.detoken(token);
+        user.userServices.models.findAll({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLE_USER,
+                    where: {
+                        bossId: decodetoken.userId,
+                        [this.userRolesServices.Op.and]: {
+                            userId: {
+                                [this.userRolesServices.Op.ne]: decodetoken.userId
+                            }
+                        }
+                    }
+                }
+            ]
+        }).then(async (employees: any[]) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                employees
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi không mong muốn, vui lòng thử lại.'
+            });
+            throw e;
+        });
+    }
+
+    getEmplyeeById = async (request: Request, response: Response, next: NextFunction) => {
+        const { rolesid }: any = request.headers;
+        this.userRolesServices.models.findOne({
+            include: [
+                {
+                    model: this.userServives.models,
+                    as: ActionAssociateDatabase.USER_ROLES_2_USER
+                }
+            ],
+            where: {
+                rolesId: (rolesid * 1)
+            }
+        }).then(roles => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                roles
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thực hiện lại...'
+            });
+        });
+    }
+
+    insertOnlyRole = async (request: Request, response: Response, next: NextFunction) => {
+        const userRoles: UserRole = new UserRole();
+        const { userId, roles } = request.body;
+        const token: string = request.headers.authorization.split('100%<3')[1];
+        const decodeToken: any = Authentication.detoken(token);
+        userRoles.setBossId = decodeToken.userId;
+        userRoles.setUserId = userId;
+        userRoles.setRoles = roles;
+        userRoles.insert().then((res: any) => {
+            response.status(200).json({
+                success: true,
+                message: 'Phân quyền thành công.'
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thực hiện lại...'
+            });
+        });
+    }
+
+    updateEmployee = async (request: Request, response: Response, next: NextFunction) => {
+        const userRoles: UserRole = new UserRole();
+        const { rolesId, roles, isDeleted } = request.body;
+        userRoles.setRolesId = rolesId;
+        userRoles.setRoles = roles;
+        userRoles.setIsDeleted = isDeleted;
+        userRoles.update().then((res: any) => {
+            if(res.length > 0) {
+                response.status(200).json({
+                    success: true,
+                    message: 'Cập nhật thành công.'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thực hiện lại...'
             });
         });
     }

@@ -177,7 +177,7 @@ export class SeasonRoute extends BaseRoute {
             throw e;
         });
     }
-    
+
     // Get pond not in seasonId
     // private getpondNotInSeasonById = (request: Request, response: Response, next: NextFunction) => {
     //     const { seasonId } = request.body;

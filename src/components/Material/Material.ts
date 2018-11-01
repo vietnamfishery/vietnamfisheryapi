@@ -60,7 +60,7 @@ export class Material extends BaseComponent {
     public set setIsDeleted(isDeleted) {
         this.isDeleted = isDeleted;
     }
-    
+
     public setMaterial(
         materialId: number,
         materialUUId: string,
