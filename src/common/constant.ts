@@ -102,7 +102,7 @@ export enum ActionAssociateDatabase {
     COUPON_2_SEASON = 'season',
     COUPON_2_USER = 'user',
     //
-    DIED_FISHERY_2_SEASON_AND_POND = 'diedFish',
+    DIED_FISHERY_2_SEASON_AND_POND = 'seasonAndPond',
     //
     DISTRICT_2_USER = 'districtsToUser',
     //
@@ -110,7 +110,7 @@ export enum ActionAssociateDatabase {
     //
     HARVEST_DETAIL_2_HARVEST = 'harvestDetail',
     //
-    HARVEST_2_HARVEST_DETAILS = 'harvest',
+    HARVEST_2_HARVEST_DETAILS = 'harvestToHarvestDetails',
     HARVEST_2_SEASON_AND_POND = 'harvestSNP',
     //
     MATERIAL_2_COUPON = 'coupon',

@@ -44,10 +44,10 @@ export class GrowthsRoute extends BaseRoute {
         this.router.post('/gets', Authentication.isLogin, this.getgrowths);
         this.router.post('/add', Authentication.isLogin, this.addgrowth);
         this.router.get('/get', Authentication.isLogin, this.getGrowthById);
-        // this.router.put('/update', Authentication.isLogin, this.updatePondDiary);
+        this.router.put('/update', Authentication.isLogin, this.updateGrowth);
     }
 
-    // Get DiedFishery
+    // Get getgrowths
     private getgrowths = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, pondId } = request.body;
         this.growthsServives.models.findAll({
@@ -62,6 +62,9 @@ export class GrowthsRoute extends BaseRoute {
                         }
                     }
                 }
+            ],
+            order: [
+                ['createdDate', 'DESC']
             ]
         }).then((growths) => {
             response.status(200).json({
@@ -149,6 +152,35 @@ export class GrowthsRoute extends BaseRoute {
                 message: 'Không có thông tin tăng trưởng, vui lòng kiểm tra lại, cảm ơn!'
             });
         });
+    }
+
+    // Update growth by Id
+    private updateGrowth = async (request: Request, response: Response, next: NextFunction) => {
+        const { growthId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
+        const growth: Growth = new Growth();
+        growth.setGrowthId = growthId;
+        if (!growthId) {
+            response.status(200).json({
+                success: false,
+                message: 'Hành động không được phép, vui lòng thử lại sau!'
+            });
+        } else {
+            growth.setGrowths(growthId, undefined, undefined, averageDensity, averageMass, speedOdGrowth, livingRatio, undefined, undefined, undefined, undefined, undefined);
+            growth.update().then((res: any) => {
+                if (!res) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Cập nhật thông tin tăng trưởng thành công!'
+                    });
+                }
+            });;
+        }
+
     }
 
 }
