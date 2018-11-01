@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class UsingFood extends BaseComponent {
-    private usingFoodsServices: UsingFoodsServices;
+    public usingFoodsServices: UsingFoodsServices;
     private usingFoodId: number;
     private usingFoodUUId: string;
     private takeCareId: number;

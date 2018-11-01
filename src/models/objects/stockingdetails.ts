@@ -47,6 +47,6 @@ export const stockingdetailOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'stockingdetails'
     }
 }, _.cloneDeep(baseModel));

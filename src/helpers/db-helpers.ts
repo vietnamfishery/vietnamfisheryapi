@@ -70,8 +70,8 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.boughtbreedsAssociate(
             this.models[`boughtbreeddetailsOptions`],
-            this.models[`breedOptions`],
-            this.models[`seasonOptions`]
+            this.models[`seasonOptions`],
+            this.models[`userOptions`]
         );
         return md;
     }

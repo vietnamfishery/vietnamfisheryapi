@@ -28,6 +28,7 @@ export class BoughtBreed extends BaseComponent {
     public set setUserId(userId) {
         this.userId = userId;
     }
+
     public set setSeasonId(seasonId) {
         this.seasonId = seasonId;
     }
@@ -35,9 +36,11 @@ export class BoughtBreed extends BaseComponent {
     public set setCreatedBy(createdBy) {
         this.createdBy =  createdBy;
     }
+
     public set setCreatedDate(createdDate) {
         this.createdDate = createdDate;
     }
+
     public set setIsDeleted(isDeleted) {
         this.isDeleted = isDeleted;
     }

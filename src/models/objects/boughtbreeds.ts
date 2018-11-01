@@ -22,14 +22,13 @@ export const boughtbreedOptions: any = _.merge({
         },
         userId: {
             type: Sequelize.BIGINT(20),
-            // field: 'breedId',
-            unique: true,
             allowNull: false,
+            // field: 'userId',
         },
         seasonId: {
             type: Sequelize.BIGINT(20),
-            // field: 'seasonId',
             allowNull: false,
+            // field: 'seasonId',
         },
         createdBy: {
             type: Sequelize.STRING(36),

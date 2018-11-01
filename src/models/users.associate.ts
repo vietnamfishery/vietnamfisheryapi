@@ -1,6 +1,18 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
+export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_BOUGHT_BREED,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
+//
+
 export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.USER_2_DIS,
@@ -34,16 +46,6 @@ export function userToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
 export function userToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.USER_2_COUPON,
-        foreignKey: {
-            name: 'userId',
-            field: 'userId'
-        }
-    });
-}
-
-export function userToBoughtBreeds(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_BOUGHT_BREED,
         foreignKey: {
             name: 'userId',
             field: 'userId'

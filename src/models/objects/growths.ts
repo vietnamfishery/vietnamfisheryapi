@@ -75,6 +75,6 @@ export const growthOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'growths'
     }
 }, _.cloneDeep(baseModel));

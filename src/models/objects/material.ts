@@ -12,41 +12,49 @@ export const materialOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
+            // field: 'materialId'
         },
         materialUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             allowNull: false,
+            // field: 'materialUUId'
         },
-        couponId : {
+        couponId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
+            // field: 'couponId'
         },
-        storageId : {
+        storageId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
+            // field: 'storageId'
         },
         provider: {
             type: Sequelize.STRING(100),
-            allowNull: true,
+            // field: 'provider'
         },
         providerAddress: {
             type: Sequelize.STRING,
-            allowNull: true,
+            // field: 'providerAddress'
         },
         quantity: {
             type: Sequelize.FLOAT,
+            // field: 'quantity'
         },
         unit: {
             type: Sequelize.INTEGER(1),
+            // field: 'unit'
         },
         unitPrice: {
             type: Sequelize.FLOAT,
+            // field: 'unitPrice'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
+            // field: 'isDeleted'
         }
     },
     options: {

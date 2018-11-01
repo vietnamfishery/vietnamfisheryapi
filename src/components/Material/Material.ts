@@ -29,11 +29,11 @@ export class Material extends BaseComponent {
         this.materialUUId = materialUUId;
     }
 
-    public set setCouponId(couponId: number) {
+    public set setCouponId(couponId) {
         this.couponId = couponId;
     }
 
-    public set setStorageId(storageId: number) {
+    public set setStorageId(storageId) {
         this.storageId = storageId;
     }
 
@@ -60,6 +60,7 @@ export class Material extends BaseComponent {
     public set setIsDeleted(isDeleted) {
         this.isDeleted = isDeleted;
     }
+    
     public setMaterial(
         materialId: number,
         materialUUId: string,

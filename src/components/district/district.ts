@@ -3,7 +3,7 @@ import { DistrictServives } from '../../services';
 import { Promise } from '../../lib';
 
 export class District extends BaseComponent {
-    private districtServives: DistrictServives;
+    public districtServives: DistrictServives;
     private districtid: string;
     private name: string;
     private type: string;

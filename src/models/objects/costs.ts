@@ -76,6 +76,6 @@ export const costsOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'costs'
     }
 }, _.cloneDeep(baseModel));

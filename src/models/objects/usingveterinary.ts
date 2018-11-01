@@ -81,6 +81,6 @@ export const usingveterinaryOptions: any = _.merge({
         }
     },
     options: {
-        //
+        tableName: 'usingveterinary'
     }
 }, _.cloneDeep(baseModel));

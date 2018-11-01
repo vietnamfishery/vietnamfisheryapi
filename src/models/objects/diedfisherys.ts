@@ -26,7 +26,7 @@ export const diedfisherysOptions: any = _.merge({
             // field: 'seasonAndPondId'
         },
         card: {
-            type: Sequelize.STRING(100),
+            type: Sequelize.INTEGER(1),
             // field: 'card'
         },
         quantity: {
@@ -77,6 +77,6 @@ export const diedfisherysOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'diedfisherys'
     }
 }, _.cloneDeep(baseModel));

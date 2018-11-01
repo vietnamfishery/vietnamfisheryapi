@@ -4,7 +4,7 @@ import { Promise } from '../../lib';
 import { ActionServer } from '../../common';
 
 export class UsingVeterinary extends BaseComponent {
-    private usingVeterinaryServices: UsingVeterinaryServices;
+    public usingVeterinaryServices: UsingVeterinaryServices;
     private usingVeterinaryId: number;
     private usingVeterinaryUUId: string;
     private takeCareId: number;

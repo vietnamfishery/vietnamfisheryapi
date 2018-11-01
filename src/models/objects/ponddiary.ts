@@ -75,6 +75,6 @@ export const ponddiaryOptions: any = _.merge({
         }
     },
     options: {
-        // something with disable fields
+        tableName: 'ponddiary'
     }
 }, _.cloneDeep(baseModel));
