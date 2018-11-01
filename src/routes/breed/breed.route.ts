@@ -1,98 +1,91 @@
-import { Storage, Coupon, Material } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, CouponServives, StoregeServices, StoregeOwnwerServices, UserRolesServices, UserServives } from '../../services';
+import { BoughtBreed, Breed, BoughtBreedDetail } from '../../components';
+import { logger, UserRolesServices, UserServives, BreedOwnwerServices, BreedServives } from '../../services';
+import { ActionAssociateDatabase } from '../../common';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer, ActionAssociateDatabase } from '../../common';
-import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 import { Sequelize, Transaction } from 'sequelize';
 import DBHelper from '../../helpers/db-helpers';
+import * as uuidv4 from 'uuid/v4';
 
 /**
+ * @api {get} /ping Ping Request customer object
+ * @apiName Ping
+ * @apiGroup Ping
+ *
  * @apiSuccess {String} type Json Type.
  */
-export class StorageRoute extends BaseRoute {
-    public static path = '/storages';
-    private static instance: StorageRoute;
-    // private couponServives: CouponServives = new CouponServives();
-    private storegeOwnwerServices: StoregeOwnwerServices = new StoregeOwnwerServices();
+export class BreedRoute extends BaseRoute {
+    public static path = '/breeds';
+    private static instance: BreedRoute;
+    private sequeliz: Sequelize = DBHelper.sequelize;
+    private breedOwnwerServices: BreedOwnwerServices = new BreedOwnwerServices();
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private userServives: UserServives = new UserServives();
-    private storegeServices: StoregeServices = new StoregeServices();
-    private sequeliz: Sequelize = DBHelper.sequelize;
+    private breedServives: BreedServives = new BreedServives();
     /**
-     * @class StorageRoute
+     * @class BreedRoute
      * @constructor
      */
     private constructor() {
         super();
+        // this.get = this.get.bind(this);
         this.init();
     }
 
     static get router() {
-        if (!StorageRoute.instance) {
-            StorageRoute.instance = new StorageRoute();
+        if (!BreedRoute.instance) {
+            BreedRoute.instance = new BreedRoute();
         }
-        return StorageRoute.instance.router;
+        return BreedRoute.instance.router;
     }
 
     private init() {
-        logger.info('[StorageRoute] Creating storage route.');
-        this.router.post('/add', Authentication.isLogin, this.addStorage);
-        this.router.get('/gets', Authentication.isLogin, this.getStorages);
-        this.router.get('/get/:storageId', Authentication.isLogin, this.getStorageById);
-        this.router.put('/update', Authentication.isLogin, this.updateStorage);
+        // log
+        logger.info('[BreedRoute] Creating breed route.');
+
+        // add index page route
+        this.router.post('/add', Authentication.isLogin, this.addBreed);
+        this.router.get('/gets', Authentication.isLogin, this.getBreed);
     }
 
-    /**
-     * Phân tích token nếu là chủ thì thêm thằng vào kho,
-     * nếu không phải chủ phải join với bảng phân quyền để tìm lấy id chủ
-     *
-     * tiếp theo...
-     *
-     * Nhận lên mã phiều nhập, nếu là một phiên nhập mới (coupondId từ client = 0)
-     * thì tạo phiếu nhập mới và tiến hành lập mảng các item và thêm chúng vào DB
-     * trong quá trình thêm ghi nhận lại kết quả và trả về các vị trí lỗi(nếu có) của mảng
-     * để client giữ lại những form lỗi yêu cầu người dùng nhập lại
-     * lúc gửi cùng gửi kèm coupondId để khi người dùng submit lại thì thêm lại vào phiếu cũ
-     */
-    private addStorage = async (request: Request, response: Response, next: NextFunction) => {
+    addBreed = async (request: Request, response: Response) => {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodeToken: any = Authentication.detoken(token);
-        const { couponId, itemArr } = request.body;
+        const { boughtBreedId, itemArr } = request.body;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
-            let boss: any = await this.storegeOwnwerServices.models.findOne({
+            let boss: any = await this.breedOwnwerServices.models.findOne({
                 where: {
                     userId: decodeToken.userId
                 },
                 transaction: t
             });
             // Là chủ và phiên nhập mới
-            if (boss && !couponId) {
-                const coupon: Coupon = new Coupon();
-                coupon.setUserId = decodeToken.userId;
-                const cp: any = await coupon.couponServives.models.create(coupon, {
+            if (boss && !boughtBreedId) {
+                const boughtBreed: BoughtBreed = new BoughtBreed();
+                boughtBreed.setUserId = decodeToken.userId;
+                const bb: any = await boughtBreed.boughtBreedServives.models.create(boughtBreed, {
                     transaction: t
                 });
-                if (cp) {
+                if (bb) {
                     const result: any[] = [];
                     for (const item of itemArr) {
-                        const storage: Storage = new Storage();
-                        if (typeof item.product === 'string') {
-                            storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                            const sto: any = await storage.storegeServices.models.create(storage, {
+                        const breed: Breed = new Breed();
+                        if (typeof item.breedName === 'string') {
+                            breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                            const bre: any = await breed.breedServives.models.create(breed, {
                                 transaction: t
                             });
-                            if (sto) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), cp.couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat: any = await material.materialServives.models.create(material, {
+                            if (bre) {
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                     transaction: t
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
                                         message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
-                                        couponId: cp.couponId
+                                        couponId: bb.boughtBreedId
                                     });
                                     t.rollback();
                                 });
@@ -101,25 +94,25 @@ export class StorageRoute extends BaseRoute {
                                 }
                             }
                         } else {
-                            const sUpdate: any = await storage.storegeServices.models.update({
-                                quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
+                            const sUpdate: any = await breed.breedServives.models.update({
+                                totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
                             }, {
                                     where: {
-                                        storageId: item.product.storageId
+                                        breedId: item.breedName.breedId
                                     },
                                     transaction: t
                                 });
                             if (sUpdate.length > 0) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat = await material.materialServives.models.create(material, { transaction: t });
-                                result.push(mat);
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
+                                result.push(boughtBre);
                             } else {
                                 t.rollback();
                                 response.status(200).json({
                                     success: false,
                                     message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
-                                    couponId: cp.couponId
+                                    couponId: bb.boughtBreedId
                                 });
                             }
                         }
@@ -134,32 +127,32 @@ export class StorageRoute extends BaseRoute {
                         response.status(200).json({
                             success: false,
                             message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                            couponId: cp.couponId
+                            couponId: bb.boughtBreedId
                         });
                         t.rollback();
                     }
                 }
             }
             // Là chủ và phiên nhập củ
-            else if (boss && couponId) {
+            else if (boss && boughtBreedId) {
                 const result: any[] = [];
                 for (const item of itemArr) {
-                    const storage: Storage = new Storage();
-                    if (typeof item.product === 'string') {
-                        storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                        const sto: any = await storage.storegeServices.models.create(storage, {
+                    const breed: Breed = new Breed();
+                    if (typeof item.breedName === 'string') {
+                        breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                        const bre: any = await breed.breedServives.models.create(breed, {
                             transaction: t
                         });
-                        if (sto) {
-                            const material: Material = new Material();
-                            material.setMaterial(null, uuidv4(), couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                            const mat: any = await material.materialServives.models.create(material, {
+                        if (bre) {
+                            const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                            const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                 transaction: t
                             }).catch(async e => {
                                 response.status(200).json({
                                     success: false,
                                     message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
-                                    couponId
+                                    boughtBreedId
                                 });
                                 t.rollback();
                             });
@@ -168,26 +161,26 @@ export class StorageRoute extends BaseRoute {
                             }
                         }
                     } else {
-                        const sUpdate: any = await storage.storegeServices.models.update({
-                            quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
+                        const sUpdate: any = await breed.breedServives.models.update({
+                            totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
                         }, {
                                 where: {
-                                    storageId: item.product.storageId
+                                    breedId: item.breedName.breedId
                                 },
                                 transaction: t
                             });
                         if (sUpdate.length > 0) {
-                            const material: Material = new Material();
-                            material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                            const mat = await material.materialServives.models.create(material, { transaction: t });
-                            result.push(mat);
+                            const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                            const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
+                            result.push(boughtBre);
                         } else {
+                            t.rollback();
                             response.status(200).json({
                                 success: false,
                                 message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
-                                couponId
+                                boughtBreedId
                             });
-                            t.rollback();
                         }
                     }
                 }
@@ -201,13 +194,13 @@ export class StorageRoute extends BaseRoute {
                     response.status(200).json({
                         success: false,
                         message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                        couponId
+                        boughtBreedId
                     });
                     t.rollback();
                 }
             }
             // Nhân viên và phiên nhập mới
-            else if (!boss && !couponId) {
+            else if (!boss && !boughtBreedId) {
                 boss = await this.userRolesServices.models.findOne({
                     where: {
                         userId: decodeToken.userId,
@@ -221,8 +214,8 @@ export class StorageRoute extends BaseRoute {
                             as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
                             include: [
                                 {
-                                    model: this.storegeOwnwerServices.models,
-                                    as: ActionAssociateDatabase.USER_2_OWNER_STORAGE
+                                    model: this.breedOwnwerServices.models,
+                                    as: ActionAssociateDatabase.USER_2_OWNER_BREED
                                 }
                             ]
                         }
@@ -230,57 +223,57 @@ export class StorageRoute extends BaseRoute {
                     transaction: t
                 });
                 if (boss) {
-                    const coupon: Coupon = new Coupon();
-                    coupon.setUserId = decodeToken.userId;
-                    const cp: any = await coupon.couponServives.models.create(coupon, {
+                    const boughtBreed: BoughtBreed = new BoughtBreed();
+                    boughtBreed.setUserId = decodeToken.userId;
+                    const bb: any = await boughtBreed.boughtBreedServives.models.create(boughtBreed, {
                         transaction: t
                     });
-                    if (cp) {
+                    if (bb) {
                         const result: any[] = [];
                         for (const item of itemArr) {
-                            const storage: Storage = new Storage();
-                            if (typeof item.product === 'string') {
-                                storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                                const sto: any = await storage.storegeServices.models.create(storage, {
+                            const breed: Breed = new Breed();
+                            if (typeof item.breedName === 'string') {
+                                breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                                const bre: any = await breed.breedServives.models.create(breed, {
                                     transaction: t
                                 });
-                                if (sto) {
-                                    const material: Material = new Material();
-                                    material.setMaterial(null, uuidv4(), cp.couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                    const mat: any = await material.materialServives.models.create(material, {
+                                if (bre) {
+                                    const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                    const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                         transaction: t
                                     }).catch(async e => {
-                                        t.rollback();
                                         response.status(200).json({
                                             success: false,
                                             message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
-                                            couponId: cp.couponId
+                                            couponId: bb.boughtBreedId
                                         });
+                                        t.rollback();
                                     });
                                     if (mat) {
                                         result.push(mat);
                                     }
                                 }
                             } else {
-                                const sUpdate: any = await storage.storegeServices.models.update({
-                                    quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
+                                const sUpdate: any = await breed.breedServives.models.update({
+                                    totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
                                 }, {
                                         where: {
-                                            storageId: item.product.storageId
+                                            breedId: item.breedName.breedId
                                         },
                                         transaction: t
                                     });
                                 if (sUpdate.length > 0) {
-                                    const material: Material = new Material();
-                                    material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                    const mat = await material.materialServives.models.create(material, { transaction: t });
-                                    result.push(mat);
+                                    const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                    const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
+                                    result.push(boughtBre);
                                 } else {
                                     t.rollback();
                                     response.status(200).json({
                                         success: false,
                                         message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
-                                        couponId: cp.couponId
+                                        couponId: bb.boughtBreedId
                                     });
                                 }
                             }
@@ -295,7 +288,7 @@ export class StorageRoute extends BaseRoute {
                             response.status(200).json({
                                 success: false,
                                 message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                                couponId: cp.couponId
+                                couponId: bb.boughtBreedId
                             });
                             t.rollback();
                         }
@@ -308,7 +301,7 @@ export class StorageRoute extends BaseRoute {
                 }
             }
             // Nhân viên và phiên nhập củ
-            else if (!boss && couponId) {
+            else if (!boss && boughtBreedId) {
                 boss = await this.userRolesServices.models.findOne({
                     where: {
                         userId: decodeToken.userId,
@@ -322,8 +315,8 @@ export class StorageRoute extends BaseRoute {
                             as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
                             include: [
                                 {
-                                    model: this.storegeOwnwerServices.models,
-                                    as: ActionAssociateDatabase.OWNER_TO_USER
+                                    model: this.breedOwnwerServices.models,
+                                    as: ActionAssociateDatabase.USER_2_OWNER_BREED
                                 }
                             ]
                         }
@@ -333,22 +326,22 @@ export class StorageRoute extends BaseRoute {
                 if (boss) {
                     const result: any[] = [];
                     for (const item of itemArr) {
-                        const storage: Storage = new Storage();
-                        if (typeof item.product === 'string') {
-                            storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                            const sto: any = await storage.storegeServices.models.create(storage, {
+                        const breed: Breed = new Breed();
+                        if (typeof item.breedName === 'string') {
+                            breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                            const bre: any = await breed.breedServives.models.create(breed, {
                                 transaction: t
                             });
-                            if (sto) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat: any = await material.materialServives.models.create(material, {
+                            if (bre) {
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                     transaction: t
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
                                         message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
-                                        couponId
+                                        boughtBreedId
                                     });
                                     t.rollback();
                                 });
@@ -357,26 +350,26 @@ export class StorageRoute extends BaseRoute {
                                 }
                             }
                         } else {
-                            const sUpdate: any = await storage.storegeServices.models.update({
-                                quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
+                            const sUpdate: any = await breed.breedServives.models.update({
+                                totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
                             }, {
                                     where: {
-                                        storageId: item.product.storageId
+                                        breedId: item.breedName.breedId
                                     },
                                     transaction: t
                                 });
                             if (sUpdate.length > 0) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat = await material.materialServives.models.create(material, { transaction: t });
-                                result.push(mat);
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
+                                result.push(boughtBre);
                             } else {
+                                t.rollback();
                                 response.status(200).json({
                                     success: false,
                                     message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
-                                    couponId
+                                    boughtBreedId
                                 });
-                                t.rollback();
                             }
                         }
                     }
@@ -390,7 +383,7 @@ export class StorageRoute extends BaseRoute {
                         response.status(200).json({
                             success: false,
                             message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                            couponId
+                            boughtBreedId
                         });
                         t.rollback();
                     }
@@ -404,7 +397,7 @@ export class StorageRoute extends BaseRoute {
         });
     }
 
-    private getStorages = async (request: Request, response: Response, next: NextFunction) => {
+    getBreed = (request: Request, response: Response) => {
         const token: string = request.headers.authorization.split('100%<3')[1];
         const decodeToken: any = Authentication.detoken(token);
         const query: any = {
@@ -426,12 +419,12 @@ export class StorageRoute extends BaseRoute {
                     attributes: ['userId'],
                     include: [
                         {
-                            model: this.storegeOwnwerServices.models,
-                            as: ActionAssociateDatabase.USER_2_OWNER_STORAGE,
+                            model: this.breedOwnwerServices.models,
+                            as: ActionAssociateDatabase.USER_2_OWNER_BREED,
                             include: [
                                 {
-                                    model: this.storegeServices.models,
-                                    as: ActionAssociateDatabase.OWNER_TO_STORAGE
+                                    model: this.breedServives.models,
+                                    as: ActionAssociateDatabase.OWNER_BREED_TO_BREED
                                 }
                             ]
                         }
@@ -439,25 +432,18 @@ export class StorageRoute extends BaseRoute {
                 }
             ]
         };
-        this.userRolesServices.models.findOne(query).then((s: any) => {
+        this.userRolesServices.models.findOne(query).then((res: any) => {
             response.status(200).json({
                 success: true,
                 message: '',
-                storages: s.boss.user.storages
+                breeds: res.boss.ownerBreed.breeds
             });
         }).catch(e => {
             response.status(200).json({
                 success: false,
                 message: 'Bạn không có vật phẩm nào trong kho của mình!'
             });
+            throw e;
         });
-    }
-
-    private getStorageById = (request: Request, response: Response, next: NextFunction) => {
-        //
-    }
-
-    private updateStorage = (request: Request, response: Response, next: NextFunction) => {
-        //
     }
 }

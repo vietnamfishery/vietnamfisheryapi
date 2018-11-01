@@ -21,4 +21,14 @@ export function breedsToStockingDetails(thatmodel: Sequeliz.Model<{}, any>, mode
     });
 }
 
+export function breedsToOwnerBreed(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.BREED_2_OWNER_BREED,
+        foreignKey: {
+            name: 'ownerId',
+            field: 'ownerId'
+        }
+    });
+}
+
 //

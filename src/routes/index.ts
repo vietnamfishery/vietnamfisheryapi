@@ -15,6 +15,7 @@ import { SeasonRoute } from './seasons';
 import { PondPrepareRoute } from './pondPrepare';
 import { PondPrepareDetailRoute } from './pondPrepareDetail';
 import { StorageRoute } from './storages';
+import { BreedRoute } from './breed';
 
 /**
  * / route
@@ -68,6 +69,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(PondPrepareRoute.path, PondPrepareRoute.router);
         this.router.use(PondPrepareDetailRoute.path, PondPrepareDetailRoute.router);
         this.router.use(StorageRoute.path, StorageRoute.router);
+        this.router.use(BreedRoute.path, BreedRoute.router);
     }
 
     /**

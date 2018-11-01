@@ -1,8 +1,7 @@
 import { BaseComponent } from '../baseComponents';
 import { StoregeOwnwerServices } from '../../services'; // import services
-import { Promise } from '../../lib';
 
-export class Storage extends BaseComponent {
+export class OwnerStorage extends BaseComponent {
     public storegeOwnwerServices: StoregeOwnwerServices;
     private storageOwnerId: number;
     private userId: number;
@@ -25,7 +24,7 @@ export class Storage extends BaseComponent {
         this.isDeleted = isDeleted;
     }
 
-    public setStorages(
+    public setOwnerStorages(
         storageOwnerId: number,
         userId: number,
         isDeleted?: number

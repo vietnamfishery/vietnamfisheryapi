@@ -100,3 +100,13 @@ export function userToOwnerStorage(thatmodel: Sequeliz.Model<{}, any>, model: Se
         }
     });
 }
+
+export function userToOwnerBreed(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasOne(model, {
+        as: ActionAssociateDatabase.USER_2_OWNER_BREED,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}

@@ -1,6 +1,7 @@
 export * from './boughtbreeddetails.associate';
 export * from './boughtbreeds.associate';
 export * from './breeds.associate';
+export * from './ownerBreed.associate';
 export * from './costs.associate';
 export * from './coupon.associate';
 export * from './diedfisherys.associate';

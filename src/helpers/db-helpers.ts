@@ -59,7 +59,8 @@ export default class DBHelper {
             this.models[`provinceOptions`],
             this.models[`seasonOptions`],
             this.models[`wardOptions`],
-            this.models[`storageOwnerOptions`]
+            this.models[`storageOwnerOptions`],
+            this.models[`ownerBreedOptions`]
         );
         return md;
     }
@@ -81,6 +82,16 @@ export default class DBHelper {
         modelBuilder.boughtbreeddetailsAssociate(
             this.models[`boughtbreedOptions`],
             this.models[`breedOptions`]
+        );
+        return md;
+    }
+
+    public get breedOwnerModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.breedOwnerAssociate(
+            this.models[`breedOptions`],
+            this.models[`userOptions`]
         );
         return md;
     }
@@ -111,7 +122,8 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.breedsAssociate(
             this.models[`boughtbreeddetailsOptions`],
-            this.models[`stockingdetailOptions`]
+            this.models[`stockingdetailOptions`],
+            this.models[`ownerBreedOptions`]
         );
         return md;
     }
