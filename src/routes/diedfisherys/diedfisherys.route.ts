@@ -124,7 +124,7 @@ export class DiedFisheryRoute extends BaseRoute {
                     response.status(200).json({
                         success: false,
                         message: 'Ao không thuộc trong vụ nuôi'
-                    })
+                    });
                     return t.rollback();
                 }
 
