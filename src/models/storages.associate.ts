@@ -5,8 +5,8 @@ export function storagesToOwner(thatmodel: Sequeliz.Model<{}, any>, model: Seque
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.STORAGE_2_OWNER,
         foreignKey: {
-            name: 'storageOwnerId',
-            field: 'storageOwnerId'
+            name: 'ownerId',
+            field: 'ownerId'
         }
     });
 }

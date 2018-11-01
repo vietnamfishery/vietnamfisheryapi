@@ -7,7 +7,7 @@ export class Storage extends BaseComponent {
     public storegeServices: StoregeServices;
     private storageId: number;
     private storageUUId: string;
-    private userId: number;
+    private ownerId: number;
     private productName: string;
     private quantityStorages: number;
     private unit: number;
@@ -29,8 +29,8 @@ export class Storage extends BaseComponent {
         this.storageUUId = storageUUId;
     }
 
-    public set setUserId(userId) {
-        this.userId = userId;
+    public set setOwnerId(userId: number) {
+        this.ownerId = userId;
     }
 
     public set setProductName(productName) {
@@ -64,7 +64,7 @@ export class Storage extends BaseComponent {
     public setStorages(
         storageId: number,
         storageUUId: string,
-        userId: number,
+        ownerId: number,
         productName: string,
         quantityStorages: number,
         unit: number,
@@ -75,7 +75,7 @@ export class Storage extends BaseComponent {
     ) {
         this.setStorageId = storageId;
         this.setStorageUUId = storageUUId;
-        this.setUserId = userId;
+        this.setOwnerId = ownerId;
         this.setProductName = productName;
         this.setQuantityStorages = quantityStorages;
         this.setUnit = unit;
@@ -94,7 +94,7 @@ export class Storage extends BaseComponent {
     }
 
     public get getUserId(): number {
-        return this.userId;
+        return this.ownerId;
     }
 
     public get getProductName(): string {
