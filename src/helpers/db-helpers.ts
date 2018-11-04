@@ -60,7 +60,8 @@ export default class DBHelper {
             this.models[`seasonOptions`],
             this.models[`wardOptions`],
             this.models[`storageOwnerOptions`],
-            this.models[`ownerBreedOptions`]
+            this.models[`ownerBreedOptions`],
+            this.models[`ponduserrolesOptions`],
         );
         return md;
     }
@@ -243,7 +244,7 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.ponduserrolesAssociate(
             this.models[`userOptions`],
-            this.models[`pondOptions`]
+            this.models[`pondOptions`],
         );
         return md;
     }
@@ -334,11 +335,9 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.seasonAssociate(
             this.models[`boughtbreedOptions`],
-            this.models[`couponOptions`],
             this.models[`pricesOptions`],
             this.models[`userOptions`],
-            this.models[`seasonAndPondOptions`],
-            this.models[`storagesOptions`],
+            this.models[`seasonAndPondOptions`]
         );
         return md;
     }

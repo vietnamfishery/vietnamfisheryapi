@@ -26,7 +26,7 @@ export class PondsServices extends BaseServices {
             }).then((pond) => {
                 if(pond) {
                     const pondUserRole: PondUserRole = new PondUserRole();
-                    pondUserRole.setUserId = entity.userId;
+                    pondUserRole.setRolesId = entity.userId;
                     pondUserRole.setPondId = pond.pondId;
                     return pondUserRole.pondUserRolesServices.models.create(pondUserRole);
                 }

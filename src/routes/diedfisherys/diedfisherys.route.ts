@@ -44,7 +44,7 @@ export class DiedFisheryRoute extends BaseRoute {
         this.router.post('/gets', Authentication.isLogin, this.getdiedFishery);
         this.router.post('/add', Authentication.isLogin, this.addDiedFishery);
         this.router.get('/get', Authentication.isLogin, this.getDiedFisheryById);
-        // this.router.put('/update', Authentication.isLogin, this.updatePondDiary);
+        this.router.put('/update', Authentication.isLogin, this.updateDiedFishery);
     }
 
     // Get DiedFishery
@@ -149,6 +149,35 @@ export class DiedFisheryRoute extends BaseRoute {
                 message: 'Không có thông tin chất thải, vui lòng kiểm tra lại, cảm ơn!'
             });
         });
+    }
+
+    // Update
+    private updateDiedFishery = async (request: Request, response: Response, next: NextFunction) => {
+        const { diedFisheryId, card, employee, quantity, solutions } = request.body;
+        const diedFishery: DiedFishery = new DiedFishery();
+        diedFishery.setDiedFisheryId = diedFisheryId;
+        if (!diedFisheryId) {
+            response.status(200).json({
+                success: false,
+                message: 'Hành động không được phép, vui lòng thử lại sau!'
+            });
+        } else {
+            diedFishery.setDiedfisherys(diedFisheryId, undefined, undefined, card, quantity, solutions, employee, undefined, undefined, undefined, undefined, undefined);
+            diedFishery.update().then((res: any) => {
+                if (!res) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Cập nhật thông tin chất thải thành công!'
+                    });
+                }
+            });
+        }
+
     }
 
 }

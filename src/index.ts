@@ -5,7 +5,8 @@ const debug = Debug('express:server');
 
 // create http server port
 const port = process.env.PORT || config.port;
-export const server = ServerExpress.bootstrap().server;
+export const Express: ServerExpress = ServerExpress.bootstrap();
+const server = Express.server;
 server.listen(port, () => {
-    console.log(`App listening on host http://localhost:${ port }`);
+    console.log(`App listening on host https://localhost:${ port }`);
 });
