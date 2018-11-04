@@ -1,8 +1,6 @@
 import { BaseComponent } from '../baseComponents';
 import { PondsServices } from '../../services';
 import { Promise } from '../../lib';
-import { ActionServer, IOptionQuery } from '../../common';
-import { merge } from 'lodash';
 
 export class Pond extends BaseComponent {
     public pondsServices: PondsServices;

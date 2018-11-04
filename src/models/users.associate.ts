@@ -93,6 +93,16 @@ export function userToRolesBoss(thatmodel: Sequeliz.Model<{}, any>, model: Seque
     });
 }
 
+export function userToPondUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_POND_USER_ROLE,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
 export function userToOwnerStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasOne(model, {
         as: ActionAssociateDatabase.USER_2_OWNER_STORAGE,

@@ -13,11 +13,13 @@ import * as errorHandler from 'errorhandler';
 import * as express from 'express';
 import * as expressStatusMonitor from 'express-status-monitor';
 import * as helmet from 'helmet';
+import { readFileSync } from 'fs';
 import * as methodOverride from 'method-override';
 import * as morgan from 'morgan';
 import * as path from 'path';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
+// import { createServer, Server } from 'https';
 import * as passport from 'passport';
 import * as fileUpload from 'express-fileupload';
 import DBHelper from './helpers/db-helpers';
@@ -60,7 +62,17 @@ export class ServerExpress {
         // create expressjs application
         this.app = express();
         // create server for socket io
-        this.server = createServer(this.app);
+        const certsPath = path.join(__dirname, 'certs', 'server');
+        const caCertsPath = path.join(__dirname, 'certs', 'ca');
+        const options: any = {
+            key: readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'}),
+            cert: readFileSync(path.join(certsPath, 'my-server.crt.pem'), { encoding: 'utf8'}),
+            ca: readFileSync(path.join(caCertsPath, 'my-root-ca.crt.pem'), { encoding: 'utf8'}),
+            requestCert: false,
+            rejectUnauthorized: false
+        };
+        this.server = createServer(/*options,*/this.app);
+        // this.server = createServer(options,this.app);
         // Add socket server
         this.io = SocketIO(this.server);
         new BaseSocketServer(this.io);

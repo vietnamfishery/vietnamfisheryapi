@@ -175,7 +175,7 @@ export class DiedFisheryRoute extends BaseRoute {
                         message: 'Cập nhật thông tin chất thải thành công!'
                     });
                 }
-            });;
+            });
         }
 
     }

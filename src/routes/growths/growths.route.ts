@@ -178,7 +178,7 @@ export class GrowthsRoute extends BaseRoute {
                         message: 'Cập nhật thông tin tăng trưởng thành công!'
                     });
                 }
-            });;
+            });
         }
 
     }

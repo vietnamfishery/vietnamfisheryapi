@@ -11,6 +11,9 @@ import { secret, defaultImage } from '../../common';
 import { Authentication } from '../../helpers/login-helpers';
 import { Sequelize, Transaction } from 'sequelize';
 import DBHelper from '../../helpers/db-helpers';
+import { readFileSync } from 'fs';
+import * as path from 'path';
+
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -55,6 +58,9 @@ export class UserRoute extends BaseRoute {
         this.router.get('/get/employee', Authentication.isLogin, this.getEmplyeeById);
         this.router.put('/update/employee', Authentication.isLogin, this.updateEmployee);
         this.router.post('/insert/employee/role', Authentication.isLogin, this.insertOnlyRole);
+        this.router.get('/login', (req, res) => {
+            res.render('login');
+        });
     }
 
     private register = async (request: Request, response: Response, next: NextFunction) => {
@@ -135,41 +141,59 @@ export class UserRoute extends BaseRoute {
     private login = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { username, password } = request.body;
+        const certsPath = path.join(__dirname, '/../../certs', 'server');
+        const cert = readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'});
         user.setUsername = username;
         user.setPassword = password;
-        user.login().then((user$: any) => {
-            if(!user$) {
+        user.userServices.models.findOne({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
+                    required: false,
+                    attributes: ['bossId']
+                }
+            ],
+            where: {
+                username
+            },
+            attributes: ['userId', 'username', 'password', 'createdDate']
+        }).then((u: any) => {
+            if(!u) {
                 response.json({
                     success: false,
-                    message: 'Sai tài khoản, mật khẩu, vui long thử lại!'
+                    message: 'Sai tài khoản, mật khẩu, vui lòng thử lại!'
                 });
             } else {
-                Enscrypts.compare(user.getPassword, user$.password).then((isMatch: boolean) => {
+                Enscrypts.compare(user.getPassword, u.password).then((isMatch: boolean) => {
                     if(isMatch) {
-                        delete user$.password;
-                        const token = Enscrypts.hashingSync('vietnamfishery', Enscrypts.getSaltSync(Math.floor((Math.random() * 12) + 1))) + '100%<3' + jwt.sign(user$, secret);
+                        delete u.dataValues.password;
+                        const content: any = u.dataValues;
+                        const token: any = jwt.sign(content, cert, {
+                            algorithm: 'RS512'
+                        });
+                        // token = this.reCryptToken(token,content.boss.length === 0);
                         response.json({
                             success: true,
-                            token,
-                            user: user$
+                            token
                         });
                     } else {
                         response.json({
                             success: false,
-                            message: 'Sai tài khoản, mật khẩu, vui long thử lại!'
+                            message: 'Sai tài khoản, mật khẩu, vui lòng thử lại!'
                         });
                     }
                 }).catch(err => {
                     response.json({
                         success: false,
-                        message: 'Sai tài khoản, mật khẩu, vui long thử lại!'
+                        message: 'Sai tài khoản, mật khẩu, vui lòng thử lại!'
                     });
                 });
             }
         }).catch(err => {
             response.json({
                 success: false,
-                message: 'Sai tài khoản, mật khẩu, vui long thử lại!'
+                message: 'Sai tài khoản, mật khẩu, vui lòng thử lại!'
             });
         });
     }
