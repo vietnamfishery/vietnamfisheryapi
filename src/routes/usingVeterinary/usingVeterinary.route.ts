@@ -43,7 +43,7 @@ export class StockingRoute extends BaseRoute {
 
     private addPond = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
         if(!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
@@ -73,7 +73,7 @@ export class StockingRoute extends BaseRoute {
 
     private getPonds = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         pond.pondsServices.get({
             userId: decodetoken.userId
@@ -98,7 +98,7 @@ export class StockingRoute extends BaseRoute {
     private getPondById = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const { pondId } = request.params;
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         pond.getById(pondId, decodetoken.userId).then( async (pond$: any) => {
             if(!pond$) {
@@ -121,7 +121,7 @@ export class StockingRoute extends BaseRoute {
 
     private updatePond = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
         if(!pondId) {

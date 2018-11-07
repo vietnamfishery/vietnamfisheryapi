@@ -52,7 +52,7 @@ export class SeasonRoute extends BaseRoute {
 
     private addSeason = (request: Request, response: Response, next: NextFunction) => {
         const { seasonName } = request.body;
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         this.season.setSeason(null, uuidv4(), decodeToken.userId, seasonName, 0);
         this.season.insert().then((res: any) => {
@@ -75,7 +75,7 @@ export class SeasonRoute extends BaseRoute {
 
     private getSeasons = (request: Request, response: Response, next: NextFunction) => {
         const { pageSizes, pageIndex, sortBy, between, count } = request.headers;
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         const criteria: any = {
             userId: decodeToken.userId,

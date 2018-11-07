@@ -6,7 +6,7 @@ import { ActionServer } from '../../common';
 export class PondUserRole extends BaseComponent {
     public pondUserRolesServices: PondUserRolesServices;
     private pondUserRolesId: number;
-    private rolesId: number;
+    private userId: number;
     private pondId: number;
     private createdDate: Date;
     private isDeleted: number;
@@ -20,8 +20,8 @@ export class PondUserRole extends BaseComponent {
         this.pondUserRolesId = id;
     }
 
-    public set setRolesId(rolesId) {
-        this.rolesId = rolesId;
+    public set setUserId(userId) {
+        this.userId = userId;
     }
 
     public set setPondId(pondId) {
@@ -36,9 +36,9 @@ export class PondUserRole extends BaseComponent {
         this.isDeleted = isDeleted;
     }
 
-    public setPondUserRoles(pondUserRolesId?: number, rolesId?: number, pondId?: number, createdDate?: Date, isDeleted?: number) {
+    public setPondUserRoles(pondUserRolesId?: number, userId?: number, pondId?: number, createdDate?: Date, isDeleted?: number) {
         this.setPondUserRolesId = pondUserRolesId;
-        this.setRolesId = rolesId;
+        this.setUserId = userId;
         this.setPondId = pondId;
         this.setCreatedDate = createdDate;
         this.setIsDeleted = isDeleted;
@@ -48,8 +48,8 @@ export class PondUserRole extends BaseComponent {
         return this.pondUserRolesId;
     }
 
-    public get getRolesId(): number {
-        return this.rolesId;
+    public get getUserId(): number {
+        return this.userId;
     }
 
     public get getPondId(): number {

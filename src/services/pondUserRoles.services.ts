@@ -6,7 +6,7 @@ export class PondUserRolesServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = ponduserrolesOptions;
     constructor() {
         super(PondUserRolesServices.optionsModel);
-        this.models = this.conn.ponduserrolesModel;
+        this.models = this.conn.ponduserrolesModel ;
     }
     testpr = (): Promise<any> => {
         return new Promise((resolve, reject) => {

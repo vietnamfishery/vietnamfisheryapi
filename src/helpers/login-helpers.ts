@@ -1,30 +1,24 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { secret, ActionServer } from '../common';
-import { UserServives } from '../services';
-import { User } from '../components/user';
-import { Enscrypts } from '../lib';
+import { secret } from '../common';
+import * as path from 'path';
+import { readFileSync } from 'fs';
+const certsPath = path.join(__dirname, '/../authKey');
 
 export class Authentication {
-    private userServices: UserServives = new UserServives();
-    private user: User = new User();
+    static cert: Buffer = readFileSync(path.join(certsPath, 'jwtRS256.key.pub'));
     constructor() {}
     static isLogin(request: Request, response: Response, next: NextFunction) {
-        const verifyKey = request.headers.authorization ? request.headers.authorization.split('100%<3')[0] : null;
-        const token: string = request.headers.authorization ? request.headers.authorization.split('100%<3')[1]: null;
-        if(!verifyKey || !token) {
+        const token: string = request.headers.authorization ? request.headers.authorization: null;
+        if(!token) {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi đăng nhập!'
-            });
-        } else
-        if(!Enscrypts.compareSync('vietnamfishery', verifyKey)) {
-            response.status(200).json({
-                success: false,
-                message: 'Bạn cần đăng nhập để tiếp tục.'
+                message: 'Dừng lại, truy cập là không được phép!'
             });
         } else {
-            jwt.verify(token,secret,(err, data) => {
+            jwt.verify(token, Authentication.cert, {
+                algorithms: ['RS512', 'RS256']
+            }, (err, data) => {
                 if(err) {
                     response.status(200).json({
                         success: false,
@@ -32,6 +26,32 @@ export class Authentication {
                     });
                 } else {
                     next();
+                }
+            });
+        }
+    }
+
+    static isBoss(request: Request, response: Response, next: NextFunction) {
+        const token: string = request.headers.authorization ? request.headers.authorization: null;
+        if(!token) {
+            response.status(200).json({
+                success: false,
+                message: 'Bạn cần đăng nhập để tiếp tục.'
+            });
+        } else {
+            jwt.verify(token,secret,(err, data: any) => {
+                if(err) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Bạn cần đăng nhập để tiếp tục.'
+                    });
+                } else if(data.boss.length === 0) {
+                    next();
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Tài khoản của bạn không đủ thẩm quyền, liên hệ với quản lý để được hỗ trợ thêm.'
+                    });
                 }
             });
         }

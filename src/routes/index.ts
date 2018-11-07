@@ -20,6 +20,8 @@ import { StockingRoute } from './stocking';
 import { DiedFisheryRoute } from './diedfisherys';
 import { GrowthsRoute } from './growths';
 import { HarvestRoute } from './harvest';
+import { UserRoleRoute } from './userRoles';
+import { PondUserRolesRoute } from './pondUserRoles';
 
 /**
  * / route
@@ -78,6 +80,8 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(DiedFisheryRoute.path, DiedFisheryRoute.router);
         this.router.use(GrowthsRoute.path, GrowthsRoute.router);
         this.router.use(HarvestRoute.path, HarvestRoute.router);
+        this.router.use(UserRoleRoute.path, UserRoleRoute.router);
+        this.router.use(PondUserRolesRoute.path, PondUserRolesRoute.router);
     }
 
     /**

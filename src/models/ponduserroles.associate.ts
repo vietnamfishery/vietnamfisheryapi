@@ -12,9 +12,8 @@ export function ponduserrolesToPond(thatmodel: Sequeliz.Model<{}, any>, model: S
 }
 
 export function ponduserrolesToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.belongsToMany(model, {
+    return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.POND_USER_ROLE_2_USER,
-        through: 'usersModel',
         foreignKey: {
             name: 'userId',
             field: 'userId'

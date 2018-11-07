@@ -34,29 +34,35 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private init() {
         logger.info('[PondUserRolesRoute] Creating ping route.');
-        this.router.post('/add', Authentication.isLogin, this.addRoles);
+        this.router.post('/add', Authentication.isLogin, this.addPondRoles);
         this.router.get('/gets', Authentication.isLogin, this.getRoles);
         this.router.put('/update', Authentication.isLogin, this.updateRoles);
-        // this.router.get('/get/:pondUserRolesId', Authentication.isLogin, this.getPondById);
+        this.router.put('/delete', Authentication.isLogin, this.deleteRoles);
     }
 
-    private addRoles = (request: Request, response: Response, next: NextFunction) => {
+    private addPondRoles = (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
         const { userId, pondId } = request.body;
-        pondUserRole.setUserId = userId;
+        pondUserRole.setUserId = (userId as number) - 0;
         pondUserRole.setPondId = pondId;
-        pondUserRole.insert().then((res: any) => {
+        pondUserRole.pondUserRolesServices.models.create(pondUserRole.getFields(pondUserRole))
+        .then((res: any) => {
             if(res) {
                 response.status(200).json({
                     success: true,
-                    message: 'Phân quyền thành công!',
+                    message: 'Thao tác thành công!',
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Người đã có quyền trên ao này.'
                 });
             }
         }).catch(e => {
             if(e) {
                 response.status(200).json({
                     success: false,
-                    message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
+                    message: 'Có lỗi xảy ra vui lòng kiểm tra và thử lại!'
                 });
             }
         });
@@ -64,7 +70,7 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private getRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         pond.pondsServices.get({
             userId: decodetoken.userId
@@ -80,18 +86,21 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private updateRoles = (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const {pondUserRolesId, userId, pondId } = request.body;
-        if(!pondId || !userId || pondUserRolesId) {
+        const token: string = request.headers.authorization;
+        const { pondUserRolesId, pondId } = request.body;
+        if(!pondId && !pondUserRolesId) {
             response.status(200).json({
                 success: false,
                 message: 'Hành động không được phép, vui lòng thử lại sau!'
             });
         } else {
             pondUserRole.setPondUserRolesId = pondUserRolesId;
-            pondUserRole.setUserId = userId;
             pondUserRole.setPondId = pondId;
-            pondUserRole.update().then((res: any) => {
+            pondUserRole.pondUserRolesServices.models.update(pondUserRole.getFields(pondUserRole), {
+                where: {
+                    pondUserRolesId
+                }
+            }).then((res: any) => {
                 if(!res) {
                     response.status(200).json({
                         success: false,
@@ -103,28 +112,33 @@ export class PondUserRolesRoute extends BaseRoute {
                         message: 'Cập nhật thành công!'
                     });
                 }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Nhân viên đã có quyền thao tác với ao này, vui lòng kiểm tra và thử lại sau!'
+                });
             });
         }
     }
 
-    private getPondById = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const { pondId } = request.params;
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodetoken: any = Authentication.detoken(token);
-        pond.getById(pondId, decodetoken.userId).then((pond$: any) => {
-            if(!pond$) {
-                response.status(200).json({
-                    success: false,
-                    message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
-                });
-            } else {
-                response.status(200).json(pond$);
+    private deleteRoles = (request: Request, response: Response, next: NextFunction) => {
+        const pondUserRole: PondUserRole = new PondUserRole();
+        const token: string = request.headers.authorization;
+        const { pondUserRolesId } = request.body;
+        pondUserRole.setIsDeleted = 1;
+        pondUserRole.pondUserRolesServices.models.destroy({
+            where: {
+                pondUserRolesId
             }
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: 'Thao tác thành công!'
+            });
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Bạn không có quyền truy cập api này!'
+                message: 'Lỗi đường truyền, vui lòng thử lại sau!'
             });
         });
     }

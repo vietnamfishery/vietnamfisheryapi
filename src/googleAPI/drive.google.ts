@@ -24,7 +24,7 @@ export class GoogleDrive {
 
     public static upload(request: Request, response: Response, next: NextFunction): Promise<any> {
         return new Promise((resolve, reject) => {
-            const image: any = request.files.image;
+            const image: any = request.files.image || request.files.images;
             const requestBody = {
                 name: image.name,
                 parents: [folderDrive.uploadImageVNF]

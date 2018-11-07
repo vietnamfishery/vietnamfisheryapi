@@ -56,7 +56,7 @@ export class User extends BaseComponent {
     }
 
     public set setUsername(username: string) {
-        this.username = username.toLowerCase().trim();
+        this.username = username ? username.toLowerCase().trim() : username;
     }
 
     public set setPassword(password: string) {

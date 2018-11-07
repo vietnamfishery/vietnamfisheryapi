@@ -17,15 +17,18 @@ export const userrolesOptions: any = _.merge({
         bossId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
+            unique: true,
             // field: 'userId'
         },
         userId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
+            unique: true,
             // field: 'userId'
         },
         roles: {
             type: Sequelize.INTEGER(11),
+            unique: true,
             // field: 'roles'
         },
         createdDate: {

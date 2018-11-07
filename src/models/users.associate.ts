@@ -43,6 +43,21 @@ export function userToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
     });
 }
 
+export function userToPondRolesBelongMany(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsToMany(model, {
+        as: ActionAssociateDatabase.USER_2_POND_MANY_ROLES,
+        through: 'ponduserroles',
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        },
+        otherKey: {
+            name: 'pondId',
+            field: 'pondId'
+        }
+    });
+}
+
 export function userToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.USER_2_COUPON,
@@ -87,8 +102,8 @@ export function userToRolesBoss(thatmodel: Sequeliz.Model<{}, any>, model: Seque
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
         foreignKey: {
-            name: 'userId',
-            field: 'userId'
+            name: 'bossId',
+            field: 'bossId'
         }
     });
 }

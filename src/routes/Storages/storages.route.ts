@@ -57,7 +57,7 @@ export class StorageRoute extends BaseRoute {
      * lúc gửi cùng gửi kèm coupondId để khi người dùng submit lại thì thêm lại vào phiếu cũ
      */
     private addStorage = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         const { couponId, itemArr } = request.body;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
@@ -405,7 +405,7 @@ export class StorageRoute extends BaseRoute {
     }
 
     private getStorages = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         const query: any = {
             where: {

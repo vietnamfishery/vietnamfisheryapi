@@ -13,17 +13,16 @@ export const ponduserrolesOptions: any = _.merge({
                 autoIncrement: true,
                 primaryKey: true,
                 allowNull: false,
-                // field: 'rolesId'
             },
             userId: {
                 type: Sequelize.BIGINT(20),
                 unique: true,
-                // field: 'pondId'
+                field: 'userId'
             },
             pondId: {
                 type: Sequelize.BIGINT(20),
                 unique: true,
-                // field: 'pondId'
+                field: 'pondId'
             },
             createdDate: {
                 type: Sequelize.DATE,

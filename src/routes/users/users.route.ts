@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserRolesServices, UserServives } from '../../services';
+import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User, UserRole, OwnerBreed, OwnerStorage } from '../../components';
-import { ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase, actionUserServices } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
@@ -26,7 +26,10 @@ export class UserRoute extends BaseRoute {
     private static instance: UserRoute;
     private sequeliz: Sequelize = DBHelper.sequelize;
     private userRolesServices: UserRolesServices = new UserRolesServices();
-    private userServives: UserServives = new UserServives();
+    private provinceServices: ProvinceServices = new ProvinceServices();
+    private districtServives: DistrictServives = new DistrictServives();
+    private wardServices: WardServices = new WardServices();
+    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class UserRoute
      * @constructor
@@ -53,14 +56,16 @@ export class UserRoute extends BaseRoute {
         this.router.get('/getWithUpdate', Authentication.isLogin, this.getUserInfoWithUpdate);
         this.router.put('/update', Authentication.isLogin, this.updateUserProfile);
         this.router.put('/update/password', Authentication.isLogin, this.updateUserPassword);
+
+        // employees
         this.router.post('/register/employee', Authentication.isLogin, this.regiterEmployee);
         this.router.get('/gets/employees', Authentication.isLogin, this.getEmployee);
+        this.router.get('/gets/employees/withoutIsDelete', Authentication.isLogin, this.getEmployeesWithoutIsDelete);
         this.router.get('/get/employee', Authentication.isLogin, this.getEmplyeeById);
+        this.router.get('/gets/employees/pond', Authentication.isLogin, this.getEmployeesPondRole);
+        this.router.get('/gets/all/employees/pond', Authentication.isLogin, this.getAllPondAndEmployees);
         this.router.put('/update/employee', Authentication.isLogin, this.updateEmployee);
         this.router.post('/insert/employee/role', Authentication.isLogin, this.insertOnlyRole);
-        this.router.get('/login', (req, res) => {
-            res.render('login');
-        });
     }
 
     private register = async (request: Request, response: Response, next: NextFunction) => {
@@ -84,55 +89,38 @@ export class UserRoute extends BaseRoute {
                 t.rollback();
             });
             if(userCreated.userId) {
-                const userRoles: UserRole = new UserRole();
-                userRoles.setUserRoles(null, userCreated.userId, userCreated.userId, 0);
-                const role: any = await userRoles.userRolesServices.models.create(userRoles, {
-                    transaction: t
-                }).catch(e => {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
-                    });
-                    t.rollback();
-                });
-                if(role.userId) {
-                    const ownerStorage: OwnerStorage = new OwnerStorage();
-                    ownerStorage.setOwnerStorages(null, userCreated.userId);
-                    ownerStorage.storegeOwnwerServices.models.create(ownerStorage, {
-                        transaction: t
-                    }).catch(e => {
+                const storageOwner: OwnerStorage = new OwnerStorage();
+                storageOwner.setOwnerStorages(null, userCreated.userId);
+                const breedOwner: OwnerBreed = new OwnerBreed();
+                breedOwner.setOwnerBreed(null, userCreated.userId);
+                const sOwner: any = await storageOwner.storegeOwnwerServices.models.create(storageOwner, { transaction: t })
+                    .catch(e => {
                         response.status(200).json({
                             success: false,
                             message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
                         });
                         t.rollback();
-                    }).then(async (oStorage: any) => {
-                        const ownerBreed: OwnerBreed = new OwnerBreed();
-                        ownerBreed.setOwnerBreed(null, userCreated.userId);
-                        const owner: any = await ownerBreed.breedOwnwerServices.models.create(ownerBreed, {
-                            transaction: t
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
-                            });
-                            t.rollback();
-                        });
-                        if(owner) {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Tạo tài khoản thành công, vui lòng đợi trong khi chúng tôi chuyển bạn về trang trước...'
-                            });
-                            t.commit();
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
-                            });
-                            t.rollback();
-                        }
                     });
-
+                const bOwner: any = await breedOwner.breedOwnwerServices.models.create(breedOwner, { transaction: t })
+                    .catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                        });
+                        t.rollback();
+                    });
+                if(sOwner && bOwner) {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Tạo tài khoản thành công, vui lòng đợi trong khi chúng tôi chuyển bạn về trang trước...'
+                    });
+                    t.commit();
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thực hiện lại.'
+                    });
+                    t.rollback();
                 }
             }
         });
@@ -141,8 +129,8 @@ export class UserRoute extends BaseRoute {
     private login = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { username, password } = request.body;
-        const certsPath = path.join(__dirname, '/../../certs', 'server');
-        const cert = readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'});
+        const certsPath = path.join(__dirname, '/../../authKey');
+        const cert = readFileSync(path.join(certsPath, 'jwtRS256.key'));
         user.setUsername = username;
         user.setPassword = password;
         user.userServices.models.findOne({
@@ -157,7 +145,7 @@ export class UserRoute extends BaseRoute {
             where: {
                 username
             },
-            attributes: ['userId', 'username', 'password', 'createdDate']
+            attributes: ['userId', 'userUUId', 'username', 'password', 'createdDate', 'createdBy']
         }).then((u: any) => {
             if(!u) {
                 response.json({
@@ -172,7 +160,6 @@ export class UserRoute extends BaseRoute {
                         const token: any = jwt.sign(content, cert, {
                             algorithm: 'RS512'
                         });
-                        // token = this.reCryptToken(token,content.boss.length === 0);
                         response.json({
                             success: true,
                             token
@@ -198,21 +185,42 @@ export class UserRoute extends BaseRoute {
         });
     }
 
+    /**
+     * get cho chức năng xem thông tin
+     */
     private getUserInfo = (request: Request, response: Response) => {
         const user: User = new User();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
-        const { userId, userUUId, firstname, lastname, username, password, birthday, email, phone, addressContact, town, district, province, status, images, createdBy, createdDate, updatedBy, updatedDate, isDeleted } = decodeToken;
-        user.setUser(userId, userUUId, firstname, lastname, username, password, birthday, email, phone, addressContact, town, district, province, status, images, createdBy, createdDate, updatedBy, updatedDate, isDeleted);
-        user.login().then((user$: any) => {
+        const { userId } = decodeToken;
+        user.userServices.models.findOne({
+            include: [
+                {
+                    model: this.provinceServices.models,
+                    as: ActionAssociateDatabase.USER_2_PRO
+                },
+                {
+                    model: this.districtServives.models,
+                    as: ActionAssociateDatabase.USER_2_DIS,
+                },
+                {
+                    model: this.wardServices.models,
+                    as: ActionAssociateDatabase.USER_2_WAR
+                }
+            ],
+            where: {
+                userId
+            }
+        })
+        .then((user$: any) => {
             if(!user$) {
                 response.json({
                     success: false,
                     message: 'Có lỗi xảy ra vui lòng thử lại!'
                 });
             } else {
-                delete user$[`password`];
-                response.json(user$);
+                delete user$.dataValues[`password`];
+                response.json(user$.dataValues);
             }
         }).catch(err => {
             response.json({
@@ -222,9 +230,12 @@ export class UserRoute extends BaseRoute {
         });
     }
 
+    /**
+     * get cho chưc năng update, khong can join tinh huyen xa
+     */
     private getUserInfoWithUpdate = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         user.setUsername = decodeToken.username;
         user.login().then((user$: any) => {
@@ -247,10 +258,10 @@ export class UserRoute extends BaseRoute {
 
     private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         const { firstname, lastname, birthday, email, phone, town, district, province, images } = request.body;
-        user.setUser(decodetoken.userId,null,firstname,lastname,decodetoken.username,null,birthday,email,phone,null,town,district,province,null,images,decodetoken.userUUId,undefined,undefined,undefined,undefined);
+        user.setUser(decodetoken.userId,undefined,firstname,lastname,undefined,null,birthday,email,phone,undefined,town,district,province,null,images,undefined,undefined,undefined,undefined,undefined);
         if(request.files) {
             GoogleDrive.upload(request,response,next).then((data: any) => {
                 if(data.fileId) {
@@ -308,7 +319,7 @@ export class UserRoute extends BaseRoute {
     private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { oldPassword, newPassword } = request.body;
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         user.setUsername = decodeToken.username;
         user.login().then((data: any) => {
@@ -324,7 +335,7 @@ export class UserRoute extends BaseRoute {
                     user.changePassword().then((data$: any) => {
                         response.status(200).json({
                             success: true,
-                            message: 'Thực hiện thành công!'
+                            message: 'Thực hiện thành công, vui lòng đợi hệ thống chuyển sang trang trước.'
                         });
                     }).catch(e => {
                         response.status(200).json({
@@ -338,10 +349,10 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    regiterEmployee = async (request: Request, response: Response, next: NextFunction) => {
+    private regiterEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodeToken: any = Authentication.detoken(token);
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
         const { username, password, firstname, lastname, roles } = request.body;
         user.setUserUUId = uuidv4();
         user.setFirstname = firstname;
@@ -350,6 +361,7 @@ export class UserRoute extends BaseRoute {
         const hash = user.hashPassword(password);
         user.setPassword = hash;
         user.setImages = defaultImage.userImage;
+        user.setCreatedBy = deToken.userUUId;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             const userCreated: any = await user.userServices.models.create(user, {
                 transaction: t
@@ -361,7 +373,7 @@ export class UserRoute extends BaseRoute {
             });
             if(userCreated) {
                 const userRoles: UserRole = new UserRole();
-                userRoles.setUserRoles(null, decodeToken.userId, userCreated.userId, roles);
+                userRoles.setUserRoles(null, deToken.userId, userCreated.userId, roles);
                 const role: any = await userRoles.userRolesServices.models.create(userRoles, {
                     transaction: t
                 }).catch(e => {
@@ -394,9 +406,9 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    getEmployee = async (request: Request, response: Response, next: NextFunction) => {
+    private getEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         user.userServices.models.findAll({
             include: [
@@ -428,12 +440,13 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    getEmplyeeById = async (request: Request, response: Response, next: NextFunction) => {
+    private getEmplyeeById = async (request: Request, response: Response, next: NextFunction) => {
         const { rolesid }: any = request.headers;
+        const user: User = new User();
         this.userRolesServices.models.findOne({
             include: [
                 {
-                    model: this.userServives.models,
+                    model: user.userServices.models,
                     as: ActionAssociateDatabase.USER_ROLES_2_USER
                 }
             ],
@@ -454,20 +467,22 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    insertOnlyRole = async (request: Request, response: Response, next: NextFunction) => {
+    private insertOnlyRole = async (request: Request, response: Response, next: NextFunction) => {
         const userRoles: UserRole = new UserRole();
         const { userId, roles } = request.body;
-        const token: string = request.headers.authorization.split('100%<3')[1];
-        const decodeToken: any = Authentication.detoken(token);
-        userRoles.setBossId = decodeToken.userId;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        userRoles.setBossId = deToken.userId;
         userRoles.setUserId = userId;
         userRoles.setRoles = roles;
-        userRoles.insert().then((res: any) => {
+        userRoles.userRolesServices.models.upsert(userRoles.getFields(userRoles))
+        .then((res: any) => {
             response.status(200).json({
                 success: true,
                 message: 'Phân quyền thành công.'
             });
         }).catch(e => {
+            e;
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thực hiện lại...'
@@ -475,7 +490,7 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    updateEmployee = async (request: Request, response: Response, next: NextFunction) => {
+    private updateEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const userRoles: UserRole = new UserRole();
         const { rolesId, roles, isDeleted } = request.body;
         userRoles.setRolesId = rolesId;
@@ -492,6 +507,113 @@ export class UserRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xảy ra, vui lòng thực hiện lại...'
+            });
+        });
+    }
+
+    private getEmployeesPondRole = async (request: Request, response: Response, next: NextFunction) => {
+        const user: User = new User();
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        user.userServices.models.findAll({
+            include: [
+                {
+                    model: this.pondsServices.models,
+                    through: {
+                        where: {
+                            isDeleted: 0
+                        }
+                    },
+                    as: ActionAssociateDatabase.USER_2_POND_MANY_ROLES,
+                    where: {
+                        userId: deToken.userId
+                    }
+                }
+            ]
+        }).then((res: any) => {
+            if(res.length > 0) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    employees: res
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có nhân viên có quyền quản lý ao.'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getAllPondAndEmployees = async (request: Request, response: Response, next: NextFunction) => {
+        const user: User = new User();
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        user.userServices.models.findOne({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
+                    where: {
+                        roles: 1
+                    },
+                    attributes: ['userId'],
+                    include: [
+                        {
+                            model: user.userServices.models,
+                            as: ActionAssociateDatabase.USER_ROLES_2_USER,
+                            attributes: ['userId', 'userUUId', 'username', 'lastname', 'firstname']
+                        }
+                    ]
+                },
+                {
+                    model: this.pondsServices.models,
+                    as: ActionAssociateDatabase.USER_2_POND
+                }
+            ],
+            where: {
+                userId: deToken.userId
+            },
+            attributes: []
+        }).then((res: any) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                user: res
+            });
+        }).catch(e => {
+            console.log(e);
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getEmployeesWithoutIsDelete = async (request: Request, response: Response, next: NextFunction) => {
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const user: User = new User();
+        user.userServices.models.findAll({
+            where: {
+                createdBy: deToken.userUUId
+            }
+        }).then(employees => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                employees
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
             });
         });
     }

@@ -100,6 +100,7 @@ export class ModelBuilder {
         associations.pondsToPondUserRoles(this.model, pondUserRolesModel);
         associations.pondsToSeasonAndPond(this.model, seasonAndPondModel);
         associations.pondsToUser(this.model, userModel);
+        associations.pondsToUserEmployee(this.model, userModel);
     }
 
     ponduserrolesAssociate(
@@ -219,6 +220,7 @@ export class ModelBuilder {
         associations.userToDistrict(this.model, districtModel);
         associations.userToRolesUser(this.model, rolesUserModel);
         associations.userToPond(this.model, pondsModel);
+        associations.userToPondRolesBelongMany(this.model, pondsModel);
         associations.userToCoupon(this.model, couponModel);
         associations.userToBoughtBreeds(this.model, boughtbreedsModel);
         associations.userToProvince(this.model, provinceModel);

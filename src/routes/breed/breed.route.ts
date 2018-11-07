@@ -50,7 +50,7 @@ export class BreedRoute extends BaseRoute {
     }
 
     addBreed = async (request: Request, response: Response) => {
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         const { boughtBreedId, itemArr } = request.body;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
@@ -398,7 +398,7 @@ export class BreedRoute extends BaseRoute {
     }
 
     getBreed = (request: Request, response: Response) => {
-        const token: string = request.headers.authorization.split('100%<3')[1];
+        const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
         const query: any = {
             where: {

@@ -32,3 +32,18 @@ export function pondsToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
         }
     });
 }
+
+export function pondsToUserEmployee(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsToMany(model, {
+        as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+        through: 'ponduserroles',
+        foreignKey: {
+            name: 'pondId',
+            field: 'pondId'
+        },
+        otherKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}

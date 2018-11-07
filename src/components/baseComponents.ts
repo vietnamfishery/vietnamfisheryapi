@@ -28,11 +28,11 @@ export class BaseComponent {
      * remove null and undefine field, usually use to update action
      * @param obj
      */
-    public getFields(obj: any): string[] {
+    public getFields(obj?: any): string[] {
         const that: any = this;
         const object: any = {};
-        for(const key in obj) {
-            if(that[key] !== null && that[key] !== undefined && that[key] !== '' && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^ge[t].+$/) || that[key] === 0) {
+        for(const key in that) {
+            if(that[key] !== null && that[key] !== undefined && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^ge[t].+$/) || that[key] === 0) {
                 if(that[key] || that[key] === 0) {
                     object[key] = that[key];
                 }
