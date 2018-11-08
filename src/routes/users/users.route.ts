@@ -129,8 +129,7 @@ export class UserRoute extends BaseRoute {
     private login = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { username, password } = request.body;
-        const certsPath = path.join(__dirname, '/../../authKey');
-        const cert = readFileSync(path.join(certsPath, 'jwtRS256.key'));
+        const cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key');
         user.setUsername = username;
         user.setPassword = password;
         user.userServices.models.findOne({

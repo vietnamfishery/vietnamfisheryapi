@@ -3,16 +3,17 @@ import * as dotenv from 'dotenv';
 export default function setEnvironment() {
     if (process.env.NODE_ENV.trim() === 'debug') {
         dotenv.config({
-            path: path.join(__dirname, '../../debug.env')
+            path: process.cwd() + '/debug.env'
         });
+        console.log(process.env.GOOGLE_API_KEY);
     }
     else if (process.env.NODE_ENV.trim() === 'development') {
         dotenv.config({
-            path: path.join(__dirname, '../../.env')
+            path: process.cwd() + '/.env'
         });
     } else if (process.env.NODE_ENV.trim() === 'production') {
         dotenv.config({
-            path: path.join(__dirname, '../../production.env')
+            path: process.cwd() + '/production.env'
         });
     }
 }

@@ -8,10 +8,11 @@
         "start": "npm run api:production",
         "dev": "set NODE_ENV=development && nodemon --exec ts-node ./src/index.ts",
         "prod": "set NODE_ENV=production && nodemon --exec ts-node ./src/index.ts",
+        "deb": "set NODE_ENV=debug && nodemon --exec ts-node ./src/index.ts",
         "build": "webpack --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail && npm run copy-files",
-        "api:production": "npm run build && node ./dist/index",
+        "api:production": "npm run postinstall && node ./dist/index",
         "debug": "ts-node ./src/index.ts",
-        "postinstall": "cross-env NODE_ENV=development && webpack --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail && npm run copy-files",
+        "postinstall": "cross-env NODE_ENV=production && webpack --config ./webpack.config.js  --progress --profile --color --display-error-details --display-cached --bail && npm run copy-files",
         "copy-files": "node copyFiles.js",
         "clean": "npm cache clear && rimraf --dist"
     },

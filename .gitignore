@@ -23,8 +23,9 @@ checkstyle-result.xml
 
 .idea
 .vs
+.vscode
 .env
 debug.env
 production.env
-src/authKey/
-src/certs/
+authKey/
+certs/

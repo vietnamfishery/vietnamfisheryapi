@@ -3,10 +3,10 @@ import * as jwt from 'jsonwebtoken';
 import { secret } from '../common';
 import * as path from 'path';
 import { readFileSync } from 'fs';
-const certsPath = path.join(__dirname, '/../authKey');
+const certsPath = path.join(__dirname, '../../authKey/');
 
 export class Authentication {
-    static cert: Buffer = readFileSync(path.join(certsPath, 'jwtRS256.key.pub'));
+    static cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key.pub');
     constructor() {}
     static isLogin(request: Request, response: Response, next: NextFunction) {
         const token: string = request.headers.authorization ? request.headers.authorization: null;

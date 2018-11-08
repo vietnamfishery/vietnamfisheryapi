@@ -59,16 +59,16 @@ export class ServerExpress {
         // create expressjs application
         this.app = express();
         // create server for socket io
-        const certsPath = path.join(__dirname, 'certs', 'server');
-        const caCertsPath = path.join(__dirname, 'certs', 'ca');
-        const options: any = {
-            key: readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'}),
-            cert: readFileSync(path.join(certsPath, 'my-server.crt.pem'), { encoding: 'utf8'}),
-            ca: readFileSync(path.join(caCertsPath, 'my-root-ca.crt.pem'), { encoding: 'utf8'}),
-            requestCert: false,
-            rejectUnauthorized: false
-        };
-        this.server = createServer(/*options,*/this.app);
+        // const certsPath = path.join(__dirname, 'certs', 'server');
+        // const caCertsPath = path.join(__dirname, 'certs', 'ca');
+        // const options: any = {
+        //     key: readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'}),
+        //     cert: readFileSync(path.join(certsPath, 'my-server.crt.pem'), { encoding: 'utf8'}),
+        //     ca: readFileSync(path.join(caCertsPath, 'my-root-ca.crt.pem'), { encoding: 'utf8'}),
+        //     requestCert: false,
+        //     rejectUnauthorized: false
+        // };
+        this.server = createServer(this.app);
         // this.server = createServer(options,this.app);
         // Add socket server
         this.io = SocketIO(this.server);
