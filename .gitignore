@@ -30,3 +30,4 @@ production.env
 authKey/
 certs/
 key/
+*.zip

@@ -7,7 +7,7 @@ import * as uuidv4 from 'uuid/v4';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
 import { GoogleDrive } from '../../googleAPI/drive.google';
-import { secret, defaultImage } from '../../common';
+import { defaultImage } from '../../common';
 import { Authentication } from '../../helpers/login-helpers';
 import { Sequelize, Transaction } from 'sequelize';
 import DBHelper from '../../helpers/db-helpers';

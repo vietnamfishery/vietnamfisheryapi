@@ -6,8 +6,7 @@
     "node_args": "--harmony",
     "instances": 0,
     "env": {
-      "NODE_ENV": "production",
-      "PORT": 5000
+      "NODE_ENV": "production"
     }
   }
 ]

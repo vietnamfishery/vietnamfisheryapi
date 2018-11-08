@@ -1,5 +1,4 @@
 import { PoolOptions } from 'sequelize';
-import { key } from '../../secretKey/id_rsa';
 
 export const IdDataTypes: any = {
     Integer: 'Integer',
@@ -45,8 +44,6 @@ export enum actionUserServices {
     CHANGEUSERPASSWORD = 'updateUserPassword',
     UPLOAD_IMAGE = 'uploadImage'
 }
-
-export const secret = key;
 
 export enum folderDrive {
     uploadImageVNF = '1zh74DklADISZbcEYVix2nDDKd5wtt0-Z'

@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { secret } from '../common';
 import * as path from 'path';
 import { readFileSync } from 'fs';
 const certsPath = path.join(__dirname, '../../authKey/');
@@ -39,7 +38,7 @@ export class Authentication {
                 message: 'Bạn cần đăng nhập để tiếp tục.'
             });
         } else {
-            jwt.verify(token,secret,(err, data: any) => {
+            jwt.verify(token,Authentication.cert,(err, data: any) => {
                 if(err) {
                     response.status(200).json({
                         success: false,
