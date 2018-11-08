@@ -25,6 +25,7 @@ checkstyle-result.xml
 .vs
 package-lock.json
 .env
-*.env
+debug.env
+production.env
 src/authKey/
 src/certs/
