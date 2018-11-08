@@ -26,5 +26,5 @@ checkstyle-result.xml
 package-lock.json
 .env
 *.env
-src/authKey
-src/certs
+src/authKey/
+src/certs/
