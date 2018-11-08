@@ -8,6 +8,7 @@
         "**/.git": true,
         "**/.hg": true,
         "**/.svn": true,
-        "**/CVS": true
+        "**/CVS": true,
+        ".vscode": false
     }
 }
