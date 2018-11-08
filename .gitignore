@@ -23,7 +23,6 @@ checkstyle-result.xml
 
 .idea
 .vs
-package-lock.json
 .env
 debug.env
 production.env
