@@ -1,8 +1,6 @@
-// config env
-import * as dotenv from 'dotenv';
-if(process.env.NODE_ENV !== 'debug') {
-    dotenv.config();
-}
+import * as path from 'path';
+import setEnvironment from './bin/setEnvironment';
+setEnvironment();
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as createError from 'http-errors';
@@ -16,7 +14,6 @@ import * as helmet from 'helmet';
 import { readFileSync } from 'fs';
 import * as methodOverride from 'method-override';
 import * as morgan from 'morgan';
-import * as path from 'path';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
 // import { createServer, Server } from 'https';

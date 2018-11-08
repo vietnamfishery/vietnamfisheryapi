@@ -25,3 +25,6 @@ checkstyle-result.xml
 .vs
 package-lock.json
 .env
+*.env
+*.key
+*.key.pub

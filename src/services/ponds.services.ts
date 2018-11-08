@@ -26,7 +26,7 @@ export class PondsServices extends BaseServices {
             }).then((pond) => {
                 if(pond) {
                     const pondUserRole: PondUserRole = new PondUserRole();
-                    pondUserRole.setRolesId = entity.userId;
+                    pondUserRole.setUserId = entity.userId;
                     pondUserRole.setPondId = pond.pondId;
                     return pondUserRole.pondUserRolesServices.models.create(pondUserRole);
                 }
@@ -133,49 +133,6 @@ export class PondsServices extends BaseServices {
             });
         });
     }
-
-    // getAll(options: any, criteria: any): Promise<any[]> {
-    //     return new Promise((resolve,reject) => {
-    //         const query: any = {
-    //             include: [
-    //                 {
-    //                     model: this.pondUserRolesServices.models,
-    //                     as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
-    //                     required: true,
-    //                     include: [
-    //                         {
-    //                             model: this.userRolesServices.models,
-    //                             as: ActionAssociateDatabase.POND_USER_ROLE_2_USER_ROLE,
-    //                             include: [
-    //                                 {
-    //                                     model: (this.models as any).sequelize.models.users,
-    //                                     as: ActionAssociateDatabase.USER_ROLES_2_USER,
-    //                                     where: {
-    //                                         userId: 103
-    //                                     }
-    //                                 }
-    //                             ],
-    //                             where: {
-    //                                 [this.Op.or]: [
-    //                                     {
-    //                                         roles: 0
-    //                                     },
-    //                                     {
-    //                                         roles: 1
-    //                                     }
-    //                                 ]
-    //                             }
-    //                         }
-    //                     ]
-    //                 }
-    //             ]
-    //         };
-    //         const query: any = { ...options, where };
-    //         this.models.findAll(query).then(res => {
-    //             resolve(res);
-    //         });
-    //     });
-    // }
 
     getQuery(criteria: any): any {
         return {

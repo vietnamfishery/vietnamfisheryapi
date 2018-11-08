@@ -3,9 +3,9 @@ import { Options, ReplicationOptions } from 'sequelize';
 /**
  * Config port
  */
-const env = process.env.NODE_ENV || environment.development;
+const env = process.env.NODE_ENV.trim() || environment.development;
 
-export const port = env === environment.development ? 3000 : 7979;
+export const port = env === environment.development ? 7979 : 9999;
 
 /**
  * Config database
