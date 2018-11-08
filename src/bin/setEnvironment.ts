@@ -5,7 +5,6 @@ export default function setEnvironment() {
         dotenv.config({
             path: process.cwd() + '/debug.env'
         });
-        console.log(process.env.GOOGLE_API_KEY);
     }
     else if (process.env.NODE_ENV.trim() === 'development') {
         dotenv.config({

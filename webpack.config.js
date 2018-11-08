@@ -3,10 +3,6 @@ const path = require('path');
 const env = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : 'development';
 const isProd = env === 'production';
 
-console.log(`##########################################################################`);
-console.log(isProd);
-console.log(`##########################################################################`);
-
 const fs = require('fs');
 
 const externals = {};

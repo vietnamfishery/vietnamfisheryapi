@@ -45,6 +45,7 @@ export class UserRoleRoute extends BaseRoute {
         this.router.get('/get/:roleId', Authentication.isLogin, this.getRoleMyEmployee);
         this.router.put('/delete', Authentication.isLogin, this.deleteRoles);
         this.router.put('/upsert', Authentication.isLogin, this.upsertRoles);
+        this.router.put('/change', Authentication.isLogin, this.changeRoles);
     }
 
     /**
@@ -57,13 +58,13 @@ export class UserRoleRoute extends BaseRoute {
     private getAllMyEmplyee = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const userRole: UserRole = new  UserRole();
+        const userRole: UserRole = new UserRole();
         userRole.userRolesServices.models.findAll({
             where: {
                 bossId: deToken.userId
             }
         }).then((employees: UserRole[]) => {
-            if(employees.length === 0) {
+            if (employees.length === 0) {
                 response.status(200).json({
                     success: false,
                     message: 'Bạn chưa có nhân viên nào, hãy hãy thêm nhân viên và trở lại sau.'
@@ -97,7 +98,7 @@ export class UserRoleRoute extends BaseRoute {
         const { roleId } = request.params;
         userRole.userRolesServices.getById(roleId)
             .then((role: UserRole) => {
-                if(role) {
+                if (role) {
                     response.status(200).json({
                         success: true,
                         message: '',
@@ -138,13 +139,13 @@ export class UserRoleRoute extends BaseRoute {
                     model: userRole.userRolesServices.models,
                     as: ActionAssociateDatabase.USER_2_ROLE_USER,
                     where: {
-                        bossId : deToken.userId,
+                        bossId: deToken.userId,
                         roles: 1
                     }
                 }
             ]
         }).then((employees: any) => {
-            if(employees.length > 0) {
+            if (employees.length > 0) {
                 response.status(200).json({
                     success: true,
                     message: '',
@@ -195,7 +196,7 @@ export class UserRoleRoute extends BaseRoute {
         userRole.setUserId = userId;
         userRole.setRoles = roles;
         userRole.setIsDeleted = isDeleted;
-        userRole.userRolesServices.models.upsert(userRole.getFields(),{
+        userRole.userRolesServices.models.upsert(userRole.getFields(), {
             fields: ['roles', 'isDeleted'],
             returning: true
         }).then((res: any) => {
@@ -207,6 +208,52 @@ export class UserRoleRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private changeRoles = async (request: Request, response: Response, next: NextFunction) => {
+        const { rolesId, userId, roles, isDeleted } = request.body;
+        let userRole: UserRole = new UserRole();
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
+            userRole = new UserRole();
+            userRole.setRolesId = rolesId;
+            userRole.setIsDeleted = 1;
+            userRole.userRolesServices.models.upsert(userRole.getFields(), {
+                fields: ['roles', 'isDeleted'],
+                returning: true,
+                transaction: t
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau!'
+                });
+                t.rollback();
+            }).then(async (result: any) => {
+                const token: string = request.headers.authorization;
+                const deToken: any = Authentication.detoken(token);
+                userRole = new UserRole();
+                userRole.setBossId = deToken.userId;
+                userRole.setUserId = userId;
+                userRole.setRoles = roles;
+                userRole.setIsDeleted = 0;
+                userRole.userRolesServices.models.upsert(userRole.getFields(), {
+                    fields: ['roles', 'isDeleted'],
+                    returning: true,
+                    transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau!'
+                    });
+                    t.rollback();
+                }).then(async (res: any) => {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Thực hiện thành công.'
+                    });
+                    t.commit();
+                });
             });
         });
     }
