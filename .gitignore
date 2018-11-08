@@ -23,7 +23,7 @@ checkstyle-result.xml
 
 .idea
 .vs
-.vscode
+.vscode/launch.json
 .env
 debug.env
 production.env
