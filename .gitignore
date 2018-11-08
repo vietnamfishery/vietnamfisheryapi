@@ -26,5 +26,5 @@ checkstyle-result.xml
 package-lock.json
 .env
 *.env
-*.key
-*.key.pub
+./*/*.key
+./*/*.key.pub
