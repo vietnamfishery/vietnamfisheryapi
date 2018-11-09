@@ -11,8 +11,6 @@ export function seasonToBoughtBreed(thatmodel: Sequeliz.Model<{}, any>, model: S
     });
 }
 
-//
-
 export function seasonToPrice(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_2_PRICE,
@@ -43,4 +41,17 @@ export function seasonToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
     });
 }
 
-//
+export function seasonToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsToMany(model, {
+        as: ActionAssociateDatabase.SEASON_2_POND,
+        through: 'seasonsandpond',
+        foreignKey: {
+            name: 'seasonId',
+            field: 'seasonId'
+        },
+        otherKey: {
+            name: 'pondId',
+            field: 'pondId'
+        }
+    });
+}

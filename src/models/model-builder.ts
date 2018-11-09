@@ -96,11 +96,12 @@ export class ModelBuilder {
         associations.pondpreparedetailsToPondPrepare(this.model, pondPrepareModel);
     }
 
-    pondsAssociate(pondUserRolesModel: any, seasonAndPondModel: any, userModel: any,) {
+    pondsAssociate(pondUserRolesModel: any, seasonAndPondModel: any, userModel: any, seasonModel: any) {
         associations.pondsToPondUserRoles(this.model, pondUserRolesModel);
         associations.pondsToSeasonAndPond(this.model, seasonAndPondModel);
         associations.pondsToUser(this.model, userModel);
         associations.pondsToUserEmployee(this.model, userModel);
+        associations.pondToSeason(this.model, seasonModel);
     }
 
     ponduserrolesAssociate(
@@ -123,12 +124,14 @@ export class ModelBuilder {
         boughtBreedModel: any,
         priceModel: any,
         userModel: any,
-        seasonAndPondModel: any
+        seasonAndPondModel: any,
+        pondsModel: any
     ) {
         associations.seasonToBoughtBreed(this.model, boughtBreedModel);
         associations.seasonToPrice(this.model, priceModel);
         associations.seasonToUser(this.model, userModel);
         associations.seasonToSNP(this.model, seasonAndPondModel);
+        associations.seasonToPond(this.model, pondsModel);
     }
 
     seasonAndPondAssociate(

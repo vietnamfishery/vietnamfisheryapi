@@ -58,30 +58,42 @@ export class StorageRoute extends BaseRoute {
      */
     private addStorage = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
-        const decodeToken: any = Authentication.detoken(token);
+        const deToken: any = Authentication.detoken(token);
         const { couponId, itemArr } = request.body;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             let boss: any = await this.storegeOwnwerServices.models.findOne({
                 where: {
-                    userId: decodeToken.userId
+                    userId: deToken.userId
                 },
                 transaction: t
             });
             // Là chủ và phiên nhập mới
             if (boss && !couponId) {
                 const coupon: Coupon = new Coupon();
-                coupon.setUserId = decodeToken.userId;
+                coupon.setUserId = deToken.userId;
                 const cp: any = await coupon.couponServives.models.create(coupon, {
                     transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                    });
+                    t.rollback();
                 });
                 if (cp) {
                     const result: any[] = [];
                     for (const item of itemArr) {
                         const storage: Storage = new Storage();
-                        if (typeof item.product === 'string') {
+                        if (typeof item.product === 'string')/* Là vật phẩm mới */ {
                             storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
                             const sto: any = await storage.storegeServices.models.create(storage, {
                                 transaction: t
+                            }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
+                                t.rollback();
                             });
                             if (sto) {
                                 const material: Material = new Material();
@@ -100,7 +112,7 @@ export class StorageRoute extends BaseRoute {
                                     result.push(mat);
                                 }
                             }
-                        } else {
+                        } else/** Vật phẩm cũ */ {
                             const sUpdate: any = await storage.storegeServices.models.update({
                                 quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
                             }, {
@@ -112,15 +124,21 @@ export class StorageRoute extends BaseRoute {
                             if (sUpdate.length > 0) {
                                 const material: Material = new Material();
                                 material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat = await material.materialServives.models.create(material, { transaction: t });
+                                const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                    });
+                                    t.rollback();
+                                });
                                 result.push(mat);
                             } else {
-                                t.rollback();
                                 response.status(200).json({
                                     success: false,
                                     message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
                                     couponId: cp.couponId
                                 });
+                                t.rollback();
                             }
                         }
                     }
@@ -140,7 +158,7 @@ export class StorageRoute extends BaseRoute {
                     }
                 }
             }
-            // Là chủ và phiên nhập củ
+            // Là chủ và phiên nhập cũ
             else if (boss && couponId) {
                 const result: any[] = [];
                 for (const item of itemArr) {
@@ -149,6 +167,12 @@ export class StorageRoute extends BaseRoute {
                         storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
                         const sto: any = await storage.storegeServices.models.create(storage, {
                             transaction: t
+                        }).catch(e => {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                            });
+                            t.rollback();
                         });
                         if (sto) {
                             const material: Material = new Material();
@@ -175,11 +199,23 @@ export class StorageRoute extends BaseRoute {
                                     storageId: item.product.storageId
                                 },
                                 transaction: t
+                            }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
+                                t.rollback();
                             });
                         if (sUpdate.length > 0) {
                             const material: Material = new Material();
                             material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                            const mat = await material.materialServives.models.create(material, { transaction: t });
+                            const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
+                                t.rollback();
+                            });
                             result.push(mat);
                         } else {
                             response.status(200).json({
@@ -210,7 +246,7 @@ export class StorageRoute extends BaseRoute {
             else if (!boss && !couponId) {
                 boss = await this.userRolesServices.models.findOne({
                     where: {
-                        userId: decodeToken.userId,
+                        userId: deToken.userId,
                         [this.userRolesServices.Op.and]: {
                             roles: 2
                         }
@@ -228,12 +264,24 @@ export class StorageRoute extends BaseRoute {
                         }
                     ],
                     transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                    });
+                    t.rollback();
                 });
                 if (boss) {
                     const coupon: Coupon = new Coupon();
-                    coupon.setUserId = decodeToken.userId;
+                    coupon.setUserId = deToken.userId;
                     const cp: any = await coupon.couponServives.models.create(coupon, {
                         transaction: t
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                        });
+                        t.rollback();
                     });
                     if (cp) {
                         const result: any[] = [];
@@ -243,6 +291,12 @@ export class StorageRoute extends BaseRoute {
                                 storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
                                 const sto: any = await storage.storegeServices.models.create(storage, {
                                     transaction: t
+                                }).catch(e => {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                    });
+                                    t.rollback();
                                 });
                                 if (sto) {
                                     const material: Material = new Material();
@@ -269,11 +323,23 @@ export class StorageRoute extends BaseRoute {
                                             storageId: item.product.storageId
                                         },
                                         transaction: t
+                                    }).catch(e => {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                        });
+                                        t.rollback();
                                     });
                                 if (sUpdate.length > 0) {
                                     const material: Material = new Material();
                                     material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                    const mat = await material.materialServives.models.create(material, { transaction: t });
+                                    const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                        });
+                                        t.rollback();
+                                    });
                                     result.push(mat);
                                 } else {
                                     t.rollback();
@@ -311,7 +377,7 @@ export class StorageRoute extends BaseRoute {
             else if (!boss && couponId) {
                 boss = await this.userRolesServices.models.findOne({
                     where: {
-                        userId: decodeToken.userId,
+                        userId: deToken.userId,
                         [this.userRolesServices.Op.and]: {
                             roles: 2
                         }
@@ -329,6 +395,12 @@ export class StorageRoute extends BaseRoute {
                         }
                     ],
                     transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                    });
+                    t.rollback();
                 });
                 if (boss) {
                     const result: any[] = [];
@@ -338,6 +410,12 @@ export class StorageRoute extends BaseRoute {
                             storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
                             const sto: any = await storage.storegeServices.models.create(storage, {
                                 transaction: t
+                            }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
+                                t.rollback();
                             });
                             if (sto) {
                                 const material: Material = new Material();
@@ -364,11 +442,23 @@ export class StorageRoute extends BaseRoute {
                                         storageId: item.product.storageId
                                     },
                                     transaction: t
+                                }).catch(e => {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                    });
+                                    t.rollback();
                                 });
                             if (sUpdate.length > 0) {
                                 const material: Material = new Material();
                                 material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat = await material.materialServives.models.create(material, { transaction: t });
+                                const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                    });
+                                    t.rollback();
+                                });
                                 result.push(mat);
                             } else {
                                 response.status(200).json({
@@ -406,15 +496,15 @@ export class StorageRoute extends BaseRoute {
 
     private getStorages = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
-        const decodeToken: any = Authentication.detoken(token);
-        const query: any = {
+        const deToken: any = Authentication.detoken(token);
+        this.userRolesServices.models.findOne(({
             where: {
                 [this.userRolesServices.Op.or]: [
                     {
-                        userId: decodeToken.userId
+                        userId: deToken.userId
                     },
                     {
-                        bossId: decodeToken.userId
+                        bossId: deToken.userId
                     }
                 ]
             },
@@ -438,12 +528,11 @@ export class StorageRoute extends BaseRoute {
                     ]
                 }
             ]
-        };
-        this.userRolesServices.models.findOne(query).then((s: any) => {
+        } as any)).then((s: any) => {
             response.status(200).json({
                 success: true,
                 message: '',
-                storages: s.boss.user.storages
+                storages: s.employees.user.storages
             });
         }).catch(e => {
             response.status(200).json({

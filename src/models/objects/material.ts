@@ -39,7 +39,7 @@ export const materialOptions: any = _.merge({
             // field: 'providerAddress'
         },
         quantity: {
-            type: Sequelize.FLOAT,
+            type: Sequelize.DOUBLE,
             // field: 'quantity'
         },
         unit: {

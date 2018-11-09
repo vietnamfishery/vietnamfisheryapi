@@ -130,7 +130,7 @@ export enum ActionAssociateDatabase {
     POND_PREPARE_DETAIL_2_COST = 'detailCost',
     //
     POND_2_POND_USER_ROLE = 'pondUserRoles', // ok
-    POND_2_SEASON = 'pondsToSeason',
+    POND_2_SEASON = 'seasons',
     POND_2_USER = 'user', // ok
     POND_2_EMPLOYEE = 'users',
     POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
@@ -158,6 +158,7 @@ export enum ActionAssociateDatabase {
     SEASON_2_PRICE = 'price',
     //
     SEASON_2_USER = 'seasons',
+    SEASON_2_POND = 'ponds',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
     SEASON_2_STORAGE = 'storage',
     //

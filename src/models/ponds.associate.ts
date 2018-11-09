@@ -11,8 +11,6 @@ export function pondsToPondUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
-//
-
 export function pondsToSeasonAndPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
@@ -44,6 +42,21 @@ export function pondsToUserEmployee(thatmodel: Sequeliz.Model<{}, any>, model: S
         otherKey: {
             name: 'userId',
             field: 'userId'
+        }
+    });
+}
+
+export function pondToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsToMany(model, {
+        as: ActionAssociateDatabase.POND_2_SEASON,
+        through: 'seasonsandpond',
+        foreignKey: {
+            name: 'pondId',
+            field: 'pondId'
+        },
+        otherKey: {
+            name: 'seasonId',
+            field: 'seasonId'
         }
     });
 }

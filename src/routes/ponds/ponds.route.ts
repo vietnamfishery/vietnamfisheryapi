@@ -46,6 +46,7 @@ export class PondRoute extends BaseRoute {
         this.router.get('/gets', Authentication.isLogin, this.getPonds);
         this.router.get('/gets/withRoles', Authentication.isLogin, this.getPondWithRoles);
         this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages);
+        this.router.get('/gets/', Authentication.isLogin, this.getPondWithoutImages);
         this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByUUId);
         this.router.put('/update', Authentication.isLogin, this.updatePond);
         this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles);

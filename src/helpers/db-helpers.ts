@@ -227,7 +227,8 @@ export default class DBHelper {
         modelBuilder.pondsAssociate(
             this.models[`ponduserrolesOptions`],
             this.models[`seasonAndPondOptions`],
-            this.models[`userOptions`]
+            this.models[`userOptions`],
+            this.models[`seasonOptions`]
         );
         return md;
     }
@@ -337,7 +338,8 @@ export default class DBHelper {
             this.models[`boughtbreedOptions`],
             this.models[`pricesOptions`],
             this.models[`userOptions`],
-            this.models[`seasonAndPondOptions`]
+            this.models[`seasonAndPondOptions`],
+            this.models[`pondOptions`]
         );
         return md;
     }
