@@ -497,6 +497,7 @@ export class StorageRoute extends BaseRoute {
     private getStorages = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
+        const { type } = request.headers;
         this.userRolesServices.models.findOne(({
             where: {
                 [this.userRolesServices.Op.or]: [
@@ -521,7 +522,10 @@ export class StorageRoute extends BaseRoute {
                             include: [
                                 {
                                     model: this.storegeServices.models,
-                                    as: ActionAssociateDatabase.OWNER_TO_STORAGE
+                                    as: ActionAssociateDatabase.OWNER_TO_STORAGE,
+                                    where: {
+                                        type: (type as any) - 0
+                                    }
                                 }
                             ]
                         }

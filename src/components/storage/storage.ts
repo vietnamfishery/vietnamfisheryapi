@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
-import { StoregeServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
+import { StoregeServices } from '../../services';
 
 export class Storage extends BaseComponent {
     public storegeServices: StoregeServices;
