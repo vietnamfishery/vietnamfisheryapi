@@ -47,3 +47,6 @@
 46. Cập nhật giá - thu chi                                  [☄]
 47. Chat                                                    [☄]
 48. Đồ thị realtime                                         [☄]
+49. Hiển thị thông tin xử lý chất thải                      [☄]
+49. Thêm thông tin xử lý chất thải                          [☄]
+49. Cập nhật thông tin xử lý chất thải                      [☄]
