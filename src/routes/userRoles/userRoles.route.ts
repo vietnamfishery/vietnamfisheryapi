@@ -4,8 +4,7 @@ import { BaseRoute } from '../BaseRoute';
 import { Authentication } from '../../helpers/login-helpers';
 import { UserRole } from '../../components';
 import { ActionAssociateDatabase } from '../../common';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @api {get} /user/roles UserRoles Request customer object
@@ -18,7 +17,6 @@ export class UserRoleRoute extends BaseRoute {
     public static path = '/user/roles';
     private static instance: UserRoleRoute;
     private userServives: UserServives = new UserServives();
-    private sequeliz: Sequelize = DBHelper.sequelize;
     /**
      * @class UserRoleRoute
      * @constructor

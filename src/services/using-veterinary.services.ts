@@ -6,7 +6,7 @@ export class UsingVeterinaryServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = usingveterinaryOptions;
     constructor() {
         super(UsingVeterinaryServices.optionsModel);
-        this.models = this.conn.usingveterinaryModel;
+        this.models = this.conn.usingVeterinaryModel;
 
     }
 }

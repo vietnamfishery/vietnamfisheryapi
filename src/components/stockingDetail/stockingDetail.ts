@@ -51,8 +51,8 @@ export class StockingDetail extends BaseComponent {
         breedId: number,
         stockingId: number,
         stockingQuantity: number,
-        phFirst: number,
-        salinityFirst: number,
+        phFirst?: number,
+        salinityFirst?: number,
         isDeleted?: number
     ) {
         this.setStockingDetailUUId = stockingDetailUUId;

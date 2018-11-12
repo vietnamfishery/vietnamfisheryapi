@@ -12,7 +12,6 @@ export class BoughtBreedDetail extends BaseComponent {
     private quantity: number;
     private unit: number;
     private unitPrice: number;
-    private loopOfBreed: number;
     private soldAddress: string;
     private testingAgency: string;
     private descriptions: string;
@@ -49,10 +48,6 @@ export class BoughtBreedDetail extends BaseComponent {
 
     public set setUnitPrice(unitPrice) {
         this.unitPrice = unitPrice;
-    }
-
-    public set setLoopOfBreed(loopOfBreed) {
-        this.loopOfBreed = loopOfBreed;
     }
 
     public set setSoldAddress(soldAddress) {
@@ -92,7 +87,6 @@ export class BoughtBreedDetail extends BaseComponent {
         this.setQuantity = quantity;
         this.setUnit = unit;
         this.setUnitPrice = unitPrice;
-        this.setLoopOfBreed = loopOfBreed;
         this.setSoldAddress = soldAddress;
         this.setTestingAgency = testingAgency;
         this.setDescriptions = descriptions;
@@ -125,10 +119,6 @@ export class BoughtBreedDetail extends BaseComponent {
 
     public get getUnitPrice(): number {
         return this.unitPrice;
-    }
-
-    public get getLoopOfBreed(): number {
-        return this.loopOfBreed;
     }
 
     public get getSoldAddress(): string {

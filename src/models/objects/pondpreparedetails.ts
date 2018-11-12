@@ -12,27 +12,23 @@ export const pondpreparedetailOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            // field: 'pondPrepareDetailId'
         },
         pondPrepareDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             allowNull: false,
-            // field: 'pondPrepareDetailUUId'
         },
-        materialId: {
+        storageId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'materialId'
         },
         pondPrepareId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'pondPrepareId'
         },
         quantity: {
             type: Sequelize.FLOAT,
-            // field: 'quantity'
+            allowNull: false,
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -40,13 +36,11 @@ export const pondpreparedetailOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
-            // field: 'isDeleted'
         }
     },
     options: {

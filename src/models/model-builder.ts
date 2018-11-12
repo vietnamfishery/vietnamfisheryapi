@@ -91,8 +91,8 @@ export class ModelBuilder {
         associations.pondprepareToSeasonAndPond(this.model, seasonAndPondModel);
     }
 
-    pondpreparedetailsAssociate(pondPrepareModel: any, materialModel: any) {
-        associations.pondpreparedetailsToMaterial(this.model, materialModel);
+    pondpreparedetailsAssociate(pondPrepareModel: any, storageModel: any) {
+        associations.pondpreparedetailsToStorage(this.model, storageModel);
         associations.pondpreparedetailsToPondPrepare(this.model, pondPrepareModel);
     }
 
@@ -170,15 +170,21 @@ export class ModelBuilder {
 
     storagesAssociate(
         materialsModel: any,
-        storageOwnerModel: any
+        storageOwnerModel: any,
+        pondPrepareDetailModel: any,
+        usingFoodModel: any,
+        usingveterinaryModel: any
     ) {
         associations.storagesToMaterial(this.model, materialsModel);
         associations.storagesToOwner(this.model, storageOwnerModel);
+        associations.storagesToPondPrePareDetail(this.model, pondPrepareDetailModel);
+        associations.storagesToUsingFood(this.model, usingFoodModel);
+        associations.storagesToUsingVeterinary(this.model, usingveterinaryModel);
     }
 
     storageOwnerAssociate(
         storageModel: any,
-        userModel: any
+        userModel: any,
     ) {
         associations.ownerToStorage(this.model, storageModel);
         associations.ownerToUser(this.model, userModel);
@@ -235,13 +241,13 @@ export class ModelBuilder {
         associations.userToPondUserRoles(this.model, pondUserRolesModel);
     }
 
-    usingfoodsAssociate(materialModel: any, takecareModel: any) {
-        associations.usingfoodsToMaterial(this.model, materialModel);
+    usingfoodsAssociate(storageModel: any, takecareModel: any) {
+        associations.usingfoodsToStorage(this.model, storageModel);
         associations.usingfoodsToTakecare(this.model, takecareModel);
     }
 
-    usingveterinaryAssociate(materialModel: any, takecareModel: any) {
-        associations.usingveterinaryToMaterial(this.model, materialModel);
+    usingveterinaryAssociate(storageModel: any, takecareModel: any) {
+        associations.usingveterinaryToStorage(this.model, storageModel);
         associations.usingveterinaryToTakecare(this.model, takecareModel);
     }
 

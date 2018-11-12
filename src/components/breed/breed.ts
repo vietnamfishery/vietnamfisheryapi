@@ -10,6 +10,9 @@ export class Breed extends BaseComponent {
     private ownerId: number;
     private breedName: string;
     private totalQuantity: number;
+    private loopOfBreed: number;
+    private unit: number;
+    private tips: string;
     private createdDate: Date;
     private isDeleted: number;
     constructor() {
@@ -37,6 +40,19 @@ export class Breed extends BaseComponent {
     public set setTotalQuantity(totalQuantity) {
         this.totalQuantity = totalQuantity;
     }
+
+    public set setUnit(unit) {
+        this.unit = unit;
+    }
+
+    public set setLoopOfBreed(loopOfBreed) {
+        this.loopOfBreed = loopOfBreed;
+    }
+
+    public set setTips(tips) {
+        this.tips = tips;
+    }
+
     public set setCreatedDate(createdDate) {
         this.createdDate = createdDate;
     }
@@ -51,6 +67,9 @@ export class Breed extends BaseComponent {
         ownerId: number,
         breedName: string,
         totalQuantity: number,
+        unit: number,
+        loopOfBreed: number,
+        tips?: string,
         createdDate?: Date,
         isDeleted?: number
     ) {
@@ -59,6 +78,9 @@ export class Breed extends BaseComponent {
         this.setOwnerId = ownerId;
         this.setBreedName = breedName;
         this.setTotalQuantity = totalQuantity;
+        this.setUnit = unit;
+        this.setLoopOfBreed = loopOfBreed;
+        this.setTips = tips;
         this.setCreatedDate = createdDate;
         this.setIsDeleted = isDeleted;
     }
@@ -82,9 +104,23 @@ export class Breed extends BaseComponent {
     public get getTotalQuantity(): number {
         return this.totalQuantity;
     }
+
+    public get getUnit(): number {
+        return this.unit;
+    }
+
+    public get getLoopOfBreed(): number {
+        return this.loopOfBreed;
+    }
+
+    public get getTips(): string {
+        return this.tips;
+    }
+
     public get getCreatedDate(): Date {
         return this.createdDate;
     }
+
     public get getIsDeleted(): number {
         return this.isDeleted;
     }

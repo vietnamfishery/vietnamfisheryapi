@@ -1,18 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices } from '../../services';
+import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User, UserRole, OwnerBreed, OwnerStorage } from '../../components';
-import { ActionAssociateDatabase, actionUserServices } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Enscrypts } from '../../lib';
 import * as jwt from 'jsonwebtoken';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { defaultImage } from '../../common';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 import { readFileSync } from 'fs';
-import * as path from 'path';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -24,12 +22,13 @@ import * as path from 'path';
 export class UserRoute extends BaseRoute {
     public static path = '/user';
     private static instance: UserRoute;
-    private sequeliz: Sequelize = DBHelper.sequelize;
+    private cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key');
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private provinceServices: ProvinceServices = new ProvinceServices();
     private districtServives: DistrictServives = new DistrictServives();
     private wardServices: WardServices = new WardServices();
     private pondsServices: PondsServices = new PondsServices();
+    private seasonServices: SeasonServices = new SeasonServices();
     /**
      * @class UserRoute
      * @constructor
@@ -129,7 +128,6 @@ export class UserRoute extends BaseRoute {
     private login = (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { username, password } = request.body;
-        const cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key');
         user.setUsername = username;
         user.setPassword = password;
         user.userServices.models.findOne({
@@ -156,7 +154,7 @@ export class UserRoute extends BaseRoute {
                     if(isMatch) {
                         delete u.dataValues.password;
                         const content: any = u.dataValues;
-                        const token: any = jwt.sign(content, cert, {
+                        const token: any = jwt.sign(content, this.cert, {
                             algorithm: 'RS512'
                         });
                         response.json({

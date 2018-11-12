@@ -11,37 +11,32 @@ export const harvestOptions: any = _.merge({
         harvestId: {
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            // field: 'harvestId'
+            primaryKey: true
         },
         harvestUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            allowNull: false,
-            // field: 'harvestUUId'
+            allowNull: false
         },
         seasonAndPondId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'seasonAndPondId'
+            allowNull: false
         },
         harvestName: {
             type: Sequelize.STRING(50),
-            // field: 'harvestName'
+            allowNull: true
         },
         createdDate: {
             type: Sequelize.DATE,
             allowNull: true,
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
-            },
-            // field: 'createdDate'
+            }
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            // field: 'isDeleted'
         }
     },
     options: {

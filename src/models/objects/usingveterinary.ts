@@ -11,73 +11,59 @@ export const usingveterinaryOptions: any = _.merge({
         usingVeterinaryId: {
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            // field: 'usingVeterinaryId'
+            primaryKey: true
         },
         usingVeterinaryUUId: {
             type: Sequelize.STRING(36),
             allowNull: false,
-            unique: true,
-            // field: 'usingVeterinaryUUId'
+            unique: true
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'takeCareId'
+            allowNull: false
         },
-        materialId: {
+        storageId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'materialId'
+            allowNull: false
         },
         causesNSymptoms: {
-            type: Sequelize.STRING,
-            // field: 'causesNSymptoms'
+            type: Sequelize.STRING
         },
         averageSize: {
-            type: Sequelize.FLOAT,
-            // field: 'averageSize'
+            type: Sequelize.FLOAT
         },
         totalBiomass: {
-            type: Sequelize.FLOAT,
-            // field: 'totalBiomass'
+            type: Sequelize.FLOAT
         },
         quantity: {
-            type: Sequelize.FLOAT,
-            // field: 'quantity'
+            type: Sequelize.FLOAT
         },
         result: {
             type: Sequelize.STRING(100),
-            // field: 'result'
         },
         latestHarvestDate: {
             type: Sequelize.INTEGER(11),
-            allowNull: true,
-            // field: 'latestHarvestDate'
+            allowNull: true
         },
         mentor: {
             type: Sequelize.STRING(50),
-            allowNull: true,
-            // field: 'mentor'
+            allowNull: true
         },
         createdBy: {
             type: Sequelize.STRING(36),
-            allowNull: true,
-            // field: 'createdBy'
+            allowNull: true
         },
         createdDate: {
             type: Sequelize.DATE,
             allowNull: true,
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
-            },
-            // field: 'createdDate'
+            }
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
-            // field: 'isDeleted'
         }
     },
     options: {

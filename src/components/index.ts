@@ -14,7 +14,7 @@ export * from './pondEnvironment';
 export * from './pondUserRole';
 export * from './pondDiary';
 export * from './pondPrepare';
-export * from './pondPrepareDetail';
+export * from './pondPrepareDetails';
 export * from './pond';
 export * from './price';
 export * from './province';

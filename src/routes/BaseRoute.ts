@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { Sequelize } from 'sequelize';
+import DBHelper from '../helpers/db-helpers';
 
 export abstract class BaseRoute {
     /**
@@ -9,6 +11,7 @@ export abstract class BaseRoute {
      */
     public static path = '/api';
     protected router = Router();
+    protected sequeliz: Sequelize = DBHelper.sequelize;
 
     constructor () {}
 

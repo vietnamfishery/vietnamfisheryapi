@@ -217,7 +217,8 @@ export default class DBHelper {
     public get pondpreparedetailsModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.pondpreparedetailsAssociate(this.models[`pondprepareOptions`], this.models[`materialOptions`]);
+        modelBuilder.pondpreparedetailsAssociate(this.models[`pondprepareOptions`],
+        this.models[`storagesOptions`]);
         return md;
     }
 
@@ -260,11 +261,11 @@ export default class DBHelper {
         return md;
     }
 
-    public get usingveterinaryModel () {
+    public get usingVeterinaryModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.usingveterinaryAssociate(
-            this.models[`materialOptions`],
+            this.models[`storagesOptions`],
             this.models[`takecareOptions`]
         );
         return md;
@@ -274,7 +275,7 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.usingfoodsAssociate(
-            this.models[`materialOptions`],
+            this.models[`storagesOptions`],
             this.models[`takecareOptions`]
         );
         return md;
@@ -296,7 +297,10 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.storagesAssociate(
             this.models[`materialOptions`],
-            this.models[`storageOwnerOptions`]
+            this.models[`storageOwnerOptions`],
+            this.models[`pondpreparedetailOptions`],
+            this.models[`usingfoodOptions`],
+            this.models[`usingveterinaryOptions`]
         );
         return md;
     }

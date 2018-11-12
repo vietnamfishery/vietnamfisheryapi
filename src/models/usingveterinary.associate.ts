@@ -1,12 +1,12 @@
 import * as Sequeliz from 'sequelize';
 import { ActionAssociateDatabase } from '../common';
 
-export function usingveterinaryToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+export function usingveterinaryToStorage(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
-        as: ActionAssociateDatabase.USING_VETERINARY_2_MATERIAL,
+        as: ActionAssociateDatabase.USING_VETERINARY_2_STORAGE,
         foreignKey: {
-            name: 'materialId',
-            field: 'materialId'
+            name: 'storageId',
+            field: 'storageId'
         }
     });
 }

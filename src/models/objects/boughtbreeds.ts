@@ -12,28 +12,23 @@ export const boughtbreedOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            // field: 'boughtBreedId'
         },
         boughtBreedUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             allowNull: false,
-            // field: 'boughtBreedUUId'
         },
         userId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'userId',
         },
         seasonId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'seasonId',
         },
         createdBy: {
             type: Sequelize.STRING(36),
             allowNull: true,
-            // field: 'createdBy'
         },
         createdDate: {
             type: Sequelize.DATE,
@@ -41,13 +36,11 @@ export const boughtbreedOptions: any = _.merge({
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
             },
-            // field: 'createdDate'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             allowNull: true,
             defaultValue: 0,
-            // field: 'isDeleted'
         }
     },
     options: {

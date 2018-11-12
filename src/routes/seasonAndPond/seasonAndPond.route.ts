@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, SeasonAndPondServices, SeasonServices, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { SeasonsAndPond } from '../../components';
+import { ActionAssociateDatabase } from '../../common';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -12,6 +13,9 @@ import { SeasonsAndPond } from '../../components';
 export class SeasonAndPondRoute extends BaseRoute {
     public static path = '/seasonAndPond';
     private static instance: SeasonAndPondRoute;
+    private seasonServices: SeasonServices = new SeasonServices();
+    private pondsServices: PondsServices = new PondsServices();
+    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     /**
      * @class SeasonAndPondRoute
      * @constructor
@@ -32,6 +36,8 @@ export class SeasonAndPondRoute extends BaseRoute {
         logger.info('[SeasonAndPondRoute] Creating ping route.');
         this.router.post('/add', this.addSeasonAndPond);
         this.router.put('/update', this.updateSeasonAndPond);
+        this.router.get('/count/pondWithSeason', this.countPondWithSeason);
+        this.router.get('/count/seasonWithPond', this.countSeasonOfPond);
     }
 
     /**
@@ -81,6 +87,70 @@ export class SeasonAndPondRoute extends BaseRoute {
                     message: 'Phân quyền thành công.'
                 });
             }
+        });
+    }
+
+    /**
+     * đếm số ao theo vụ
+     */
+    private countPondWithSeason = (request: Request, response: Response, next: NextFunction) => {
+        const { ownerid, seasonid } = request.headers;
+        this.seasonAndPondServices.models.findAndCountAll({
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                    where: {
+                        userId: ownerid
+                    }
+                }
+            ],
+            where: {
+                seasonId: seasonid
+            }
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                result: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    /**
+     * Đếm số vụ của ao
+     */
+    private countSeasonOfPond = (request: Request, response: Response, next: NextFunction) => {
+        const { ownerid, pondid } = request.headers;
+        this.seasonAndPondServices.models.findAndCountAll({
+            include: [
+                {
+                    model: this.pondsServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+                    where: {
+                        userId: ownerid
+                    }
+                }
+            ],
+            where: {
+                pondId: pondid
+            }
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                result: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
         });
     }
 }

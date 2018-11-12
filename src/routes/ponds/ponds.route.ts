@@ -1,13 +1,12 @@
-import { Pond, PondUserRole } from '../../components';
+import { Pond } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserServives, UserRolesServices, PondUserRolesServices, PondsServices } from '../../services';
+import { logger, UserServives, UserRolesServices, PondUserRolesServices, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { defaultImage, ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -19,11 +18,10 @@ import DBHelper from '../../helpers/db-helpers';
 export class PondRoute extends BaseRoute {
     public static path = '/ponds';
     private static instance: PondRoute;
-    private sequeliz: Sequelize = DBHelper.sequelize;
     private userServives: UserServives = new UserServives();
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
-    private pondsServices: PondsServices = new PondsServices();
+    private seasonServices: SeasonServices = new SeasonServices();
     /**
      * @class PondRoute
      * @constructor
@@ -42,14 +40,14 @@ export class PondRoute extends BaseRoute {
 
     private init() {
         logger.info('[PondRoute] Creating ping route.');
-        this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.get('/gets', Authentication.isLogin, this.getPonds);
-        this.router.get('/gets/withRoles', Authentication.isLogin, this.getPondWithRoles);
-        this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages);
-        this.router.get('/gets/', Authentication.isLogin, this.getPondWithoutImages);
-        this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByUUId);
-        this.router.put('/update', Authentication.isLogin, this.updatePond);
-        this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles);
+        this.router.post('/add', Authentication.isLogin, this.addPond); // Thêm ao
+        this.router.get('/gets', Authentication.isLogin, this.getPonds); // get all - có hình
+        this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages); // get all kèm với quyền - không hình
+        this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByUUId);  // get với UUID
+        this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật
+        this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao
+        this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeason); // get ao theo vụ nuôi
+        this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
@@ -137,7 +135,8 @@ export class PondRoute extends BaseRoute {
     private getPonds = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        this.pondsServices.models.findAll(({
+        const pond: Pond = new Pond();
+        pond.pondsServices.models.findAll(({
             include: [
                 {
                     model: this.userServives.models,
@@ -188,10 +187,11 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    getPondWithoutImages = async (request: Request, response: Response, next: NextFunction) => {
+    private getPondWithoutImages = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        this.pondsServices.models.findAll(({
+        const pond: Pond = new Pond();
+        pond.pondsServices.models.findAll(({
             include: [
                 {
                     model: this.userServives.models,
@@ -221,47 +221,6 @@ export class PondRoute extends BaseRoute {
                 success: true,
                 message: '',
                 ponds: res
-            });
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!',
-                e
-            });
-        });
-    }
-
-    getPondWithRoles = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        this.userRolesServices.models.findAll({
-            where: {
-                userId: decodetoken.userId,
-                [this.userRolesServices.Op.and]: {
-                    roles: {
-                        [this.userRolesServices.Op.or]: [
-                            0, 1
-                        ]
-                    }
-                }
-            },
-            include: [
-                {
-                    model: this.pondUserRolesServices.models,
-                    as: ActionAssociateDatabase.USER_ROLES_2_POND_USER_ROLE,
-                    include: [
-                        {
-                            model: this.pondsServices.models,
-                            as: ActionAssociateDatabase.POND_USER_ROLE_2_POND
-                        }
-                    ]
-                }
-            ]
-        }).then(async (res: any) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                res
             });
         }).catch(e => {
             response.status(200).json({
@@ -382,5 +341,57 @@ export class PondRoute extends BaseRoute {
                 });
             }
         }
+    }
+
+    private getPondBySeason = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonUUId } = request.params;
+        const pond: Pond = new Pond();
+        pond.pondsServices.models.findAll({
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        seasonUUId
+                    }
+                }
+            ]
+        }).then((ponds: any) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                ponds
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: '',
+                e
+            });
+        });
+    }
+
+    /**
+     * Đếm tổng số ao của người dùng
+     */
+    private countPond = (request: Request, response: Response, next: NextFunction) => {
+        const { pondOwner } = request.body;
+        const pond: Pond = new Pond();
+        pond.pondsServices.models.findAndCountAll({
+            where: {
+                userId: pondOwner
+            }
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                pondsQuantity: res.count
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
     }
 }

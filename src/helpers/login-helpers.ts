@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
-import * as path from 'path';
 import { readFileSync } from 'fs';
-const certsPath = path.join(__dirname, '../../authKey/');
 
 export class Authentication {
     static cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key.pub');

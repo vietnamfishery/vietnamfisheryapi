@@ -2,12 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { Province } from '../../components/province';
-import { User } from '../../components';
-import * as uuidv4 from 'uuid/v4';
-// import { LoginHelper } from '../../helpers/login-helpers';
-import { Enscrypts } from '../../lib';
-import * as jwt from 'jsonwebtoken';
-import * as constants from '../../common';
 
 /**
  * @api {get} /ping Ping Request customer object

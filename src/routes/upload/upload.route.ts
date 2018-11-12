@@ -2,11 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { GoogleDrive } from '../../googleAPI/drive.google';
-import { CustomStream } from '../../lib';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Stream } from 'stream';
-
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping

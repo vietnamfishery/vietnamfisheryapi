@@ -2,9 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { Material } from '../../components';
-import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 /**
  * @api {get} /materials Material Request customer object
  * @apiName Material
@@ -15,7 +13,6 @@ import DBHelper from '../../helpers/db-helpers';
 export class MaterialRoute extends BaseRoute {
     public static path = '/materials';
     private static instance: MaterialRoute;
-    private sequeliz: Sequelize = DBHelper.sequelize;
     /**
      * @class MaterialRoute
      * @constructor

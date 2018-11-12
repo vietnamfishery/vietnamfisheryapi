@@ -5,7 +5,7 @@ export class PondPrepareDetail extends BaseComponent {
     public pondPrepareDetailsServices: PondPrepareDetailsServices;
     private pondPrepareDetailId: number;
     private pondPrepareDetailUUId: string;
-    private materialId: number;
+    private storageId: number;
     private pondPrepareId: number;
     private quantity: number;
     private createdDate: Date;
@@ -28,8 +28,8 @@ export class PondPrepareDetail extends BaseComponent {
         this.pondPrepareId = pondPrepareId;
     }
 
-    public set setMaterialId(materialId) {
-        this.materialId = materialId;
+    public set setStorageId(storageId) {
+        this.storageId = storageId;
     }
 
     public set setQuantity(quantity) {
@@ -48,14 +48,14 @@ export class PondPrepareDetail extends BaseComponent {
         pondPrepareDetailId: number,
         pondPrepareDetailUUId: string,
         pondPrepareId: number,
-        materialId: number,
+        storageId: number,
         quantity: number,
         createdDate?: Date,
         isDeleted?: number
     ) {
         this.setPondPrepareDetailUUId = pondPrepareDetailUUId;
         this.setPondPrepareId = pondPrepareId;
-        this.setMaterialId = materialId;
+        this.setStorageId = storageId;
         this.setPondPrepareDetailId = pondPrepareDetailId;
         this.setQuantity = quantity;
         this.setCreatedDate = createdDate;
@@ -71,7 +71,7 @@ export class PondPrepareDetail extends BaseComponent {
     }
 
     public get getMaterialId(): number {
-        return this.materialId;
+        return this.storageId;
     }
 
     public get getPondPrepareDetailId(): number {

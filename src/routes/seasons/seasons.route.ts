@@ -1,12 +1,11 @@
 import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, PondsServices, SeasonAndPondServices, StockingServices, StockingDetailsServices, BreedServives } from '../../services';
+import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -18,13 +17,12 @@ import DBHelper from '../../helpers/db-helpers';
 export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
-    private seasonServices: SeasonServices = new SeasonServices();
-    private pondsServices: PondsServices = new PondsServices();
-    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
-    private stockingServices: StockingServices = new StockingServices();
-    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
-    private breedServives: BreedServives = new BreedServives();
-    private sequeliz: Sequelize = DBHelper.sequelize;
+    // private seasonServices: SeasonServices = new SeasonServices();
+    // private pondsServices: PondsServices = new PondsServices();
+    // private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
+    // private stockingServices: StockingServices = new StockingServices();
+    // private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    // private breedServives: BreedServives = new BreedServives();
 
     /**
      * @class SeasonRoute
@@ -47,9 +45,7 @@ export class SeasonRoute extends BaseRoute {
         this.router.post('/add', Authentication.isLogin, this.addSeason);
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
-        // this.router.post('/getPondOfSeason', Authentication.isLogin, this.getpondOfSeasonById);
-        // this.router.post('/getpondNotInSeason', Authentication.isLogin, this.getpondNotInSeasonById);
-        // this.router.get('/get/:seasonId', Authentication.isLogin, this.getSeasonById);
+        this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
     }
 
     /**
@@ -159,74 +155,6 @@ export class SeasonRoute extends BaseRoute {
         });
     }
 
-    // private getSeasonById = (request: Request, response: Response, next: NextFunction) => {
-    //     const { seasonId } = request.params;
-    //     this.season.getById(seasonId).then((season: any) => {
-    //         if (!season) {
-    //             response.status(200).json({
-    //                 success: false,
-    //                 message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
-    //             });
-    //         } else {
-    //             response.status(200).json({
-    //                 success: true,
-    //                 season
-    //             });
-    //         }
-    //     });
-    // }
-
-    // // Get pond of id season
-    // private getpondOfSeasonById = (request: Request, response: Response, next: NextFunction) => {
-    //     const { seasonId } = request.body;
-    //     this.seasonAndPondServices.models.findAll({
-    //         include: [
-    //             {
-    //                 model: this.pondsServices.models,
-    //                 as: ActionAssociateDatabase.SEASON_AND_POND_2_POND
-    //             },
-    //             {
-    //                 model: this.stockingServices.models,
-    //                 as: ActionAssociateDatabase.SEASON_AND_POND_2_STOCKING,
-    //                 required: false,
-    //                 include: [
-    //                     {
-    //                         model: this.stockingDetailsServices.models,
-    //                         as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
-    //                         include: [
-    //                             {
-    //                                 model: this.breedServives.models,
-    //                                 as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED,
-    //                                 required: false
-    //                             }
-    //                         ]
-    //                     }
-    //                 ]
-    //             },
-    //             {
-    //                 model: this.seasonServices.models,
-    //                 as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON
-    //             }
-    //         ],
-    //         where: {
-    //             seasonId
-    //         }
-    //     }).then((res) => {
-    //         response.status(200).json({
-    //             success: true,
-    //             message: '',
-    //             pondOfSeasonById: res
-    //         });
-    //     }).catch(e => {
-    //         response.status(200).json({
-    //             success: false,
-    //             message: 'Lỗi, vui lòng thử lại sau.',
-    //             error: e
-    //         });
-    //         throw e;
-    //     });
-    // }
-
     private updateSeason = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, seasonName, status } = request.body;
         if (!seasonId) {
@@ -251,5 +179,29 @@ export class SeasonRoute extends BaseRoute {
                 }
             });
         }
+    }
+
+    private getSeasonByUUId = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonUUId } = request.params;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const season: Season = new Season();
+        season.seasonServices.models.findOne({
+            where: {
+                seasonUUId,
+                userId: deToken.userId
+            }
+        }).then((res: Season) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                season: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
     }
 }

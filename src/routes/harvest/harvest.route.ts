@@ -1,30 +1,24 @@
-import { Pond, UserRole, Harvest, Season, SeasonsAndPond } from '../../components';
+import { Harvest, HarvestDetail } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonAndPondServices, HarvestsServives, HarvestDetailsServives, StockingServices, StockingDetailsServices, BreedServives } from '../../services';
+import { logger, SeasonAndPondServices, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage, ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
-import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
- * @api {get} /ping Ping Request customer object
- * @apiName Ping
- * @apiGroup Ping
+ * @api {all} /harvests Harvest Request customer object
+ * @apiName Harvest
+ * @apiGroup Harvest
  *
  * @apiSuccess {String} type Json Type.
  */
 export class HarvestRoute extends BaseRoute {
-    public static path = '/harvest';
+    public static path = '/harvests';
     private static instance: HarvestRoute;
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
-    private harvestsServives: HarvestsServives = new HarvestsServives();
-    private harvestDetailsServives: HarvestDetailsServives = new HarvestDetailsServives();
-    private stockingServices: StockingServices = new StockingServices();
-    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
-    private breedServives: BreedServives = new BreedServives();
+    private seasonServices: SeasonServices = new SeasonServices();
 
     /**
      * @class HarvestRoute
@@ -44,62 +38,87 @@ export class HarvestRoute extends BaseRoute {
 
     private init() {
         logger.info('[HarvestRoute] Creating ping route.');
-        // this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.post('/gets', Authentication.isLogin, this.getHarvest);
-        // this.router.get('/get', Authentication.isLogin, this.getHarvestById);
+        this.router.post('/add', Authentication.isLogin, this.addHarvest);
     }
 
     // Get harvest
-    private getHarvest = (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId, pondId } = request.body;
-        this.harvestsServives.models.findAll({
+    private addHarvest = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondId, ownerId, harvestId, harvestName, quantity, unitPrice } = request.body;
+        const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
-                    model: this.harvestDetailsServives.models,
-                    as: ActionAssociateDatabase.HARVEST_2_HARVEST_DETAILS
-                },
-                {
-                    model: this.seasonAndPondServices.models,
-                    as: ActionAssociateDatabase.HARVEST_2_SEASON_AND_POND,
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
                     where: {
-                        seasonId,
-                        [this.harvestsServives.Op.and]: {
-                            pondId
-                        }
+                        userId: ownerId,
+                        status: 0
                     },
-                    include: [
-                        {
-                            model: this.stockingServices.models,
-                            as: ActionAssociateDatabase.SEASON_AND_POND_2_STOCKING,
-                            include: [
-                                {
-                                    model: this.stockingDetailsServices.models,
-                                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
-                                    include: [
-                                        {
-                                            model: this.breedServives.models,
-                                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                    attributes: []
                 }
-            ]
-        }).then((res) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                harvest: res
-            });
+            ],
+            where: {
+                pondId
+            },
+            attributes: ['seasonAndPondId']
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi, vui lòng thử lại sau.',
-                error: e
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
-            throw e;
         });
+        // Lần thu hoạch mới
+        if(!harvestId) {
+            return this.sequeliz.transaction().then(async (t: Transaction) => {
+                const harvest: Harvest = new Harvest();
+                harvest.setHarvests(null, uuidv4(), seasonAndPond.seasonAndPondId, harvestName);
+                const hv: any = await harvest.harvestsServives.models.create(harvest, {
+                    transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                    });
+                    t.rollback();
+                });
+                if(hv) {
+                    const harvestDetail: HarvestDetail = new HarvestDetail();
+                    harvestDetail.setHarvestdetails(uuidv4(), hv.harvestId, quantity, unitPrice);
+                    harvestDetail.harvestDetailsServives.models.create(harvestDetail, {
+                        transaction: t
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                        });
+                        t.rollback();
+                    }).then(res => {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm thành công.'
+                        });
+                        t.commit();
+                    });
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            });
+        } else {
+            const harvestDetail: HarvestDetail = new HarvestDetail();
+            harvestDetail.setHarvestdetails(uuidv4(), harvestId, quantity, unitPrice);
+            harvestDetail.harvestDetailsServives.models.create(harvestDetail).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            }).then(res => {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thêm thành công.'
+                });
+            });
+        }
     }
 }

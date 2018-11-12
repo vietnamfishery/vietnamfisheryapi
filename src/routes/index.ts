@@ -23,6 +23,8 @@ import { HarvestRoute } from './harvest';
 import { UserRoleRoute } from './userRoles';
 import { PondUserRolesRoute } from './pondUserRoles';
 import { MaterialRoute } from './material';
+import { SeasonAndPondRoute } from './seasonAndPond';
+import { UsingFoodRoute } from './usingFood';
 
 /**
  * / route
@@ -84,6 +86,8 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(UserRoleRoute.path, UserRoleRoute.router);
         this.router.use(PondUserRolesRoute.path, PondUserRolesRoute.router);
         this.router.use(MaterialRoute.path, MaterialRoute.router);
+        this.router.use(SeasonAndPondRoute.path, SeasonAndPondRoute.router);
+        this.router.use(UsingFoodRoute.path, UsingFoodRoute.router);
     }
 
     /**

@@ -4,8 +4,7 @@ import { logger, UserRolesServices, UserServives, BreedOwnwerServices, BreedServ
 import { ActionAssociateDatabase } from '../../common';
 import { BaseRoute } from '../BaseRoute';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 import * as uuidv4 from 'uuid/v4';
 
 /**
@@ -18,7 +17,6 @@ import * as uuidv4 from 'uuid/v4';
 export class BreedRoute extends BaseRoute {
     public static path = '/breeds';
     private static instance: BreedRoute;
-    private sequeliz: Sequelize = DBHelper.sequelize;
     private breedOwnwerServices: BreedOwnwerServices = new BreedOwnwerServices();
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private userServives: UserServives = new UserServives();
@@ -106,7 +104,7 @@ export class BreedRoute extends BaseRoute {
                         for (const item of itemArr) {
                             const breed: Breed = new Breed();
                             if (typeof item.breedName === 'string') {
-                                breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                                breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity,item.unit, item.loopOfBreed);
                                 const bre: any = await breed.breedServives.models.create(breed, {
                                     transaction: t
                                 }).catch(e => {
@@ -118,7 +116,7 @@ export class BreedRoute extends BaseRoute {
                                 });
                                 if (bre) {
                                     const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                     const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                         transaction: t
                                     }).catch(async e => {
@@ -150,7 +148,7 @@ export class BreedRoute extends BaseRoute {
                                     });
                                 if (sUpdate.length > 0) {
                                     const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                     const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t }).catch(e => {
                                         response.status(200).json({
                                             success: false,
@@ -163,7 +161,8 @@ export class BreedRoute extends BaseRoute {
                                     t.rollback();
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        position: item.position,
                                         couponId: bb.boughtBreedId
                                     });
                                 }
@@ -192,7 +191,7 @@ export class BreedRoute extends BaseRoute {
                 for (const item of itemArr) {
                     const breed: Breed = new Breed();
                     if (typeof item.breedName === 'string') {
-                        breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                        breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity, item.unit, item.loopOfBreed);
                         const bre: any = await breed.breedServives.models.create(breed, {
                             transaction: t
                         }).catch(e => {
@@ -204,13 +203,13 @@ export class BreedRoute extends BaseRoute {
                         });
                         if (bre) {
                             const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                             const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                 transaction: t
                             }).catch(async e => {
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
                                     boughtBreedId
                                 });
                                 t.rollback();
@@ -236,14 +235,15 @@ export class BreedRoute extends BaseRoute {
                             });
                         if (sUpdate.length > 0) {
                             const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                             const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
                             result.push(boughtBre);
                         } else {
                             t.rollback();
                             response.status(200).json({
                                 success: false,
-                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                position: item.position,
                                 boughtBreedId
                             });
                         }
@@ -325,7 +325,7 @@ export class BreedRoute extends BaseRoute {
                             for (const item of itemArr) {
                                 const breed: Breed = new Breed();
                                 if (typeof item.breedName === 'string') {
-                                    breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                                    breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity, item.unit, item.loopOfBreed);
                                     const bre: any = await breed.breedServives.models.create(breed, {
                                         transaction: t
                                     }).catch(e => {
@@ -337,13 +337,13 @@ export class BreedRoute extends BaseRoute {
                                     });
                                     if (bre) {
                                         const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                        boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                        boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                         const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                             transaction: t
                                         }).catch(async e => {
                                             response.status(200).json({
                                                 success: false,
-                                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
                                                 couponId: bb.boughtBreedId
                                             });
                                             t.rollback();
@@ -369,7 +369,7 @@ export class BreedRoute extends BaseRoute {
                                         });
                                     if (sUpdate.length > 0) {
                                         const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                        boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                        boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                         const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t }).catch(e => {
                                             response.status(200).json({
                                                 success: false,
@@ -382,7 +382,8 @@ export class BreedRoute extends BaseRoute {
                                         t.rollback();
                                         response.status(200).json({
                                             success: false,
-                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1}.`,
+                                            position: item.position,
                                             couponId: bb.boughtBreedId
                                         });
                                     }
@@ -411,7 +412,7 @@ export class BreedRoute extends BaseRoute {
                     });
                 }
             }
-            // Nhân viên và phiên nhập củ
+            // Nhân viên và phiên nhập cũ
             else if (!boss && boughtBreedId) {
                 boss = await this.userRolesServices.models.findOne({
                     where: {
@@ -445,7 +446,7 @@ export class BreedRoute extends BaseRoute {
                     for (const item of itemArr) {
                         const breed: Breed = new Breed();
                         if (typeof item.breedName === 'string') {
-                            breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity);
+                            breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity, item.unit, item.loopOfBreed);
                             const bre: any = await breed.breedServives.models.create(breed, {
                                 transaction: t
                             }).catch(e => {
@@ -457,13 +458,14 @@ export class BreedRoute extends BaseRoute {
                             });
                             if (bre) {
                                 const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                 const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
                                     transaction: t
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        position: item.position,
                                         boughtBreedId
                                     });
                                     t.rollback();
@@ -489,7 +491,7 @@ export class BreedRoute extends BaseRoute {
                                 });
                             if (sUpdate.length > 0) {
                                 const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.loopOfBreed, item.soldAddress, item.testingAgency, item.testingAgency);
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
                                 const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t }).catch(e => {
                                     response.status(200).json({
                                         success: false,
@@ -502,7 +504,8 @@ export class BreedRoute extends BaseRoute {
                                 t.rollback();
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                    position: item.position,
                                     boughtBreedId
                                 });
                             }

@@ -1,11 +1,11 @@
 import { DiedFishery, Season, SeasonsAndPond } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonAndPondServices, DiedFisherysServives, SeasonServices, PondsServices } from '../../services';
+import { logger, SeasonAndPondServices, DiedFisherysServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer, ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
+import { Transaction } from 'sequelize';
 import DBHelper from '../../helpers/db-helpers';
 
 /**
@@ -19,10 +19,7 @@ export class DiedFisheryRoute extends BaseRoute {
     public static path = '/diedFishery';
     private static instance: DiedFisheryRoute;
     private diedFisherysServives: DiedFisherysServives = new DiedFisherysServives();
-    private diedFishery: DiedFishery = new DiedFishery();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
-    private seasonServices: SeasonServices = new SeasonServices();
-    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class DiedFisheryRoute
      * @constructor
@@ -82,11 +79,9 @@ export class DiedFisheryRoute extends BaseRoute {
     //  Add DiedFishery
     private addDiedFishery = async (request: Request, response: Response, next: NextFunction) => {
         const season: Season = new Season();
-        const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
         const { seasonId, pondId, card, quantity, solutions, employee } = request.body;
         season.setSeasonId = seasonId;
-        const sequeliz: Sequelize = DBHelper.sequelize;
-        return sequeliz.transaction().then(async (t: Transaction) => {
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
             return this.seasonAndPondServices.models.findOne({
                 where: {
                     seasonId,

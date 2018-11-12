@@ -11,31 +11,26 @@ export const boughtbreeddetailsOptions: any = _.merge({
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
             primaryKey: true,
-            // field: 'boughtBreedDetailId'
         },
         boughtBreedDetailUUId: {
             type: Sequelize.STRING(36),
             unique: true,
             allowNull: false,
-            // field: 'boughtBreedDetailUUId'
         },
         boughtBreedId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'boughtBreedId'
         },
         breedId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
-            // field: 'breedId'
         },
         quantity: {
             type: Sequelize.FLOAT,
             allowNull: false,
-            // field: 'quantity'
         },
         unit: {
-            type: Sequelize.FLOAT,
+            type: Sequelize.INTEGER(1),
             allowNull: false
         },
         unitPrice: {
@@ -43,31 +38,22 @@ export const boughtbreeddetailsOptions: any = _.merge({
             allowNull: false,
             // field: 'unitPrice'
         },
-        loopOfBreed: {
-            type: Sequelize.INTEGER(11),
-            allowNull: false,
-            // field: 'loopOfBreed'
-        },
         soldAddress: {
             type: Sequelize.STRING,
             allowNull: true,
-            // field: 'soldAddress'
         },
         testingAgency: {
             type: Sequelize.STRING,
             allowNull: true,
-            // field: 'testingAgency'
         },
         descriptions: {
             type: Sequelize.TEXT,
             allowNull: true,
-            // field: 'descriptions'
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true,
-            // field: 'isDeleted'
         }
     },
     options: {

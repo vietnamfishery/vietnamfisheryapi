@@ -1,8 +1,7 @@
-import { Pond, UserRole, PondUserRole } from '../../components';
+import { Pond, PondUserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 

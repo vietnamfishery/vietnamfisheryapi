@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
-import { MaterialServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
+import { MaterialServives } from '../../services';
 
 export class Material extends BaseComponent {
     public materialServives: MaterialServives;

@@ -8,8 +8,8 @@ export class TakeCare extends BaseComponent {
     private takeCareId: number;
     private takeCareUUId: string;
     private seasonAndPondId: number;
-    private takeCareName: string;
     private takeType: number;
+    private takeCareName: string;
     private createdDate: Date;
     private isDeleted: number;
     constructor() {
@@ -30,12 +30,12 @@ export class TakeCare extends BaseComponent {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setTakeCareName(takeCareName) {
-        this.takeCareName = takeCareName;
-    }
-
     public set setTakeType(takeType) {
         this.takeType = takeType;
+    }
+
+    public set setTakeCareName(takeCareName) {
+        this.takeCareName = takeCareName;
     }
 
     public set setCreatedDate(createdDate) {
@@ -46,12 +46,20 @@ export class TakeCare extends BaseComponent {
         this.isDeleted = isDeleted;
     }
 
-    public setTakecare(takeCareId: number, takeCareUUId: string, seasonAndPondId: number, takeCareName: string, takeType: number, createdDate?: Date, isDeleted?: number) {
+    public setTakecare(
+        takeCareId: number,
+        takeCareUUId: string,
+        seasonAndPondId: number,
+        takeType: number,
+        takeCareName?: string,
+        createdDate?: Date,
+        isDeleted?: number
+    ) {
         this.setTakeCareId = takeCareId;
         this.setTakeCareUUId = takeCareUUId;
         this.setSeasonAndPondId= seasonAndPondId;
-        this.setTakeCareName = takeCareName;
         this.setTakeType = takeType;
+        this.setTakeCareName = takeCareName;
         this.setCreatedDate = createdDate;
         this.setIsDeleted = isDeleted;
     }

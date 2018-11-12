@@ -1,11 +1,11 @@
-import { Pond, UserRole } from '../../components';
+import { Stocking, StockingDetail } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, PondsServices, SeasonAndPondServices, StockingServices, StockingDetailsServices, BreedServives, BoughtBreedDetailsServives, BoughtBreedServives } from '../../services';
+import { logger, SeasonServices, SeasonAndPondServices, BreedServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { defaultImage, ActionAssociateDatabase, actionUserServices } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
-import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -18,13 +18,8 @@ export class StockingRoute extends BaseRoute {
     public static path = '/stocking';
     private static instance: StockingRoute;
     private seasonServices: SeasonServices = new SeasonServices();
-    private pondsServices: PondsServices = new PondsServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
-    private stockingServices: StockingServices = new StockingServices();
-    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
     private breedServives: BreedServives = new BreedServives();
-    private boughtBreedDetailsServives: BoughtBreedDetailsServives = new BoughtBreedDetailsServives();
-    private boughtBreedServives: BoughtBreedServives = new BoughtBreedServives();
     /**
      * @class StockingRoute
      * @constructor
@@ -43,172 +38,87 @@ export class StockingRoute extends BaseRoute {
 
     private init() {
         logger.info('[StockingRoute] Creating ping route.');
-        this.router.post('/add', Authentication.isLogin, this.addPond);
-        this.router.post('/gets', Authentication.isLogin, this.getStocking);
-        this.router.get('/get/:pondId', Authentication.isLogin, this.getPondById);
-        this.router.put('/update', Authentication.isLogin, this.updatePond);
+        this.router.post('/add', Authentication.isLogin, this.addStocking);
     }
 
-    // Get stocking
-    private getStocking = (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId, pondId } = request.body;
-        this.stockingServices.models.findAll({
+    private addStocking = async (request: Request, response: Response, next: NextFunction) => {
+        const { ownerId, pondId, breedId, stockingQuantity, phFirst, salinityFirst, notes } = request.body;
+        const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
-                    model: this.seasonAndPondServices.models,
-                    as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
                     where: {
-                        seasonId,
-                        [this.stockingServices.Op.and]: {
-                            pondId
-                        }
-                    }
-                },
-                {
-                    model: this.stockingDetailsServices.models,
-                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
-                    include: [
-                        {
-                            model: this.breedServives.models,
-                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED,
-                            include: [
-                                {
-                                    model: this.boughtBreedDetailsServives.models,
-                                    as: ActionAssociateDatabase.BREED_2_BOUGHT_BREED_DETAIL,
-                                    include: [
-                                        {
-                                            model: this.boughtBreedServives.models,
-                                            as: ActionAssociateDatabase.BOUGHT_BREED_DETAIL_2_BOUGHT_BREED,
-                                            where: {
-                                                seasonId
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
+                        userId: ownerId,
+                        status: 0
+                    },
+                    attributes: []
                 }
-            ]
-        }).then((res) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                stockings: res
-            });
+            ],
+            where: {
+                pondId
+            },
+            attributes: ['seasonAndPondId']
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi, vui lòng thử lại sau.',
-                error: e
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
-            throw e;
         });
-    }
-
-    private addPond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if (!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || !images || !status) {
-            response.status(200).json({
-                success: false,
-                message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-            });
-        } else {
-            pond.setPond(null, uuidv4(), decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-            pond.insert(employee).then((res: any) => {
-                if (res) {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm ao thành công!',
-                    });
-                }
+        this.sequeliz.transaction().then(async (t: Transaction) => {
+            const stocking: Stocking = new Stocking();
+            stocking.setStocking(null, uuidv4(), seasonAndPond.seasonAndPondId, notes);
+            const st: any = await stocking.stockingServices.models.create(stocking, {
+                transaction: t
             }).catch(e => {
-                if (e) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-                    });
-                }
-            });
-        }
-    }
-
-    private getPonds = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        pond.pondsServices.get({
-            userId: decodetoken.userId
-        }).then(async (res: any) => {
-            const endData = [];
-            for (const e of res.ponds) {
-                e[`images`] = await GoogleDrive.delayGetFileById(e.images);
-                endData.push(e);
-            }
-            response.status(200).json({
-                success: true,
-                ponds: endData
-            });
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
-            });
-        });
-    }
-
-    private getPondById = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const { pondId } = request.params;
-        const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        pond.getById(pondId, decodetoken.userId).then(async (pond$: any) => {
-            if (!pond$) {
                 response.status(200).json({
                     success: false,
-                    message: 'Không tìm thấy ao, xin vui lòng kiểm tra lại!'
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                 });
-            } else {
-                const p: any = pond$;
-                p[`images`] = await GoogleDrive.delayGetFileById(pond$.images);
-                response.status(200).json(p);
+                t.rollback();
+            });
+            if(st) {
+                const onUpdate: any = await this.breedServives.models.update(
+                    {
+                        totalQuantity: this.sequeliz.literal(`totalQuantity - ${ stockingQuantity }`)
+                    },
+                    {
+                        where: {
+                            breedId // lấy ra từ form select get từ api breed, chỉ có breed của owner hiện tại
+                        }
+                    }
+                ).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                    });
+                    t.rollback();
+                });
+                if(onUpdate) {
+                    const stockingDetail: StockingDetail = new StockingDetail();
+                    stockingDetail.setStockingdetails(uuidv4(), breedId, st.stockingId, stockingQuantity, phFirst, salinityFirst);
+                    stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
+                        transaction: t
+                    }).then(res => {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm thành công.'
+                        });
+                        t.commit();
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                        });
+                        t.rollback();
+                    });
+                }
             }
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Bạn không có quyền truy cập api này!'
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
         });
-    }
-
-    private updatePond = (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        const { pondId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, employee } = request.body;
-        if (!pondId) {
-            response.status(200).json({
-                success: false,
-                message: 'Hành động không được phép, vui lòng thử lại sau!'
-            });
-        } else {
-            pond.setPond(pondId, undefined, decodetoken.userId, pondName, pondArea, pondDepth, createCost, status, images || defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
-            pond.update().then((res: any) => {
-                if (!res) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Cập nhật thành công!'
-                    });
-                }
-            });
-        }
     }
 }

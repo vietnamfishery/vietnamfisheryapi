@@ -1,12 +1,11 @@
-import { Season, SeasonsAndPond, Growth } from '../../components';
+import { Growth } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonAndPondServices, GrowthsServives, SeasonServices, PondsServices } from '../../services';
+import { logger, SeasonAndPondServices, GrowthsServives, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer, ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -19,10 +18,8 @@ export class GrowthsRoute extends BaseRoute {
     public static path = '/growth';
     private static instance: GrowthsRoute;
     private growthsServives: GrowthsServives = new GrowthsServives();
-    private growth: Growth = new Growth();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
-    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class GrowthsRoute
      * @constructor
@@ -41,10 +38,7 @@ export class GrowthsRoute extends BaseRoute {
 
     private init() {
         logger.info('[GrowthsRoute] Creating season route.');
-        this.router.post('/gets', Authentication.isLogin, this.getgrowths);
         this.router.post('/add', Authentication.isLogin, this.addgrowth);
-        this.router.get('/get', Authentication.isLogin, this.getGrowthById);
-        this.router.put('/update', Authentication.isLogin, this.updateGrowth);
     }
 
     // Get getgrowths
@@ -84,53 +78,40 @@ export class GrowthsRoute extends BaseRoute {
 
     //  Add addgrowth
     private addgrowth = async (request: Request, response: Response, next: NextFunction) => {
-        const season: Season = new Season();
-        const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
-        const { seasonId, pondId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
-        season.setSeasonId = seasonId;
-        const sequeliz: Sequelize = DBHelper.sequelize;
-        return sequeliz.transaction().then(async (t: Transaction) => {
-            return this.seasonAndPondServices.models.findOne({
-                where: {
-                    seasonId,
-                    [this.seasonAndPondServices.Op.and]: {
-                        pondId
-                    }
-                },
-                transaction: t
-            }).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Ao không tồn tại trong vụ nuôi này, vui lòng kiểm tra lại, cảm ơn!'
-                });
-                return t.rollback();
-            }).then(async (seasonAndPond: any) => {
-                if (seasonAndPond) {
-                    const growth: Growth = new Growth();
-                    growth.setGrowths(undefined, uuidv4(), seasonAndPond.seasonAndPondId, averageDensity, averageMass, speedOdGrowth, livingRatio);
-                    return growth.growthsServives.models.create(growth, { transaction: t })
-                        .then(async (growth$: any) => {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Chúc mừng, thêm ghi chú tăng trưởng thành công!'
-                            });
-                            return t.commit();
-                        })
-                        .catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Có lỗi xảy ra, vui lòng thử lại, cảm ơn!'
-                            });
-                            return t.rollback();
-                        });
-                } else {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Ao không thuộc trong vụ nuôi'
-                    });
-                    return t.rollback();
+        const { pondId, ownerId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
+        const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                    where: {
+                        userId: ownerId,
+                        status: 0
+                    },
+                    attributes: []
                 }
-
+            ],
+            where: {
+                pondId
+            },
+            attributes: ['seasonAndPondId']
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+        const growth: Growth = new Growth();
+        growth.setGrowths(null, uuidv4(), seasonAndPond.seasonAndPondId, averageDensity, averageMass, speedOdGrowth, livingRatio);
+        growth.growthsServives.models.create(growth).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: 'Thêm thành công.'
             });
         });
     }

@@ -1,12 +1,11 @@
 import { Storage, Coupon, Material } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, CouponServives, StoregeServices, StoregeOwnwerServices, UserRolesServices, UserServives } from '../../services';
+import { logger, StoregeServices, StoregeOwnwerServices, UserRolesServices, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
-import { ActionServer, ActionAssociateDatabase } from '../../common';
+import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Sequelize, Transaction } from 'sequelize';
-import DBHelper from '../../helpers/db-helpers';
+import { Transaction } from 'sequelize';
 
 /**
  * @apiSuccess {String} type Json Type.
@@ -14,12 +13,10 @@ import DBHelper from '../../helpers/db-helpers';
 export class StorageRoute extends BaseRoute {
     public static path = '/storages';
     private static instance: StorageRoute;
-    // private couponServives: CouponServives = new CouponServives();
     private storegeOwnwerServices: StoregeOwnwerServices = new StoregeOwnwerServices();
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private userServives: UserServives = new UserServives();
     private storegeServices: StoregeServices = new StoregeServices();
-    private sequeliz: Sequelize = DBHelper.sequelize;
     /**
      * @class StorageRoute
      * @constructor
@@ -103,7 +100,8 @@ export class StorageRoute extends BaseRoute {
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        position: item.position,
                                         couponId: cp.couponId
                                     });
                                     t.rollback();
@@ -135,7 +133,8 @@ export class StorageRoute extends BaseRoute {
                             } else {
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                    position: item.position,
                                     couponId: cp.couponId
                                 });
                                 t.rollback();
@@ -182,7 +181,8 @@ export class StorageRoute extends BaseRoute {
                             }).catch(async e => {
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                    position: item.position,
                                     couponId
                                 });
                                 t.rollback();
@@ -220,7 +220,8 @@ export class StorageRoute extends BaseRoute {
                         } else {
                             response.status(200).json({
                                 success: false,
-                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                position: item.position,
                                 couponId
                             });
                             t.rollback();
@@ -307,7 +308,8 @@ export class StorageRoute extends BaseRoute {
                                         t.rollback();
                                         response.status(200).json({
                                             success: false,
-                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                            position: item.position,
                                             couponId: cp.couponId
                                         });
                                     });
@@ -345,7 +347,8 @@ export class StorageRoute extends BaseRoute {
                                     t.rollback();
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        position: item.position,
                                         couponId: cp.couponId
                                     });
                                 }
@@ -425,7 +428,8 @@ export class StorageRoute extends BaseRoute {
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        position: item.position,
                                         couponId
                                     });
                                     t.rollback();
@@ -463,7 +467,8 @@ export class StorageRoute extends BaseRoute {
                             } else {
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position}.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position }.`,
+                                    position: item.position,
                                     couponId
                                 });
                                 t.rollback();

@@ -1,14 +1,12 @@
 import { BaseComponent } from '../baseComponents';
-import { UsingVeterinaryServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
+import { UsingVeterinaryServices } from '../../services';
 
 export class UsingVeterinary extends BaseComponent {
     public usingVeterinaryServices: UsingVeterinaryServices;
     private usingVeterinaryId: number;
     private usingVeterinaryUUId: string;
     private takeCareId: number;
-    private materialId: number;
+    private storageId: number;
     private causesNSymptoms: string;
     private averageSize: number;
     private totalBiomass: number;
@@ -37,8 +35,8 @@ export class UsingVeterinary extends BaseComponent {
         this.takeCareId = takeCareId;
     }
 
-    public set setMaterialId(materialId) {
-        this.materialId = materialId;
+    public set setStorageId(storageId) {
+        this.storageId = storageId;
     }
 
     public set setCausesNSymptoms(causesNSymptoms) {
@@ -85,7 +83,7 @@ export class UsingVeterinary extends BaseComponent {
         usingVeterinaryId: number,
         usingVeterinaryUUId: string,
         takeCareId: number,
-        materialId: number,
+        storageId: number,
         causesNSymptoms: string,
         averageSize: number,
         totalBiomass: number,
@@ -99,7 +97,7 @@ export class UsingVeterinary extends BaseComponent {
     ) {
         this.setUsingVeterinaryId = usingVeterinaryId;
         this.setUsingVeterinaryUUId = usingVeterinaryUUId;
-        this.setMaterialId = materialId;
+        this.setStorageId = storageId;
         this.setTakeCareId = takeCareId;
         this.setCausesNSymptoms = causesNSymptoms;
         this.setAverageSize = averageSize;
@@ -125,8 +123,8 @@ export class UsingVeterinary extends BaseComponent {
         return this.takeCareId;
     }
 
-    public get getMaterialId(): number {
-        return this.materialId;
+    public get getStorageId(): number {
+        return this.storageId;
     }
 
     public get getCausesNSymptoms(): string {

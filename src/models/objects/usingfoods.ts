@@ -11,55 +11,45 @@ export const usingfoodOptions: any = _.merge({
         usingFoodId: {
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            // field: 'usingFoodId'
+            primaryKey: true
         },
         usingFoodUUId: {
             type: Sequelize.STRING(36),
             allowNull: false,
-            unique: true,
-            // field: 'usingFoodUUId'
+            unique: true
         },
         takeCareId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'takeCareId'
+            allowNull: false
         },
-        materialId: {
+        storageId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'materialId'
+            allowNull: false
         },
         massOfFishery: {
-            type: Sequelize.FLOAT,
-            // field: 'massOfFishery'
+            type: Sequelize.FLOAT
         },
         feedingRate: {
-            type: Sequelize.FLOAT,
-            // field: 'feedingRate'
+            type: Sequelize.FLOAT
         },
         totalFood: {
-            type: Sequelize.FLOAT,
-            // field: 'totalFood'
+            type: Sequelize.FLOAT
         },
         createdBy: {
             type: Sequelize.STRING(36),
-            allowNull: true,
-            // field: 'createdBy'
+            allowNull: true
         },
         createdDate: {
             type: Sequelize.DATE,
             allowNull: true,
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
-            },
-            // field: 'createdDate'
+            }
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
-            // field: 'isDeleted'
         }
     },
     options: {

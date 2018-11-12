@@ -8,7 +8,7 @@ export class UsingFood extends BaseComponent {
     private usingFoodId: number;
     private usingFoodUUId: string;
     private takeCareId: number;
-    private materialId: number;
+    private storageId: number;
     private massOfFishery: number;
     private feedingRate: number;
     private totalFood: number;
@@ -29,8 +29,8 @@ export class UsingFood extends BaseComponent {
         this.usingFoodUUId = usingFoodUUId;
     }
 
-    public set setMaterialId(materialId) {
-        this.materialId = materialId;
+    public set setStorageId(storageId) {
+        this.storageId = storageId;
     }
 
     public set setTakeCareId(takeCareId) {
@@ -61,10 +61,10 @@ export class UsingFood extends BaseComponent {
         this.isDeleted = isDeleted;
     }
 
-    public setUsingfoods(
+    public setUsingFoods(
         usingFoodId: number,
         usingFoodUUId: string,
-        materialId: number,
+        storageId: number,
         takeCareId: number,
         massOfFishery: number,
         feedingRate: number,
@@ -76,7 +76,7 @@ export class UsingFood extends BaseComponent {
         this.setUsingFoodId = usingFoodId;
         this.setUsingFoodUUId = usingFoodUUId;
         this.setTakeCareId = takeCareId;
-        this.setMaterialId = materialId;
+        this.setStorageId = storageId;
         this.setMassOfFishery = massOfFishery;
         this.setFeedingRate = feedingRate;
         this.setTotalFood = totalFood;
@@ -93,8 +93,8 @@ export class UsingFood extends BaseComponent {
         return this.usingFoodUUId;
     }
 
-    public get getMaterialId(): number {
-        return this.materialId;
+    public get getStorageId(): number {
+        return this.storageId;
     }
 
     public get getTakeCareId(): number {
