@@ -43,7 +43,7 @@ export class PondDiaryRoute extends BaseRoute {
     }
 
     private addPondDiary = async (request: Request, response: Response, next: NextFunction) => {
-        const { pondId, ownerId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery } = request.body;
+        const { pondId, ownerId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery, notes } = request.body;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
@@ -66,23 +66,30 @@ export class PondDiaryRoute extends BaseRoute {
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
         });
-        const pondDiary: PondDiary = new PondDiary();
-        pondDiary.setPonddiary(null, uuidv4(), seasonAndPond.seasonAndPondId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery);
-        pondDiary.insert().then((res: any) => {
-            if(res) {
-                response.status(200).json({
-                    success: true,
-                    message: 'Thêm nhật ký thành công!'
-                });
-            }
-        }).catch(e => {
-            if(e) {
-                response.status(200).json({
-                    success: false,
-                    message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-                });
-            }
-        });
+        if(seasonAndPond) {
+            const pondDiary: PondDiary = new PondDiary();
+            pondDiary.setPonddiary(null, uuidv4(), seasonAndPond.seasonAndPondId, fisheryQuantity, healthOfFishery, pondVolume, diedFishery, notes);
+            pondDiary.insert().then((res: any) => {
+                if(res) {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Thêm nhật ký thành công!'
+                    });
+                }
+            }).catch(e => {
+                if(e) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
+                    });
+                }
+            });
+        } else {
+            response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền vui liên hệ với quản lý của bạn để được hỗ trợ.'
+            });
+        }
     }
 
     /**

@@ -17,7 +17,7 @@ import { PondPrepareDetailRoute } from './pondPrepareDetail';
 import { StorageRoute } from './storages';
 import { BreedRoute } from './breed';
 import { StockingRoute } from './stocking';
-import { DiedFisheryRoute } from './diedfisherys';
+import { DiedFisheryRoute } from './diedFishery';
 import { GrowthsRoute } from './growths';
 import { HarvestRoute } from './harvest';
 import { UserRoleRoute } from './userRoles';
@@ -25,6 +25,7 @@ import { PondUserRolesRoute } from './pondUserRoles';
 import { MaterialRoute } from './material';
 import { SeasonAndPondRoute } from './seasonAndPond';
 import { UsingFoodRoute } from './usingFood';
+import { PondDiaryRoute } from './pondDiary';
 
 /**
  * / route
@@ -88,6 +89,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(MaterialRoute.path, MaterialRoute.router);
         this.router.use(SeasonAndPondRoute.path, SeasonAndPondRoute.router);
         this.router.use(UsingFoodRoute.path, UsingFoodRoute.router);
+        this.router.use(PondDiaryRoute.path, PondDiaryRoute.router);
     }
 
     /**

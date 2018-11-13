@@ -42,7 +42,7 @@ export class StockingRoute extends BaseRoute {
     }
 
     private addStocking = async (request: Request, response: Response, next: NextFunction) => {
-        const { ownerId, pondId, breedId, stockingQuantity, phFirst, salinityFirst, notes } = request.body;
+        const { ownerId, pondId, breedId, stockingQuantity, phFirst, salinityFirst, notes, createdDate } = request.body;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
@@ -67,7 +67,7 @@ export class StockingRoute extends BaseRoute {
         });
         this.sequeliz.transaction().then(async (t: Transaction) => {
             const stocking: Stocking = new Stocking();
-            stocking.setStocking(null, uuidv4(), seasonAndPond.seasonAndPondId, notes);
+            stocking.setStocking(null, uuidv4(), seasonAndPond.seasonAndPondId, notes, createdDate);
             const st: any = await stocking.stockingServices.models.create(stocking, {
                 transaction: t
             }).catch(e => {

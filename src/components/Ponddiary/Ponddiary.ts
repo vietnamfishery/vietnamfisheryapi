@@ -12,11 +12,12 @@ export class PondDiary extends BaseComponent {
     private healthOfFishery: string;
     private pondVolume: number;
     private diedFishery: number;
-    private createdBy: string;
-    private createdDate: Date;
-    private updatedBy: string;
-    private updatedDate: Date;
-    private isDeleted: number;
+    private notes: string;
+    private createdBy?: string;
+    private createdDate?: Date;
+    private updatedBy?: string;
+    private updatedDate?: Date;
+    private isDeleted?: number;
     constructor() {
         super();
         this.pondDiaryServices = new PondDiaryServices();
@@ -51,6 +52,10 @@ export class PondDiary extends BaseComponent {
         this.diedFishery = diedFishery;
     }
 
+    public set setNotes(notes) {
+        this.notes = notes;
+    }
+
     public set setCreatedBy(createdBy) {
         this.createdBy = createdBy;
     }
@@ -79,6 +84,7 @@ export class PondDiary extends BaseComponent {
         healthOfFishery: string,
         pondVolume: number,
         diedFishery: number,
+        notes: string,
         createdBy?: string,
         createdDate?: Date,
         updatedBy?: string,
@@ -92,6 +98,7 @@ export class PondDiary extends BaseComponent {
         this.setHealthOfFishery = healthOfFishery;
         this.setPondVolume = pondVolume;
         this.setDiedFishery = diedFishery;
+        this.setNotes = notes;
         this.setCreatedBy = createdBy;
         this.setCreatedDate = createdDate;
         this.setUpdatedBy = updatedBy;
@@ -125,6 +132,10 @@ export class PondDiary extends BaseComponent {
 
     public get getDiedFishery(): number {
         return this.diedFishery;
+    }
+
+    public get getNotes(): string {
+        return this.notes;
     }
 
     public get getPrimary(): object {

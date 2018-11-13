@@ -28,7 +28,6 @@ export class UserRoute extends BaseRoute {
     private districtServives: DistrictServives = new DistrictServives();
     private wardServices: WardServices = new WardServices();
     private pondsServices: PondsServices = new PondsServices();
-    private seasonServices: SeasonServices = new SeasonServices();
     /**
      * @class UserRoute
      * @constructor
@@ -134,9 +133,8 @@ export class UserRoute extends BaseRoute {
             include: [
                 {
                     model: this.userRolesServices.models,
-                    as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
-                    required: false,
-                    attributes: ['bossId']
+                    as: ActionAssociateDatabase.USER_2_ROLE_USER,
+                    required: false
                 }
             ],
             where: {
@@ -159,6 +157,7 @@ export class UserRoute extends BaseRoute {
                         });
                         response.json({
                             success: true,
+                            u,
                             token
                         });
                     } else {
