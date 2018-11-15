@@ -1,28 +1,28 @@
-[✔] ~~Đăng ký~~                                                  
-[✔] ~~Đăng nhập~~                                                
-[✔] ~~Cập nhật thông tin người dùng~~                            
-[✔] ~~Tải ảnh người dùng~~                                       
-[✔] ~~Đổi mật khẩu~~                                             
-[✔] ~~Thêm nhân viên~~                                           
-[✔] ~~Phân quyền nhân viên~~                                     
-[✔] ~~Thêm ao~~                                                  
-[✔] ~~Cập nhật ao~~                                              
-[✔] ~~Tải ảnh ao~~                                              
-[✔] ~~Phân quyền ao cho nhân viên~~                             
-[✔] ~~Hiển thị thức ăn/csvc/dược phẩm & thuốc~~                 
-[✔] ~~Hiển thị giống~~                                          
-[✔] ~~Hiển thị vụ theo người dùng~~                             
-[✔] ~~Tạo vụ (một thời điểm chỉ có 1 vụ được kích hoạt)~~       
-[✔] ~~Lưu vụ kích hoạt hiện tại vào token~~                     
-[✔] ~~Thêm danh sách ao vào vụ hiện tại~~                       
-[✔] ~~Hiển thị danh sách ao của vụ yêu cầu~~                    
-[✔] ~~Thêm hoạt động chuẩn bị ao~~                              
-[✔] ~~Thêm hoạt động thả nuôi~~                                 
-[✔] ~~Thêm nhật ký~~                                            
-[✔] ~~Thêm quản lý tăng trưởng~~                                
-[✔] ~~Thêm cho ăn~~                                             
-[✔] ~~Thêm sử dụng thuốc~~                                      
-[✔] ~~Thêm thông tin xử lý chất thải~~                          
+[✔] ~~Đăng ký~~
+[✔] ~~Đăng nhập~~
+[✔] ~~Cập nhật thông tin người dùng~~
+[✔] ~~Tải ảnh người dùng~~
+[✔] ~~Đổi mật khẩu~~
+[✔] ~~Thêm nhân viên~~
+[✔] ~~Phân quyền nhân viên~~
+[✔] ~~Thêm ao~~
+[✔] ~~Cập nhật ao~~
+[✔] ~~Tải ảnh ao~~
+[✔] ~~Phân quyền ao cho nhân viên~~
+[✔] ~~Hiển thị thức ăn/csvc/dược phẩm & thuốc~~
+[✔] ~~Hiển thị giống~~
+[✔] ~~Hiển thị vụ theo người dùng~~
+[✔] ~~Tạo vụ (một thời điểm chỉ có 1 vụ được kích hoạt)~~
+[✔] ~~Lưu vụ kích hoạt hiện tại vào token~~
+[✔] ~~Thêm danh sách ao vào vụ hiện tại~~
+[✔] ~~Hiển thị danh sách ao của vụ yêu cầu~~
+[✔] ~~Thêm hoạt động chuẩn bị ao~~
+[✔] ~~Thêm hoạt động thả nuôi~~
+[✔] ~~Thêm nhật ký~~
+[✔] ~~Thêm quản lý tăng trưởng~~
+[✔] ~~Thêm cho ăn~~
+[✔] ~~Thêm sử dụng thuốc~~
+[✔] ~~Thêm thông tin xử lý chất thải~~
 [✔] ~~Thêm thu hoạch~~
 
 #############################################################################################
@@ -32,27 +32,27 @@
 
 #############################################################################################
 
-[☄] Sửa thức ăn/csvc/dược phẩm & thuốc                          
-[☄] Sửa giống                                                   
-[☄] Hiển thị hoạt động chuẩn bị ao                              
-[☄] Hiển thị hoạt động thả nuôi                                 
-[☄] Hiển thị nhật ký                                            
-[☄] Hiển thị quản lý tăng trưởng                                
-[☄] Hiển thị sử dụng thuốc                                      
-[☄] Hiển thị thu hoạch                                          
-[☄] Hiển thị giá - thu chi                                      
-[☄] Hiển thị thông tin xử lý chất thải                          
-[☄] Sửa hoạt động chuẩn bị ao                                   
-[☄] Sửa hoạt động thả nuôi                                      
-[☄] Cập nhật nhật ký                                            
-[☄] Hiển thị cho ăn                                             
-[☄] Cập nhật cho ăn                                             
-[☄] Cập nhật sử dụng thuốc                                      
-[☄] Cập nhật thu hoạch                                          
-[☄] Thêm giá - thu chi                                          
-[☄] Cập nhật giá - thu chi                                      
-[☄] Chat                                                        
-[☄] Đồ thị realtime                                             
-[☄] Cập nhật thông tin xử lý chất thải                          
+[☄] Hiển thị hoạt động chuẩn bị ao
+[☄] Hiển thị hoạt động thả nuôi
+[☄] Hiển thị nhật ký
+[☄] Hiển thị quản lý tăng trưởng
+[☄] Hiển thị sử dụng thuốc
+[☄] Hiển thị thu hoạch
+[☄] Hiển thị giá - thu chi
+[☄] Hiển thị thông tin xử lý chất thải
+[☄] Hiển thị cho ăn
+[☄] Cập nhật thức ăn/csvc/dược phẩm & thuốc
+[☄] Cập nhật giống
+[☄] Cập nhật hoạt động chuẩn bị ao
+[☄] Cập nhật hoạt động thả nuôi
+[☄] Cập nhật nhật ký
+[☄] Cập nhật cho ăn
+[☄] Cập nhật sử dụng thuốc
+[☄] Cập nhật thu hoạch
+[☄] Cập nhật thông tin xử lý chất thải
+[☄] Thêm giá - thu chi
+[☄] Cập nhật giá - thu chi
+[☄] Chat
+[☄] Đồ thị realtime
 
-[✿] Hiển thị tổng số ao, số vụ của người dùng                   
+[✿] Hiển thị tổng số ao, số vụ của người dùng

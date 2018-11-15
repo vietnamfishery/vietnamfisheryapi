@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2018 at 12:35 AM
+-- Generation Time: Nov 15, 2018 at 10:55 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -68,12 +68,19 @@ CREATE TABLE `boughtbreeddetails` (
   `quantity` float NOT NULL,
   `unit` int(1) NOT NULL,
   `unitPrice` float NOT NULL,
-  `loopOfBreed` int(11) NOT NULL,
   `soldAddress` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `testingAgency` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `descriptions` text COLLATE utf8_unicode_ci,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `boughtbreeddetails`
+--
+
+INSERT INTO `boughtbreeddetails` (`boughtBreedDetailId`, `boughtBreedDetailUUId`, `boughtBreedId`, `breedId`, `quantity`, `unit`, `unitPrice`, `soldAddress`, `testingAgency`, `descriptions`, `isDeleted`) VALUES
+(5, 'c3fb210f-95d9-4770-be64-2af30c36b39a', 6, 5, 1215, 0, 121, 'dfhd', 'dfhd', NULL, 0),
+(6, '4dc68dfa-ab52-47d7-9006-420c6d3f6d5b', 8, 6, 16516, 0, 500, 'HG', 'HG', NULL, 0);
 
 --
 -- Triggers `boughtbreeddetails`
@@ -101,6 +108,17 @@ CREATE TABLE `boughtbreeds` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `boughtbreeds`
+--
+
+INSERT INTO `boughtbreeds` (`boughtBreedId`, `boughtBreedUUId`, `userId`, `seasonId`, `createdBy`, `createdDate`, `isDeleted`) VALUES
+(4, 'fa743ea5-6444-4b35-accd-fb5b47301e8f', 122, 6, NULL, '2018-11-10 11:14:01', 0),
+(5, 'a369c4a3-ac70-4fa7-8e58-10ea986692f5', 122, 6, NULL, '2018-11-10 14:31:38', 0),
+(6, '78408d9e-62f9-4d64-b2b0-437daa9c1651', 122, 6, NULL, '2018-11-10 14:35:25', 0),
+(7, '496c0ebd-87b3-4b0e-a1ee-599102af3e2d', 122, 6, NULL, '2018-11-10 14:35:39', 0),
+(8, 'f77f0064-fb6c-4ad6-b467-7e012d81c9d0', 122, 6, NULL, '2018-11-13 18:38:12', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -113,9 +131,20 @@ CREATE TABLE `breeds` (
   `ownerId` bigint(20) NOT NULL,
   `breedName` varchar(80) COLLATE utf8_unicode_ci NOT NULL,
   `totalQuantity` bigint(20) NOT NULL,
+  `unit` int(1) NOT NULL,
+  `loopOfBreed` int(11) NOT NULL,
+  `tips` text COLLATE utf8_unicode_ci,
   `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `breeds`
+--
+
+INSERT INTO `breeds` (`breedId`, `breedUUId`, `ownerId`, `breedName`, `totalQuantity`, `unit`, `loopOfBreed`, `tips`, `createdDate`, `isDeleted`) VALUES
+(5, 'e0406e99-f52f-4495-9032-ad837b838122', 3, 'Tôm', 1154, 0, 15, NULL, '2018-11-10 14:35:25', 0),
+(6, '2eb419a4-706c-49bc-abac-0e6f19cb69a2', 3, 'Cá', 16516, 0, 90, NULL, '2018-11-13 18:38:12', 0);
 
 --
 -- Triggers `breeds`
@@ -161,6 +190,15 @@ CREATE TABLE `coupons` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`couponId`, `userId`, `createdDate`, `isDeleted`) VALUES
+(6, 122, '2018-11-09 12:09:21', 0),
+(7, 122, '2018-11-11 08:06:32', 0),
+(8, 122, '2018-11-14 17:59:59', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -181,6 +219,13 @@ CREATE TABLE `diedfisherys` (
   `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `diedfisherys`
+--
+
+INSERT INTO `diedfisherys` (`diedFisheryId`, `diedFisheryUUId`, `seasonAndPondId`, `card`, `quantity`, `solutions`, `employee`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
+(1, 'e9bfad0f-6eee-44ca-b254-4f100d213dac', 2, '0', 3453, 'khong', 'Nguyen Van A', NULL, '2018-11-13 19:39:18', NULL, '2018-11-13 19:39:18', 0);
 
 -- --------------------------------------------------------
 
@@ -920,6 +965,13 @@ CREATE TABLE `growths` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `growths`
+--
+
+INSERT INTO `growths` (`growthId`, `growthUUId`, `seasonAndPondId`, `averageDensity`, `averageMass`, `speedOdGrowth`, `livingRatio`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
+(1, '7683b411-fb1b-4d69-9545-fc31254a84d5', 1, 534, 345, 86, 64, NULL, '2018-11-14 03:12:08', NULL, '2018-11-14 03:12:08', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -962,11 +1014,20 @@ CREATE TABLE `materials` (
   `storageId` bigint(20) NOT NULL,
   `provider` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `providerAddress` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `quantity` float NOT NULL,
+  `quantity` double NOT NULL,
   `unit` tinyint(1) NOT NULL,
   `unitPrice` float NOT NULL,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `materials`
+--
+
+INSERT INTO `materials` (`materialId`, `materialUUId`, `couponId`, `storageId`, `provider`, `providerAddress`, `quantity`, `unit`, `unitPrice`, `isDeleted`) VALUES
+(5, '1670c910-c30d-44dd-b6d2-6cc98dc39b12', 6, 5, 'Biotic', 'HCM', 20, 0, 1e17, 0),
+(6, '0a76cae1-2267-4f65-ad23-19631afbef2d', 7, 7, 'Cần Thơ', 'Cần Thơ', 1500, 3, 1500, 0),
+(7, '76e38c6a-6ee6-4654-abb7-a1fa1d2c3eff', 8, 8, 'HG', 'HG', 3131, 2, 125000, 0);
 
 --
 -- Triggers `materials`
@@ -995,19 +1056,8 @@ CREATE TABLE `ownerbreed` (
 --
 
 INSERT INTO `ownerbreed` (`ownerId`, `userId`, `isDeleted`) VALUES
-(2, 116, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `ownerpond`
---
-
-CREATE TABLE `ownerpond` (
-  `ownerPondId` bigint(20) NOT NULL,
-  `userId` bigint(20) NOT NULL,
-  `isDeleted` tinyint(4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+(3, 122, 0),
+(5, 125, 0);
 
 -- --------------------------------------------------------
 
@@ -1023,12 +1073,20 @@ CREATE TABLE `ponddiary` (
   `healthOfFishery` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `pondVolume` float NOT NULL,
   `diedFishery` int(11) NOT NULL,
+  `notes` text COLLATE utf8_unicode_ci,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
   `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `ponddiary`
+--
+
+INSERT INTO `ponddiary` (`pondDiaryId`, `pondDiaryUUId`, `seasonAndPondId`, `fisheryQuantity`, `healthOfFishery`, `pondVolume`, `diedFishery`, `notes`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
+(1, '0790d5fc-4e90-48ac-9f08-e36b62d8fd2b', 2, 2000, 'Tốt', 2000, 20, NULL, NULL, '2018-11-13 18:33:50', NULL, '2018-11-13 18:33:50', 0);
 
 -- --------------------------------------------------------
 
@@ -1074,6 +1132,14 @@ CREATE TABLE `pondprepare` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `pondprepare`
+--
+
+INSERT INTO `pondprepare` (`pondPrepareId`, `pondPrepareUUId`, `seasonAndPondId`, `pondprepareName`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
+(20, 'f47a0592-2c06-4124-a1a4-8a127b8ed3b2', 16, 'Chuẩn bị ao cá ba sa 15/11', '', '2018-11-14 19:46:15', '', '2018-11-14 19:46:15', 0),
+(21, '9b056db9-56d8-4ac3-8044-861aa15fbf18', 17, 'Chuẩn bị ao cá lau kính', '', '2018-11-15 15:43:58', '', '2018-11-15 15:43:58', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1083,12 +1149,20 @@ CREATE TABLE `pondprepare` (
 CREATE TABLE `pondpreparedetails` (
   `pondPrepareDetailId` bigint(20) NOT NULL,
   `pondPrepareDetailUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
-  `materialId` bigint(20) NOT NULL,
   `pondPrepareId` bigint(20) NOT NULL,
+  `storageId` bigint(20) NOT NULL,
   `quantity` float NOT NULL,
   `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `pondpreparedetails`
+--
+
+INSERT INTO `pondpreparedetails` (`pondPrepareDetailId`, `pondPrepareDetailUUId`, `pondPrepareId`, `storageId`, `quantity`, `createdDate`, `isDeleted`) VALUES
+(3, '5b09fc8b-6317-4bd6-b10f-ce00d7f0be4a', 20, 8, 34, '2018-11-14 19:46:15', 0),
+(4, 'f04ab26b-71a1-496e-bb2c-70c319e68861', 21, 8, 4, '2018-11-15 15:43:59', 0);
 
 -- --------------------------------------------------------
 
@@ -1099,7 +1173,7 @@ CREATE TABLE `pondpreparedetails` (
 CREATE TABLE `ponds` (
   `pondId` bigint(20) NOT NULL,
   `pondUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
-  `ownerPondId` bigint(20) NOT NULL,
+  `userId` bigint(20) NOT NULL,
   `pondName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `pondArea` float NOT NULL,
   `pondDepth` float NOT NULL,
@@ -1116,6 +1190,20 @@ CREATE TABLE `ponds` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `ponds`
+--
+
+INSERT INTO `ponds` (`pondId`, `pondUUId`, `userId`, `pondName`, `pondArea`, `pondDepth`, `createCost`, `status`, `images`, `pondLatitude`, `pondLongitude`, `pondCreatedDate`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
+(49, '7c072409-9fb0-408f-a1db-12e00813e52c', 122, 'Ao cá diêu hồng', 20, 1.2, 50000000, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, '2018-11-01 17:00:00', NULL, '2018-11-05 14:01:20', NULL, '2018-11-05 14:01:20', 0),
+(52, '8f36cfda-3b83-4dc5-b9b5-421493982891', 122, 'Ao cá Koi', 53, 3.4, 23423500000, 1, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, '2018-11-01 17:00:00', NULL, '2018-11-05 14:13:17', NULL, '2018-11-05 14:13:17', 0),
+(53, '32beb6af-6421-492d-b7e2-e9aa1362ea7f', 122, 'Ao cá Koi 3', 235, 3.4, 100000000, 0, '1NAA0uVvvhYCiGNdWgaFEe5oskDZppR1T', 9.897820595083385, 105.65689097107156, '2018-10-12 17:00:00', NULL, '2018-11-05 16:02:10', NULL, '2018-11-06 04:35:40', 0),
+(54, '6c73febc-23ff-4bfb-be0d-3b8f8affb841', 125, 'Ao cá la hán', 24, 5.2, 23453400, 0, '1-KeKk9KkW97j6KyQqCSQtoSD9n8S9kn4', 9.487101982409458, 105.48531400602269, '2018-10-31 17:00:00', NULL, '2018-11-06 08:49:44', NULL, '2018-11-06 08:49:44', 0),
+(55, 'e08eb270-5ef3-4e24-a46a-eb3b8e15a182', 122, 'Ao tôm càng xanh', 345, 34, 235325000, 0, '1RP3reuRz3wolSP0X-VoK_ErAomVWoYKO', 9.735438583040349, 105.62393198669656, '2018-11-01 17:00:00', NULL, '2018-11-06 12:28:32', NULL, '2018-11-06 13:13:40', 0),
+(59, 'f8ca46b4-76eb-4dd4-9df2-604f01b9f774', 122, 'Ao cá ba sa', 34, 5, 34534500, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, '2018-11-14 19:28:31', NULL, '2018-11-14 12:28:31', NULL, '2018-11-14 12:28:31', 0),
+(64, '2f861be9-4f02-432c-a16f-69acea615df7', 122, 'Ao cá ba sa', 34, 5, 34534500, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, '2018-11-14 19:46:15', NULL, '2018-11-14 19:46:15', NULL, '2018-11-14 19:46:15', 0),
+(65, 'c879989b-46c8-4a14-a7d1-fce09cabbe0e', 122, 'Ao cá lao kính', 4534530, 6, 353435000000, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, '2018-11-15 15:43:58', NULL, '2018-11-15 15:43:58', NULL, '2018-11-15 15:43:58', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1129,6 +1217,15 @@ CREATE TABLE `ponduserroles` (
   `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `ponduserroles`
+--
+
+INSERT INTO `ponduserroles` (`pondUserRolesId`, `userId`, `pondId`, `createdDate`, `isDeleted`) VALUES
+(1, 129, 49, '2018-11-14 03:06:55', 0),
+(2, 129, 52, '2018-11-14 03:07:01', 0),
+(3, 129, 53, '2018-11-14 03:07:10', 0);
 
 -- --------------------------------------------------------
 
@@ -1243,6 +1340,17 @@ CREATE TABLE `seasons` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT;
 
+--
+-- Dumping data for table `seasons`
+--
+
+INSERT INTO `seasons` (`seasonId`, `seasonUUId`, `userId`, `seasonName`, `status`, `createdDate`, `isDeleted`) VALUES
+(1, '6684aac9-7afa-40b6-8293-4b4870f554cc', 122, 'Đông Xuân 2018', 1, '2018-11-07 13:53:05', 0),
+(4, 'b1ce6237-8bf2-42a3-a064-4a085a2cd60a', 122, 'Thu Đông 2018', 1, '2018-11-09 08:56:50', 0),
+(5, '9b6ba182-7f23-4b79-949e-e7e9984c2daa', 122, 'Đông Xuấn 2019', 1, '2018-11-09 08:57:26', 0),
+(6, '2e5634e7-ca34-4abd-84c2-73a77bb75ad6', 122, 'Hè Thu 2019', 0, '2018-11-09 09:14:54', 0),
+(7, 'd023c7e0-6fb6-4e4e-9cfd-f6480917ec34', 125, 'Đông Xuân 2019', 0, '2018-11-12 07:15:04', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1254,6 +1362,23 @@ CREATE TABLE `seasonsandpond` (
   `seasonId` bigint(20) NOT NULL,
   `pondId` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `seasonsandpond`
+--
+
+INSERT INTO `seasonsandpond` (`seasonAndPondId`, `seasonId`, `pondId`) VALUES
+(5, 5, 54),
+(6, 5, 55),
+(1, 6, 49),
+(2, 6, 52),
+(3, 6, 53),
+(18, 6, 54),
+(19, 6, 55),
+(20, 6, 59),
+(16, 6, 64),
+(17, 6, 65),
+(7, 7, 54);
 
 -- --------------------------------------------------------
 
@@ -1270,6 +1395,13 @@ CREATE TABLE `stocking` (
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+--
+-- Dumping data for table `stocking`
+--
+
+INSERT INTO `stocking` (`stockingId`, `stockingUUId`, `seasonAndPondId`, `notes`, `createdDate`, `isDeleted`) VALUES
+(4, '9dc8a1f7-d432-476a-9807-7f09874bdcd8', 2, NULL, '2018-11-13 19:14:10', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -1285,6 +1417,13 @@ CREATE TABLE `stockingdetails` (
   `salinityFirst` float DEFAULT NULL,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `stockingdetails`
+--
+
+INSERT INTO `stockingdetails` (`stockingDetailUUId`, `breedId`, `stockingId`, `stockingQuantity`, `phFirst`, `salinityFirst`, `isDeleted`) VALUES
+('5d06d599-16d4-4185-b78f-633b831a9254', 5, 4, 46, 3453, 3453, 0);
 
 -- --------------------------------------------------------
 
@@ -1303,7 +1442,8 @@ CREATE TABLE `storageowner` (
 --
 
 INSERT INTO `storageowner` (`storageOwnerId`, `userId`, `isDeleted`) VALUES
-(8, 116, 0);
+(9, 122, 0),
+(11, 125, 0);
 
 -- --------------------------------------------------------
 
@@ -1325,6 +1465,15 @@ CREATE TABLE `storages` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Dumping data for table `storages`
+--
+
+INSERT INTO `storages` (`storageId`, `storageUUId`, `ownerId`, `productName`, `quantityStorages`, `unit`, `type`, `descriptions`, `createdDate`, `isDeleted`) VALUES
+(5, '5d867545-57a8-4d55-b7b5-14a640ade3f4', 9, 'Thức ăn Biotic', 20000, 0, 0, NULL, '2018-11-09 12:09:21', 0),
+(7, 'a98e0bb2-aa8a-4c5b-9271-04f3a31c9206', 9, 'Thức ăn cho tôm', 1400, 3, 0, NULL, '2018-11-11 08:06:32', 0),
+(8, '3529fff3-2830-4e53-9304-247c5f9fd268', 9, 'Quạt', 3093, 2, 1, NULL, '2018-11-14 17:59:59', 0);
+
+--
 -- Triggers `storages`
 --
 DELIMITER $$
@@ -1344,8 +1493,8 @@ CREATE TABLE `takecare` (
   `takeCareId` bigint(20) NOT NULL,
   `takeCareUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `seasonAndPondId` bigint(20) NOT NULL,
-  `takeCareName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `takeType` tinyint(1) NOT NULL,
+  `takeCareName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1371,17 +1520,12 @@ CREATE TABLE `userroles` (
 --
 
 INSERT INTO `userroles` (`rolesId`, `bossId`, `userId`, `roles`, `createdDate`, `updatedBy`, `isDeleted`) VALUES
-(6, 116, 116, 0, '2018-11-01 18:58:00', NULL, 0),
-(10, 116, 119, 1, '2018-11-01 19:22:56', NULL, 1),
-(11, 116, 119, 2, '2018-11-01 19:22:56', NULL, 0),
-(12, 116, 120, 1, '2018-11-01 19:23:47', NULL, 0),
-(13, 116, 121, 2, '2018-11-01 19:24:11', NULL, 0),
-(14, 116, 120, 2, '2018-11-01 22:36:26', NULL, 1),
-(15, 116, 119, 1, '2018-11-01 22:45:54', NULL, 1),
-(16, 116, 121, 1, '2018-11-01 22:46:51', NULL, 1),
-(17, 116, 119, 1, '2018-11-01 22:47:20', NULL, 0),
-(18, 116, 120, 2, '2018-11-01 22:48:40', NULL, 1),
-(19, 116, 121, 1, '2018-11-01 22:48:58', NULL, 1);
+(27, 125, 131, 1, '2018-11-06 08:47:45', NULL, 0),
+(28, 125, 132, 2, '2018-11-06 08:48:19', NULL, 0),
+(34, 122, 129, 2, '2018-11-07 15:03:16', NULL, 1),
+(58, 122, 130, 2, '2018-11-08 19:23:09', NULL, 0),
+(84, 122, 129, 1, '2018-11-08 21:15:01', NULL, 0),
+(87, 122, 130, 1, '2018-11-08 21:15:53', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1417,10 +1561,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userId`, `userUUId`, `firstname`, `lastname`, `birthday`, `addressContact`, `username`, `password`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(116, '60c74358-c467-4cd7-af2c-ef158af28582', 'Việt Huấn', 'Nguyễn', NULL, NULL, 'nvh', '$2a$06$fwE47Z8qYVjs27HQeS43oeetbQRsCcPTvRxF56l/8hzKSe76ingcy', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-01 18:57:28', NULL, '2018-11-01 18:57:28', 0),
-(119, '462d3939-cb7b-4099-875e-b5a2ac9e7f4b', 'Đắc Di', 'Nguyễn', NULL, NULL, 'ndd', '$2a$04$EKZWsnRRzvOX5epgih0xtuTW8ihaI3Vpfz2wwu/4jhQDe3b7zeUJa', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-01 19:22:55', NULL, '2018-11-01 19:22:55', 0),
-(120, '65ad7785-042a-4a8d-b6e4-1423db8f7cd8', 'Vô Kỵ', 'Trương', NULL, NULL, 'tvk', '$2a$10$tBsRZji0Jlu938MalkgpAOA5FNsTBti08CHzLarOL0Ed0TSRC2.de', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-01 19:23:47', NULL, '2018-11-01 19:23:47', 0),
-(121, '21b9ea94-5d2e-495a-89ad-17aca2c224a7', 'Nhất Hàn', 'Trác', NULL, NULL, 'tnh', '$2a$04$rv3pkIxlbVs4hazIH.giJuOL6SYzJDsdZdSEArrvx3MbfqqDBXI3W', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-01 19:24:11', NULL, '2018-11-01 19:24:11', 0);
+(122, '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', 'Huấn', 'Nguyễn', '1996-10-14 17:00:00', NULL, 'nvh', '$2a$09$saFTOu.H5TACoWvvYIc.S.VL8KF/M/blIBEqs6XT1vvElpwilz80e', '31423', '934', '93', 0, '0869143133', 'ngnviethuan@gmail.com', '1LrWlmSFWxJTYKGkYK-RTrmUhTGm4WQub', NULL, '2018-11-05 11:58:09', NULL, '2018-11-05 12:58:22', 0),
+(125, '8787b866-85ed-4443-a108-0d07e9cc540d', 'Võ', 'Phong', NULL, NULL, 'vhp', '$2a$06$NgAEYNYQbiR1NhOod74ymuk9TPO.QbFS26gHSvBUhodDNeH6EfQ8a', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-05 12:05:11', NULL, '2018-11-05 12:05:11', 0),
+(129, 'c6f5f044-0238-48bc-8037-fd0a0928dd2a', 'Vô Kỵ', 'Trương', NULL, NULL, 'tvk', '$2a$12$gxSl2DjXBggAmeZBlZ2bWeK2Mm5glNhCS967sycPtTxhispVE6va.', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-05 13:48:24', NULL, '2018-11-06 13:01:29', 0),
+(130, '7a82c0bd-52a8-4906-8aa2-6755cca3cf22', 'Nhất Hàn', 'Trác', NULL, NULL, 'tnh', '$2a$04$LCFurKpv.5lZ6ZnN8khHK.l.YqM6pFT.Zh4hTa1he87UGOXcXZWj6', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-05 13:48:53', NULL, '2018-11-06 13:01:42', 0),
+(131, '13886f23-08bb-435e-a5db-b01414f523c3', 'Dự', 'Đoàn', NULL, NULL, 'dd', '$2a$05$T8q2jn0feKlcGJc72FR71u26EsUytfaeH7xXajhrU13Gzc0odop8i', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-06 08:47:45', NULL, '2018-11-06 13:01:58', 0),
+(132, '8d661253-4815-45fd-ab3c-99992b30bfcf', 'Thất Công', 'Hồng', NULL, NULL, 'htc', '$2a$04$RdgBPfYd2jWTZwlVxFJ2sOk7P/0kKcfDX/rZDYCWwTIC8W9vDL/YK', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-06 08:48:18', NULL, '2018-11-06 13:02:01', 0);
 
 -- --------------------------------------------------------
 
@@ -1432,7 +1578,7 @@ CREATE TABLE `usingfoods` (
   `usingFoodId` bigint(20) NOT NULL,
   `usingFoodUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `takeCareId` bigint(20) NOT NULL,
-  `materialId` bigint(20) NOT NULL,
+  `storageId` bigint(20) NOT NULL,
   `massOfFishery` float NOT NULL,
   `feedingRate` float NOT NULL,
   `totalFood` float NOT NULL,
@@ -1451,7 +1597,7 @@ CREATE TABLE `usingveterinary` (
   `usingVeterinaryId` bigint(20) NOT NULL,
   `usingVeterinaryUUId` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
   `takeCareId` bigint(20) NOT NULL,
-  `materialId` bigint(20) NOT NULL,
+  `storageId` bigint(20) NOT NULL,
   `causesNSymptoms` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `averageSize` float NOT NULL,
   `totalBiomass` float NOT NULL,
@@ -12707,13 +12853,6 @@ ALTER TABLE `ownerbreed`
   ADD KEY `FK_OWNER_OF_BREED_STORAGE` (`userId`);
 
 --
--- Indexes for table `ownerpond`
---
-ALTER TABLE `ownerpond`
-  ADD PRIMARY KEY (`ownerPondId`),
-  ADD KEY `FK_OWNER_POND_TO_USER` (`userId`);
-
---
 -- Indexes for table `ponddiary`
 --
 ALTER TABLE `ponddiary`
@@ -12743,8 +12882,8 @@ ALTER TABLE `pondprepare`
 ALTER TABLE `pondpreparedetails`
   ADD PRIMARY KEY (`pondPrepareDetailId`),
   ADD UNIQUE KEY `uuid` (`pondPrepareDetailUUId`,`pondPrepareId`),
-  ADD KEY `fk_ppd_to_material` (`materialId`),
-  ADD KEY `fk_ppreparedetail_to_pprepare` (`pondPrepareId`);
+  ADD KEY `fk_ppreparedetail_to_pprepare` (`pondPrepareId`),
+  ADD KEY `fk_ppd_to_storage` (`storageId`);
 
 --
 -- Indexes for table `ponds`
@@ -12752,14 +12891,15 @@ ALTER TABLE `pondpreparedetails`
 ALTER TABLE `ponds`
   ADD PRIMARY KEY (`pondId`),
   ADD UNIQUE KEY `pondUUId` (`pondUUId`),
-  ADD KEY `FK_POND_TO_OWNER` (`ownerPondId`);
+  ADD KEY `FK_POND_TO_OWNER` (`userId`);
 
 --
 -- Indexes for table `ponduserroles`
 --
 ALTER TABLE `ponduserroles`
   ADD PRIMARY KEY (`pondUserRolesId`),
-  ADD UNIQUE KEY `usnp` (`userId`,`pondId`),
+  ADD UNIQUE KEY `uni_key_pond_and_user_couple` (`userId`,`pondId`),
+  ADD KEY `FK_PUR_TO_US` (`userId`),
   ADD KEY `FK_TO_POND` (`pondId`);
 
 --
@@ -12782,7 +12922,7 @@ ALTER TABLE `province`
 ALTER TABLE `seasons`
   ADD PRIMARY KEY (`seasonId`),
   ADD UNIQUE KEY `seasonUUId` (`seasonUUId`),
-  ADD KEY `FK_SEASON_TO_USER` (`userId`);
+  ADD KEY `FK_SEASON_TO_BOSS` (`userId`);
 
 --
 -- Indexes for table `seasonsandpond`
@@ -12836,6 +12976,7 @@ ALTER TABLE `takecare`
 --
 ALTER TABLE `userroles`
   ADD PRIMARY KEY (`rolesId`),
+  ADD UNIQUE KEY `uni_key` (`bossId`,`userId`,`roles`),
   ADD KEY `FK_UR_TO_US` (`userId`),
   ADD KEY `FK_UR_TO_USEMPLOYEE` (`bossId`);
 
@@ -12853,8 +12994,8 @@ ALTER TABLE `users`
 ALTER TABLE `usingfoods`
   ADD PRIMARY KEY (`usingFoodId`),
   ADD UNIQUE KEY `usingFoodUUId` (`usingFoodUUId`),
-  ADD KEY `FK_uf_to_material` (`materialId`),
-  ADD KEY `FK_uf_to_takecare` (`takeCareId`);
+  ADD KEY `FK_uf_to_takecare` (`takeCareId`),
+  ADD KEY `FK_uf_to_storage` (`storageId`);
 
 --
 -- Indexes for table `usingveterinary`
@@ -12862,8 +13003,8 @@ ALTER TABLE `usingfoods`
 ALTER TABLE `usingveterinary`
   ADD PRIMARY KEY (`usingVeterinaryId`),
   ADD UNIQUE KEY `usingVeterinaryUUId` (`usingVeterinaryUUId`),
-  ADD KEY `FK_uv_to_material` (`materialId`),
-  ADD KEY `FK_uv_to_takecare` (`takeCareId`);
+  ADD KEY `FK_uv_to_takecare` (`takeCareId`),
+  ADD KEY `FK_uv_to_storage` (`storageId`);
 
 --
 -- Indexes for table `ward`
@@ -12880,12 +13021,12 @@ ALTER TABLE `ward`
 -- AUTO_INCREMENT for table `boughtbreeddetails`
 --
 ALTER TABLE `boughtbreeddetails`
-  MODIFY `boughtBreedDetailId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `boughtBreedDetailId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `boughtbreeds`
 --
 ALTER TABLE `boughtbreeds`
-  MODIFY `boughtBreedId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `boughtBreedId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `breeds`
 --
@@ -12900,17 +13041,17 @@ ALTER TABLE `costs`
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `couponId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
+  MODIFY `couponId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `diedfisherys`
 --
 ALTER TABLE `diedfisherys`
-  MODIFY `diedFisheryId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `diedFisheryId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `growths`
 --
 ALTER TABLE `growths`
-  MODIFY `growthId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `growthId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `harvests`
 --
@@ -12920,22 +13061,17 @@ ALTER TABLE `harvests`
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `materialId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `materialId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `ownerbreed`
 --
 ALTER TABLE `ownerbreed`
-  MODIFY `ownerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
---
--- AUTO_INCREMENT for table `ownerpond`
---
-ALTER TABLE `ownerpond`
-  MODIFY `ownerPondId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `ownerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `ponddiary`
 --
 ALTER TABLE `ponddiary`
-  MODIFY `pondDiaryId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `pondDiaryId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `pondenvironments`
 --
@@ -12945,22 +13081,22 @@ ALTER TABLE `pondenvironments`
 -- AUTO_INCREMENT for table `pondprepare`
 --
 ALTER TABLE `pondprepare`
-  MODIFY `pondPrepareId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `pondPrepareId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `pondpreparedetails`
 --
 ALTER TABLE `pondpreparedetails`
-  MODIFY `pondPrepareDetailId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `pondPrepareDetailId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `ponds`
 --
 ALTER TABLE `ponds`
-  MODIFY `pondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `pondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 --
 -- AUTO_INCREMENT for table `ponduserroles`
 --
 ALTER TABLE `ponduserroles`
-  MODIFY `pondUserRolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `pondUserRolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `prices`
 --
@@ -12970,27 +13106,27 @@ ALTER TABLE `prices`
 -- AUTO_INCREMENT for table `seasons`
 --
 ALTER TABLE `seasons`
-  MODIFY `seasonId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `seasonId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `seasonsandpond`
 --
 ALTER TABLE `seasonsandpond`
-  MODIFY `seasonAndPondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `seasonAndPondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `stocking`
 --
 ALTER TABLE `stocking`
-  MODIFY `stockingId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `stockingId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `storageowner`
 --
 ALTER TABLE `storageowner`
-  MODIFY `storageOwnerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `storageOwnerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `storages`
 --
 ALTER TABLE `storages`
-  MODIFY `storageId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `storageId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `takecare`
 --
@@ -13000,12 +13136,12 @@ ALTER TABLE `takecare`
 -- AUTO_INCREMENT for table `userroles`
 --
 ALTER TABLE `userroles`
-  MODIFY `rolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `rolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `userId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
 --
 -- AUTO_INCREMENT for table `usingfoods`
 --
@@ -13090,12 +13226,6 @@ ALTER TABLE `ownerbreed`
   ADD CONSTRAINT `FK_OWNER_OF_BREED_STORAGE` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `ownerpond`
---
-ALTER TABLE `ownerpond`
-  ADD CONSTRAINT `FK_OWNER_POND_TO_USER` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
 -- Constraints for table `ponddiary`
 --
 ALTER TABLE `ponddiary`
@@ -13117,21 +13247,21 @@ ALTER TABLE `pondprepare`
 -- Constraints for table `pondpreparedetails`
 --
 ALTER TABLE `pondpreparedetails`
-  ADD CONSTRAINT `fk_ppd_to_material` FOREIGN KEY (`materialId`) REFERENCES `materials` (`materialId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_ppd_to_storage` FOREIGN KEY (`storageId`) REFERENCES `storages` (`storageId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_ppreparedetail_to_pprepare` FOREIGN KEY (`pondPrepareId`) REFERENCES `pondprepare` (`pondPrepareId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ponds`
 --
 ALTER TABLE `ponds`
-  ADD CONSTRAINT `FK_POND_TO_OWNER` FOREIGN KEY (`ownerPondId`) REFERENCES `ownerpond` (`ownerPondId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_POND_TO_OWNER` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `ponduserroles`
 --
 ALTER TABLE `ponduserroles`
-  ADD CONSTRAINT `FK_TO_POND` FOREIGN KEY (`pondId`) REFERENCES `ponds` (`pondId`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_TO_USER` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_PUR_TO_US` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_TO_POND` FOREIGN KEY (`pondId`) REFERENCES `ponds` (`pondId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `prices`
@@ -13143,6 +13273,7 @@ ALTER TABLE `prices`
 -- Constraints for table `seasons`
 --
 ALTER TABLE `seasons`
+  ADD CONSTRAINT `FK_SEASON_TO_BOSS` FOREIGN KEY (`userId`) REFERENCES `userroles` (`bossId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_SEASON_TO_USER` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -13194,14 +13325,14 @@ ALTER TABLE `userroles`
 -- Constraints for table `usingfoods`
 --
 ALTER TABLE `usingfoods`
-  ADD CONSTRAINT `FK_uf_to_material` FOREIGN KEY (`materialId`) REFERENCES `materials` (`materialId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_uf_to_storage` FOREIGN KEY (`storageId`) REFERENCES `storages` (`storageId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_uf_to_takecare` FOREIGN KEY (`takeCareId`) REFERENCES `takecare` (`takeCareId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `usingveterinary`
 --
 ALTER TABLE `usingveterinary`
-  ADD CONSTRAINT `FK_uv_to_material` FOREIGN KEY (`materialId`) REFERENCES `materials` (`materialId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_uv_to_storage` FOREIGN KEY (`storageId`) REFERENCES `storages` (`storageId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_uv_to_takecare` FOREIGN KEY (`takeCareId`) REFERENCES `takecare` (`takeCareId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
