@@ -1,6 +1,6 @@
 import { Pond } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserServives, UserRolesServices, PondUserRolesServices, SeasonServices } from '../../services';
+import { logger, UserServives, UserRolesServices, PondUserRolesServices, SeasonServices, PondsServices, SeasonAndPondServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { defaultImage, ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -22,6 +22,9 @@ export class PondRoute extends BaseRoute {
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
     private seasonServices: SeasonServices = new SeasonServices();
+    private pondsServices: PondsServices = new PondsServices();
+    private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
+
     /**
      * @class PondRoute
      * @constructor
@@ -46,8 +49,9 @@ export class PondRoute extends BaseRoute {
         this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByUUId);  // get với UUID
         this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật
         this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao
-        this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeason); // get ao theo vụ nuôi
+        this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
+        this.router.post('/get/notin/season-and-pond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
@@ -231,6 +235,78 @@ export class PondRoute extends BaseRoute {
         });
     }
 
+    private getPondNotInSeasonAndPond = async (request: Request, response: Response, next: NextFunction) => {
+        const { seasonUUId } = request.body;
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
+            let ponds: any = await this.seasonAndPondServices.models.findAll({
+                include: [
+                    {
+                        model: this.seasonServices.models,
+                        as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                        where: {
+                            seasonUUId
+                        },
+                        attributes: []
+                    }
+                ],
+                attributes: ['pondId'],
+                transaction: t
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+                });
+                return t.rollback();
+            });
+            if (ponds.length) {
+                ponds = ponds.map(element => {
+                    return element.pondId;
+                });
+                const p: any = await this.pondsServices.models.findAll({
+                    where: {
+                        pondId: {
+                            [this.sequeliz.Op.notIn]: ponds
+                        }
+                    },
+                    transaction: t
+                }).catch(e => {
+                    e;
+                    response.status(200).json({
+                        success: false,
+                        message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+                    });
+                    t.rollback();
+                });
+                if(!p) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Không tìm thấy ao.'
+                    });
+                    t.rollback();
+                } else {
+                    t.commit();
+                    response.status(200).json({
+                        success: true,
+                        message: '',
+                        ponds: p
+                    });
+                }
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy ao.',
+                    ponds
+                });
+                t.rollback();
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+            });
+        });
+    }
+
     private getPondByUUId = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const { pondUUId } = request.params;
@@ -300,7 +376,7 @@ export class PondRoute extends BaseRoute {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
                         pond.setPond(null, undefined, undefined, pondName, pondArea, pondDepth, createCost, status, data.fileId, pondLatitude, pondLongitude, pondCreatedDate);
-                        pond.pondsServices.models.update(pond.getFields(pond),{
+                        pond.pondsServices.models.update(pond.getFields(pond), {
                             where: {
                                 pondUUId
                             }
@@ -324,7 +400,7 @@ export class PondRoute extends BaseRoute {
                 });
             } else {
                 pond.setPond(null, undefined, undefined, pondName, pondArea, pondDepth, createCost, status, images, pondLatitude, pondLongitude, pondCreatedDate);
-                pond.pondsServices.models.update(pond.getFields(pond),{
+                pond.pondsServices.models.update(pond.getFields(pond), {
                     where: {
                         pondUUId
                     }
@@ -343,7 +419,7 @@ export class PondRoute extends BaseRoute {
         }
     }
 
-    private getPondBySeason = (request: Request, response: Response, next: NextFunction) => {
+    private getPondBySeasonUUId = (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId } = request.params;
         const pond: Pond = new Pond();
         pond.pondsServices.models.findAll({
@@ -353,7 +429,8 @@ export class PondRoute extends BaseRoute {
                     as: ActionAssociateDatabase.POND_2_SEASON,
                     where: {
                         seasonUUId
-                    }
+                    },
+                    attributes: []
                 }
             ]
         }).then((ponds: any) => {

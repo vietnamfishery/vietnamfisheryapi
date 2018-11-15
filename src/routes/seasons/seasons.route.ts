@@ -46,6 +46,7 @@ export class SeasonRoute extends BaseRoute {
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
+        this.router.post('/get', Authentication.isLogin, this.getSeasonById);
     }
 
     /**
@@ -192,6 +193,25 @@ export class SeasonRoute extends BaseRoute {
                 userId: deToken.userId
             }
         }).then((res: Season) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                season: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getSeasonById = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId } = request.body;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const season: Season = new Season();
+        season.seasonServices.models.findById(seasonId).then((res: Season) => {
             response.status(200).json({
                 success: true,
                 message: '',

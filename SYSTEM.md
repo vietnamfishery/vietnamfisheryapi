@@ -1,52 +1,58 @@
-1. ~~Đăng ký~~                                                  [✔]
-2. ~~Đăng nhập~~                                                [✔]
-3. ~~Cập nhật thông tin người dùng~~                            [✔]
-4. ~~Tải ảnh người dùng~~                                       [✔]
-5. ~~Đổi mật khẩu~~                                             [✔]
-6. ~~Thêm nhân viên~~                                           [✔]
-7. ~~Phân quyền nhân viên~~                                     [✔]
-8. ~~Thêm ao~~                                                  [✔]
-9. ~~Cập nhật ao~~                                              [✔]
-10. ~~Tải ảnh ao~~                                              [✔]
-11. ~~Phân quyền ao cho nhân viên~~                             [✔]
-12. Thêm thức ăn/csvc/dược phẩm & thuốc vào kho             [☠] Lỗi cộng số lượng không cùng đơn vị tính
-13. Thêm giống                                              [☠] Lỗi cộng số lượng không cùng đơn vị tính
-14. ~~Hiển thị thức ăn/csvc/dược phẩm & thuốc~~                 [✔]
-15. Sửa thức ăn/csvc/dược phẩm & thuốc                              [☄]
-16. ~~Hiển thị giống~~                                          [✔]
-17. Sửa giống                                                       [☄]
-18. ~~Hiển thị vụ theo người dùng~~                             [✔]
-19. ~~Tạo vụ (một thời điểm chỉ có 1 vụ được kích hoạt)~~       [✔]
-20. ~~Lưu vụ kích hoạt hiện tại vào token~~                     [✔]
-21. Thêm danh sách ao vào vụ hiện tại                               [☄]
-21. Hiển thị danh sách ao của vụ yêu cầu                    [✿]
-22. Hiển thị tổng số ao, số vụ của người dùng               [✿]
-23. ~~Thêm hoạt động chuẩn bị ao~~                              [✔]
-24. Hiển thị hoạt động chuẩn bị ao                                  [☄]
-25. Sửa hoạt động chuẩn bị ao                                       [☄]
-26. ~~Thêm hoạt động thả nuôi~~                                 [✔]
-27. Hiển thị hoạt động thả nuôi                                     [☄]
-28. Sửa hoạt động thả nuôi                                          [☄]
-29. ~~Thêm nhật ký~~                                            [✔]
-30. Hiển thị nhật ký                                                [☄]
-31. Cập nhật nhật ký                                                [☄]
-32. ~~Thêm quản lý tăng trưởng~~                                [✔]
-33. Hiển thị quản lý tăng trưởng                                    [☄]
-34. Cập nhật quản lý tăng trưởng                                    [☄]
-35. Thêm cho ăn                                                 [✔]
-36. Hiển thị cho ăn                                                 [☄]
-37. Cập nhật cho ăn                                                 [☄]
-38. Thêm sử dụng thuốc                                          [✔]
-39. Hiển thị sử dụng thuốc                                          [☄]
-40. Cập nhật sử dụng thuốc                                          [☄]
-41. ~~Thêm thu hoạch~~                                          [✔]
-42. Hiển thị thu hoạch                                              [☄]
-43. Cập nhật thu hoạch                                              [☄]
-44. Thêm giá - thu chi                                              [☄]
-45. Hiển thị giá - thu chi                                          [☄]
-46. Cập nhật giá - thu chi                                          [☄]
-47. Chat                                                            [☄]
-48. Đồ thị realtime                                                 [☄]
-49. Hiển thị thông tin xử lý chất thải                              [☄]
-49. ~~Thêm thông tin xử lý chất thải~~                           [✔]
-49. Cập nhật thông tin xử lý chất thải                              [☄]
+[✔] ~~Đăng ký~~                                                  
+[✔] ~~Đăng nhập~~                                                
+[✔] ~~Cập nhật thông tin người dùng~~                            
+[✔] ~~Tải ảnh người dùng~~                                       
+[✔] ~~Đổi mật khẩu~~                                             
+[✔] ~~Thêm nhân viên~~                                           
+[✔] ~~Phân quyền nhân viên~~                                     
+[✔] ~~Thêm ao~~                                                  
+[✔] ~~Cập nhật ao~~                                              
+[✔] ~~Tải ảnh ao~~                                              
+[✔] ~~Phân quyền ao cho nhân viên~~                             
+[✔] ~~Hiển thị thức ăn/csvc/dược phẩm & thuốc~~                 
+[✔] ~~Hiển thị giống~~                                          
+[✔] ~~Hiển thị vụ theo người dùng~~                             
+[✔] ~~Tạo vụ (một thời điểm chỉ có 1 vụ được kích hoạt)~~       
+[✔] ~~Lưu vụ kích hoạt hiện tại vào token~~                     
+[✔] ~~Thêm danh sách ao vào vụ hiện tại~~                       
+[✔] ~~Hiển thị danh sách ao của vụ yêu cầu~~                    
+[✔] ~~Thêm hoạt động chuẩn bị ao~~                              
+[✔] ~~Thêm hoạt động thả nuôi~~                                 
+[✔] ~~Thêm nhật ký~~                                            
+[✔] ~~Thêm quản lý tăng trưởng~~                                
+[✔] ~~Thêm cho ăn~~                                             
+[✔] ~~Thêm sử dụng thuốc~~                                      
+[✔] ~~Thêm thông tin xử lý chất thải~~                          
+[✔] ~~Thêm thu hoạch~~
+
+#############################################################################################
+
+[☠] Thêm thức ăn/csvc/dược phẩm & thuốc vào kho - [Lỗi cộng số lượng không cùng đơn vị tính]
+[☠] Thêm giống - [Lỗi cộng số lượng không cùng đơn vị tính]
+
+#############################################################################################
+
+[☄] Sửa thức ăn/csvc/dược phẩm & thuốc                          
+[☄] Sửa giống                                                   
+[☄] Hiển thị hoạt động chuẩn bị ao                              
+[☄] Hiển thị hoạt động thả nuôi                                 
+[☄] Hiển thị nhật ký                                            
+[☄] Hiển thị quản lý tăng trưởng                                
+[☄] Hiển thị sử dụng thuốc                                      
+[☄] Hiển thị thu hoạch                                          
+[☄] Hiển thị giá - thu chi                                      
+[☄] Hiển thị thông tin xử lý chất thải                          
+[☄] Sửa hoạt động chuẩn bị ao                                   
+[☄] Sửa hoạt động thả nuôi                                      
+[☄] Cập nhật nhật ký                                            
+[☄] Hiển thị cho ăn                                             
+[☄] Cập nhật cho ăn                                             
+[☄] Cập nhật sử dụng thuốc                                      
+[☄] Cập nhật thu hoạch                                          
+[☄] Thêm giá - thu chi                                          
+[☄] Cập nhật giá - thu chi                                      
+[☄] Chat                                                        
+[☄] Đồ thị realtime                                             
+[☄] Cập nhật thông tin xử lý chất thải                          
+
+[✿] Hiển thị tổng số ao, số vụ của người dùng                   

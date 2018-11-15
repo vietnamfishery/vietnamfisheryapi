@@ -3,6 +3,7 @@ import { logger, SeasonAndPondServices, SeasonServices, PondsServices } from '..
 import { BaseRoute } from '../BaseRoute';
 import { SeasonsAndPond } from '../../components';
 import { ActionAssociateDatabase } from '../../common';
+import { Transaction } from 'sequelize';
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -48,24 +49,79 @@ export class SeasonAndPondRoute extends BaseRoute {
      * @param next {NextFunction} Execute the next method.
      */
     private addSeasonAndPond = async (request: Request, response: Response) => {
-        const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
-        const { seasonId, pondId } = request.body;
-        seasonsAndPond.setSeasonId = seasonId;
-        seasonsAndPond.setPondId = pondId;
-
-        seasonsAndPond.insert().then((res: any) => {
-            if (!res) {
+        const { seasonId, pondIdArr } = request.body;
+        if (Array.isArray(pondIdArr)) {
+            if(pondIdArr.length) {
+                return this.sequeliz.transaction().then(async (t: Transaction) => {
+                    const result: any[] = [];
+                    for (const pondId of pondIdArr) {
+                        const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
+                        seasonsAndPond.setSeasonsAndPond(null, seasonId, pondId);
+                        const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond, {
+                            transaction: t
+                        }).catch(e => {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+                            });
+                            t.rollback();
+                        });
+                        if (snp) {
+                            result.push(1);
+                        } else {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
+                            });
+                            t.rollback();
+                        }
+                    }
+                    if (pondIdArr.length !== 0 && pondIdArr.length === result.length) {
+                        t.commit();
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm thành công!'
+                        });
+                    } else {
+                        t.rollback();
+                        response.status(200).json({
+                            success: false,
+                            message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
+                        });
+                    }
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+                    });
+                });
+            } else {
                 response.status(200).json({
                     success: false,
-                    message: 'Đã có lỗi xảy ra, không thể thực hiện yêu cầu, vui long thử lại sau!'
+                    message: 'Vui lòng cung cấp dữ liệu để tiếp tục.',
+                });
+            }
+        } else {
+            const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
+            seasonsAndPond.setSeasonsAndPond(null, seasonId, pondIdArr);
+            const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+                });
+            });
+            if(!snp) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Lỗi đường truyền, vui lòng thử lại.'
                 });
             } else {
                 response.status(200).json({
                     success: true,
-                    message: 'Phân quyền thành công.'
+                    message: 'Thêm thành công.'
                 });
             }
-        });
+        }
     }
 
     private updateSeasonAndPond = async (request: Request, response: Response) => {
