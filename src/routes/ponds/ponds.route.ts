@@ -51,7 +51,7 @@ export class PondRoute extends BaseRoute {
         this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao
         this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
-        this.router.post('/get/notin/season-and-pond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
+        this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
