@@ -110,7 +110,7 @@ export class Pond extends BaseComponent {
         images?: string,
         pondLatitude?: number,
         pondLongitude?: number,
-        pondCreatedDate?: Date,
+        pondCreatedDate?: Date | string,
         createdBy?: string,
         createdDate?: Date,
         updatedBy?: string,

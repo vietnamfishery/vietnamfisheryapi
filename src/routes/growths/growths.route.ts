@@ -15,7 +15,7 @@ import { Transaction } from 'sequelize';
  * @apiSuccess {String} type Json Type.
  */
 export class GrowthsRoute extends BaseRoute {
-    public static path = '/growth';
+    public static path = '/growths';
     private static instance: GrowthsRoute;
     private growthsServives: GrowthsServives = new GrowthsServives();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();

@@ -140,7 +140,7 @@ export class UserRoute extends BaseRoute {
             where: {
                 username
             },
-            attributes: ['userId', 'userUUId', 'username', 'password', 'createdDate', 'createdBy']
+            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'password', 'createdDate', 'createdBy']
         }).then((u: any) => {
             if(!u) {
                 response.json({
