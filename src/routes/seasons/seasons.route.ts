@@ -1,6 +1,6 @@
 import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -17,7 +17,7 @@ import { Transaction } from 'sequelize';
 export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
-    // private seasonServices: SeasonServices = new SeasonServices();
+    private seasonServices: SeasonServices = new SeasonServices();
     // private pondsServices: PondsServices = new PondsServices();
     // private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     // private stockingServices: StockingServices = new StockingServices();
@@ -47,6 +47,7 @@ export class SeasonRoute extends BaseRoute {
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
         this.router.post('/get', Authentication.isLogin, this.getSeasonById);
+        this.router.get('/get/active', Authentication.isLogin, this.getActiveSeason);
     }
 
     /**
@@ -125,6 +126,7 @@ export class SeasonRoute extends BaseRoute {
 
     /**
      * Get All vụ theo user
+     * chức năng của admin
      */
     private getSeasons = (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
@@ -217,6 +219,34 @@ export class SeasonRoute extends BaseRoute {
                 message: '',
                 season: res
             });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getActiveSeason = async (request: Request, response: Response, next: NextFunction) => {
+        const { ownerid } = request.headers;
+        this.seasonServices.models.findOne({
+            where: {
+                userId: ownerid,
+                status: 0
+            }
+        }).then((res: any) => {
+            if(res) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    season: res.dataValues
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có vụ nào được kích hoạt, vui lòng kích hoạt một vụ mùa trong hệ thống.'
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,

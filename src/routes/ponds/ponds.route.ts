@@ -46,12 +46,14 @@ export class PondRoute extends BaseRoute {
         this.router.post('/add', Authentication.isLogin, this.addPond); // Thêm ao
         this.router.get('/gets', Authentication.isLogin, this.getPonds); // get all - có hình
         this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages); // get all kèm với quyền - không hình
-        this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByUUId);  // get với UUID
+        this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByPondUUId);  // get với UUID
         this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật
         this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao
         this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi
+        this.router.post('/gets/seasonUUId', Authentication.isLogin, this.getPostPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
         this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
+        this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
@@ -236,7 +238,7 @@ export class PondRoute extends BaseRoute {
     }
 
     private getPondNotInSeasonAndPond = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonUUId } = request.body;
+        const { seasonUUId, ownerId } = request.body;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             let ponds: any = await this.seasonAndPondServices.models.findAll({
                 include: [
@@ -244,7 +246,8 @@ export class PondRoute extends BaseRoute {
                         model: this.seasonServices.models,
                         as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
                         where: {
-                            seasonUUId
+                            seasonUUId,
+                            userId: ownerId
                         },
                         attributes: []
                     }
@@ -266,7 +269,8 @@ export class PondRoute extends BaseRoute {
                     where: {
                         pondId: {
                             [this.sequeliz.Op.notIn]: ponds
-                        }
+                        },
+                        userId: ownerId
                     },
                     transaction: t
                 }).catch(e => {
@@ -307,7 +311,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private getPondByUUId = (request: Request, response: Response, next: NextFunction) => {
+    private getPondByPondUUId = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const { pondUUId } = request.params;
         const token: string = request.headers.authorization;
@@ -444,6 +448,88 @@ export class PondRoute extends BaseRoute {
                 success: false,
                 message: '',
                 e
+            });
+        });
+    }
+
+    private getPostPondBySeasonUUId = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonUUId, ownerId } = request.body;
+        const pond: Pond = new Pond();
+        pond.pondsServices.models.findAll({
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        seasonUUId
+                    },
+                    attributes: []
+                }
+            ],
+            where: {
+                userId: ownerId
+            }
+        }).then((ponds: any) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                ponds
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: '',
+                e
+            });
+        });
+    }
+
+    /**
+     * Get ao các ao của vụ hiện tại
+     * có check status
+     */
+    private getPondByOwnerSeason = async (request: Request, response: Response, next: NextFunction) => {
+        const { ownerId, status } = request.body;
+        const query: any = {
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        userId: ownerId,
+                        status: 0
+                    },
+                    attributes: []
+                },
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                    attributes: []
+                }
+            ],
+            where: {
+                userId: ownerId
+            }
+        };
+        if(status) {
+            const where: any = {
+                status
+            };
+            query.where = {
+                ...query.where,
+                ...where
+            };
+        }
+        this.pondsServices.models.findAll(query).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                ponds: res
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi đường truyền, vui lòng thử lại sau.'
             });
         });
     }

@@ -3,9 +3,7 @@
 [✔] ~~Cập nhật thông tin người dùng~~
 [✔] ~~Tải ảnh người dùng~~
 [✔] ~~Đổi mật khẩu~~
-[✔] ~~Thêm nhân viên~~
 [✔] ~~Phân quyền nhân viên~~
-[✔] ~~Thêm ao~~
 [✔] ~~Cập nhật ao~~
 [✔] ~~Tải ảnh ao~~
 [✔] ~~Phân quyền ao cho nhân viên~~
@@ -16,6 +14,8 @@
 [✔] ~~Lưu vụ kích hoạt hiện tại vào token~~
 [✔] ~~Thêm danh sách ao vào vụ hiện tại~~
 [✔] ~~Hiển thị danh sách ao của vụ yêu cầu~~
+[✔] ~~Thêm nhân viên~~
+[✔] ~~Thêm ao~~
 [✔] ~~Thêm hoạt động chuẩn bị ao~~
 [✔] ~~Thêm hoạt động thả nuôi~~
 [✔] ~~Thêm nhật ký~~
@@ -24,6 +24,7 @@
 [✔] ~~Thêm sử dụng thuốc~~
 [✔] ~~Thêm thông tin xử lý chất thải~~
 [✔] ~~Thêm thu hoạch~~
+[✔] ~~Hiển thị quản lý tăng trưởng~~
 
 #############################################################################################
 
@@ -35,7 +36,6 @@
 [☄] Hiển thị hoạt động chuẩn bị ao
 [☄] Hiển thị hoạt động thả nuôi
 [☄] Hiển thị nhật ký
-[☄] Hiển thị quản lý tăng trưởng
 [☄] Hiển thị sử dụng thuốc
 [☄] Hiển thị thu hoạch
 [☄] Hiển thị giá - thu chi

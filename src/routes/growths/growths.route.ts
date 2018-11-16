@@ -38,12 +38,15 @@ export class GrowthsRoute extends BaseRoute {
 
     private init() {
         logger.info('[GrowthsRoute] Creating season route.');
-        this.router.post('/add', Authentication.isLogin, this.addgrowth);
+        this.router.post('/add', Authentication.isLogin, this.addGrowth);
+        this.router.post('/gets', Authentication.isLogin, this.getGrowths);
+        this.router.post('/get/growthUUId', Authentication.isLogin, this.getGrowthByUUId);
+        this.router.put('/update', Authentication.isLogin, this.updateGrowth);
     }
 
     // Get getgrowths
-    private getgrowths = (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId, pondId } = request.body;
+    private getGrowths = (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId, ownerId } = request.body;
         this.growthsServives.models.findAll({
             include: [
                 {
@@ -51,9 +54,7 @@ export class GrowthsRoute extends BaseRoute {
                     as: ActionAssociateDatabase.GROWTH_2_SEASON_AND_POND,
                     where: {
                         seasonId,
-                        [this.growthsServives.Op.and]: {
-                            pondId
-                        }
+                        pondId
                     }
                 }
             ],
@@ -70,14 +71,12 @@ export class GrowthsRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Lỗi, vui lòng thử lại sau.',
-                error: e
             });
-            throw e;
         });
     }
 
     //  Add addgrowth
-    private addgrowth = async (request: Request, response: Response, next: NextFunction) => {
+    private addGrowth = async (request: Request, response: Response, next: NextFunction) => {
         const { pondId, ownerId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
@@ -102,52 +101,69 @@ export class GrowthsRoute extends BaseRoute {
             });
         });
         const growth: Growth = new Growth();
-        growth.setGrowths(null, uuidv4(), seasonAndPond.seasonAndPondId, averageDensity, averageMass, speedOdGrowth, livingRatio);
-        growth.growthsServives.models.create(growth).catch(e => {
+        if(seasonAndPond) {
+            growth.setGrowths(null, uuidv4(), seasonAndPond.seasonAndPondId, averageDensity, averageMass, speedOdGrowth, livingRatio);
+            growth.growthsServives.models.create(growth).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            }).then(res => {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thêm thành công.'
+                });
+            });
+        } else {
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
-        }).then(res => {
-            response.status(200).json({
-                success: true,
-                message: 'Thêm thành công.'
-            });
-        });
+        }
     }
 
-    // Get growth by Id
-    private getGrowthById = async (request: Request, response: Response, next: NextFunction) => {
-        const { growthid } = request.headers;
-        const growth: Growth = new Growth();
-        growth.setGrowthId = growthid;
-        growth.getById(growth.getGrowthId).then(res => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                growth: res
-            });
+    private getGrowthByUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { growthUUId } = request.body;
+        this.growthsServives.models.findOne({
+            where: {growthUUId}
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Không có thông tin tăng trưởng, vui lòng kiểm tra lại, cảm ơn!'
+                message: 'Lỗi đường truyền, vui lòng thử lại sau.'
             });
+        }).then((res: any) => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    growth: res.dataValues
+                });
+            }
         });
     }
 
     // Update growth by Id
     private updateGrowth = async (request: Request, response: Response, next: NextFunction) => {
-        const { growthId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
+        const { growthUUId, averageDensity, averageMass, speedOdGrowth, livingRatio } = request.body;
         const growth: Growth = new Growth();
-        growth.setGrowthId = growthId;
-        if (!growthId) {
+        growth.setGrowthUUId = growthUUId;
+        if (!growthUUId) {
             response.status(200).json({
                 success: false,
                 message: 'Hành động không được phép, vui lòng thử lại sau!'
             });
         } else {
-            growth.setGrowths(growthId, undefined, undefined, averageDensity, averageMass, speedOdGrowth, livingRatio, undefined, undefined, undefined, undefined, undefined);
-            growth.update().then((res: any) => {
+            growth.setGrowths(undefined, growthUUId, undefined, averageDensity, averageMass, speedOdGrowth, livingRatio, undefined, undefined, undefined, undefined, undefined);
+            growth.growthsServives.models.update(growth.getFields(growth), {
+                where: {
+                    growthUUId
+                }
+            }).then((res: any) => {
                 if (!res) {
                     response.status(200).json({
                         success: false,
