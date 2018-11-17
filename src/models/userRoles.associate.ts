@@ -31,4 +31,14 @@ export function userrolesToUsersBoss(thatmodel: Sequeliz.Model<{}, any>, model: 
     });
 }
 
+export function userrolesToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_ROLES_2_SEASON,
+        foreignKey: {
+            name: 'bossId',
+            field: 'bossId'
+        }
+    });
+}
+
 //

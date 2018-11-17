@@ -1,6 +1,6 @@
 import { DiedFishery } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonAndPondServices, SeasonServices } from '../../services';
+import { logger, SeasonAndPondServices, SeasonServices, DiedFisherysServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -19,6 +19,7 @@ export class DiedFisheryRoute extends BaseRoute {
     private static instance: DiedFisheryRoute;
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
+    private diedFisherysServives: DiedFisherysServives = new DiedFisherysServives();
     /**
      * @class DiedFisheryRoute
      * @constructor
@@ -38,6 +39,9 @@ export class DiedFisheryRoute extends BaseRoute {
     private init() {
         logger.info('[DiedFisheryRoute] Creating Died Fishery route.');
         this.router.post('/add', Authentication.isLogin, this.addDiedFishery);
+        this.router.post('/gets', Authentication.isLogin, this.getDiedFishery);
+        this.router.post('/get/diedFisheryUUId', Authentication.isLogin, this.getDiedFisheryByDiedFisheryUUId);
+        this.router.put('/update', Authentication.isLogin, this.updateDiedFisheryByDiedFisheryUUId);
     }
 
     //  Add DiedFishery
@@ -76,6 +80,92 @@ export class DiedFisheryRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getDiedFishery = async (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId, ownerId } = request.body;
+        this.diedFisherysServives.models.findAll({
+            include: [
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.DIED_FISHERY_2_SEASON_AND_POND,
+                    where: {
+                        seasonId,
+                        pondId
+                    }
+                }
+            ],
+            order: [
+                ['createdDate', 'DESC']
+            ]
+        }).then((wastes) => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                wastes
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi, vui lòng thử lại sau.',
+            });
+        });
+    }
+
+    private getDiedFisheryByDiedFisheryUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { diedFisheryUUId } = request.body;
+        this.diedFisherysServives.models.findOne({
+            where: {
+                diedFisheryUUId
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+            });
+        }).then((res: any) => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    waste: res.dataValues
+                });
+            }
+        });
+    }
+
+    private updateDiedFisheryByDiedFisheryUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { diedFisheryUUId, card, quantity, solutions, employee } = request.body;
+        const diedFishery: DiedFishery = new DiedFishery();
+        diedFishery.setDiedfisherys(null, diedFisheryUUId, undefined, card, quantity, solutions, employee);
+        this.diedFisherysServives.models.update({ card, quantity, solutions, employee }, {
+            where: {
+                diedFisheryUUId
+            },
+            returning: true
+        }).then((res: any) => {
+            if (!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: 'Cập nhật thông tin tăng trưởng thành công!'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau!'
             });
         });
     }

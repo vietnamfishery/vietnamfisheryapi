@@ -162,7 +162,8 @@ export class GrowthsRoute extends BaseRoute {
             growth.growthsServives.models.update(growth.getFields(growth), {
                 where: {
                     growthUUId
-                }
+                },
+                returning: true
             }).then((res: any) => {
                 if (!res) {
                     response.status(200).json({
@@ -175,6 +176,11 @@ export class GrowthsRoute extends BaseRoute {
                         message: 'Cập nhật thông tin tăng trưởng thành công!'
                     });
                 }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau!'
+                });
             });
         }
 

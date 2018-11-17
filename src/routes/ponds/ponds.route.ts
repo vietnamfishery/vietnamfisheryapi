@@ -54,6 +54,7 @@ export class PondRoute extends BaseRoute {
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
         this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
         this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
+        this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // đếm ao của user
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
@@ -530,6 +531,64 @@ export class PondRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getPondByOwnerSeasonWithImage = async (request: Request, response: Response, next: NextFunction) => {
+        const { ownerId, status } = request.body;
+        const query: any = {
+            include: [
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        userId: ownerId,
+                        status: 0
+                    },
+                    attributes: []
+                },
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                    attributes: []
+                }
+            ],
+            where: {
+                userId: ownerId
+            }
+        };
+        if(status) {
+            const where: any = {
+                status
+            };
+            query.where = {
+                ...query.where,
+                ...where
+            };
+        }
+        this.pondsServices.models.findAll(query).then(async (res: any[]) => {
+            if (res.length > 0) {
+                const endData = [];
+                for (const e of res) {
+                    e[`images`] = await GoogleDrive.delayGetFileById(e.images);
+                    endData.push(e);
+                }
+                response.status(200).json({
+                    success: true,
+                    ponds: endData
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    ponds: []
+                });
+            }
+        }).catch(e => {
+            e;
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
             });
         });
     }

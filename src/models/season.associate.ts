@@ -31,6 +31,16 @@ export function seasonToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz
     });
 }
 
+export function seasonToUserRoles(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.SEASON_2_USER_ROLES,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}
+
 export function seasonToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
         as: ActionAssociateDatabase.SEASON_2_SEASON_AND_POND,

@@ -24,7 +24,7 @@ export default class DBHelper {
 
     public static getDatabaseConnection() {
         DBHelper.sequelize.authenticate().then(() => {
-            console.log('Connection has been established successfully.');
+            console.log('Connection with database has been established successfully.');
         })
         .catch(err => {
             console.error('Unable to connect to the database:', err);
@@ -256,7 +256,8 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.userRolesAssociate(
             this.models[`ponduserrolesOptions`],
-            this.models[`userOptions`]
+            this.models[`userOptions`],
+            this.models[`seasonOptions`]
         );
         return md;
     }
@@ -343,7 +344,8 @@ export default class DBHelper {
             this.models[`pricesOptions`],
             this.models[`userOptions`],
             this.models[`seasonAndPondOptions`],
-            this.models[`pondOptions`]
+            this.models[`pondOptions`],
+            this.models[`userrolesOptions`]
         );
         return md;
     }

@@ -14,7 +14,7 @@ export function stockingToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
 //
 
 export function stockingToStockingdetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
-    return thatmodel.hasMany(model, {
+    return thatmodel.hasOne(model, {
         as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
         foreignKey: {
             name: 'stockingId',

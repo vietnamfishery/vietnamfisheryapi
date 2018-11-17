@@ -1,6 +1,6 @@
 import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices } from '../../services';
+import { logger, SeasonServices, UserRolesServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -18,6 +18,7 @@ export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
     private seasonServices: SeasonServices = new SeasonServices();
+    private userRolesServices: UserRolesServices = new UserRolesServices();
     // private pondsServices: PondsServices = new PondsServices();
     // private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     // private stockingServices: StockingServices = new StockingServices();
@@ -47,7 +48,7 @@ export class SeasonRoute extends BaseRoute {
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
         this.router.post('/get', Authentication.isLogin, this.getSeasonById);
-        this.router.get('/get/active', Authentication.isLogin, this.getActiveSeason);
+        this.router.get('/get/present', Authentication.isLogin, this.getPresentSeason);
     }
 
     /**
@@ -210,10 +211,7 @@ export class SeasonRoute extends BaseRoute {
 
     private getSeasonById = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId } = request.body;
-        const token: string = request.headers.authorization;
-        const deToken: any = Authentication.detoken(token);
-        const season: Season = new Season();
-        season.seasonServices.models.findById(seasonId).then((res: Season) => {
+        this.seasonServices.models.findById(seasonId).then((res: Season) => {
             response.status(200).json({
                 success: true,
                 message: '',
@@ -227,7 +225,7 @@ export class SeasonRoute extends BaseRoute {
         });
     }
 
-    private getActiveSeason = async (request: Request, response: Response, next: NextFunction) => {
+    private getPresentSeason = async (request: Request, response: Response, next: NextFunction) => {
         const { ownerid } = request.headers;
         this.seasonServices.models.findOne({
             where: {

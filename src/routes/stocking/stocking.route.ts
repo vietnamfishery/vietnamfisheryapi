@@ -1,6 +1,6 @@
 import { Stocking, StockingDetail } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, SeasonAndPondServices, BreedServives } from '../../services';
+import { logger, SeasonServices, SeasonAndPondServices, BreedServives, StockingServices, StockingDetailsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -20,6 +20,8 @@ export class StockingRoute extends BaseRoute {
     private seasonServices: SeasonServices = new SeasonServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private breedServives: BreedServives = new BreedServives();
+    private stockingServices: StockingServices = new StockingServices();
+    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
     /**
      * @class StockingRoute
      * @constructor
@@ -39,6 +41,7 @@ export class StockingRoute extends BaseRoute {
     private init() {
         logger.info('[StockingRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addStocking);
+        this.router.post('/gets', Authentication.isLogin, this.getStocking);
     }
 
     private addStocking = async (request: Request, response: Response, next: NextFunction) => {
@@ -118,6 +121,58 @@ export class StockingRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getStocking = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondId, seasonId, ownerId } = request.body;
+        this.stockingServices.models.findAll(({
+            include: [
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
+                    where: {
+                        pondId,
+                        seasonId
+                    },
+                    include: [
+                        {
+                            model: this.seasonServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                            where: {
+                                userId: ownerId
+                            },
+                            attributes: []
+                        }
+                    ],
+                    attributes: []
+                },
+                {
+                    model: this.stockingDetailsServices.models,
+                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS
+                }
+            ],
+            order: [
+                this.sequeliz.fn('max', this.sequeliz.col('stockingId'))
+            ]
+        } as any)).then(res => {
+            if(!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký thả ao.',
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    stocking: res
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: true,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
             });
         });
     }

@@ -25,6 +25,8 @@
 [✔] ~~Thêm thông tin xử lý chất thải~~
 [✔] ~~Thêm thu hoạch~~
 [✔] ~~Hiển thị quản lý tăng trưởng~~
+[✔] Hiển thị thông tin xử lý chất thải
+[✔] Cập nhật thông tin xử lý chất thải
 
 #############################################################################################
 
@@ -39,7 +41,6 @@
 [☄] Hiển thị sử dụng thuốc
 [☄] Hiển thị thu hoạch
 [☄] Hiển thị giá - thu chi
-[☄] Hiển thị thông tin xử lý chất thải
 [☄] Hiển thị cho ăn
 [☄] Cập nhật thức ăn/csvc/dược phẩm & thuốc
 [☄] Cập nhật giống
@@ -49,7 +50,6 @@
 [☄] Cập nhật cho ăn
 [☄] Cập nhật sử dụng thuốc
 [☄] Cập nhật thu hoạch
-[☄] Cập nhật thông tin xử lý chất thải
 [☄] Thêm giá - thu chi
 [☄] Cập nhật giá - thu chi
 [☄] Chat
