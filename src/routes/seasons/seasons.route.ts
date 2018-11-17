@@ -48,7 +48,7 @@ export class SeasonRoute extends BaseRoute {
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
         this.router.post('/get', Authentication.isLogin, this.getSeasonById);
-        this.router.get('/get/present', Authentication.isLogin, this.getPresentSeason);
+        this.router.get('/gets/present', Authentication.isLogin, this.getPresentSeason);
     }
 
     /**

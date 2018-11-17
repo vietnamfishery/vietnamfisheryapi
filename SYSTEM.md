@@ -25,18 +25,19 @@
 [✔] ~~Thêm thông tin xử lý chất thải~~
 [✔] ~~Thêm thu hoạch~~
 [✔] ~~Hiển thị quản lý tăng trưởng~~
-[✔] Hiển thị thông tin xử lý chất thải
-[✔] Cập nhật thông tin xử lý chất thải
+[✔] ~~Hiển thị thông tin xử lý chất thải~~
+[✔] ~~Cập nhật thông tin xử lý chất thải~~
+[✔] ~~Hiển thị hoạt động thả nuôi~~
 
 #############################################################################################
 
+[☠] Cập nhật hoạt động thả nuôi - [Lỗi cập nhật thả nuôi nhưng không cập nhật số lượng trong breed]
 [☠] Thêm thức ăn/csvc/dược phẩm & thuốc vào kho - [Lỗi cộng số lượng không cùng đơn vị tính]
 [☠] Thêm giống - [Lỗi cộng số lượng không cùng đơn vị tính]
 
 #############################################################################################
 
 [☄] Hiển thị hoạt động chuẩn bị ao
-[☄] Hiển thị hoạt động thả nuôi
 [☄] Hiển thị nhật ký
 [☄] Hiển thị sử dụng thuốc
 [☄] Hiển thị thu hoạch
@@ -45,7 +46,6 @@
 [☄] Cập nhật thức ăn/csvc/dược phẩm & thuốc
 [☄] Cập nhật giống
 [☄] Cập nhật hoạt động chuẩn bị ao
-[☄] Cập nhật hoạt động thả nuôi
 [☄] Cập nhật nhật ký
 [☄] Cập nhật cho ăn
 [☄] Cập nhật sử dụng thuốc

@@ -167,7 +167,7 @@ export enum ActionAssociateDatabase {
     STOCKING_2_SEASON_AND_POND = 'seasonAndPond',
     //
     STOCKING_DETAILS_2_STOCKING = 'stocking',
-    STOCKING_DETAILS_2_BREED = 'stockingDetailsBreeds',
+    STOCKING_DETAILS_2_BREED = 'breed',
     //
     STORAGE_2_POND_PREPARE_DETAILS = 'pondPrepareDetails', //
     STORAGE_2_MATERIAL = 'materials',

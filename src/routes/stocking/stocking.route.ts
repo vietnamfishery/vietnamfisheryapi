@@ -1,6 +1,6 @@
 import { Stocking, StockingDetail } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, SeasonAndPondServices, BreedServives, StockingServices, StockingDetailsServices } from '../../services';
+import { logger, SeasonServices, SeasonAndPondServices, BreedServives, StockingServices, StockingDetailsServices, PondsServices, UserServives, PondUserRolesServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -22,6 +22,9 @@ export class StockingRoute extends BaseRoute {
     private breedServives: BreedServives = new BreedServives();
     private stockingServices: StockingServices = new StockingServices();
     private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    private pondsServices: PondsServices = new PondsServices();
+    private userServives: UserServives = new UserServives();
+    private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
     /**
      * @class StockingRoute
      * @constructor
@@ -42,6 +45,8 @@ export class StockingRoute extends BaseRoute {
         logger.info('[StockingRoute] Creating ping route.');
         this.router.post('/add', Authentication.isLogin, this.addStocking);
         this.router.post('/gets', Authentication.isLogin, this.getStocking);
+        this.router.post('/get/stockingDetailUUId', Authentication.isLogin, this.getStockingDetailsByStockingDetailsUUId);
+        this.router.put('/update', Authentication.isLogin, this.updateStockingDetailsByStockingDetailsUUId);
     }
 
     private addStocking = async (request: Request, response: Response, next: NextFunction) => {
@@ -80,10 +85,10 @@ export class StockingRoute extends BaseRoute {
                 });
                 t.rollback();
             });
-            if(st) {
+            if (st) {
                 const onUpdate: any = await this.breedServives.models.update(
                     {
-                        totalQuantity: this.sequeliz.literal(`totalQuantity - ${ stockingQuantity }`)
+                        totalQuantity: this.sequeliz.literal(`totalQuantity - ${stockingQuantity}`)
                     },
                     {
                         where: {
@@ -97,7 +102,7 @@ export class StockingRoute extends BaseRoute {
                     });
                     t.rollback();
                 });
-                if(onUpdate) {
+                if (onUpdate) {
                     const stockingDetail: StockingDetail = new StockingDetail();
                     stockingDetail.setStockingdetails(uuidv4(), breedId, st.stockingId, stockingQuantity, phFirst, salinityFirst);
                     stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
@@ -126,14 +131,15 @@ export class StockingRoute extends BaseRoute {
     }
 
     private getStocking = async (request: Request, response: Response, next: NextFunction) => {
-        const { pondId, seasonId, ownerId } = request.body;
+        const { seasonId, ownerId } = request.body;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
         this.stockingServices.models.findAll(({
             include: [
                 {
                     model: this.seasonAndPondServices.models,
                     as: ActionAssociateDatabase.STOCKING_2_SEASON_AND_POND,
                     where: {
-                        pondId,
                         seasonId
                     },
                     include: [
@@ -144,20 +150,50 @@ export class StockingRoute extends BaseRoute {
                                 userId: ownerId
                             },
                             attributes: []
+                        },
+                        {
+                            model: this.pondsServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+                            include: [
+                                {
+                                    model: this.userServives.models,
+                                    as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+                                    required: false,
+                                    attributes: []
+                                },
+                                {
+                                    model: this.pondUserRolesServices.models,
+                                    as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                                    required: false,
+                                    attributes: []
+                                }
+                            ]
                         }
                     ],
-                    attributes: []
                 },
                 {
                     model: this.stockingDetailsServices.models,
-                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS
+                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
+                    include: [
+                        {
+                            model: this.breedServives.models,
+                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED
+                        }
+                    ]
                 }
             ],
-            order: [
-                this.sequeliz.fn('max', this.sequeliz.col('stockingId'))
-            ]
+            where: {
+                [this.sequeliz.Op.or]: [
+                    {
+                        '$seasonAndPond->ponds.userId$': deToken.userId
+                    },
+                    {
+                        '$seasonAndPond->ponds->users->ponduserroles.userId$': deToken.userId
+                    }
+                ]
+            }
         } as any)).then(res => {
-            if(!res.length) {
+            if (!res.length) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy nhật ký thả ao.',
@@ -173,6 +209,63 @@ export class StockingRoute extends BaseRoute {
             response.status(200).json({
                 success: true,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+                e
+            });
+        });
+    }
+
+    private getStockingDetailsByStockingDetailsUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { stockingDetailUUId } = request.body;
+        this.stockingDetailsServices.models.findOne({
+            where: {
+                stockingDetailUUId
+            }
+        }).then(res => {
+            if (!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy hoạt động thả nuôi.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    stockingDetails: res
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra.'
+            });
+        });
+    }
+
+    private updateStockingDetailsByStockingDetailsUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { stockingDetailUUId, breedId, stockingQuantity } = request.body;
+        this.stockingDetailsServices.models.update({
+            breedId, stockingQuantity
+        }, {
+            where: {
+                stockingDetailUUId
+            },
+            returning: true
+        }).then(res => {
+            if (!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Thất bại, vui lòng thử lại sau.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: 'Cập nhật thành công!'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra.'
             });
         });
     }
