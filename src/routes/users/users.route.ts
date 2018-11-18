@@ -157,7 +157,6 @@ export class UserRoute extends BaseRoute {
                         });
                         response.json({
                             success: true,
-                            u,
                             token
                         });
                     } else {

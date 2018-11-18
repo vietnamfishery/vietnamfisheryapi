@@ -137,3 +137,13 @@ export function userToOwnerBreed(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
         }
     });
 }
+
+export function userToIncurred(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.USER_2_INCURREDS,
+        foreignKey: {
+            name: 'userId',
+            field: 'userId'
+        }
+    });
+}

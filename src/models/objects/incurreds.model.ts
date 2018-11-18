@@ -22,6 +22,10 @@ export const incurredsOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             allowNull: false,
         },
+        ownerId: {
+            type: Sequelize.BIGINT(20),
+            allowNull: false,
+        },
         incurredName: {
             type: Sequelize.STRING(100),
             allowNull: false,
@@ -29,6 +33,10 @@ export const incurredsOptions: any = _.merge({
         value: {
             type: Sequelize.FLOAT,
             allowNull: false,
+        },
+        notes: {
+            type: Sequelize.STRING(255),
+            allowNull: true,
         },
         createdDate: {
             type: Sequelize.DATE,

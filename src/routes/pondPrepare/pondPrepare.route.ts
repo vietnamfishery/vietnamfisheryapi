@@ -1,6 +1,6 @@
 import { PondPrepare, PondPrepareDetail, Storage, Pond, SeasonsAndPond, Incurred } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, PondPrepareServices, SeasonAndPondServices, SeasonServices, PondsServices, IncurredsServices } from '../../services';
+import { logger, PondPrepareServices, SeasonAndPondServices, SeasonServices, PondsServices, IncurredsServices, PondPrepareDetailsServices, StoregeServices, MaterialServives, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase, defaultImage } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -16,13 +16,16 @@ import { DateUtil } from '../../lib';
  * @apiSuccess {String} type Json Type.
  */
 export class PondPrepareRoute extends BaseRoute {
-    public static path = '/PondPrepares';
+    public static path = '/pondPrepares';
     private static instance: PondPrepareRoute;
     private pondPrepareServices: PondPrepareServices = new PondPrepareServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
     private pondsServices: PondsServices = new PondsServices();
     private incurredsServices: IncurredsServices = new IncurredsServices();
+    private pondPrepareDetailsServices: PondPrepareDetailsServices = new PondPrepareDetailsServices();
+    private storegeServices: StoregeServices = new StoregeServices();
+    private userServives: UserServives = new UserServives();
     /**
      * @class PondPrepareRoute
      * @constructor
@@ -45,64 +48,95 @@ export class PondPrepareRoute extends BaseRoute {
         this.router.post('/addNew', Authentication.isLogin, this.addNewPrepare);
         this.router.post('/add/exiting-pond', Authentication.isLogin, this.addPrepareOldPond);
         this.router.post('/gets', Authentication.isLogin, this.getPondPrepares);
-        this.router.get('/get', Authentication.isLogin, this.getById);
+        this.router.post('/gets/uuid', Authentication.isLogin, this.getPondPrepareByPondPrePareUUId);
         this.router.put('/update', Authentication.isLogin, this.updatePondPrepare);
 
         // incurred
-        this.router.post('incurreds/add', Authentication.isLogin, this.addIncurred);
-        this.router.put('incurreds/update', Authentication.isLogin, this.updateIncurred);
+        this.router.post('/incurreds/add', Authentication.isLogin, this.addIncurred);
+        this.router.post('/incurreds/get/uuid', Authentication.isLogin, this.getIncurredByIncurredUUId);
+        this.router.put('/incurreds/update', Authentication.isLogin, this.updateIncurred);
     }
 
     private getPondPrepares = (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, pondId } = request.body;
         this.pondPrepareServices.models.findAll({
             include: [
-                // {
-                //     model: this.pondPrepareDetailsServices.models,
-                //     as: ActionAssociateDatabase.POND_PREPARE_2_POND_PREPARE_DETAILS,
-                //     // include: [
-                //     //     {
-                //     //         model: this.materialServices.models,
-                //     //         as: ActionAssociateDatabase.POND_PREPARE_DETAIL_2_MATERIAL
-                //     //     }
-                //     // ]
-                // },
+                {
+                    model: this.pondPrepareDetailsServices.models,
+                    as: ActionAssociateDatabase.POND_PREPARE_2_POND_PREPARE_DETAILS,
+                    required: false,
+                    include: [
+                        {
+                            model: this.storegeServices.models,
+                            as: ActionAssociateDatabase.POND_PREPARE_DETAIL_2_STORAGE
+                        }
+                    ]
+                },
+                {
+                    model: this.incurredsServices.models,
+                    required: false,
+                    as: ActionAssociateDatabase.POND_PREPARE_2_INCURREDS,
+                    include: [
+                        {
+                            model: this.userServives.models,
+                            as: ActionAssociateDatabase.INCURREDS_TO_USER
+                        }
+                    ]
+                },
                 {
                     model: this.seasonAndPondServices.models,
                     as: ActionAssociateDatabase.POND_PREPARE_2_SEASON_AND_POND,
-                    include: [
-                        {
-                            model: this.seasonServices.models,
-                            as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
-                            where: {
-                                seasonId
-                            },
-                            attributes: ['seasonName']
-                        },
-                        {
-                            model: this.pondsServices.models,
-                            as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
-                            where: {
-                                pondId
-                            },
-                            attributes: ['pondName']
-                        }
-                    ]
+                    where: {
+                        pondId,
+                        seasonId
+                    }
                 }
             ]
         }).then((res) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                pondPrepare: res
-            });
+            if(!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký chuẩn bị ao của ao này.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    pondPrepares: res
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi, vui lòng thử lại sau.',
-                error: e
+                message: 'Lỗi, vui lòng thử lại sau.'
             });
-            throw e;
+        });
+    }
+
+    private getPondPrepareByPondPrePareUUId = (request: Request, response: Response, next: NextFunction) => {
+        const { pondPrepareUUId } = request.body;
+        this.pondPrepareServices.models.findOne({
+            where: {
+                pondPrepareUUId
+            }
+        }).then(res => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký chuẩn bị ao.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    pondPrepare: res
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra, vui lòng thử lại sau.'
+            });
         });
     }
 
@@ -545,8 +579,8 @@ export class PondPrepareRoute extends BaseRoute {
     private addIncurred = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const { pondPrepareId, incurredName, value, notes } = request.body;
         const { userId } = deToken;
+        const { pondPrepareId, incurredName, value, notes } = request.body;
         const incurred: Incurred = new Incurred();
         incurred.setIncurred(null, uuidv4(), pondPrepareId, userId, incurredName, value, notes);
         incurred.incurredsServices.models.create(incurred).then(res => {
@@ -570,16 +604,14 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     private updateIncurred = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
-        const deToken: any = Authentication.detoken(token);
-        const { userId } = deToken;
         const { incurredUUId, incurredName, value, notes } = request.body;
         this.incurredsServices.models.update({
-            userId, incurredName, value, notes
+            incurredName, value, notes
         }, {
             where: {
                 incurredUUId
-            }
+            },
+            returning: true
         }).then(res => {
             if(!res) {
                 response.status(200).json({
@@ -589,7 +621,34 @@ export class PondPrepareRoute extends BaseRoute {
             } else {
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm thành phí phát sinh thành công.'
+                    message: 'Cập nhật thành công phí phát sinh thành công.'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private getIncurredByIncurredUUId = async (request: Request, response: Response, next: NextFunction) => {
+        const { incurredUUId } = request.body;
+        this.incurredsServices.models.findOne({
+            where: {
+                incurredUUId
+            }
+        }).then(res => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy thông tin chi phí phát sinh.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    incurred: res
                 });
             }
         }).catch(e => {

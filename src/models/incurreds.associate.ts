@@ -10,3 +10,13 @@ export function incurredsToPondPrepare(thatmodel: Sequeliz.Model<{}, any>, model
         }
     });
 }
+
+export function incurredsToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.INCURREDS_TO_USER,
+        foreignKey: {
+            name: 'ownerId',
+            field: 'ownerId'
+        }
+    });
+}

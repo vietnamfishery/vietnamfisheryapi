@@ -131,6 +131,7 @@ export enum ActionAssociateDatabase {
     POND_PREPARE_DETAIL_2_COST = 'detailCost',
     //
     INCURREDS_TO_POND_PREPARE = 'pondPrepare',
+    INCURREDS_TO_USER = 'user',
     //
     POND_2_POND_USER_ROLE = 'pondUserRoles', // ok
     POND_2_SEASON = 'seasons',
@@ -208,6 +209,7 @@ export enum ActionAssociateDatabase {
     USER_2_POND_USER_ROLE = 'pondUserRole',
     USER_2_OWNER_STORAGE = 'user',
     USER_2_OWNER_BREED = 'ownerBreed',
+    USER_2_INCURREDS = 'incurreds',
     //
     USING_FOOD_2_STORAGE = 'storages',
     USING_FOOD_2_TAKE_CARE = 'usingFoods',

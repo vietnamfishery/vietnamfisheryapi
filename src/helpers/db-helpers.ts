@@ -62,6 +62,7 @@ export default class DBHelper {
             this.models[`storageOwnerOptions`],
             this.models[`ownerBreedOptions`],
             this.models[`ponduserrolesOptions`],
+            this.models[`incurredsOptions`]
         );
         return md;
     }
@@ -226,7 +227,10 @@ export default class DBHelper {
     public get incurredModel () {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
-        modelBuilder.incurredAssociate(this.models[`pondprepareOptions`]);
+        modelBuilder.incurredAssociate(
+            this.models[`pondprepareOptions`],
+            this.models[`userOptions`]
+        );
         return md;
     }
 

@@ -52,6 +52,7 @@ export class PondRoute extends BaseRoute {
         this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/gets/seasonUUId', Authentication.isLogin, this.getPostPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
+        this.router.post('/seasons/count', Authentication.isLogin, this.countSeasonWithPond); // đếm ao của user
         this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
         this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
         this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // đếm ao của user
@@ -765,6 +766,37 @@ export class PondRoute extends BaseRoute {
                 success: false,
                 message: 'Đã có lỗi xảy ra.',
                 e
+            });
+        });
+    }
+
+    /**
+     * @method POST
+     * Đếm số vụ của ao chỉ định
+     */
+    private countSeasonWithPond = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondUUId } = request.body;
+        this.seasonAndPondServices.models.findAndCountAll({
+            include: [
+                {
+                    model: this.pondsServices.models,
+                    as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+                    where: {
+                        pondUUId
+                    },
+                    attributes: []
+                }
+            ]
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                count: res.count
+            });
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra.'
             });
         });
     }
