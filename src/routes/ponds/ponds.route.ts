@@ -72,7 +72,7 @@ export class PondRoute extends BaseRoute {
             if (request.files) {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
-                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude, pondLongitude, pondCreatedDate);
+                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude ? pondLatitude : null, pondLongitude ? pondLongitude : null, pondCreatedDate);
                         pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                             response.status(200).json({
                                 success: true,
