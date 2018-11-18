@@ -56,11 +56,17 @@ export const pondOptions: any = _.merge({
         },
         pondLatitude: {
             type: Sequelize.DOUBLE,
-            allowNull: true
+            allowNull: true,
+            defaultValue: () => {
+                return null;
+            }
         },
         pondLongitude: {
             type: Sequelize.DOUBLE,
-            allowNull: true
+            allowNull: true,
+            defaultValue: () => {
+                return null;
+            }
         },
         createdBy: {
             type: Sequelize.STRING(36),

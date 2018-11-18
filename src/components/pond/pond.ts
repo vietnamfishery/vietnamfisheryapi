@@ -15,8 +15,8 @@ export class Pond extends BaseComponent {
     private isFed: number;
     private isDiary: number;
     private images: string;
-    private pondLatitude: number = null;
-    private pondLongitude: number = null;
+    private pondLatitude: number;
+    private pondLongitude: number;
     private createdBy: string;
     private createdDate: Date;
     private updatedBy: string;
