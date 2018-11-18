@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { WardServices } from '../../services';
-import { Promise } from '../../lib';
 
 export class Ward extends BaseComponent {
     public wardServices: WardServices;

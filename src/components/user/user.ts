@@ -2,7 +2,6 @@ import { Enscrypts } from '../../lib/';
 import { UserServives } from '../../services';
 import { BaseComponent } from '../baseComponents';
 import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class User extends BaseComponent {
     public userServices: UserServives;

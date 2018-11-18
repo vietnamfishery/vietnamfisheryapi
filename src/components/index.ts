@@ -30,3 +30,4 @@ export * from './user';
 export * from './usingFood';
 export * from './usingVeterinary';
 export * from './ward';
+export * from './incurreds';

@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { SeasonAndPondServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class SeasonsAndPond extends BaseComponent {
     public seasonAndPondServices: SeasonAndPondServices;

@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { PondsServices } from '../../services';
-import { Promise } from '../../lib';
 
 export class Pond extends BaseComponent {
     public pondsServices: PondsServices;
@@ -11,11 +10,13 @@ export class Pond extends BaseComponent {
     private pondArea: number;
     private pondDepth: number;
     private createCost: number;
+    private pondCreatedDate: Date;
     private status: number;
+    private isFed: number;
+    private isDiary: number;
     private images: string;
     private pondLatitude: number = null;
     private pondLongitude: number = null;
-    private pondCreatedDate: Date;
     private createdBy: string;
     private createdDate: Date;
     private updatedBy: string;
@@ -66,6 +67,14 @@ export class Pond extends BaseComponent {
         this.status = status;
     }
 
+    public set setIsFed(isFed) {
+        this.isFed = isFed;
+    }
+
+    public set setIsDiary(isDiary) {
+        this.isDiary = isDiary;
+    }
+
     public set setImages(images) {
         this.images = images;
     }
@@ -107,6 +116,8 @@ export class Pond extends BaseComponent {
         pondDepth: number,
         createCost: number,
         status: number,
+        isFed: number,
+        isDiary: number,
         images?: string,
         pondLatitude?: number,
         pondLongitude?: number,
@@ -125,6 +136,8 @@ export class Pond extends BaseComponent {
         this.setPondDepth = pondDepth;
         this.setCreateCost = createCost;
         this.setStatus = status || status === 0 ? status * 1 : null;
+        this.setIsFed = isFed;
+        this.setIsDiary = isDiary;
         this.setImages = images;
         this.setPondLatitude = pondLatitude;
         this.setPondLongitude = pondLongitude;
@@ -168,6 +181,14 @@ export class Pond extends BaseComponent {
         return this.status;
     }
 
+    public get getIsFed(): number {
+        return this.isFed;
+    }
+
+    public get getIsDiary(): number {
+        return this.isDiary;
+    }
+
     public get getImages(): string {
         return this.images;
     }
@@ -208,51 +229,5 @@ export class Pond extends BaseComponent {
         return {
             pondId: this.getPondId
         };
-    }
-
-    insert(employee?: number): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.pondsServices.insert({
-                pond: this,
-                userId: employee ? employee : this.getUserId
-            }).then((res: any) => {
-                resolve(res);
-            });
-        });
-    }
-
-    // public getAll(action, userId): Promise<any> {
-    //     return new Promise((resolve, reject) => {
-    //         this.pondsServices.getAll(this.getQuery(action, userId)).then((pond: any) => {
-    //             resolve(pond);
-    //         });
-    //     });
-    // }
-
-    // createQuery(options: IOptionQuery) {
-    //     switch (options.action) {
-    //         case ActionServer.GET:
-    //             return merge(super.createQuery(options),{
-    //                 // where: this.getForgeinKey
-    //             },{
-    //                 where: this.getPrimary
-    //             });
-    //         default:
-    //             return super.createQuery(options);
-    //     }
-    // }
-
-    // getById(action, pondId, userId): Promise<any> {
-    //     return new Promise((resolve, reject) => {
-    //         this.pondsServices.getById(this.getQuery(action, pondId));
-    //     });
-    // }
-
-    test(): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.pondsServices.test().then(res => {
-                resolve(res);
-            });
-        });
     }
 }

@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { PondDiaryServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class PondDiary extends BaseComponent {
     public pondDiaryServices: PondDiaryServices;

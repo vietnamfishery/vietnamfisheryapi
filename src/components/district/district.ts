@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { DistrictServives } from '../../services';
-import { Promise } from '../../lib';
 
 export class District extends BaseComponent {
     public districtServives: DistrictServives;

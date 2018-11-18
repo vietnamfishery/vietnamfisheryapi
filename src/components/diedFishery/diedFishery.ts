@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { DiedFisherysServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class DiedFishery extends BaseComponent {
     public diedFisherysServives: DiedFisherysServives;

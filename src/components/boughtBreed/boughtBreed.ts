@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { BoughtBreedServives } from '../../services'; // import services
-import { Promise } from '../../lib';
 
 export class BoughtBreed extends BaseComponent {
     public boughtBreedServives: BoughtBreedServives;

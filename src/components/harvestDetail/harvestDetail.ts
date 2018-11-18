@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { HarvestDetailsServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class HarvestDetail extends BaseComponent {
     public harvestDetailsServives: HarvestDetailsServives;

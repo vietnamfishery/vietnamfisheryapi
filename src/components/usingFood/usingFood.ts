@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { UsingFoodsServices } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class UsingFood extends BaseComponent {
     public usingFoodsServices: UsingFoodsServices;

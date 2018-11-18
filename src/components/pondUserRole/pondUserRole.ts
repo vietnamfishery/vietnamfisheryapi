@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { PondUserRolesServices } from '../../services';
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class PondUserRole extends BaseComponent {
     public pondUserRolesServices: PondUserRolesServices;

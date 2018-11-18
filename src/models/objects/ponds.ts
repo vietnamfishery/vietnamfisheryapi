@@ -11,92 +11,83 @@ export const pondOptions: any = _.merge({
         pondId: {
             autoIncrement: true,
             type: Sequelize.BIGINT(20),
-            primaryKey: true,
-            // field: 'pondId'
+            primaryKey: true
         },
         pondUUId: {
             type: Sequelize.STRING(36),
             unique: true,
-            allowNull: false,
-            // field: 'pondUUId'
+            allowNull: false
         },
         userId: {
             type: Sequelize.BIGINT(20),
-            allowNull: false,
-            // field: 'userId'
+            allowNull: false
         },
         pondName: {
-            type: Sequelize.STRING(50),
-            // field: 'pondName'
+            type: Sequelize.STRING(50)
         },
         pondArea: {
-            type: Sequelize.FLOAT,
-            // field: 'pondArea'
+            type: Sequelize.FLOAT
         },
         pondDepth: {
-            type: Sequelize.FLOAT,
-            // field: 'pondDepth'
+            type: Sequelize.FLOAT
         },
         createCost: {
-            type: Sequelize.FLOAT,
-            // field: 'createCost'
+            type: Sequelize.FLOAT
+        },
+        pondCreatedDate: {
+            type: Sequelize.DATE
         },
         status: {
             type: Sequelize.INTEGER(1),
             allowNull: false,
-            defaultValue: 0,
-            // field: 'status'
+            defaultValue: 0
+        },
+        isFed: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true
+        },
+        isDiary: {
+            type: Sequelize.INTEGER(1),
+            allowNull: true
         },
         images: {
             type: Sequelize.TEXT({ length: '1000' }),
-            allowNull: true,
-            // field: 'images'
+            allowNull: true
         },
         pondLatitude: {
             type: Sequelize.DOUBLE,
-            allowNull: true,
-            // field: 'pondLatitude'
+            allowNull: true
         },
         pondLongitude: {
             type: Sequelize.DOUBLE,
-            allowNull: true,
-            // field: 'pondLongitude'
-        },
-        pondCreatedDate: {
-            type: Sequelize.DATE,
-            // field: 'pondCreatedDate'
+            allowNull: true
         },
         createdBy: {
             type: Sequelize.STRING(36),
-            allowNull: true,
-            // field: 'createdBy'
+            allowNull: true
         },
         createdDate: {
             type: Sequelize.DATE,
             allowNull: true,
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
-            },
-            // field: 'createdDate'
+            }
         },
         updatedBy: {
             type: Sequelize.STRING(36),
-            allowNull: true,
-            // field: 'updatedBy'
+            allowNull: true
         },
         updatedDate: {
             type: Sequelize.DATE,
             allowNull: true,
             defaultValue: () => {
                 return DateUtil.getUTCDateTime();
-            },
-            // field: 'updatedDate'
+            }
         },
         isDeleted: {
             type: Sequelize.INTEGER(1),
             defaultValue: 0,
             allowNull: true
-            // field: 'isDeleted'
         }
     },
     options: {

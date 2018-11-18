@@ -28,6 +28,8 @@
 [✔] ~~Hiển thị thông tin xử lý chất thải~~
 [✔] ~~Cập nhật thông tin xử lý chất thải~~
 [✔] ~~Hiển thị hoạt động thả nuôi~~
+[✔] ~~Hiển thị cho ăn~~
+[✔] ~~Hiển thị sử dụng thuốc~~
 
 #############################################################################################
 
@@ -37,12 +39,12 @@
 
 #############################################################################################
 
+[☄] Thống kê cho ăn
+[☄] Thống kê sử dụng thuốc
 [☄] Hiển thị hoạt động chuẩn bị ao
 [☄] Hiển thị nhật ký
-[☄] Hiển thị sử dụng thuốc
 [☄] Hiển thị thu hoạch
 [☄] Hiển thị giá - thu chi
-[☄] Hiển thị cho ăn
 [☄] Cập nhật thức ăn/csvc/dược phẩm & thuốc
 [☄] Cập nhật giống
 [☄] Cập nhật hoạt động chuẩn bị ao

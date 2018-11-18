@@ -34,3 +34,4 @@ export * from './using-foods.services';
 export * from './using-veterinary.services';
 export * from './ward.services';
 export * from './seasonAndPond.services';
+export * from './incurreds.services';

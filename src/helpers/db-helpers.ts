@@ -209,7 +209,8 @@ export default class DBHelper {
         modelBuilder.pondprepareAssociate(
             this.models[`seasonAndPondOptions`],
             this.models[`costsOptions`],
-            this.models[`pondpreparedetailOptions`]
+            this.models[`pondpreparedetailOptions`],
+            this.models[`incurredsOptions`]
         );
         return md;
     }
@@ -219,6 +220,13 @@ export default class DBHelper {
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.pondpreparedetailsAssociate(this.models[`pondprepareOptions`],
         this.models[`storagesOptions`]);
+        return md;
+    }
+
+    public get incurredModel () {
+        const md = this.model;
+        const modelBuilder: ModelBuilder = new ModelBuilder(md);
+        modelBuilder.incurredAssociate(this.models[`pondprepareOptions`]);
         return md;
     }
 

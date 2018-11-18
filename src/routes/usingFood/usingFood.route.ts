@@ -107,4 +107,11 @@ export class UsingFoodRoute extends BaseRoute {
             });
         });
     }
+
+    private getUsingFood = async (request: Request, response: Response, next: NextFunction) => {
+        // const token: string = request.headers.authorization;
+        // const deToken: any = Authentication.detoken(token);
+        // const { userId } = deToken;
+        // const ownerId =
+    }
 }

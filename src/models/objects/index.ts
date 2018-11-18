@@ -20,6 +20,7 @@ export * from './ponduserroles';
 export * from './prices';
 export * from './province';
 export * from './seasons';
+export * from './incurreds.model';
 export * from './seasonandpond';
 export * from './stocking';
 export * from './stockingdetails';

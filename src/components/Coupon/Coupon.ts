@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { CouponServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class Coupon extends BaseComponent {
     public couponServives: CouponServives;

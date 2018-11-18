@@ -34,8 +34,8 @@ export const boughtbreeddetailsOptions: any = _.merge({
             allowNull: false
         },
         unitPrice: {
-            type: Sequelize.FLOAT,
             allowNull: false,
+            type: Sequelize.FLOAT,
             // field: 'unitPrice'
         },
         soldAddress: {

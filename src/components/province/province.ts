@@ -1,6 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { ProvinceServices } from '../../services';
-import { Promise } from '../../lib';
 
 export class Province extends BaseComponent {
     public provinceServices: ProvinceServices;

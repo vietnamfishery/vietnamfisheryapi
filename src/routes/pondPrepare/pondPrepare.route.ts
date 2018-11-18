@@ -1,6 +1,6 @@
-import { PondPrepare, PondPrepareDetail, Storage, Pond, SeasonsAndPond } from '../../components';
+import { PondPrepare, PondPrepareDetail, Storage, Pond, SeasonsAndPond, Incurred } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, PondPrepareServices, SeasonAndPondServices, SeasonServices, PondsServices } from '../../services';
+import { logger, PondPrepareServices, SeasonAndPondServices, SeasonServices, PondsServices, IncurredsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase, defaultImage } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -22,6 +22,7 @@ export class PondPrepareRoute extends BaseRoute {
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
     private pondsServices: PondsServices = new PondsServices();
+    private incurredsServices: IncurredsServices = new IncurredsServices();
     /**
      * @class PondPrepareRoute
      * @constructor
@@ -46,6 +47,10 @@ export class PondPrepareRoute extends BaseRoute {
         this.router.post('/gets', Authentication.isLogin, this.getPondPrepares);
         this.router.get('/get', Authentication.isLogin, this.getById);
         this.router.put('/update', Authentication.isLogin, this.updatePondPrepare);
+
+        // incurred
+        this.router.post('incurreds/add', Authentication.isLogin, this.addIncurred);
+        this.router.put('incurreds/update', Authentication.isLogin, this.updateIncurred);
     }
 
     private getPondPrepares = (request: Request, response: Response, next: NextFunction) => {
@@ -395,7 +400,7 @@ export class PondPrepareRoute extends BaseRoute {
         if (!pondPrepareId) {
             return this.sequeliz.transaction().then(async (t: Transaction) => {
                 const pond: Pond = new Pond();
-                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, status, defaultImage.pondImage, pondLatitude, pondLongitude, DateUtil.getUTCDateTime());
+                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude, pondLongitude, DateUtil.getUTCDateTime());
                 const p: any = await this.pondsServices.models.create(pond, {
                     transaction: t
                 }).catch(e => {
@@ -535,5 +540,57 @@ export class PondPrepareRoute extends BaseRoute {
                 }
             });
         }
+    }
+
+    private addIncurred = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondPrepareId, incurredName, value } = request.body;
+        const incurred: Incurred = new Incurred();
+        incurred.setIncurred(null, uuidv4(), pondPrepareId, incurredName, value);
+        incurred.incurredsServices.models.create(incurred).then(res => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thêm thành phí phát sinh thành công.'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private updateIncurred = async (request: Request, response: Response, next: NextFunction) => {
+        const { incurredUUId, incurredName, value } = request.body;
+        this.incurredsServices.models.update({
+            incurredName, value
+        }, {
+            where: {
+                incurredUUId
+            }
+        }).then(res => {
+            if(!res) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thêm thành phí phát sinh thành công.'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
     }
 }

@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { CostsServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class Cost extends BaseComponent {
     public costsServives: CostsServives;
