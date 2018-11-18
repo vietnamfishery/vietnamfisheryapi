@@ -298,12 +298,32 @@ export class PondRoute extends BaseRoute {
                     });
                 }
             } else {
-                response.status(200).json({
-                    success: false,
-                    message: 'Không tìm thấy ao.',
-                    ponds
+                const p: any = await this.pondsServices.models.findAll({
+                    where: {
+                        userId: ownerId
+                    },
+                    transaction: t
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+                    });
+                    t.rollback();
                 });
-                t.rollback();
+                if (!p) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Không tìm thấy ao.'
+                    });
+                    t.rollback();
+                } else {
+                    t.commit();
+                    response.status(200).json({
+                        success: true,
+                        message: '',
+                        ponds: p
+                    });
+                }
             }
         }).catch(e => {
             response.status(200).json({
