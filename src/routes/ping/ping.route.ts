@@ -52,9 +52,7 @@ export class PingRoute extends BaseRoute {
      */
     private async get(req: Request, res: Response, next: NextFunction) {
         const pond = new Pond();
-        pond.test().then(res$ => {
-            res.json({ res$ });
-        });
+        res.json({});
     }
 
     private async getAll(req: Request, res: Response, next: NextFunction) {

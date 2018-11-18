@@ -543,9 +543,12 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     private addIncurred = async (request: Request, response: Response, next: NextFunction) => {
-        const { pondPrepareId, incurredName, value } = request.body;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { pondPrepareId, incurredName, value, notes } = request.body;
+        const { userId } = deToken;
         const incurred: Incurred = new Incurred();
-        incurred.setIncurred(null, uuidv4(), pondPrepareId, incurredName, value);
+        incurred.setIncurred(null, uuidv4(), pondPrepareId, userId, incurredName, value, notes);
         incurred.incurredsServices.models.create(incurred).then(res => {
             if(!res) {
                 response.status(200).json({
@@ -567,9 +570,12 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     private updateIncurred = async (request: Request, response: Response, next: NextFunction) => {
-        const { incurredUUId, incurredName, value } = request.body;
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const { incurredUUId, incurredName, value, notes } = request.body;
         this.incurredsServices.models.update({
-            incurredName, value
+            userId, incurredName, value, notes
         }, {
             where: {
                 incurredUUId
