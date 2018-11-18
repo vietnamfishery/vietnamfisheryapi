@@ -33,7 +33,7 @@ export function pondprepareToPondPrepareDetails(thatmodel: Sequeliz.Model<{}, an
 
 export function pondprepareToIncurred(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.POND_PREPARE_2_POND_PREPARE_DETAILS,
+        as: ActionAssociateDatabase.POND_PREPARE_2_INCURREDS,
         foreignKey: {
             name: 'pondPrepareId',
             field: 'pondPrepareId'
