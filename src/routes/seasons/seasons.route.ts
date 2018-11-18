@@ -76,7 +76,7 @@ export class SeasonRoute extends BaseRoute {
                 });
                 t.rollback();
             });
-            if(ss)/* Tìm thấy */ {
+            if (ss)/* Tìm thấy */ {
                 season = new Season();
                 season.setStatus = 1;
                 const onUpdate: any = await season.seasonServices.models.update(season.getFields(), {
@@ -92,7 +92,7 @@ export class SeasonRoute extends BaseRoute {
                     });
                     t.rollback();
                 });
-                if(onUpdate) {
+                if (onUpdate) {
                     season = new Season();
                     season.setSeason(null, uuidv4(), deToken.userId, seasonName, 0);
                     season.seasonServices.models.create(season, {
@@ -117,9 +117,27 @@ export class SeasonRoute extends BaseRoute {
                     });
                 }
             } else {
-                response.status(200).json({
-                    success: false,
-                    message: 'Bạn chưa có vụ nuôi nào được kích hoạt'
+                season = new Season();
+                season.setSeason(null, uuidv4(), deToken.userId, seasonName, 0);
+                season.seasonServices.models.create(season, {
+                    transaction: t
+                }).then((res: any) => {
+                    if (res) {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm vụ thành công!',
+                            season: res
+                        });
+                        t.commit();
+                    }
+                }).catch(e => {
+                    if (e) {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
+                        });
+                        t.rollback();
+                    }
                 });
             }
         });
@@ -233,7 +251,7 @@ export class SeasonRoute extends BaseRoute {
                 status: 0
             }
         }).then((res: any) => {
-            if(res) {
+            if (res) {
                 response.status(200).json({
                     success: true,
                     message: '',
