@@ -18,7 +18,7 @@ export class DateUtil {
     * Get current datetime using moment
     * @return {Date} The current date
     */
-    public static getNow() {
+    public static getNow(): Date {
         return moment().toDate();
     }
 
@@ -28,7 +28,7 @@ export class DateUtil {
     * @param {String} format    The format pattern to be used
     * @return {Date}            The current date in specify time zone
     */
-    public static getNowByTimeZone(timeZone, format) {
+    public static getNowByTimeZone(timeZone: string, format: string): string {
         return moment().tz(timeZone).format(format);
     }
 
@@ -36,8 +36,8 @@ export class DateUtil {
      * Get current UTC datetime using moment
      * @return {String} A string that represent curent UTC datetime (i.e. 2016-11-13T04:40:08Z)
      */
-    public static getUTCDateTime() {
-        return moment.utc().format();
+    public static getUTCDateTime(date?: Date): string {
+        return moment(date).utc().format();
     }
 
     /**
@@ -48,7 +48,7 @@ export class DateUtil {
      * @param {boolean} ignoreConvert   The flag to specific the date is convert to server time or not
      * @return {String}                 The formatted date
      */
-    public static formatDate(date, format, isUTC?, ignoreConvert = false) {
+    public static formatDate(date: moment.MomentInput, format: string, isUTC?: boolean, ignoreConvert: boolean = false): string {
         if (!date) {
             return null;
         }
@@ -71,11 +71,10 @@ export class DateUtil {
      * @param {String} format The format pattern is using
      * @return {String} Return the date from the formatted date string
      */
-    public static parse(str, format) {
+    public static parse(str: moment.MomentInput, format?: moment.MomentFormatSpecification): Date {
         if (str === null || str === '') {
             return null;
         }
-
         return moment(str, format).toDate();
     }
 
@@ -86,9 +85,8 @@ export class DateUtil {
      * @param {String} newFormat    The new format pattern to be used
      * @return {String} Return the new formatted date
      */
-    public static reformatDate(str, format, newFormat) {
-        const date = this.parse(str, format);
-
+    public static reformatDate(str: moment.MomentInput, format: moment.MomentFormatSpecification, newFormat: string): string {
+        const date: Date = this.parse(str, format);
         return DateUtil.formatDate(date, newFormat);
     }
 
@@ -99,7 +97,7 @@ export class DateUtil {
      * @param {String} unitOfTime   The unit of time (months, years, days, etc... )
      * @return {String} The difference in another unit of measurement
      */
-    public static diffDate(date, diffDate, unitOfTime) {
+    public static diffDate(date: moment.MomentInput, diffDate: moment.MomentInput, unitOfTime: moment.unitOfTime.Diff): number {
         return moment(date).diff(diffDate, unitOfTime);
     }
 
@@ -110,7 +108,7 @@ export class DateUtil {
      * @param {String} unitOfTime   The unit of time (months, years, days, etc... )
      * @return {Date} The date after added amount of unit of time.
      */
-    public static add(date, amount, unitOfTime) {
+    public static add(date: moment.MomentInput, amount: moment.DurationInputArg1, unitOfTime: moment.unitOfTime.DurationConstructor): Date {
         return moment(date).add(amount, unitOfTime).toDate();
     }
 
@@ -121,7 +119,7 @@ export class DateUtil {
      * @param {String} unitOfTime   The unit of time (months, years, days, etc... )
      * @return {Date} The date after subtracted amount of unit of time.
      */
-    public static subtract(date, amount, unitOfTime) {
+    public static subtract(date: moment.MomentInput, amount: moment.DurationInputArg1, unitOfTime: moment.unitOfTime.DurationConstructor): Date {
         return moment(date).subtract(amount, unitOfTime).toDate();
     }
 
@@ -131,7 +129,17 @@ export class DateUtil {
      * @param {String} unitOfTime   The unit of time (months, years, days, etc... )
      * @return {Date} The date end of unit of time.
      */
-    public static endOf(date, unitOfTime) {
+    public static endOf(date: moment.MomentInput, unitOfTime: moment.unitOfTime.StartOf): Date {
         return moment(date).endOf(unitOfTime).toDate();
+    }
+
+    /**
+     * Calculate the date start of unit of time to specified date
+     * @param {Date} date           The input date
+     * @param {String} unitOfTime   The unit of time (months, years, days, etc... )
+     * @return {Date} The date end of unit of time.
+     */
+    public static startOf(date: moment.MomentInput, unitOfTime: moment.unitOfTime.StartOf): Date {
+        return moment(date).startOf(unitOfTime).toDate();
     }
 }

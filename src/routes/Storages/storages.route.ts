@@ -34,11 +34,17 @@ export class StorageRoute extends BaseRoute {
     }
 
     private init() {
+        // log message
         logger.info('[StorageRoute] Creating storage route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addStorage);
         this.router.get('/gets', Authentication.isLogin, this.getStorages);
         this.router.get('/get/:storageId', Authentication.isLogin, this.getStorageById);
         this.router.put('/update', Authentication.isLogin, this.updateStorage);
+
+        // log endpoints
+        this.logEndpoints(this.router, StorageRoute.path);
     }
 
     /**

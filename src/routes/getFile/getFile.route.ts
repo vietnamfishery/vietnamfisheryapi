@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { GoogleDrive } from '../../googleAPI/drive.google';
@@ -30,8 +29,13 @@ export class GetFileRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[GetFileRoute] Creating upload route.');
+        // log message
+        logger.info('[GetFileRoute] Creating get file route.');
+
+        // add route
         this.router.get('/image/:fileId', GoogleDrive.getFile);
+
+        // log endpoints
+        this.logEndpoints(this.router, GetFileRoute.path);
     }
 }

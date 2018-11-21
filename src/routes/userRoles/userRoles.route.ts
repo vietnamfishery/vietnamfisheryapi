@@ -34,16 +34,19 @@ export class UserRoleRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[UserRoleRoute] Creating user/roles route.');
+        // log message
+        logger.info('[UserRoleRoute] Creating roles of user route.');
 
-        // add index page route
+        // add route
         this.router.get('/gets', Authentication.isLogin, this.getAllMyEmplyee);
         this.router.get('/gets/employees/pond', Authentication.isLogin, this.getEmployeeWithPondRoles);
         this.router.get('/get/:roleId', Authentication.isLogin, this.getRoleMyEmployee);
         this.router.put('/delete', Authentication.isLogin, this.deleteRoles);
         this.router.put('/upsert', Authentication.isLogin, this.upsertRoles);
         this.router.put('/change', Authentication.isLogin, this.changeRoles);
+
+        // log endpoints
+        this.logEndpoints(this.router, UserRoleRoute.path);
     }
 
     /**

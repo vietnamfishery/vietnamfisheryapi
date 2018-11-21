@@ -1,18 +1,15 @@
 import { Sequelize } from 'sequelize';
 import * as Sequeliz from 'sequelize';
-import * as config from '../config';
-import * as constants from '../common';
+import { configDB, colorCli } from '../config';
+import { databaseName } from '../common';
 import { IOptionsModelDB } from '../interfaces';
 import { ModelBuilder } from '../models/model-builder';
 import * as options from '../models/objects';
-const { dialect, operatorsAliases, pool, replication } = config.configDB;
+const { dialect, operatorsAliases, pool, replication } = configDB;
 
 export default class DBHelper {
-    public static sequelize: Sequelize = new Sequeliz(constants.databaseName, null, null, {
-        dialect,
-        operatorsAliases,
-        pool,
-        replication
+    public static sequelize: Sequelize = new Sequeliz(databaseName, null, null, {
+        ...configDB
     });
     private models: any = {};
 
@@ -24,10 +21,10 @@ export default class DBHelper {
 
     public static getDatabaseConnection() {
         DBHelper.sequelize.authenticate().then(() => {
-            console.log('Connection with database has been established successfully.');
+            console.log(`${ colorCli.GREEN }Connection with database has been established successfully.`);
         })
         .catch(err => {
-            console.error('Unable to connect to the database:', err);
+            console.error(`${ colorCli.RED }Unable to connect to the database:`, err);
         });
     }
 

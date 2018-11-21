@@ -45,20 +45,8 @@ export abstract class BaseServices {
         }
     }
 
-    public get(query: any, options?: any): Promise<any[]> {
-        if(query) {
-            return new Promise((resolve, reject) => {
-                this.models.findOne(this.getQuery(query)).then((obj: any[]) => {
-                    resolve(obj);
-                });
-            });
-        } else {
-            return new Promise((resolve, reject) => {
-                this.models.findOne().then((obj: any[]) => {
-                    resolve(obj);
-                });
-            });
-        }
+    public get(query: any): Promise<any[]> {
+        return this.models.findAll(query);
     }
 
     insert(data: any): Promise<any> {

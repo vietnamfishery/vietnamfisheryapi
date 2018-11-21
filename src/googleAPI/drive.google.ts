@@ -3,6 +3,7 @@ import { JWT } from 'google-auth-library';
 import { folderDrive, actionUserServices } from '../common';
 import { NextFunction, Request, Response } from 'express';
 import { CustomStream } from '../lib';
+import { colorCli } from '../config';
 
 export class GoogleDrive {
     private static drive: drive_v3.Drive;
@@ -14,10 +15,10 @@ export class GoogleDrive {
         GoogleDrive.jwtToken = new google.auth.JWT(GoogleDrive.key.client_email, null, GoogleDrive.key.private_key, ['https://www.googleapis.com/auth/drive'], null);
         GoogleDrive.jwtToken.authorize(err => {
             if (err) {
-                console.log(err);
+                console.log(`${ colorCli.RED }Google authorization not accorded: `,err);
                 return;
             } else {
-                console.log(`Google authorization accorded.`);
+                console.log(`${ colorCli.GREEN }Google authorization accorded.${ colorCli.RESET }`);
             }
         });
     }

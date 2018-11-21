@@ -30,6 +30,7 @@
 [✔] ~~Hiển thị hoạt động thả nuôi~~
 [✔] ~~Hiển thị cho ăn~~
 [✔] ~~Hiển thị sử dụng thuốc~~
+[✔] Hiển thị hoạt động chuẩn bị ao
 
 #############################################################################################
 
@@ -41,7 +42,6 @@
 
 [☄] Thống kê cho ăn
 [☄] Thống kê sử dụng thuốc
-[☄] Hiển thị hoạt động chuẩn bị ao
 [☄] Hiển thị nhật ký
 [☄] Hiển thị thu hoạch
 [☄] Hiển thị giá - thu chi

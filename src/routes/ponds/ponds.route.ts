@@ -42,7 +42,10 @@ export class PondRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[PondRoute] Creating ping route.');
+        // log message
+        logger.info('[PondRoute] Creating pond route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addPond); // Thêm ao
         this.router.get('/gets', Authentication.isLogin, this.getPonds); // get all - có hình
         this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages); // get all kèm với quyền - không hình
@@ -57,6 +60,9 @@ export class PondRoute extends BaseRoute {
         this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
         this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // đếm ao của user
         this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds); // đếm ao của user
+
+        // log endpoints
+        this.logEndpoints(this.router, PondRoute.path);
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
@@ -657,11 +663,13 @@ export class PondRoute extends BaseRoute {
         // flagged
         const { image, isnull, isnotnull, isupgrade, seasonid } = request.headers;
 
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
+        // init query
         const query: FindOptions<any> = {
             include: [],
             where: {}

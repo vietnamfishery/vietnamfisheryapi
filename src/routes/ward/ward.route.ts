@@ -30,11 +30,14 @@ export class WardRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[WardRoute] Creating ping route.');
-        // const loginHelper = new LoginHelper();
-        // add index page route
+        // log message
+        logger.info('[WardRoute] Creating ward route.');
+
+        // add route
         this.router.get('/', this.getAllWard);
+
+        // log endpoints
+        this.logEndpoints(this.router, WardRoute.path);
     }
 
     private getAllWard(request: Request, response: Response) {

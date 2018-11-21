@@ -1,6 +1,3 @@
-import * as Sequelize from 'sequelize';
-import { DateUtil } from '../../lib';
-
 export const baseModel: any = {
     options: {
         createdAt: false,

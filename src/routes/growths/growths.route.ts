@@ -37,11 +37,17 @@ export class GrowthsRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[GrowthsRoute] Creating season route.');
+        // log message
+        logger.info('[GrowthsRoute] Creating growth route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addGrowth);
         this.router.post('/gets', Authentication.isLogin, this.getGrowths);
         this.router.post('/get/growthUUId', Authentication.isLogin, this.getGrowthByUUId);
         this.router.put('/update', Authentication.isLogin, this.updateGrowth);
+
+        // log enpoints
+        this.logEndpoints(this.router, GrowthsRoute.path);
     }
 
     // Get getgrowths

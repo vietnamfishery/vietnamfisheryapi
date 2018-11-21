@@ -22,7 +22,7 @@ export const takecareOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             allowNull: false
         },
-        takeType: {
+        type: {
             type: Sequelize.INTEGER(1),
             allowNull: false
         },

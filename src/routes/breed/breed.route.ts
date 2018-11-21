@@ -28,7 +28,6 @@ export class BreedRoute extends BaseRoute {
      */
     private constructor() {
         super();
-        // this.get = this.get.bind(this);
         this.init();
     }
 
@@ -40,12 +39,15 @@ export class BreedRoute extends BaseRoute {
     }
 
     private init() {
-        // log
+        // log message
         logger.info('[BreedRoute] Creating breed route.');
 
-        // add index page route
-        this.router.post('/add', Authentication.isLogin, this.addBreed);
+        // add route
         this.router.get('/gets', Authentication.isLogin, this.getBreed);
+        this.router.post('/add', Authentication.isLogin, this.addBreed);
+
+        // Log path
+        this.logEndpoints(this.router, BreedRoute.path);
     }
 
     addBreed = async (request: Request, response: Response) => {

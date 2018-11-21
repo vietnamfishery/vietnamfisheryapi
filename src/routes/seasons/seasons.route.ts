@@ -18,12 +18,6 @@ export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
     private seasonServices: SeasonServices = new SeasonServices();
-    private userRolesServices: UserRolesServices = new UserRolesServices();
-    // private pondsServices: PondsServices = new PondsServices();
-    // private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
-    // private stockingServices: StockingServices = new StockingServices();
-    // private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
-    // private breedServives: BreedServives = new BreedServives();
 
     /**
      * @class SeasonRoute
@@ -42,13 +36,19 @@ export class SeasonRoute extends BaseRoute {
     }
 
     private init() {
+        // log message
         logger.info('[SeasonRoute] Creating season route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addSeason);
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
         this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
         this.router.post('/get', Authentication.isLogin, this.getSeasonById);
         this.router.get('/gets/present', Authentication.isLogin, this.getPresentSeason);
+
+        // log endpoints
+        this.logEndpoints(this.router, SeasonRoute.path);
     }
 
     /**

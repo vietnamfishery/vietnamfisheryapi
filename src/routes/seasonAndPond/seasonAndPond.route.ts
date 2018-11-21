@@ -34,11 +34,17 @@ export class SeasonAndPondRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[SeasonAndPondRoute] Creating ping route.');
+        // log message
+        logger.info('[SeasonAndPondRoute] Creating season and pond associate route.');
+
+        // add route
         this.router.post('/add', this.addSeasonAndPond);
         this.router.put('/update', this.updateSeasonAndPond);
         this.router.get('/count/pondWithSeason', this.countPondWithSeason);
         this.router.get('/count/seasonWithPond', this.countSeasonOfPond);
+
+        // log endpoints
+        this.logEndpoints(this.router, SeasonAndPondRoute.path);
     }
 
     /**

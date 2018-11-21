@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { Sequelize } from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
+import { host, port, colorCli, method } from '../config';
 
 export abstract class BaseRoute {
     /**
@@ -10,25 +11,22 @@ export abstract class BaseRoute {
      * @constructor
      */
     public static path = '/api';
-    protected router = Router();
+    public static countEndpoints: number = 0;
+    protected router: Router = Router();
     protected sequeliz: Sequelize = DBHelper.sequelize;
 
     constructor () {}
 
-    /**
-     * Enscrypts.hashingSync('vietnamfishery', Enscrypts.getSaltSync(Math.floor((Math.random() * 12) + 1))) + '100%<3' +
-     */
-    protected reCryptToken = (tokenBCrypt: string, isBoss: boolean): string => {
-        const token = tokenBCrypt.split('.');
-        if(!isBoss) {
-            return token[0] + '.' + (token[1].slice(0, token[1].length-1) + Math.floor((Math.random() * 9) + 1) + token[1][token[1].length - 1]) + '.' + token[2];
-        } else {
-            return token[0] + '.' + (token[1].slice(0, token[1].length-1) + 0 + token[1][token[1].length - 1]) + '.' + token[2];
+    protected logEndpoints(router?: Router, path?: string) {
+        if(path) {
+            for(const stack of router.stack) {
+                const endpoints: string = Object.keys(stack.route.methods)[0].toLocaleUpperCase();
+                console.log(`[${
+                    endpoints === method.get ? colorCli.MAGENTA : endpoints === method.post ? colorCli.YELLOW : endpoints === method.put ? colorCli.CYAN : colorCli.RED
+                }${ endpoints }${ colorCli.RESET }]\thttp://${ host }:${ port }${BaseRoute.path}${path}${ stack.route.path }`);
+                BaseRoute.countEndpoints++;
+            }
+            console.log('');
         }
-    }
-
-    protected extractToken = (token: string): string => {
-        const tokenCheck = token.split('.');
-        return tokenCheck[0] + '.' + (tokenCheck[1].slice(0, tokenCheck[1].length-1) + tokenCheck[1][tokenCheck[1].length]) + '.' + tokenCheck[2];
     }
 }

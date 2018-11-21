@@ -30,11 +30,14 @@ export class ProvinceRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[ProvinceRoute] Creating ping route.');
-        // const loginHelper = new LoginHelper();
-        // add index page route
+        // log message
+        logger.info('[ProvinceRoute] Creating province route.');
+
+        // add route
         this.router.get('/', this.getAllProvince);
+
+        // log endpoint
+        this.logEndpoints(this.router, ProvinceRoute.path);
     }
 
     private getAllProvince(request: Request, response: Response) {

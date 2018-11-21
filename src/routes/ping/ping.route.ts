@@ -32,7 +32,7 @@ export class PingRoute extends BaseRoute {
 
     private init() {
         // log
-        logger.info('[PingRoute] Creating ping route.');
+        // logger.info('[PingRoute] Creating ping route.');
 
         // add index page route
         this.router.get('/', this.get);

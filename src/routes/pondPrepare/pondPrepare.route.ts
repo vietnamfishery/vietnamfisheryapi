@@ -43,7 +43,10 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[PondPrepareRoute] Creating season route.');
+        // log message
+        logger.info('[PondPrepareRoute] Creating action preparing of pond route.');
+
+        // add route pond prepare
         this.router.post('/add', Authentication.isLogin, this.addPrepare);
         this.router.post('/addNew', Authentication.isLogin, this.addNewPrepare);
         this.router.post('/add/exiting-pond', Authentication.isLogin, this.addPrepareOldPond);
@@ -51,10 +54,13 @@ export class PondPrepareRoute extends BaseRoute {
         this.router.post('/gets/uuid', Authentication.isLogin, this.getPondPrepareByPondPrePareUUId);
         this.router.put('/update', Authentication.isLogin, this.updatePondPrepare);
 
-        // incurred
+        // add route incurred
         this.router.post('/incurreds/add', Authentication.isLogin, this.addIncurred);
         this.router.post('/incurreds/get/uuid', Authentication.isLogin, this.getIncurredByIncurredUUId);
         this.router.put('/incurreds/update', Authentication.isLogin, this.updateIncurred);
+
+        // log enpoints
+        this.logEndpoints(this.router, PondPrepareRoute.path);
     }
 
     private getPondPrepares = (request: Request, response: Response, next: NextFunction) => {

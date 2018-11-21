@@ -15,7 +15,7 @@ import { ActionAssociateDatabase } from '../../common';
  * @apiSuccess {String} type Json Type.
  */
 export class PondDiaryRoute extends BaseRoute {
-    public static path = '/PondDiarys';
+    public static path = '/pondDiarys';
     private static instance: PondDiaryRoute;
     private seasonServices: SeasonServices = new SeasonServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
@@ -36,10 +36,16 @@ export class PondDiaryRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[PondDiaryRoute] Creating season route.');
+        // log message
+        logger.info('[PondDiaryRoute] Creating diary route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addPondDiary);
         this.router.get('/gets', Authentication.isLogin, this.getPondDiaries);
         this.router.put('/update', Authentication.isLogin, this.updatePondDiary);
+
+        // log endpoints
+        this.logEndpoints(this.router, PondDiaryRoute.path);
     }
 
     private addPondDiary = async (request: Request, response: Response, next: NextFunction) => {

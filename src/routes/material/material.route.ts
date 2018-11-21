@@ -30,7 +30,7 @@ export class MaterialRoute extends BaseRoute {
     }
 
     private init() {
-        // log
+        // log message
         logger.info('[MaterialRoute] Creating materials route.');
 
         // add index page route

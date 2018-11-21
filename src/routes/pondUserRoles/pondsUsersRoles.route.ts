@@ -32,11 +32,17 @@ export class PondUserRolesRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[PondUserRolesRoute] Creating ping route.');
+        // log message
+        logger.info('[PondUserRolesRoute] Creating role pond of user route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addPondRoles);
         this.router.get('/gets', Authentication.isLogin, this.getRoles);
         this.router.put('/update', Authentication.isLogin, this.updateRoles);
         this.router.put('/delete', Authentication.isLogin, this.deleteRoles);
+
+        // log endpoints
+        this.logEndpoints(this.router, PondUserRolesRoute.path);
     }
 
     private addPondRoles = (request: Request, response: Response, next: NextFunction) => {

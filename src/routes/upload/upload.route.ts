@@ -29,8 +29,13 @@ export class UploadRoute extends BaseRoute {
     }
 
     private init() {
-        // log
+        // log message
         logger.info('[UploadRoute] Creating upload route.');
+
+        // add route
         this.router.post('/image', GoogleDrive.upload);
+
+        // log endpoints
+        this.logEndpoints(this.router, UploadRoute.path);
     }
 }

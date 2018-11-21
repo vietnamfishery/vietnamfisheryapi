@@ -37,8 +37,14 @@ export class UsingFoodRoute extends BaseRoute {
     }
 
     private init() {
+        // log message
         logger.info('[UsingFoodRoute] Creating Using Food route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addUsingFood);
+
+        // log endpoints
+        this.logEndpoints(this.router, UsingFoodRoute.path);
     }
 
     /**
@@ -95,7 +101,8 @@ export class UsingFoodRoute extends BaseRoute {
                 }).then(res => {
                     response.status(200).json({
                         success: true,
-                        message: 'Thêm thành công.'
+                        message: 'Thêm thành công.',
+                        res
                     });
                     t.commit();
                 });

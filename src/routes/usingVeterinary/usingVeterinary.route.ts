@@ -37,8 +37,14 @@ export class UsingVeterinaryRoute extends BaseRoute {
     }
 
     private init() {
+        // log message
         logger.info('[UsingVeterinaryRoute] Creating Using Veterinary route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addUsingVeterinary);
+
+        // log endpoints
+        this.logEndpoints(this.router, UsingVeterinaryRoute.path);
     }
 
     /**
@@ -71,7 +77,7 @@ export class UsingVeterinaryRoute extends BaseRoute {
         });
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             const takeCare: TakeCare = new TakeCare();
-            takeCare.setTakecare(null, uuidv4(), seasonAndPond.seasonAndPondId, 0, takeCareName);
+            takeCare.setTakecare(null, uuidv4(), seasonAndPond.seasonAndPondId, 1, takeCareName);
             const tk: any = await this.takeCareServices.models.create(takeCare, {
                 transaction: t
             }).catch(e => {

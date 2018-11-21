@@ -37,8 +37,14 @@ export class HarvestRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[HarvestRoute] Creating ping route.');
+        // log message
+        logger.info('[HarvestRoute] Creating harvest route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addHarvest);
+
+        // log endpoints
+        this.logEndpoints(this.router, HarvestRoute.path);
     }
 
     // Get harvest

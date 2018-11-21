@@ -45,9 +45,9 @@ export class UserRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[UserRoute] Creating ping route.');
-        // add index page route
+        // log message
+        logger.info('[UserRoute] Creating user route.');
+        // add route boss
         this.router.post('/register', this.register);
         this.router.post('/login', this.login);
         this.router.get('/get', Authentication.isLogin, this.getUserInfo);
@@ -64,6 +64,9 @@ export class UserRoute extends BaseRoute {
         this.router.get('/gets/all/employees/pond', Authentication.isLogin, this.getAllPondAndEmployees);
         this.router.put('/update/employee', Authentication.isLogin, this.updateEmployee);
         this.router.post('/insert/employee/role', Authentication.isLogin, this.insertOnlyRole);
+
+        // log endPoint
+        this.logEndpoints(this.router, UserRoute.path);
     }
 
     private register = async (request: Request, response: Response, next: NextFunction) => {

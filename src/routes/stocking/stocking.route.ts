@@ -42,11 +42,17 @@ export class StockingRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[StockingRoute] Creating ping route.');
+        // log message
+        logger.info('[StockingRoute] Creating stocking route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addStocking);
         this.router.post('/gets', Authentication.isLogin, this.getStocking);
         this.router.post('/get/stockingDetailUUId', Authentication.isLogin, this.getStockingDetailsByStockingDetailsUUId);
         this.router.put('/update', Authentication.isLogin, this.updateStockingDetailsByStockingDetailsUUId);
+
+        // log endpoint
+        this.logEndpoints(this.router, StockingRoute.path);
     }
 
     private addStocking = async (request: Request, response: Response, next: NextFunction) => {

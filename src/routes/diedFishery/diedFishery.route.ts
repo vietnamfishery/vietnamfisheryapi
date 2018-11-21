@@ -5,7 +5,6 @@ import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Transaction } from 'sequelize';
 
 /**
  * @api {all} /ping Died Fishery Request customer object
@@ -37,11 +36,17 @@ export class DiedFisheryRoute extends BaseRoute {
     }
 
     private init() {
+        // log message
         logger.info('[DiedFisheryRoute] Creating Died Fishery route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addDiedFishery);
         this.router.post('/gets', Authentication.isLogin, this.getDiedFishery);
         this.router.post('/get/diedFisheryUUId', Authentication.isLogin, this.getDiedFisheryByDiedFisheryUUId);
         this.router.put('/update', Authentication.isLogin, this.updateDiedFisheryByDiedFisheryUUId);
+
+        // log path
+        this.logEndpoints(this.router, DiedFisheryRoute.path);
     }
 
     //  Add DiedFishery

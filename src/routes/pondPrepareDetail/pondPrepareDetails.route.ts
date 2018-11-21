@@ -1,4 +1,4 @@
-import { PondPrepare, PondPrepareDetail, Material } from '../../components';
+import { PondPrepareDetail, Material } from '../../components';
 import { NextFunction, Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
@@ -34,9 +34,15 @@ export class PondPrepareDetailRoute extends BaseRoute {
     }
 
     private init() {
-        logger.info('[PondPrepareDetailRoute] Creating season route.');
+        // log message
+        logger.info('[PondPrepareDetailRoute] Creating details of preparing pond action route.');
+
+        // add route
         this.router.post('/add', Authentication.isLogin, this.addDetail);
         this.router.put('/update', Authentication.isLogin, this.updatePondPrepare);
+
+        // log endpoints
+        this.logEndpoints(this.router, PondPrepareDetailRoute.path);
     }
 
     /**

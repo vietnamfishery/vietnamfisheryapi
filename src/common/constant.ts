@@ -188,8 +188,8 @@ export enum ActionAssociateDatabase {
     OWNER_BREED_TO_USER = 'user',
     //
     TAKE_CARE_2_USING_FOOD = 'usingFoods',
-    TAKE_CARE_2_USING_VETERINARY = 'takecareToUsingveterinary',
-    TAKE_CARE_2_SEASON_AND_POND = 'takecares',
+    TAKE_CARE_2_USING_VETERINARY = 'usingVeterinary',
+    TAKE_CARE_2_SEASON_AND_POND = 'seasonAndPond',
     //
     USER_ROLES_2_USER = 'rolesUsers',
     USER_ROLES_2_SEASON = 'seasonRoles',
@@ -214,7 +214,7 @@ export enum ActionAssociateDatabase {
     USING_FOOD_2_STORAGE = 'storages',
     USING_FOOD_2_TAKE_CARE = 'usingFoods',
     //
-    USING_VETERINARY_2_STORAGE = 'usingVeterinary',
+    USING_VETERINARY_2_STORAGE = 'storages',
     USING_VETERINARY_2_TAKE_CARE = 'usingVeterinaryTakeCare',
     //
     WARD_2_USER = 'wards',

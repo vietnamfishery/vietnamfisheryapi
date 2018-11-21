@@ -30,11 +30,14 @@ export class DistrictRoute extends BaseRoute {
     }
 
     private init() {
-        // log
-        logger.info('[DistrictRoute] Creating ping route.');
-        // const loginHelper = new LoginHelper();
-        // add index page route
+        // log message
+        logger.info('[DistrictRoute] Creating district route.');
+
+        // add route
         this.router.get('/', this.getAllDistrict);
+
+        // log enpoint
+        this.logEndpoints(this.router, DistrictRoute.path);
     }
 
     private getAllDistrict(request: Request, response: Response) {
