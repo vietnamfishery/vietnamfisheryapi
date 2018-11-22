@@ -1,9 +1,10 @@
-import { Pond, PondUserRole } from '../../components';
+import { PondUserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger } from '../../services';
+import { logger, PondUserRolesServices, UserRolesServices, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
+import { ActionAssociateDatabase } from '../../common';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -15,6 +16,9 @@ import { Authentication } from '../../helpers/login-helpers';
 export class PondUserRolesRoute extends BaseRoute {
     public static path = '/pondUserRoles';
     private static instance: PondUserRolesRoute;
+    private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
+    private userRolesServices: UserRolesServices = new UserRolesServices();
+    private userServives: UserServives = new UserServives();
     /**
      * @class PondUserRolesRoute
      * @constructor
@@ -37,7 +41,7 @@ export class PondUserRolesRoute extends BaseRoute {
 
         // add route
         this.router.post('/add', Authentication.isLogin, this.addPondRoles);
-        this.router.get('/gets', Authentication.isLogin, this.getRoles);
+        this.router.get('/gets', Authentication.isLogin, this.getUserManageWithPond);
         this.router.put('/update', Authentication.isLogin, this.updateRoles);
         this.router.put('/delete', Authentication.isLogin, this.deleteRoles);
 
@@ -73,20 +77,59 @@ export class PondUserRolesRoute extends BaseRoute {
         });
     }
 
-    private getRoles = async (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
+    private getUserManageWithPond = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
         const token: string = request.headers.authorization;
-        const decodetoken: any = Authentication.detoken(token);
-        pond.pondsServices.get({
-            userId: decodetoken.userId
-        }).then((res: any) => {
-            response.status(200).json(res);
-        }).catch(e => {
-            response.status(200).json({
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if(!isBoss) {
+            return response.status(200).json({
                 success: false,
-                message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
+                message: 'Dừng lại! Truy cập là trái phép.'
             });
-        });
+        } else {
+            this.userRolesServices.models.findAll({
+                include: [
+                    {
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.USER_ROLES_2_USER,
+                        include: [
+                            {
+                                model: this.pondUserRolesServices.models,
+                                as: ActionAssociateDatabase.USER_2_POND_USER_ROLE,
+                                required: false
+                            }
+                        ],
+                        attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username',  'createdDate', 'createdBy']
+                    }
+                ],
+                where: {
+                    bossId: userId,
+                    roles: 1
+                }
+            }).then((res: any) => {
+                if(!res.length) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Bạn không có nhân viên vào.',
+                        employees: res
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: '',
+                        employees: res
+                    });
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+                });
+            });
+        }
     }
 
     private updateRoles = (request: Request, response: Response, next: NextFunction) => {

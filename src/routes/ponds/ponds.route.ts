@@ -56,10 +56,12 @@ export class PondRoute extends BaseRoute {
         this.router.post('/gets/seasonUUId', Authentication.isLogin, this.getPostPondBySeasonUUId); // get ao theo vụ nuôi
         this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
         this.router.post('/seasons/count', Authentication.isLogin, this.countSeasonWithPond); // đếm ao của user
-        this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // đếm ao của user
+        this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // get số ao không có trong vụ
         this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
-        this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // đếm ao của user
-        this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds); // đếm ao của user
+        this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // get ao của người dùng hiện tại có hình ảnh
+        this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds);
+        this.router.get('/gets/boss', Authentication.isLogin, this.getPondOfBoss);
+        this.router.post('/gets/notEmployee', Authentication.isLogin, this.getPondWithUserNotManage);
 
         // log endpoints
         this.logEndpoints(this.router, PondRoute.path);
@@ -99,7 +101,7 @@ export class PondRoute extends BaseRoute {
                     }
                 });
             } else {
-                pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude, pondLongitude, pondCreatedDate);
+                pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined, pondCreatedDate);
                 pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                     response.status(200).json({
                         success: true,
@@ -202,6 +204,46 @@ export class PondRoute extends BaseRoute {
         });
     }
 
+    private getPondOfBoss = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        if(!isBoss) {
+            return response.status(200).json({
+                success: false,
+                message: 'Dừng lại! Truy cập là trái phép.'
+            });
+        } else {
+            this.pondsServices.models.findAll({
+                where: {
+                    userId
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+                });
+            }).then((res: any) => {
+                if(!res.length) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Bạn không có ao nào trong hệ thống'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: '',
+                        ponds: res
+                    });
+                }
+            });
+        }
+    }
+
     private getPondWithoutImages = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
@@ -247,7 +289,13 @@ export class PondRoute extends BaseRoute {
     }
 
     private getPondNotInSeasonAndPond = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonUUId, ownerId } = request.body;
+        const { seasonUUId } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             let ponds: any = await this.seasonAndPondServices.models.findAll({
                 include: [
@@ -396,8 +444,18 @@ export class PondRoute extends BaseRoute {
 
     private updatePond = (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if(!isBoss) {
+            return response.status(200).json({
+                success: false,
+                message: 'Dừng lại! Truy cập là trái phép.'
+            });
+        }
         const { pondUUId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, isFed, isDiary } = request.body;
         if (!pondUUId) {
             response.status(200).json({
@@ -410,23 +468,24 @@ export class PondRoute extends BaseRoute {
                     if (data.fileId) {
                         pond.setPond(null, undefined, undefined, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude, pondLongitude, pondCreatedDate);
                         pond.pondsServices.models.update({
-                            pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, isFed, isDiary
+                            pondName, pondCreatedDate, pondArea, pondDepth, createCost, images:
+                            data.fileId, pondLatitude, pondLongitude, status, isFed, isDiary
                         }, {
-                            where: {
-                                pondUUId
-                            },
-                            returning: true
-                        }).then((pond$: any) => {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Cập nhật thành công.'
+                                where: {
+                                    pondUUId
+                                },
+                                returning: true
+                            }).then((pond$: any) => {
+                                response.status(200).json({
+                                    success: true,
+                                    message: 'Cập nhật thành công.'
+                                });
+                            }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
                             });
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                            });
-                        });
                     } else {
                         response.status(200).json({
                             success: false,
@@ -436,7 +495,7 @@ export class PondRoute extends BaseRoute {
                 });
             } else {
                 pond.pondsServices.models.update({
-                    pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, isFed
+                    pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status, isFed
                 }, {
                         where: {
                             pondUUId
@@ -522,7 +581,13 @@ export class PondRoute extends BaseRoute {
      * có check status
      */
     private getPondByOwnerSeason = async (request: Request, response: Response, next: NextFunction) => {
-        const { ownerId, status } = request.body;
+        const { status } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
         const query: any = {
             include: [
                 {
@@ -653,15 +718,15 @@ export class PondRoute extends BaseRoute {
      * @method GET
      * Hàm lấy danh sách ao của người dùng đang đăng nhập
      * request - token
-     * option - image: get ao kèm thêm hình
-     * option - isnull: get ao trống
-     * option - isnotnull: get ao đang nuôi thả
-     * option - isupgrade: get ao đang nâng cấp
-     * option - seasonid: get ao đang nâng cấp
+     * option - image: boolean get ao kèm thêm hình
+     * option - isnull: boolean get ao trống
+     * option - isnotnull: boolean get ao đang nuôi thả
+     * option - isupgrade: boolean get ao đang nâng cấp
+     * option - seasonid: string|number get ao theo vụ chỉ định
      */
     private getPondAdvanceds = async (request: Request, response: Response, next: NextFunction) => {
         // flagged
-        const { image, isnull, isnotnull, isupgrade, seasonid } = request.headers;
+        const { image, isnull, isnotnull, isupgrade, seasonid, notRoles, userid } = request.headers;
 
         // start authozation info
         const token: string = request.headers.authorization;
@@ -695,7 +760,7 @@ export class PondRoute extends BaseRoute {
             query.include.push(presentSeason);
             query.include.push(rule);
         } else {
-            if(!seasonid) {
+            if (!seasonid) {
                 // load vụ mặc định
                 const presentSeason: any = {
                     model: this.seasonServices.models,
@@ -772,8 +837,7 @@ export class PondRoute extends BaseRoute {
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Đã có lỗi xảy ra.',
-                e
+                message: 'Đã có lỗi xảy ra.'
             });
         });
     }
@@ -807,5 +871,79 @@ export class PondRoute extends BaseRoute {
                 message: 'Có lỗi xảy ra.'
             });
         });
+    }
+
+    /**
+     * Get All pond mà người dùng chỉ định không có quản lý
+     * @method POST
+     * @param request.body.employeeId
+     */
+    private getPondWithUserNotManage = async (request: Request, response: Response, next: NextFunction) => {
+        const { employeeId } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if (!isBoss) {
+            return response.status(200).json({
+                success: false,
+                message: 'Dừng lại! Truy cập là trái phép.'
+            });
+        } else {
+            if (employeeId) {
+                const pondByManage: any = await this.pondUserRolesServices.models.findAll({
+                    where: {
+                        userId: employeeId
+                    }
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thử lại sau.'
+                    });
+                });
+                const query: FindOptions<any> = {
+                    include: [],
+                    where: {}
+                };
+                if(pondByManage.length) {
+                    query.where = {
+                        userId,
+                        [this.sequeliz.Op.notIn]: pondByManage
+                    };
+                } else {
+                    query.where = {
+                        userId,
+                    };
+                }
+                this.pondsServices.models.findAll(query).then(async (res: any[]) => {
+                    if (!res.length) {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Không tìm thấy ao.',
+                            ponds: []
+                        });
+                    } else {
+                        response.status(200).json({
+                            success: true,
+                            message: '',
+                            ponds: res
+                        });
+                    }
+                }).catch(e => {
+                    e;
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra.'
+                    });
+                });
+            } else {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra.'
+                });
+            }
+        }
     }
 }

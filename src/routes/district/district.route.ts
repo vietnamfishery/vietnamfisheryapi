@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { logger } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { District } from '../../components/district';

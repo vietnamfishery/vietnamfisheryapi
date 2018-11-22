@@ -95,6 +95,8 @@ export class GoogleDrive {
                     const base64 = file.data.toString('base64');
                     const data = prefix + base64;
                     resolve(data);
+                } else if(err) {
+                    resolve(err);
                 }
             });
         });

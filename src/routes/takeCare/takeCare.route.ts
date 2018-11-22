@@ -118,6 +118,9 @@ export class TakeCareRoute extends BaseRoute {
                         {
                             model: this.pondUserRolesServices.models,
                             as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                            where: {
+                                userId
+                            },
                             attributes: []
                         }
                     ],
@@ -145,10 +148,12 @@ export class TakeCareRoute extends BaseRoute {
             getType = {
                 model: this.usingFoodsServices.models,
                 as: ActionAssociateDatabase.TAKE_CARE_2_USING_FOOD,
+                required: false,
                 include: [
                     {
                         model: this.storegeServices.models,
-                        as: ActionAssociateDatabase.USING_FOOD_2_STORAGE
+                        as: ActionAssociateDatabase.USING_FOOD_2_STORAGE,
+                        required: false
                     }
                 ]
             };
@@ -188,10 +193,12 @@ export class TakeCareRoute extends BaseRoute {
             getType = {
                 model: this.usingVeterinaryServices.models,
                 as: ActionAssociateDatabase.TAKE_CARE_2_USING_VETERINARY,
+                required: false,
                 include: [
                     {
                         model: this.storegeServices.models,
-                        as: ActionAssociateDatabase.USING_VETERINARY_2_STORAGE
+                        as: ActionAssociateDatabase.USING_VETERINARY_2_STORAGE,
+                        required: false
                     }
                 ]
             };
