@@ -1,6 +1,6 @@
 import { UsingFood, TakeCare } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, TakeCareServices, SeasonAndPondServices, SeasonServices } from '../../services';
+import { logger, TakeCareServices, SeasonAndPondServices, SeasonServices, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
@@ -20,6 +20,7 @@ export class UsingFoodRoute extends BaseRoute {
     private takeCareServices: TakeCareServices = new TakeCareServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
+    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class UsingFoodRoute
      * @constructor
@@ -42,6 +43,7 @@ export class UsingFoodRoute extends BaseRoute {
 
         // add route
         this.router.post('/add', Authentication.isLogin, this.addUsingFood);
+        this.router.post('/gets', Authentication.isLogin, this.getUsingFood);
 
         // log endpoints
         this.logEndpoints(this.router, UsingFoodRoute.path);
@@ -115,10 +117,64 @@ export class UsingFoodRoute extends BaseRoute {
         });
     }
 
+    /**
+     * Get Cho ăn
+     * @method POST
+     */
     private getUsingFood = async (request: Request, response: Response, next: NextFunction) => {
-        // const token: string = request.headers.authorization;
-        // const deToken: any = Authentication.detoken(token);
-        // const { userId } = deToken;
-        // const ownerId =
+        const { pondUUId, seasonUUId, options } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if(isBoss) {
+            this.takeCareServices.models.findAll({
+                include: [
+                    {
+                        model: this.seasonAndPondServices.models,
+                        as: ActionAssociateDatabase.TAKE_CARE_2_SEASON_AND_POND,
+                        include: [
+                            {
+                                model: this.seasonServices.models,
+                                as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                                where: {
+                                    seasonUUId
+                                },
+                                required: false
+                            },
+                            {
+                                model: this.pondsServices.models,
+                                as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+                                where: {
+                                    pondUUId
+                                },
+                                required: false
+                            }
+                        ],
+                        required: false
+                    }
+                ]
+            }).then(res => {
+                if(res) {
+                    response.status(200).json({
+                        success: true,
+                        message: '',
+                        res
+                    });
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Không tìm thấy nhật ký cho ăn của ao này'
+                    });
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+                });
+            });
+        }
     }
 }

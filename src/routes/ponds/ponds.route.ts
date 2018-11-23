@@ -62,6 +62,7 @@ export class PondRoute extends BaseRoute {
         this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds);
         this.router.get('/gets/boss', Authentication.isLogin, this.getPondOfBoss);
         this.router.post('/gets/notEmployee', Authentication.isLogin, this.getPondWithUserNotManage);
+        this.router.post('/gets/not/manage', Authentication.isLogin, this.getPondWithoutManager);
 
         // log endpoints
         this.logEndpoints(this.router, PondRoute.path);
@@ -691,6 +692,80 @@ export class PondRoute extends BaseRoute {
     }
 
     /**
+     * Get ao mà người dùng đó không có quyền - sử dụng cho chức năng phân quyền ao
+     * Get theo pondUserRolesId
+     * @method POST
+     */
+    private getPondWithoutManager = async (request: Request, response: Response, next: NextFunction) => {
+        const { employeeId } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if (!isBoss) {
+            return response.status(200).json({
+                success: false,
+                message: 'Dừng lại! Truy cập là trái phép.'
+            });
+        } else {
+            if (employeeId) {
+                const pondByManage: any = await this.pondUserRolesServices.models.findAll({
+                    where: {
+                        userId: employeeId
+                    }
+                }).catch(e => {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Có lỗi xảy ra, vui lòng thử lại sau.'
+                    });
+                });
+                const query: FindOptions<any> = {
+                    include: [],
+                    where: {}
+                };
+                if(pondByManage.length) {
+                    query.where = {
+                        userId,
+                        [this.sequeliz.Op.notIn]: pondByManage
+                    };
+                } else {
+                    query.where = {
+                        userId,
+                    };
+                }
+                this.pondsServices.models.findAll(query).then(async (res: any[]) => {
+                    if (!res.length) {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Không tìm thấy ao.',
+                            ponds: []
+                        });
+                    } else {
+                        response.status(200).json({
+                            success: true,
+                            message: '',
+                            ponds: res
+                        });
+                    }
+                }).catch(e => {
+                    e;
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã có lỗi xảy ra.'
+                    });
+                });
+            } else {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra.'
+                });
+            }
+        }
+    }
+
+    /**
      * Đếm tổng số ao của người dùng
      */
     private countPond = (request: Request, response: Response, next: NextFunction) => {
@@ -910,7 +985,9 @@ export class PondRoute extends BaseRoute {
                 if(pondByManage.length) {
                     query.where = {
                         userId,
-                        [this.sequeliz.Op.notIn]: pondByManage
+                        pondId: {
+                            [this.sequeliz.Op.notIn]: pondByManage.map((e: any) => e.pondId)
+                        }
                     };
                 } else {
                     query.where = {

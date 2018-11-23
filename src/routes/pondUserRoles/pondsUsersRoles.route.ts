@@ -1,6 +1,6 @@
 import { PondUserRole } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, PondUserRolesServices, UserRolesServices, UserServives } from '../../services';
+import { logger, PondUserRolesServices, UserRolesServices, UserServives, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
@@ -19,6 +19,7 @@ export class PondUserRolesRoute extends BaseRoute {
     private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private userServives: UserServives = new UserServives();
+    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class PondUserRolesRoute
      * @constructor
@@ -99,7 +100,14 @@ export class PondUserRolesRoute extends BaseRoute {
                             {
                                 model: this.pondUserRolesServices.models,
                                 as: ActionAssociateDatabase.USER_2_POND_USER_ROLE,
-                                required: false
+                                required: false,
+                                include: [
+                                    {
+                                        model: this.pondsServices.models,
+                                        as: ActionAssociateDatabase.POND_USER_ROLE_2_POND,
+                                        required: false
+                                    }
+                                ]
                             }
                         ],
                         attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username',  'createdDate', 'createdBy']
