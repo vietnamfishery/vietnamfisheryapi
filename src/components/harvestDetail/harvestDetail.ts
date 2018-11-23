@@ -14,23 +14,23 @@ export class HarvestDetail extends BaseComponent {
         this.services = this.harvestDetailsServives;
     }
 
-    public set setHarvestIdDetailUUId(harvestIdDetailUUId) {
+    public set setHarvestIdDetailUUId(harvestIdDetailUUId: string) {
         this.harvestDetailUUId = harvestIdDetailUUId;
     }
 
-    public set setHarvestId(harvestId) {
+    public set setHarvestId(harvestId: number) {
         this.harvestId = harvestId;
     }
 
-    public set setQuantity(quantity) {
+    public set setQuantity(quantity: number) {
         this.quantity = quantity;
     }
 
-    public set setUnitPrice(unitPrice) {
+    public set setUnitPrice(unitPrice: number) {
         this.unitPrice = unitPrice;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

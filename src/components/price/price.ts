@@ -16,31 +16,31 @@ export class Price extends BaseComponent {
         this.services = this.pricesServices;
     }
 
-    public set setPriceId(priceId) {
+    public set setPriceId(priceId: number) {
         this.priceId = priceId;
     }
 
-    public set setPriceUUId(priceUUId) {
+    public set setPriceUUId(priceUUId: string) {
         this.priceUUId = priceUUId;
     }
 
-    public set setSeasonId(seasonId) {
+    public set setSeasonId(seasonId: number) {
         this.seasonId = seasonId;
     }
 
-    public set setTotalCost(totalCost) {
+    public set setTotalCost(totalCost: number) {
         this.totalCost = totalCost;
     }
 
-    public set setTotalProfit(totalProfit) {
+    public set setTotalProfit(totalProfit: number) {
         this.totalProfit = totalProfit;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

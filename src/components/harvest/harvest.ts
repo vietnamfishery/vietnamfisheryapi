@@ -15,27 +15,27 @@ export class Harvest extends BaseComponent {
         this.services = this.harvestsServives;
     }
 
-    public set setHarvestId(harvestId) {
+    public set setHarvestId(harvestId: number) {
         this.harvestId = harvestId;
     }
 
-    public set setHarvestUUId(harvestUUId) {
+    public set setHarvestUUId(harvestUUId: string) {
         this.harvestUUId = harvestUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setHarvestName(harvestName) {
+    public set setHarvestName(harvestName: string) {
         this.harvestName = harvestName;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

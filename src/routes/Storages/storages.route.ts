@@ -60,26 +60,51 @@ export class StorageRoute extends BaseRoute {
      * lúc gửi cùng gửi kèm coupondId để khi người dùng submit lại thì thêm lại vào phiếu cũ
      */
     private addStorage = async (request: Request, response: Response, next: NextFunction) => {
+        const { couponId, itemArr } = request.body;
+
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const { couponId, itemArr } = request.body;
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        this.userRolesServices.models.findAll({
+            where: {
+                userId,
+                roles: 2
+            }
+        }).then(res => {
+            if(!res) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có quyền truy cập api này.'
+                });
+            }
+        }).catch(e => {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền truy cập api này.'
+            });
+        });
+
         return this.sequeliz.transaction().then(async (t: Transaction) => {
-            let boss: any = await this.storegeOwnwerServices.models.findOne({
+            const boss: any = await this.storegeOwnwerServices.models.findOne({
                 where: {
-                    userId: deToken.userId
+                    userId: isBoss ? userId : ownerId
                 },
                 transaction: t
             });
             // Là chủ và phiên nhập mới
-            if (boss && !couponId) {
+            if (boss) {
                 const coupon: Coupon = new Coupon();
-                coupon.setUserId = deToken.userId;
+                coupon.setUserId = userId;
                 const cp: any = await coupon.couponServives.models.create(coupon, {
                     transaction: t
                 }).catch(e => {
                     response.status(200).json({
                         success: false,
-                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                        message: 'Lỗi xác thực người dùng, vui lòng liên hệ nhà cung cấp để được hỗ trợ.'
                     });
                     t.rollback();
                 });
@@ -87,14 +112,16 @@ export class StorageRoute extends BaseRoute {
                     const result: any[] = [];
                     for (const item of itemArr) {
                         const storage: Storage = new Storage();
-                        if (typeof item.product === 'string')/* Là vật phẩm mới */ {
+                        if (typeof item.product === 'string' )/* Là vật phẩm mới */ {
                             storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
                             const sto: any = await storage.storegeServices.models.create(storage, {
                                 transaction: t
                             }).catch(e => {
                                 response.status(200).json({
                                     success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                    message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                    position: item.position,
+                                    couponId: cp.couponId
                                 });
                                 t.rollback();
                             });
@@ -104,42 +131,92 @@ export class StorageRoute extends BaseRoute {
                                 const mat: any = await material.materialServives.models.create(material, {
                                     transaction: t
                                 }).catch(async e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                        position: item.position,
-                                        couponId: cp.couponId
-                                    });
+                                    if (e.message === 'FailWithInsertQuantityOfMaterials') {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Lỗi nhập liệu số lượng vui lòng kiểm tra lại.',
+                                            position: item.position,
+                                            couponId: cp.couponId
+                                        });
+                                    } else {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                            position: item.position,
+                                            couponId: cp.couponId
+                                        });
+                                    }
                                     t.rollback();
                                 });
                                 if (mat) {
                                     result.push(mat);
+                                } else {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                        position: item.position,
+                                        couponId: cp.couponId
+                                    });
+                                    t.rollback();
                                 }
+                            } else {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.'
+                                });
+                                t.rollback();
                             }
                         } else/** Vật phẩm cũ */ {
                             const sUpdate: any = await storage.storegeServices.models.update({
                                 quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
                             }, {
                                     where: {
-                                        storageId: item.product.storageId
+                                        storageId: item.product.storageId,
+                                        type: item.type
                                     },
                                     transaction: t
+                                }).catch(e => {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Lỗi nhập liệu số lượng hay đơn vị vui lòng kiểm tra lại.'
+                                    });
                                 });
                             if (sUpdate.length > 0) {
                                 const material: Material = new Material();
                                 material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
                                 const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                    });
+                                    if (e.message === 'FailWithInsertQuantityOfMaterials') {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Lỗi nhập liệu số lượng vui lòng kiểm tra lại.',
+                                            position: item.position,
+                                            couponId: cp.couponId
+                                        });
+                                    } else {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                            position: item.position,
+                                            couponId: cp.couponId
+                                        });
+                                    }
                                     t.rollback();
                                 });
-                                result.push(mat);
+                                if(mat) {
+                                    result.push(mat);
+                                } else {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                        position: item.position,
+                                        couponId: cp.couponId
+                                    });
+                                    t.rollback();
+                                }
                             } else {
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                    message: `Lỗi nhập liệu số lượng vui lòng kiểm tra lại.`,
                                     position: item.position,
                                     couponId: cp.couponId
                                 });
@@ -150,7 +227,7 @@ export class StorageRoute extends BaseRoute {
                     if (result.length === itemArr.length) {
                         response.status(200).json({
                             success: true,
-                            message: 'Thêm thành công, vui lòng đợi...'
+                            message: 'Thêm thành công.'
                         });
                         t.commit();
                     } else {
@@ -161,345 +238,12 @@ export class StorageRoute extends BaseRoute {
                         });
                         t.rollback();
                     }
-                }
-            }
-            // Là chủ và phiên nhập cũ
-            else if (boss && couponId) {
-                const result: any[] = [];
-                for (const item of itemArr) {
-                    const storage: Storage = new Storage();
-                    if (typeof item.product === 'string') {
-                        storage.setStorages(null, uuidv4(), boss.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                        const sto: any = await storage.storegeServices.models.create(storage, {
-                            transaction: t
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                            });
-                            t.rollback();
-                        });
-                        if (sto) {
-                            const material: Material = new Material();
-                            material.setMaterial(null, uuidv4(), couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                            const mat: any = await material.materialServives.models.create(material, {
-                                transaction: t
-                            }).catch(async e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                    position: item.position,
-                                    couponId
-                                });
-                                t.rollback();
-                            });
-                            if (mat) {
-                                result.push(mat);
-                            }
-                        }
-                    } else {
-                        const sUpdate: any = await storage.storegeServices.models.update({
-                            quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
-                        }, {
-                                where: {
-                                    storageId: item.product.storageId
-                                },
-                                transaction: t
-                            }).catch(e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                });
-                                t.rollback();
-                            });
-                        if (sUpdate.length > 0) {
-                            const material: Material = new Material();
-                            material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                            const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                });
-                                t.rollback();
-                            });
-                            result.push(mat);
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                position: item.position,
-                                couponId
-                            });
-                            t.rollback();
-                        }
-                    }
-                }
-                if (result.length === itemArr.length) {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm thành công, vui lòng đợi...'
-                    });
-                    t.commit();
                 } else {
                     response.status(200).json({
                         success: false,
-                        message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                        couponId
+                        message: 'Thực hiện không thành công, vui lòng thử lại sau.'
                     });
                     t.rollback();
-                }
-            }
-            // Nhân viên và phiên nhập mới
-            else if (!boss && !couponId) {
-                boss = await this.userRolesServices.models.findOne({
-                    where: {
-                        userId: deToken.userId,
-                        [this.userRolesServices.Op.and]: {
-                            roles: 2
-                        }
-                    },
-                    include: [
-                        {
-                            model: this.userServives.models,
-                            as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
-                            include: [
-                                {
-                                    model: this.storegeOwnwerServices.models,
-                                    as: ActionAssociateDatabase.USER_2_OWNER_STORAGE
-                                }
-                            ]
-                        }
-                    ],
-                    transaction: t
-                }).catch(e => {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                    });
-                    t.rollback();
-                });
-                if (boss) {
-                    const coupon: Coupon = new Coupon();
-                    coupon.setUserId = deToken.userId;
-                    const cp: any = await coupon.couponServives.models.create(coupon, {
-                        transaction: t
-                    }).catch(e => {
-                        response.status(200).json({
-                            success: false,
-                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                        });
-                        t.rollback();
-                    });
-                    if (cp) {
-                        const result: any[] = [];
-                        for (const item of itemArr) {
-                            const storage: Storage = new Storage();
-                            if (typeof item.product === 'string') {
-                                storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                                const sto: any = await storage.storegeServices.models.create(storage, {
-                                    transaction: t
-                                }).catch(e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                    });
-                                    t.rollback();
-                                });
-                                if (sto) {
-                                    const material: Material = new Material();
-                                    material.setMaterial(null, uuidv4(), cp.couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                    const mat: any = await material.materialServives.models.create(material, {
-                                        transaction: t
-                                    }).catch(async e => {
-                                        t.rollback();
-                                        response.status(200).json({
-                                            success: false,
-                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                            position: item.position,
-                                            couponId: cp.couponId
-                                        });
-                                    });
-                                    if (mat) {
-                                        result.push(mat);
-                                    }
-                                }
-                            } else {
-                                const sUpdate: any = await storage.storegeServices.models.update({
-                                    quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
-                                }, {
-                                        where: {
-                                            storageId: item.product.storageId
-                                        },
-                                        transaction: t
-                                    }).catch(e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                        });
-                                        t.rollback();
-                                    });
-                                if (sUpdate.length > 0) {
-                                    const material: Material = new Material();
-                                    material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                    const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                        });
-                                        t.rollback();
-                                    });
-                                    result.push(mat);
-                                } else {
-                                    t.rollback();
-                                    response.status(200).json({
-                                        success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                        position: item.position,
-                                        couponId: cp.couponId
-                                    });
-                                }
-                            }
-                        }
-                        if (result.length === itemArr.length) {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Thêm thành công, vui lòng đợi...'
-                            });
-                            t.commit();
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                                couponId: cp.couponId
-                            });
-                            t.rollback();
-                        }
-                    }
-                } else {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Bạn chưa đủ thẩm quyền thực hiện thao tác, vui lòng liên hệ với quản lý của bạn để được hỗ trợ.'
-                    });
-                }
-            }
-            // Nhân viên và phiên nhập củ
-            else if (!boss && couponId) {
-                boss = await this.userRolesServices.models.findOne({
-                    where: {
-                        userId: deToken.userId,
-                        [this.userRolesServices.Op.and]: {
-                            roles: 2
-                        }
-                    },
-                    include: [
-                        {
-                            model: this.userServives.models,
-                            as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
-                            include: [
-                                {
-                                    model: this.storegeOwnwerServices.models,
-                                    as: ActionAssociateDatabase.OWNER_TO_USER
-                                }
-                            ]
-                        }
-                    ],
-                    transaction: t
-                }).catch(e => {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                    });
-                    t.rollback();
-                });
-                if (boss) {
-                    const result: any[] = [];
-                    for (const item of itemArr) {
-                        const storage: Storage = new Storage();
-                        if (typeof item.product === 'string') {
-                            storage.setStorages(null, uuidv4(), boss.boss.user.storageOwnerId, item.product, item.quantity, item.unit, item.type, item.descriptions);
-                            const sto: any = await storage.storegeServices.models.create(storage, {
-                                transaction: t
-                            }).catch(e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                });
-                                t.rollback();
-                            });
-                            if (sto) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), couponId, sto.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat: any = await material.materialServives.models.create(material, {
-                                    transaction: t
-                                }).catch(async e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                        position: item.position,
-                                        couponId
-                                    });
-                                    t.rollback();
-                                });
-                                if (mat) {
-                                    result.push(mat);
-                                }
-                            }
-                        } else {
-                            const sUpdate: any = await storage.storegeServices.models.update({
-                                quantityStorages: this.sequeliz.literal(`quantityStorages + ${item.quantity}`)
-                            }, {
-                                    where: {
-                                        storageId: item.product.storageId
-                                    },
-                                    transaction: t
-                                }).catch(e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                    });
-                                    t.rollback();
-                                });
-                            if (sUpdate.length > 0) {
-                                const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
-                                const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                    });
-                                    t.rollback();
-                                });
-                                result.push(mat);
-                            } else {
-                                response.status(200).json({
-                                    success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position }.`,
-                                    position: item.position,
-                                    couponId
-                                });
-                                t.rollback();
-                            }
-                        }
-                    }
-                    if (result.length === itemArr.length) {
-                        response.status(200).json({
-                            success: true,
-                            message: 'Thêm thành công, vui lòng đợi...'
-                        });
-                        t.commit();
-                    } else {
-                        response.status(200).json({
-                            success: false,
-                            message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                            couponId
-                        });
-                        t.rollback();
-                    }
-                } else {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Bạn chưa đủ thẩm quyền thực hiện thao tác, vui lòng liên hệ với quản lý của bạn để được hỗ trợ.'
-                    });
                 }
             }
         });
@@ -513,12 +257,13 @@ export class StorageRoute extends BaseRoute {
             where: {
                 [this.userRolesServices.Op.or]: [
                     {
-                        userId: deToken.userId
+                        userId: deToken.userId,
+                        roles: 2
                     },
                     {
                         bossId: deToken.userId
                     }
-                ]
+                ],
             },
             attributes: ['bossId'],
             include: [
@@ -544,15 +289,21 @@ export class StorageRoute extends BaseRoute {
                 }
             ]
         } as any)).then((s: any) => {
-            response.status(200).json({
+            if(!s) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có vật phẩm nào trong kho của mình!'
+                });
+            }
+            return response.status(200).json({
                 success: true,
                 message: '',
                 storages: s.employees.user.storages
             });
         }).catch(e => {
-            response.status(200).json({
+            return response.status(200).json({
                 success: false,
-                message: 'Bạn không có vật phẩm nào trong kho của mình!'
+                message: 'Có lỗi xảy ra, vui lòng thử lại sau!'
             });
         });
     }
@@ -562,6 +313,6 @@ export class StorageRoute extends BaseRoute {
     }
 
     private updateStorage = (request: Request, response: Response, next: NextFunction) => {
-        //
+        const { storageUUId } = request.body;
     }
 }

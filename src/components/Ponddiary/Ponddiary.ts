@@ -22,55 +22,55 @@ export class PondDiary extends BaseComponent {
         this.services = this.pondDiaryServices;
     }
 
-    public set setPondDiaryId(pondDiaryId) {
+    public set setPondDiaryId(pondDiaryId: number) {
         this.pondDiaryId = pondDiaryId;
     }
 
-    public set setPondDiaryUUId(pondDiaryUUId) {
+    public set setPondDiaryUUId(pondDiaryUUId: string) {
         this.pondDiaryUUId = pondDiaryUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setFisheryQuantity(fisheryQuantity) {
+    public set setFisheryQuantity(fisheryQuantity: number) {
         this.fisheryQuantity = fisheryQuantity;
     }
 
-    public set setHealthOfFishery(healthOfFishery) {
+    public set setHealthOfFishery(healthOfFishery: string) {
         this.healthOfFishery = healthOfFishery;
     }
 
-    public set setPondVolume(pondVolume) {
+    public set setPondVolume(pondVolume: number) {
         this.pondVolume = pondVolume;
     }
 
-    public set setDiedFishery(diedFishery) {
+    public set setDiedFishery(diedFishery: number) {
         this.diedFishery = diedFishery;
     }
 
-    public set setNotes(notes) {
+    public set setNotes(notes: string) {
         this.notes = notes;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

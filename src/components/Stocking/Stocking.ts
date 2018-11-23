@@ -15,27 +15,27 @@ export class Stocking extends BaseComponent {
         this.services = this.stockingServices;
     }
 
-    public set setStockingId(stockingId) {
+    public set setStockingId(stockingId: number) {
         this.stockingId = stockingId;
     }
 
-    public set setStockingUUId(stockingUUId) {
+    public set setStockingUUId(stockingUUId: string) {
         this.stockingUUId = stockingUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setNotes(notes) {
+    public set setNotes(notes: string) {
         this.notes = notes;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

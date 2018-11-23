@@ -21,51 +21,51 @@ export class Growth extends BaseComponent {
         this.services = this.growthsServives;
     }
 
-    public set setGrowthId(growthId) {
+    public set setGrowthId(growthId: number) {
         this.growthId = growthId;
     }
 
-    public set setGrowthUUId(growthUUId) {
+    public set setGrowthUUId(growthUUId: string) {
         this.growthUUId = growthUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setAverageDensity(averageDensity) {
+    public set setAverageDensity(averageDensity: number) {
         this.averageDensity = averageDensity;
     }
 
-    public set setAverageMass(averageMass) {
+    public set setAverageMass(averageMass: number) {
         this.averageMass = averageMass;
     }
 
-    public set setSpeedOdGrowth(speedOdGrowth) {
+    public set setSpeedOdGrowth(speedOdGrowth: number) {
         this.speedOdGrowth = speedOdGrowth;
     }
 
-    public set setLivingRatio(livingRatio) {
+    public set setLivingRatio(livingRatio: number) {
         this.livingRatio = livingRatio;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

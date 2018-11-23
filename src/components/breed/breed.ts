@@ -21,11 +21,11 @@ export class Breed extends BaseComponent {
         this.services = this.breedServives;
     }
 
-    public set setBreedId(breedId) {
+    public set setBreedId(breedId: number) {
         this.breedId = breedId;
     }
 
-    public set setBreedUUId(breedUUId) {
+    public set setBreedUUId(breedUUId: string) {
         this.breedUUId = breedUUId;
     }
 
@@ -33,31 +33,31 @@ export class Breed extends BaseComponent {
         this.ownerId = userId;
     }
 
-    public set setBreedName(breedName) {
+    public set setBreedName(breedName: string) {
         this.breedName = breedName;
     }
 
-    public set setTotalQuantity(totalQuantity) {
+    public set setTotalQuantity(totalQuantity: number) {
         this.totalQuantity = totalQuantity;
     }
 
-    public set setUnit(unit) {
+    public set setUnit(unit: number) {
         this.unit = unit;
     }
 
-    public set setLoopOfBreed(loopOfBreed) {
+    public set setLoopOfBreed(loopOfBreed: number) {
         this.loopOfBreed = loopOfBreed;
     }
 
-    public set setTips(tips) {
+    public set setTips(tips: string) {
         this.tips = tips;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

@@ -17,31 +17,31 @@ export class UserRole extends BaseComponent {
         this.services = this.userRolesServices;
     }
 
-    public set setRolesId(rolesId) {
+    public set setRolesId(rolesId: number) {
         this.rolesId = rolesId;
     }
 
-    public set setBossId(bossId) {
+    public set setBossId(bossId: number) {
         this.bossId = bossId;
     }
 
-    public set setUserId(userId) {
+    public set setUserId(userId: number) {
         this.userId = userId;
     }
 
-    public set setRoles(roles) {
+    public set setRoles(roles: number) {
         this.roles = roles;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

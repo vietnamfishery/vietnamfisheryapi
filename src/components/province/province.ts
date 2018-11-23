@@ -12,15 +12,15 @@ export class Province extends BaseComponent {
         this.provinceServices = new ProvinceServices();
     }
 
-    public set setProvinceid(provinceid) {
+    public set setProvinceid(provinceid: string) {
         this.provinceid = provinceid;
     }
 
-    public set setName(name) {
+    public set setName(name: string) {
         this.name = name;
     }
 
-    public set setType(type) {
+    public set setType(type: string) {
         this.type = type;
     }
 

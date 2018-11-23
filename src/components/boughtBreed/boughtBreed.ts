@@ -16,31 +16,31 @@ export class BoughtBreed extends BaseComponent {
         this.services = this.boughtBreedServives;
     }
 
-    public set setBoughtBreedId(boughtBreedId) {
+    public set setBoughtBreedId(boughtBreedId: number) {
         this.boughtBreedId = boughtBreedId ? boughtBreedId : null;
     }
 
-    public set setBoughtBreedUUId(boughtBreedUUId) {
+    public set setBoughtBreedUUId(boughtBreedUUId: string) {
         this.boughtBreedUUId = boughtBreedUUId;
     }
 
-    public set setUserId(userId) {
+    public set setUserId(userId: number) {
         this.userId = userId;
     }
 
-    public set setSeasonId(seasonId) {
+    public set setSeasonId(seasonId: number) {
         this.seasonId = seasonId;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy =  createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

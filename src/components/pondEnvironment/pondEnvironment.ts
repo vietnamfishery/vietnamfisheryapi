@@ -26,71 +26,71 @@ export class PondEnvironment extends BaseComponent {
         this.services = this.pondEnvironmentsServices;
     }
 
-    public set setPondEnvironmentId(pondEnvironmentId) {
+    public set setPondEnvironmentId(pondEnvironmentId: number) {
         this.pondEnvironmentId = pondEnvironmentId;
     }
 
-    public set setPondEnvironmentUUId(pondEnvironmentUUId) {
+    public set setPondEnvironmentUUId(pondEnvironmentUUId: string) {
         this.pondEnvironmentUUId = pondEnvironmentUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setOxyMorning(oxyMorning) {
+    public set setOxyMorning(oxyMorning: number) {
         this.oxyMorning = oxyMorning;
     }
 
-    public set setOxyAfternoon(oxyAfternoon) {
+    public set setOxyAfternoon(oxyAfternoon: number) {
         this.oxyAfternoon = oxyAfternoon;
     }
 
-    public set setPhMorning(phMorning) {
+    public set setPhMorning(phMorning: number) {
         this.phMorning = phMorning;
     }
 
-    public set setPhAfternoon(phAfternoon) {
+    public set setPhAfternoon(phAfternoon: number) {
         this.phAfternoon = phAfternoon;
     }
 
-    public set setTransparent(transparent) {
+    public set setTransparent(transparent: number) {
         this.transparent = transparent;
     }
 
-    public set setSalinity(salinity) {
+    public set setSalinity(salinity: number) {
         this.salinity = salinity;
     }
 
-    public set setH2s(h2s) {
+    public set setH2s(h2s: number) {
         this.h2s = h2s;
     }
 
-    public set setNh3(nh3) {
+    public set setNh3(nh3: number) {
         this.nh3 = nh3;
     }
 
-    public set setBazo(bazo) {
+    public set setBazo(bazo: number) {
         this.bazo = bazo;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

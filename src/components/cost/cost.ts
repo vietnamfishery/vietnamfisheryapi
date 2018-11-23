@@ -21,51 +21,51 @@ export class Cost extends BaseComponent {
         this.services = this.costsServives;
     }
 
-    public set setCostId(costId) {
+    public set setCostId(costId: number) {
         this.costId = costId;
     }
 
-    public set setCostUUId(costUUId) {
+    public set setCostUUId(costUUId: string) {
         this.costUUId = costUUId;
     }
 
-    public set setPondPrepareId(pondPrepareId) {
+    public set setPondPrepareId(pondPrepareId: number) {
         this.pondPrepareId = pondPrepareId;
     }
 
-    public set setLabel(label) {
+    public set setLabel(label: string) {
         this.label = label;
     }
 
-    public set setValue(value) {
+    public set setValue(value: number) {
         this.value = value;
     }
 
-    public set setResponsible(responsible) {
+    public set setResponsible(responsible: string) {
         this.responsible = responsible;
     }
 
-    public set setNotes(notes) {
+    public set setNotes(notes: string) {
         this.notes = notes;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

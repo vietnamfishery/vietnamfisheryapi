@@ -21,51 +21,51 @@ export class DiedFishery extends BaseComponent {
         this.services = this.diedFisherysServives;
     }
 
-    public set setDiedFisheryId(diedFisheryId) {
+    public set setDiedFisheryId(diedFisheryId: number) {
         this.diedFisheryId = diedFisheryId;
     }
 
-    public set setDiedFisheryUUId(diedFisheryUUId) {
+    public set setDiedFisheryUUId(diedFisheryUUId: string) {
         this.diedFisheryUUId = diedFisheryUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setCard(card) {
+    public set setCard(card: number) {
         this.card = card;
     }
 
-    public set setQuantity(quantity) {
+    public set setQuantity(quantity: number) {
         this.quantity = quantity;
     }
 
-    public set setSolutions(solutions) {
+    public set setSolutions(solutions: string) {
         this.solutions = solutions;
     }
 
-    public set setEmployee(employee) {
+    public set setEmployee(employee: string) {
         this.employee = employee;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

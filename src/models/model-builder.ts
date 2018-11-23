@@ -36,10 +36,12 @@ export class ModelBuilder {
 
     couponAssociate(
         materialModel: any,
-        usersModel: any
+        usersModel: any,
+        seasonModel: any
     ) {
         associations.couponToMaterial(this.model, materialModel);
         associations.couponToUsers(this.model, usersModel);
+        associations.couponToSeason(this.model, seasonModel);
     }
 
     diedfisherysAssociate(seasonAndPondModel: any) {
@@ -137,7 +139,8 @@ export class ModelBuilder {
         userModel: any,
         seasonAndPondModel: any,
         pondsModel: any,
-        rolesUserModel: any
+        rolesUserModel: any,
+        couponModel: any
     ) {
         associations.seasonToBoughtBreed(this.model, boughtBreedModel);
         associations.seasonToPrice(this.model, priceModel);
@@ -145,6 +148,7 @@ export class ModelBuilder {
         associations.seasonToSNP(this.model, seasonAndPondModel);
         associations.seasonToPond(this.model, pondsModel);
         associations.seasonToUserRoles(this.model, rolesUserModel);
+        associations.seasonToCoupon(this.model, couponModel);
     }
 
     seasonAndPondAssociate(

@@ -14,23 +14,23 @@ export class PondUserRole extends BaseComponent {
         this.services = this.pondUserRolesServices;
     }
 
-    public set setPondUserRolesId(id) {
+    public set setPondUserRolesId(id: number) {
         this.pondUserRolesId = id;
     }
 
-    public set setUserId(userId) {
+    public set setUserId(userId: number) {
         this.userId = userId;
     }
 
-    public set setPondId(pondId) {
+    public set setPondId(pondId: number) {
         this.pondId = pondId;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

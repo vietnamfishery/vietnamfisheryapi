@@ -19,43 +19,43 @@ export class Material extends BaseComponent {
         this.services = this.materialServives;
     }
 
-    public set setMaterialId(materialId) {
+    public set setMaterialId(materialId: number) {
         this.materialId = materialId;
     }
 
-    public set setMaterialUUId(materialUUId) {
+    public set setMaterialUUId(materialUUId: string) {
         this.materialUUId = materialUUId;
     }
 
-    public set setCouponId(couponId) {
+    public set setCouponId(couponId: number) {
         this.couponId = couponId;
     }
 
-    public set setStorageId(storageId) {
+    public set setStorageId(storageId: number) {
         this.storageId = storageId;
     }
 
-    public set setProvider(provider) {
+    public set setProvider(provider: string) {
         this.provider = provider;
     }
 
-    public set setProviderAddress(providerAddress) {
+    public set setProviderAddress(providerAddress: string) {
         this.providerAddress = providerAddress;
     }
 
-    public set setQuantity(quantity) {
+    public set setQuantity(quantity: number) {
         this.quantity = quantity;
     }
 
-    public set setUnit(unit) {
+    public set setUnit(unit: number) {
         this.unit = unit;
     }
 
-    public set setUnitPrice(unitPrice) {
+    public set setUnitPrice(unitPrice: number) {
         this.unitPrice = unitPrice;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

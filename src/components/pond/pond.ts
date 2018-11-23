@@ -26,102 +26,99 @@ export class Pond extends BaseComponent {
         super();
         this.pondsServices = new PondsServices();
         this.services = this.pondsServices;
-        this.primary = {
-            pondId: this.getPondId
-        };
     }
 
-    public set setPondId(pondId) {
-        this.pondId = pondId ? pondId : null;
+    public set setPondId(pondId: number) {
+        this.pondId = pondId;
     }
 
-    public set setPondUUId(pondUUId) {
+    public set setPondUUId(pondUUId: string) {
         this.pondUUId = pondUUId;
     }
 
-    public set setUserId(userId) {
+    public set setUserId(userId: number) {
         this.userId = userId;
     }
 
-    public set setPondName(pondName) {
+    public set setPondName(pondName: string) {
         this.pondName = pondName;
     }
 
-    public set setPondCreatedDate(pondCreatedDate) {
-        this.pondCreatedDate = pondCreatedDate;
-    }
-
-    public set setPondArea(pondArea) {
+    public set setPondArea(pondArea: number) {
         this.pondArea = pondArea;
     }
 
-    public set setPondDepth(pondDepth) {
+    public set setPondDepth(pondDepth: number) {
         this.pondDepth = pondDepth;
     }
 
-    public set setCreateCost(createCost) {
+    public set setCreateCost(createCost: number) {
         this.createCost = createCost;
     }
 
-    public set setStatus(status) {
+    public set setPondCreatedDate(pondCreatedDate: Date) {
+        this.pondCreatedDate = pondCreatedDate;
+    }
+
+    public set setStatus(status: number) {
         this.status = status;
     }
 
-    public set setIsFed(isFed) {
+    public set setIsFed(isFed: number) {
         this.isFed = isFed;
     }
 
-    public set setIsDiary(isDiary) {
+    public set setIsDiary(isDiary: number) {
         this.isDiary = isDiary;
     }
 
-    public set setImages(images) {
+    public set setImages(images: string) {
         this.images = images;
     }
 
-    public set setPondLatitude(val) {
-        this.pondLatitude = val;
+    public set setPondLatitude(pondLatitude: number) {
+        this.pondLatitude = pondLatitude;
     }
 
-    public set setPondLongitude(val) {
-        this.pondLongitude = val;
+    public set setPondLongitude(pondLongitude: number) {
+        this.pondLongitude = pondLongitude;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 
     public setPond(
-        pondId: string,
+        pondId: number,
         pondUUId: string,
         userId: number,
         pondName: string,
         pondArea: number,
         pondDepth: number,
         createCost: number,
+        pondCreatedDate: Date,
         status: number,
         isFed: number,
         isDiary: number,
-        images?: string,
+        images: string,
         pondLatitude?: number,
         pondLongitude?: number,
-        pondCreatedDate?: Date | string,
         createdBy?: string,
         createdDate?: Date,
         updatedBy?: string,
@@ -177,32 +174,32 @@ export class Pond extends BaseComponent {
         return this.createCost;
     }
 
-    public get getStatus(): number {
-        return this.status;
+    public get getStatus(): Date {
+        return this.pondCreatedDate;
     }
 
     public get getIsFed(): number {
-        return this.isFed;
+        return this.status;
     }
 
     public get getIsDiary(): number {
+        return this.isFed;
+    }
+
+    public get getImages(): number {
         return this.isDiary;
     }
 
-    public get getImages(): string {
+    public get getPondLatitude(): string {
         return this.images;
     }
 
-    public get getPondLatitude(): number {
+    public get getPondLongitude(): number {
         return this.pondLatitude;
     }
 
-    public get getPondLongitude(): number {
+    public get getPondCreatedDate(): number {
         return this.pondLongitude;
-    }
-
-    public get getPondCreatedDate(): Date {
-        return this.pondCreatedDate;
     }
 
     public get getCreatedBy(): string {
@@ -223,11 +220,5 @@ export class Pond extends BaseComponent {
 
     public get getIsDeleted(): number {
         return this.isDeleted;
-    }
-
-    public get getPrimary(): object {
-        return {
-            pondId: this.getPondId
-        };
     }
 }

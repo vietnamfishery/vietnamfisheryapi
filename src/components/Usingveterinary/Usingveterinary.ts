@@ -23,59 +23,59 @@ export class UsingVeterinary extends BaseComponent {
         this.services = this.usingVeterinaryServices;
     }
 
-    public set setUsingVeterinaryId(usingVeterinaryId) {
+    public set setUsingVeterinaryId(usingVeterinaryId: number) {
         this.usingVeterinaryId = usingVeterinaryId;
     }
 
-    public set setUsingVeterinaryUUId(usingVeterinaryUUId) {
+    public set setUsingVeterinaryUUId(usingVeterinaryUUId: string) {
         this.usingVeterinaryUUId = usingVeterinaryUUId;
     }
 
-    public set setTakeCareId(takeCareId) {
+    public set setTakeCareId(takeCareId: number) {
         this.takeCareId = takeCareId;
     }
 
-    public set setStorageId(storageId) {
+    public set setStorageId(storageId: number) {
         this.storageId = storageId;
     }
 
-    public set setCausesNSymptoms(causesNSymptoms) {
+    public set setCausesNSymptoms(causesNSymptoms: string) {
         this.causesNSymptoms = causesNSymptoms;
     }
 
-    public set setAverageSize(averageSize) {
+    public set setAverageSize(averageSize: number) {
         this.averageSize = averageSize;
     }
 
-    public set setTotalBiomass(totalBiomass) {
+    public set setTotalBiomass(totalBiomass: number) {
         this.totalBiomass = totalBiomass;
     }
 
-    public set setQuantity(quantity) {
+    public set setQuantity(quantity: number) {
         this.quantity = quantity;
     }
 
-    public set setResult(result) {
+    public set setResult(result: string) {
         this.result = result;
     }
 
-    public set setLatestHarvestDate(latestHarvestDate) {
+    public set setLatestHarvestDate(latestHarvestDate: number) {
         this.latestHarvestDate = latestHarvestDate;
     }
 
-    public set setMentor(mentor) {
+    public set setMentor(mentor: string) {
         this.mentor = mentor;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

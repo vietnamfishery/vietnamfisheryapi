@@ -20,3 +20,13 @@ export function couponToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeli
         }
     });
 }
+
+export function couponToSeason(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.belongsTo(model, {
+        as: ActionAssociateDatabase.COUPON_2_SEASON,
+        foreignKey: {
+            name: 'seasonId',
+            field: 'seasonId'
+        }
+    });
+}

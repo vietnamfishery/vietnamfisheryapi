@@ -16,31 +16,31 @@ export class StockingDetail extends BaseComponent {
         this.services = this.stockingDetailsServices;
     }
 
-    public set setStockingDetailUUId(stockingDetailUUId) {
+    public set setStockingDetailUUId(stockingDetailUUId: string) {
         this.stockingDetailUUId = stockingDetailUUId;
     }
 
-    public set setBreedId(breedId) {
+    public set setBreedId(breedId: number) {
         this.breedId = breedId;
     }
 
-    public set setStockingId(stockingId) {
+    public set setStockingId(stockingId: number) {
         this.stockingId = stockingId;
     }
 
-    public set setStockingQuantity(stockingQuantity) {
+    public set setStockingQuantity(stockingQuantity: number) {
         this.stockingQuantity = stockingQuantity;
     }
 
-    public set setPhFirst(phFirst) {
+    public set setPhFirst(phFirst: number) {
         this.phFirst = phFirst;
     }
 
-    public set setSalinityFirst(salinityFirst) {
+    public set setSalinityFirst(salinityFirst: number) {
         this.salinityFirst = salinityFirst;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

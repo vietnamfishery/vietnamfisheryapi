@@ -19,11 +19,11 @@ export class Storage extends BaseComponent {
         this.services = this.storegeServices;
     }
 
-    public set setStorageId(storageId) {
+    public set setStorageId(storageId: number) {
         this.storageId = storageId;
     }
 
-    public set setStorageUUId(storageUUId) {
+    public set setStorageUUId(storageUUId: string) {
         this.storageUUId = storageUUId;
     }
 
@@ -31,31 +31,31 @@ export class Storage extends BaseComponent {
         this.ownerId = userId;
     }
 
-    public set setProductName(productName) {
+    public set setProductName(productName: string) {
         this.productName = productName;
     }
 
-    public set setQuantityStorages(quantityStorages) {
+    public set setQuantityStorages(quantityStorages: number) {
         this.quantityStorages = quantityStorages;
     }
 
-    public set setUnit(unit) {
+    public set setUnit(unit: number) {
         this.unit = unit;
     }
 
-    public set setType(type) {
+    public set setType(type: number) {
         this.type = type;
     }
 
-    public set setDescriptions(descriptions) {
+    public set setDescriptions(descriptions: string) {
         this.descriptions = descriptions;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

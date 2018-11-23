@@ -157,10 +157,10 @@ export enum ActionAssociateDatabase {
     SEASON_AND_POND_2_TAKE_CARE = 'takeCares',
     SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
     SEASON_AND_POND_2_POND_ENV = 'seasonWithEnvironment',
-    SEASON_2_BOUGHT_BREED = 'boughtBreed',
-    SEASON_2_COUPON = 'coupon',
-    SEASON_2_PRICE = 'price',
     //
+    SEASON_2_BOUGHT_BREED = 'boughtBreed',
+    SEASON_2_PRICE = 'price',
+    SEASON_2_COUPON = 'coupon',
     SEASON_2_USER = 'seasons',
     SEASON_2_USER_ROLES = 'roles',
     SEASON_2_POND = 'ponds',

@@ -17,31 +17,31 @@ export class Season extends BaseComponent {
         this.services = this.seasonServices;
     }
 
-    public set setSeasonId(seasonId) {
+    public set setSeasonId(seasonId: number) {
         this.seasonId = seasonId;
     }
 
-    public set setSeasonUUId(seasonUUId) {
+    public set setSeasonUUId(seasonUUId: string) {
         this.seasonUUId = seasonUUId;
     }
 
-    public set setUserId(userId) {
+    public set setUserId(userId: number) {
         this.userId = userId;
     }
 
-    public set setSeasonName(seasonName) {
+    public set setSeasonName(seasonName: string) {
         this.seasonName = seasonName;
     }
 
-    public set setStatus(status) {
+    public set setStatus(status: number) {
         this.status = status;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

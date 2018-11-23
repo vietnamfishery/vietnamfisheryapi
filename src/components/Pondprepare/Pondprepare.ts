@@ -18,39 +18,39 @@ export class PondPrepare extends BaseComponent {
         this.services = this.pondPrepareServices;
     }
 
-    public set setPondPrepareId(pondPrepareId) {
+    public set setPondPrepareId(pondPrepareId: number) {
         this.pondPrepareId = pondPrepareId;
     }
 
-    public set setPondPrepareUUId(pondPrepareUUId) {
+    public set setPondPrepareUUId(pondPrepareUUId: string) {
         this.pondPrepareUUId = pondPrepareUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setPondprepareName(pondprepareName) {
+    public set setPondprepareName(pondprepareName: string) {
         this.pondprepareName = pondprepareName;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setUpdatedBy(updatedBy) {
+    public set setUpdatedBy(updatedBy: string) {
         this.updatedBy = updatedBy;
     }
 
-    public set setUpdatedDate(updatedDate) {
+    public set setUpdatedDate(updatedDate: Date) {
         this.updatedDate = updatedDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

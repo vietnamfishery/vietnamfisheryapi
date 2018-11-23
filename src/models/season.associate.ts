@@ -51,6 +51,16 @@ export function seasonToSNP(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
     });
 }
 
+export function seasonToCoupon(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.SEASON_2_COUPON,
+        foreignKey: {
+            name: 'seasonId',
+            field: 'seasonId'
+        }
+    });
+}
+
 export function seasonToPond(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsToMany(model, {
         as: ActionAssociateDatabase.SEASON_2_POND,

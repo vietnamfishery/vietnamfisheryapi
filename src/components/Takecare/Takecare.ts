@@ -16,31 +16,31 @@ export class TakeCare extends BaseComponent {
         this.services = this.takeCareServices;
     }
 
-    public set setTakeCareId(takeCareId) {
+    public set setTakeCareId(takeCareId: number) {
         this.takeCareId = takeCareId;
     }
 
-    public set setTakeCareUUId(takeCareUUId) {
+    public set setTakeCareUUId(takeCareUUId: string) {
         this.takeCareUUId = takeCareUUId;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setTakeType(type) {
+    public set setTakeType(type: number) {
         this.type = type;
     }
 
-    public set setTakeCareName(takeCareName) {
+    public set setTakeCareName(takeCareName: string) {
         this.takeCareName = takeCareName;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

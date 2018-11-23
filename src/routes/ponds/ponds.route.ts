@@ -82,7 +82,7 @@ export class PondRoute extends BaseRoute {
             if (request.files) {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
-                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined, pondCreatedDate);
+                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                         pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                             response.status(200).json({
                                 success: true,
@@ -102,7 +102,7 @@ export class PondRoute extends BaseRoute {
                     }
                 });
             } else {
-                pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined, pondCreatedDate);
+                pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                 pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                     response.status(200).json({
                         success: true,
@@ -213,7 +213,7 @@ export class PondRoute extends BaseRoute {
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
 
-        if(!isBoss) {
+        if (!isBoss) {
             return response.status(200).json({
                 success: false,
                 message: 'Dừng lại! Truy cập là trái phép.'
@@ -229,7 +229,7 @@ export class PondRoute extends BaseRoute {
                     message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
                 });
             }).then((res: any) => {
-                if(!res.length) {
+                if (!res.length) {
                     response.status(200).json({
                         success: false,
                         message: 'Bạn không có ao nào trong hệ thống'
@@ -451,7 +451,7 @@ export class PondRoute extends BaseRoute {
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
-        if(!isBoss) {
+        if (!isBoss) {
             return response.status(200).json({
                 success: false,
                 message: 'Dừng lại! Truy cập là trái phép.'
@@ -467,10 +467,10 @@ export class PondRoute extends BaseRoute {
             if (request.files) {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
-                        pond.setPond(null, undefined, undefined, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude, pondLongitude, pondCreatedDate);
+                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                         pond.pondsServices.models.update({
                             pondName, pondCreatedDate, pondArea, pondDepth, createCost, images:
-                            data.fileId, pondLatitude, pondLongitude, status, isFed, isDiary
+                                data.fileId, pondLatitude, pondLongitude, status, isFed, isDiary
                         }, {
                                 where: {
                                     pondUUId
@@ -725,7 +725,7 @@ export class PondRoute extends BaseRoute {
                     include: [],
                     where: {}
                 };
-                if(pondByManage.length) {
+                if (pondByManage.length) {
                     query.where = {
                         userId,
                         [this.sequeliz.Op.notIn]: pondByManage
@@ -982,7 +982,7 @@ export class PondRoute extends BaseRoute {
                     include: [],
                     where: {}
                 };
-                if(pondByManage.length) {
+                if (pondByManage.length) {
                     query.where = {
                         userId,
                         pondId: {

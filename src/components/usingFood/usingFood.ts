@@ -19,43 +19,43 @@ export class UsingFood extends BaseComponent {
         this.services = this.usingFoodsServices;
     }
 
-    public set setUsingFoodId(usingFoodId) {
+    public set setUsingFoodId(usingFoodId: number) {
         this.usingFoodId = usingFoodId;
     }
 
-    public set setUsingFoodUUId(usingFoodUUId) {
+    public set setUsingFoodUUId(usingFoodUUId: string) {
         this.usingFoodUUId = usingFoodUUId;
     }
 
-    public set setStorageId(storageId) {
+    public set setStorageId(storageId: number) {
         this.storageId = storageId;
     }
 
-    public set setTakeCareId(takeCareId) {
+    public set setTakeCareId(takeCareId: number) {
         this.takeCareId = takeCareId;
     }
 
-    public set setMassOfFishery(massOfFishery) {
+    public set setMassOfFishery(massOfFishery: number) {
         this.massOfFishery = massOfFishery;
     }
 
-    public set setFeedingRate(feedingRate) {
+    public set setFeedingRate(feedingRate: number) {
         this.feedingRate = feedingRate;
     }
 
-    public set setTotalFood(totalFood) {
+    public set setTotalFood(totalFood: number) {
         this.totalFood = totalFood;
     }
 
-    public set setCreatedBy(createdBy) {
+    public set setCreatedBy(createdBy: string) {
         this.createdBy = createdBy;
     }
 
-    public set setCreatedDate(createdDate) {
+    public set setCreatedDate(createdDate: Date) {
         this.createdDate = createdDate;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 

@@ -13,15 +13,15 @@ export class SeasonsAndPond extends BaseComponent {
         this.services = this.seasonAndPondServices;
     }
 
-    public set setSeasonAndPondId(seasonAndPondId) {
+    public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
     }
 
-    public set setSeasonId(seasonId) {
+    public set setSeasonId(seasonId: number) {
         this.seasonId = seasonId;
     }
 
-    public set setPondId(pondId) {
+    public set setPondId(pondId: number) {
         this.pondId = pondId;
     }
 

@@ -1,11 +1,12 @@
 import { UsingVeterinary, TakeCare } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, TakeCareServices, SeasonAndPondServices, SeasonServices } from '../../services';
+import { logger, TakeCareServices, SeasonAndPondServices, SeasonServices, UsingVeterinaryServices, StoregeServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Transaction } from 'sequelize';
+import { Transaction, FindOptions } from 'sequelize';
 import { ActionAssociateDatabase } from '../../common';
+import { DateUtil } from '../../lib';
 
 /**
  * @api {all} /usingVeterinary UsingVeterinary Request customer object
@@ -20,6 +21,8 @@ export class UsingVeterinaryRoute extends BaseRoute {
     private takeCareServices: TakeCareServices = new TakeCareServices();
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
+    private usingVeterinaryServices: UsingVeterinaryServices = new UsingVeterinaryServices();
+    private storegeServices: StoregeServices = new StoregeServices();
     /**
      * @class UsingVeterinaryRoute
      * @constructor
@@ -42,6 +45,7 @@ export class UsingVeterinaryRoute extends BaseRoute {
 
         // add route
         this.router.post('/add', Authentication.isLogin, this.addUsingVeterinary);
+        this.router.post('/gets', Authentication.isLogin, this.getUsingVeterinary);
 
         // log endpoints
         this.logEndpoints(this.router, UsingVeterinaryRoute.path);
@@ -52,7 +56,11 @@ export class UsingVeterinaryRoute extends BaseRoute {
      * usingVeterinary - take care type is 1
      */
     private addUsingVeterinary = async (request: Request, response: Response, next: NextFunction) => {
-        const { pondId, ownerId, takeCareName, causesNSymptoms, averageSize, totalBiomass, result, latestHarvestDate, mentor, storageId, quantity } = request.body;
+        const { pondId, takeCareName, causesNSymptoms, averageSize, totalBiomass, result, latestHarvestDate, mentor, storageId, quantity } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
@@ -76,21 +84,32 @@ export class UsingVeterinaryRoute extends BaseRoute {
             });
         });
         return this.sequeliz.transaction().then(async (t: Transaction) => {
-            const takeCare: TakeCare = new TakeCare();
-            takeCare.setTakecare(null, uuidv4(), seasonAndPond.seasonAndPondId, 1, takeCareName);
-            const tk: any = await this.takeCareServices.models.create(takeCare, {
-                transaction: t
-            }).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            const onUpdate: any = await this.storegeServices.models.update({
+                quantityStorages: this.sequeliz.literal(`quantityStorages - ${quantity}`)
+            }, {
+                    where: {
+                        storageId
+                    },
+                    transaction: t,
+                    returning: true
+                }).catch(e => {
+                    if (e.message === 'FailQuantity') {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Số lượng thuốc & dược phẩm trong kho không đủ.'
+                        });
+                    } else {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                        });
+                    }
+                    t.rollback();
                 });
-                t.rollback();
-            });
-            if(tk) {
-                const usingVeterinary: UsingVeterinary = new UsingVeterinary();
-                usingVeterinary.setUsingveterinary(null, uuidv4(), tk.takeCareId, storageId, causesNSymptoms, averageSize, totalBiomass, quantity, result, latestHarvestDate, mentor);
-                usingVeterinary.usingVeterinaryServices.models.create(usingVeterinary, {
+            if (onUpdate) {
+                const takeCare: TakeCare = new TakeCare();
+                takeCare.setTakecare(null, uuidv4(), seasonAndPond.seasonAndPondId, 1, takeCareName);
+                const tk: any = await this.takeCareServices.models.create(takeCare, {
                     transaction: t
                 }).catch(e => {
                     response.status(200).json({
@@ -98,18 +117,128 @@ export class UsingVeterinaryRoute extends BaseRoute {
                         message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                     });
                     t.rollback();
-                }).then(res => {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm thành công.'
+                });
+                if (tk) {
+                    const usingVeterinary: UsingVeterinary = new UsingVeterinary();
+                    usingVeterinary.setUsingveterinary(null, uuidv4(), tk.takeCareId, storageId, causesNSymptoms, averageSize, totalBiomass, quantity, result, latestHarvestDate, mentor);
+                    usingVeterinary.usingVeterinaryServices.models.create(usingVeterinary, {
+                        transaction: t
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                        });
+                        t.rollback();
+                    }).then(res => {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm thành công.'
+                        });
+                        t.commit();
                     });
-                    t.commit();
+                }
+            } else {
+                t.rollback();
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                 });
             }
         }).catch(e => {
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    /**
+     * Get Cho ăn
+     * @method POST
+     */
+    private getUsingVeterinary = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondId, seasonId, options } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        const query: FindOptions<any> = {
+            include: [
+                {
+                    model: this.usingVeterinaryServices.models,
+                    as: ActionAssociateDatabase.TAKE_CARE_2_USING_FOOD,
+                    where: {
+                        createdDate: {
+                            [this.sequeliz.Op.between]: [
+                                DateUtil.getUTCDateTime(DateUtil.startOf(DateUtil.parse(options.timeOut || new Date()), options.unitOfTime)),
+                                DateUtil.getUTCDateTime(DateUtil.endOf(DateUtil.parse(options.timeOut || new Date()), options.unitOfTime))
+                            ]
+                        }
+                    },
+                    include: [
+                        {
+                            model: this.storegeServices.models,
+                            as: ActionAssociateDatabase.USING_FOOD_2_STORAGE
+                        }
+                    ],
+                    required: false
+                }
+            ],
+            where: {
+                type: 1
+            }
+        };
+
+        if (isBoss) {
+            query.include.push({
+                model: this.seasonAndPondServices.models,
+                as: ActionAssociateDatabase.TAKE_CARE_2_SEASON_AND_POND,
+                where: {
+                    seasonId,
+                    pondId
+                },
+                attributes: []
+            });
+        } else {
+            query.include.push({
+                model: this.seasonAndPondServices.models,
+                as: ActionAssociateDatabase.TAKE_CARE_2_SEASON_AND_POND,
+                where: {
+                    seasonId,
+                    pondId
+                },
+                include: [
+                    {
+                        model: this.seasonServices.models,
+                        as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                        where: {
+                            status: 0
+                        }
+                    }
+                ],
+                attributes: []
+            });
+        }
+
+        this.takeCareServices.models.findAll(query).then(res => {
+            if (res) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    takeCare: res
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký cho ăn của ao này'
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
             });
         });
     }

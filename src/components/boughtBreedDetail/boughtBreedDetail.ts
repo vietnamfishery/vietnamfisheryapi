@@ -22,47 +22,47 @@ export class BoughtBreedDetail extends BaseComponent {
         this.services = this.boughtBreedDetailsServives;
     }
 
-    public set setBoughtBreedDetailId(boughtBreedDetailId) {
+    public set setBoughtBreedDetailId(boughtBreedDetailId: number) {
         this.boughtBreedDetailId = boughtBreedDetailId;
     }
 
-    public set setBoughtBreedDetailUUId(boughtBreedDetailUUId) {
+    public set setBoughtBreedDetailUUId(boughtBreedDetailUUId: string) {
         this.boughtBreedDetailUUId = boughtBreedDetailUUId;
     }
 
-    public set setBoughtBreedId(boughtBreedId) {
+    public set setBoughtBreedId(boughtBreedId: number) {
         this.boughtBreedId = boughtBreedId;
     }
 
-    public set setBreedId(breedId) {
+    public set setBreedId(breedId: number) {
         this.breedId = breedId;
     }
 
-    public set setQuantity(quantity) {
+    public set setQuantity(quantity: number) {
         this.quantity = quantity;
     }
 
-    public set setUnit(unit) {
+    public set setUnit(unit: number) {
         this.unit = unit;
     }
 
-    public set setUnitPrice(unitPrice) {
+    public set setUnitPrice(unitPrice: number) {
         this.unitPrice = unitPrice;
     }
 
-    public set setSoldAddress(soldAddress) {
+    public set setSoldAddress(soldAddress: string) {
         this.soldAddress = soldAddress;
     }
 
-    public set setTestingAgency(testingAgency) {
+    public set setTestingAgency(testingAgency: string) {
         this.testingAgency = testingAgency;
     }
 
-    public set setDescriptions(descriptions) {
+    public set setDescriptions(descriptions: string) {
         this.descriptions = descriptions;
     }
 
-    public set setIsDeleted(isDeleted) {
+    public set setIsDeleted(isDeleted: number) {
         this.isDeleted = isDeleted;
     }
 
@@ -74,7 +74,6 @@ export class BoughtBreedDetail extends BaseComponent {
         quantity: number,
         unit: number,
         unitPrice: number,
-        loopOfBreed: number,
         soldAddress?: string,
         testingAgency?: string,
         descriptions?: string,
