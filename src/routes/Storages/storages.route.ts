@@ -1,6 +1,6 @@
 import { Storage, Coupon, Material } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, StoregeServices, StoregeOwnwerServices, UserRolesServices, UserServives } from '../../services';
+import { logger, StoregeServices, StoregeOwnwerServices, UserRolesServices, UserServives, SeasonServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -17,6 +17,7 @@ export class StorageRoute extends BaseRoute {
     private userRolesServices: UserRolesServices = new UserRolesServices();
     private userServives: UserServives = new UserServives();
     private storegeServices: StoregeServices = new StoregeServices();
+    private seasonServices: SeasonServices = new SeasonServices();
     /**
      * @class StorageRoute
      * @constructor
@@ -90,15 +91,30 @@ export class StorageRoute extends BaseRoute {
 
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             const boss: any = await this.storegeOwnwerServices.models.findOne({
+                include: [
+                    {
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.OWNER_TO_USER,
+                        include: [
+                            {
+                                model: this.seasonServices.models,
+                                as: ActionAssociateDatabase.USER_2_SEASON,
+                                where: {
+                                    status: 0                               }
+                            }
+                        ]
+                    }
+                ],
                 where: {
                     userId: isBoss ? userId : ownerId
                 },
                 transaction: t
             });
             // Là chủ và phiên nhập mới
-            if (boss) {
+            if (boss && boss.user.seasons.length) {
                 const coupon: Coupon = new Coupon();
                 coupon.setUserId = userId;
+                coupon.setSeasonId = boss.user.seasons[0].seasonId;
                 const cp: any = await coupon.couponServives.models.create(coupon, {
                     transaction: t
                 }).catch(e => {

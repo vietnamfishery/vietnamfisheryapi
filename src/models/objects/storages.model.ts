@@ -26,7 +26,7 @@ export const storagesOptions: any = _.merge({
             type: Sequelize.STRING(100)
         },
         quantityStorages: {
-            type: Sequelize.FLOAT
+            type: Sequelize.DOUBLE
         },
         unit: {
             type: Sequelize.INTEGER(1)
