@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2018 at 04:59 PM
+-- Generation Time: Nov 24, 2018 at 09:25 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -34,21 +34,21 @@ END$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `check_quantity_insert_materials` (IN `quantity` FLOAT)  BEGIN
 	IF quantity <= 0 THEN
     	SIGNAL SQLSTATE '45000'
-        	SET MESSAGE_TEXT = 'Fail with update quantity of materials';
+        	SET MESSAGE_TEXT = 'FailWithInsertQuantityOfMaterials';
     END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `check_quatity_update_breed` (IN `totalQuantity` BIGINT(20))  BEGIN
 	IF totalQuantity < 0 THEN
     	SIGNAL SQLSTATE '45000'
-        	SET MESSAGE_TEXT = 'Fail with update quantity of Breeds';
+        	SET MESSAGE_TEXT = 'FailQuantity';
     END IF;
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `check_quatity_update_storage` (IN `quantityStorages` FLOAT)  BEGIN
 	IF quantityStorages < 0 THEN
     	SIGNAL SQLSTATE '45000'
-        	SET MESSAGE_TEXT = 'Fail with update quantity of Storage';
+        	SET MESSAGE_TEXT = 'FailQuantity';
     END IF;
 END$$
 
@@ -105,7 +105,7 @@ CREATE TABLE `boughtbreeds` (
   `userId` bigint(20) NOT NULL,
   `seasonId` bigint(20) NOT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -114,12 +114,12 @@ CREATE TABLE `boughtbreeds` (
 --
 
 INSERT INTO `boughtbreeds` (`boughtBreedId`, `boughtBreedUUId`, `userId`, `seasonId`, `createdBy`, `createdDate`, `isDeleted`) VALUES
-(4, 'fa743ea5-6444-4b35-accd-fb5b47301e8f', 122, 6, NULL, '2018-11-10 04:14:01', 0),
-(5, 'a369c4a3-ac70-4fa7-8e58-10ea986692f5', 122, 6, NULL, '2018-11-10 07:31:38', 0),
-(6, '78408d9e-62f9-4d64-b2b0-437daa9c1651', 122, 6, NULL, '2018-11-10 07:35:25', 0),
-(7, '496c0ebd-87b3-4b0e-a1ee-599102af3e2d', 122, 6, NULL, '2018-11-10 07:35:39', 0),
-(8, 'f77f0064-fb6c-4ad6-b467-7e012d81c9d0', 122, 6, NULL, '2018-11-13 11:38:12', 0),
-(9, '349cf8c8-0535-4492-8e3f-32593b33eed2', 122, 6, NULL, '2018-11-18 12:29:24', 0);
+(4, 'fa743ea5-6444-4b35-accd-fb5b47301e8f', 122, 6, NULL, '2018-11-09 21:14:01', 0),
+(5, 'a369c4a3-ac70-4fa7-8e58-10ea986692f5', 122, 6, NULL, '2018-11-10 00:31:38', 0),
+(6, '78408d9e-62f9-4d64-b2b0-437daa9c1651', 122, 6, NULL, '2018-11-10 00:35:25', 0),
+(7, '496c0ebd-87b3-4b0e-a1ee-599102af3e2d', 122, 6, NULL, '2018-11-10 00:35:39', 0),
+(8, 'f77f0064-fb6c-4ad6-b467-7e012d81c9d0', 122, 6, NULL, '2018-11-13 04:38:12', 0),
+(9, '349cf8c8-0535-4492-8e3f-32593b33eed2', 122, 6, NULL, '2018-11-18 05:29:24', 0);
 
 -- --------------------------------------------------------
 
@@ -136,7 +136,7 @@ CREATE TABLE `breeds` (
   `unit` int(1) NOT NULL,
   `loopOfBreed` int(11) NOT NULL,
   `tips` text COLLATE utf8_unicode_ci,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -145,8 +145,8 @@ CREATE TABLE `breeds` (
 --
 
 INSERT INTO `breeds` (`breedId`, `breedUUId`, `ownerId`, `breedName`, `totalQuantity`, `unit`, `loopOfBreed`, `tips`, `createdDate`, `isDeleted`) VALUES
-(5, 'e0406e99-f52f-4495-9032-ad837b838122', 3, 'Tôm', 5719, 0, 15, NULL, '2018-11-10 07:35:25', 0),
-(6, '2eb419a4-706c-49bc-abac-0e6f19cb69a2', 3, 'Cá', 16516, 0, 90, NULL, '2018-11-13 11:38:12', 0);
+(5, 'e0406e99-f52f-4495-9032-ad837b838122', 3, 'Tôm', 5719, 0, 15, NULL, '2018-11-10 00:35:25', 0),
+(6, '2eb419a4-706c-49bc-abac-0e6f19cb69a2', 3, 'Cá', 16516, 0, 90, NULL, '2018-11-13 04:38:12', 0);
 
 --
 -- Triggers `breeds`
@@ -173,9 +173,9 @@ CREATE TABLE `costs` (
   `responsible` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `notes` text COLLATE utf8_unicode_ci,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -188,7 +188,8 @@ CREATE TABLE `costs` (
 CREATE TABLE `coupons` (
   `couponId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `seasonId` bigint(20) NOT NULL,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -196,10 +197,11 @@ CREATE TABLE `coupons` (
 -- Dumping data for table `coupons`
 --
 
-INSERT INTO `coupons` (`couponId`, `userId`, `createdDate`, `isDeleted`) VALUES
-(6, 122, '2018-11-09 05:09:21', 0),
-(7, 122, '2018-11-11 01:06:32', 0),
-(8, 122, '2018-11-14 10:59:59', 0);
+INSERT INTO `coupons` (`couponId`, `userId`, `seasonId`, `createdDate`, `isDeleted`) VALUES
+(1, 122, 6, '2018-11-24 20:18:09', 0),
+(2, 122, 6, '2018-11-24 20:21:25', 0),
+(3, 122, 6, '2018-11-24 20:22:17', 0),
+(4, 122, 6, '2018-11-24 20:22:52', 0);
 
 -- --------------------------------------------------------
 
@@ -216,9 +218,9 @@ CREATE TABLE `diedfisherys` (
   `solutions` text COLLATE utf8_unicode_ci,
   `employee` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -227,8 +229,8 @@ CREATE TABLE `diedfisherys` (
 --
 
 INSERT INTO `diedfisherys` (`diedFisheryId`, `diedFisheryUUId`, `seasonAndPondId`, `card`, `quantity`, `solutions`, `employee`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(2, '2a374055-0dd6-4255-9f6d-65b52f247d5e', 21, '1', 3534, '', '', NULL, '2018-11-16 11:17:40', NULL, '2018-11-16 12:42:42', 0),
-(3, 'b950e937-3a99-483e-aba5-645f66e90b79', 21, '0', 111, '', 'Nguyen Huan', NULL, '2018-11-16 12:34:18', NULL, '2018-11-16 12:42:25', 0);
+(2, '2a374055-0dd6-4255-9f6d-65b52f247d5e', 21, '1', 3534, '', '', NULL, '2018-11-16 04:17:40', NULL, '2018-11-16 05:42:42', 0),
+(3, 'b950e937-3a99-483e-aba5-645f66e90b79', 21, '0', 111, '', 'Nguyen Huan', NULL, '2018-11-16 05:34:18', NULL, '2018-11-16 05:42:25', 0);
 
 -- --------------------------------------------------------
 
@@ -962,9 +964,9 @@ CREATE TABLE `growths` (
   `speedOdGrowth` float NOT NULL,
   `livingRatio` float NOT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -973,8 +975,7 @@ CREATE TABLE `growths` (
 --
 
 INSERT INTO `growths` (`growthId`, `growthUUId`, `seasonAndPondId`, `averageDensity`, `averageMass`, `speedOdGrowth`, `livingRatio`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(2, '3c2cdda7-0dad-4f96-9eb3-011257a40db0', 21, 343, 345, 345, 1111, NULL, '2018-11-16 09:11:16', NULL, '2018-11-16 10:54:14', 0),
-(3, '2a89d7e0-e35a-479b-84b3-dc5b68ac9157', 19, 45345, 34534, 34534, 3453, NULL, '2018-11-16 10:27:02', NULL, '2018-11-16 10:27:02', 0);
+(2, '3c2cdda7-0dad-4f96-9eb3-011257a40db0', 21, 343, 345, 345, 1111, NULL, '2018-11-16 02:11:16', NULL, '2018-11-16 03:54:14', 0);
 
 -- --------------------------------------------------------
 
@@ -1001,7 +1002,7 @@ CREATE TABLE `harvests` (
   `harvestUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `seasonAndPondId` bigint(20) NOT NULL,
   `harvestName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1017,11 +1018,20 @@ CREATE TABLE `incurreds` (
   `pondPrepareId` bigint(20) NOT NULL,
   `ownerId` bigint(20) NOT NULL,
   `incurredName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `value` float NOT NULL,
-  `notes` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `createdDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `value` double NOT NULL,
+  `notes` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `incurreds`
+--
+
+INSERT INTO `incurreds` (`incurredId`, `incurredUUId`, `pondPrepareId`, `ownerId`, `incurredName`, `value`, `notes`, `createdDate`, `isDeleted`) VALUES
+(1, '298ef0c5-35de-4296-9b53-607ee5a2b587', 21, 122, 'Chuẩn bị 1', 5000000000, 'ghi chú', '2018-11-18 11:34:39', 0),
+(2, 'bdab5423-b8d5-49d5-b4b0-448527dd6576', 21, 122, 'test2', 2535470080, NULL, '2018-11-18 11:35:28', 0),
+(7, '652ba62b-604f-449f-a8b3-14ea52de326d', 21, 122, 'test', 1351656, 'tesst', '2018-11-18 14:00:19', 0);
 
 -- --------------------------------------------------------
 
@@ -1047,9 +1057,10 @@ CREATE TABLE `materials` (
 --
 
 INSERT INTO `materials` (`materialId`, `materialUUId`, `couponId`, `storageId`, `provider`, `providerAddress`, `quantity`, `unit`, `unitPrice`, `isDeleted`) VALUES
-(5, '1670c910-c30d-44dd-b6d2-6cc98dc39b12', 6, 5, 'Biotic', 'HCM', 20, 0, 1e17, 0),
-(6, '0a76cae1-2267-4f65-ad23-19631afbef2d', 7, 7, 'Cần Thơ', 'Cần Thơ', 1500, 3, 1500, 0),
-(7, '76e38c6a-6ee6-4654-abb7-a1fa1d2c3eff', 8, 8, 'HG', 'HG', 3131, 2, 125000, 0);
+(1, 'de8c6403-bc8a-4368-8cfc-c4fb47151b0d', 1, 13, 'hhh', 'hhhh', 9999999999, 4, 100000000000, 0),
+(2, '5b28191a-cc5d-4893-b874-2678c3378140', 2, 14, 'mmm', 'mmm', 215, 2, 24, 0),
+(3, 'e55b9d4b-152e-4c87-8095-a76624a74676', 3, 15, '9999', '9999', 9999, 2, 9999, 0),
+(4, '47b45a87-7e89-4c90-bc18-8ebb2f3b8a77', 4, 16, '9999999999', '9999999999', 999999999999, 3, 10000000000, 0);
 
 --
 -- Triggers `materials`
@@ -1079,7 +1090,8 @@ CREATE TABLE `ownerbreed` (
 
 INSERT INTO `ownerbreed` (`ownerId`, `userId`, `isDeleted`) VALUES
 (3, 122, 0),
-(5, 125, 0);
+(5, 125, 0),
+(6, 133, 0);
 
 -- --------------------------------------------------------
 
@@ -1097,9 +1109,9 @@ CREATE TABLE `ponddiary` (
   `diedFishery` int(11) NOT NULL,
   `notes` text COLLATE utf8_unicode_ci,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1123,9 +1135,9 @@ CREATE TABLE `pondenvironments` (
   `nh3` float DEFAULT NULL,
   `bazo` float DEFAULT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1141,9 +1153,9 @@ CREATE TABLE `pondprepare` (
   `seasonAndPondId` bigint(20) NOT NULL,
   `pondprepareName` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci NOT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1152,7 +1164,8 @@ CREATE TABLE `pondprepare` (
 --
 
 INSERT INTO `pondprepare` (`pondPrepareId`, `pondPrepareUUId`, `seasonAndPondId`, `pondprepareName`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(21, '9b056db9-56d8-4ac3-8044-861aa15fbf18', 17, 'Chuẩn bị ao cá lau kính', '', '2018-11-15 08:43:58', '', '2018-11-15 08:43:58', 0);
+(21, '9b056db9-56d8-4ac3-8044-861aa15fbf18', 17, 'Chuẩn bị ao cá lau kính', '', '2018-11-15 01:43:58', '', '2018-11-15 01:43:58', 0),
+(22, 'de74ecc6-b428-4ffd-b52a-a7c058c8639b', 17, 'Test', '', '2018-11-18 12:40:54', '', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1166,7 +1179,7 @@ CREATE TABLE `pondpreparedetails` (
   `pondPrepareId` bigint(20) NOT NULL,
   `storageId` bigint(20) NOT NULL,
   `quantity` float NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1175,7 +1188,7 @@ CREATE TABLE `pondpreparedetails` (
 --
 
 INSERT INTO `pondpreparedetails` (`pondPrepareDetailId`, `pondPrepareDetailUUId`, `pondPrepareId`, `storageId`, `quantity`, `createdDate`, `isDeleted`) VALUES
-(4, 'f04ab26b-71a1-496e-bb2c-70c319e68861', 21, 8, 4, '2018-11-15 08:43:59', 0);
+(4, 'f04ab26b-71a1-496e-bb2c-70c319e68861', 21, 8, 4, '2018-11-15 01:43:59', 0);
 
 -- --------------------------------------------------------
 
@@ -1199,9 +1212,9 @@ CREATE TABLE `ponds` (
   `pondLatitude` double DEFAULT NULL,
   `pondLongitude` double DEFAULT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1210,13 +1223,17 @@ CREATE TABLE `ponds` (
 --
 
 INSERT INTO `ponds` (`pondId`, `pondUUId`, `userId`, `pondName`, `pondArea`, `pondDepth`, `createCost`, `pondCreatedDate`, `status`, `isFed`, `isDiary`, `images`, `pondLatitude`, `pondLongitude`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(49, '7c072409-9fb0-408f-a1db-12e00813e52c', 122, 'Ao cá diêu hồng', 20, 1.2, 50000000, '2018-11-01 17:00:00', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-05 07:01:20', NULL, '2018-11-16 11:18:48', 0),
-(52, '8f36cfda-3b83-4dc5-b9b5-421493982891', 122, 'Ao cá Koi', 53, 3.4, 23423500000, '2018-11-01 17:00:00', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-05 07:13:17', NULL, '2018-11-05 07:13:17', 0),
-(53, '32beb6af-6421-492d-b7e2-e9aa1362ea7f', 122, 'Ao cá Koi 3', 235, 3.4, 100000000, '2018-10-12 17:00:00', 0, NULL, NULL, '1NAA0uVvvhYCiGNdWgaFEe5oskDZppR1T', 9.897820595083385, 105.65689097107156, NULL, '2018-11-05 09:02:10', NULL, '2018-11-05 21:35:40', 0),
-(54, '6c73febc-23ff-4bfb-be0d-3b8f8affb841', 125, 'Ao cá la hán', 24, 5.2, 23453400, '2018-10-31 17:00:00', 0, NULL, NULL, '1-KeKk9KkW97j6KyQqCSQtoSD9n8S9kn4', 9.487101982409458, 105.48531400602269, NULL, '2018-11-06 01:49:44', NULL, '2018-11-06 01:49:44', 0),
-(55, 'e08eb270-5ef3-4e24-a46a-eb3b8e15a182', 122, 'Ao tôm càng xanh', 345, 34, 235325000, '2018-11-01 17:00:00', 1, NULL, NULL, '1RP3reuRz3wolSP0X-VoK_ErAomVWoYKO', 9.735438583040349, 105.62393198669656, NULL, '2018-11-06 05:28:32', NULL, '2018-11-16 10:25:53', 0),
-(59, 'f8ca46b4-76eb-4dd4-9df2-604f01b9f774', 122, 'Ao cá ba sa', 34, 5, 34534500, '2018-11-14 19:28:31', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-14 05:28:31', NULL, '2018-11-16 10:25:56', 0),
-(65, 'c879989b-46c8-4a14-a7d1-fce09cabbe0e', 122, 'Ao cá lao kính', 4534530, 6, 353435000000, '2018-11-15 15:43:58', 0, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-15 08:43:58', NULL, '2018-11-15 08:43:58', 0);
+(49, '7c072409-9fb0-408f-a1db-12e00813e52c', 122, 'Ao cá diêu hồng', 20, 1.2, 50000000, '2018-11-01 17:00:00', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-05 00:01:20', NULL, '2018-11-16 04:18:48', 0),
+(52, '8f36cfda-3b83-4dc5-b9b5-421493982891', 122, 'Ao cá Koi', 53, 3.4, 23423500000, '2018-11-01 17:00:00', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-05 00:13:17', NULL, '2018-11-05 00:13:17', 0),
+(53, '32beb6af-6421-492d-b7e2-e9aa1362ea7f', 122, 'Ao cá Koi 3', 235, 3.4, 100000000, '2018-10-12 17:00:00', 0, NULL, NULL, '1NAA0uVvvhYCiGNdWgaFEe5oskDZppR1T', 9.897820595083385, 105.65689097107156, NULL, '2018-11-05 02:02:10', NULL, '2018-11-05 14:35:40', 0),
+(54, '6c73febc-23ff-4bfb-be0d-3b8f8affb841', 125, 'Ao cá la hán', 24, 5.2, 23453400, '2018-10-31 17:00:00', 0, NULL, NULL, '1-KeKk9KkW97j6KyQqCSQtoSD9n8S9kn4', 9.487101982409458, 105.48531400602269, NULL, '2018-11-05 18:49:44', NULL, '2018-11-05 18:49:44', 0),
+(55, 'e08eb270-5ef3-4e24-a46a-eb3b8e15a182', 122, 'Ao tôm càng xanh', 345, 34, 235325000, '2018-11-01 17:00:00', 1, NULL, NULL, '1RP3reuRz3wolSP0X-VoK_ErAomVWoYKO', 9.735438583040349, 105.62393198669656, NULL, '2018-11-05 22:28:32', NULL, '2018-11-16 03:25:53', 0),
+(59, 'f8ca46b4-76eb-4dd4-9df2-604f01b9f774', 122, 'Ao cá ba sa', 34, 5, 34534500, '2018-11-14 19:28:31', 1, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-13 22:28:31', NULL, '2018-11-16 03:25:56', 0),
+(65, 'c879989b-46c8-4a14-a7d1-fce09cabbe0e', 122, 'Ao cá lao kính', 4534530, 6, 353435000000, '2018-11-15 15:43:58', 0, NULL, NULL, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-15 01:43:58', NULL, '2018-11-15 01:43:58', 0),
+(76, 'a5e8d5e7-31bc-46d9-8698-78c3e34f50e0', 133, 'Ao ao', 2222220000, 33333300, 1111110, '2018-11-20 17:00:00', 0, 0, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', 23.9879641257926, 105.38249360167151, NULL, '2018-11-22 14:27:48', NULL, '2018-11-22 15:10:23', 0),
+(77, '825d83d0-c62f-4ce8-a6ae-9bc1c2b2044f', 133, 'chung ta khong thuoc ve nhau', 34534, 53453, 2534530, '2018-11-21 17:00:00', 1, 0, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', NULL, NULL, NULL, '2018-11-22 14:29:57', NULL, '2018-11-22 14:29:57', 0),
+(78, '66a92d63-78d6-40cc-8a27-6f9253c7742f', 122, 'Ao test cho ăn', 333333000, 333333000000, 33333300000, '2018-11-21 17:00:00', 1, 0, 0, '14zwcMRXTr-CfOouj_Xispqkm6W9rNQmo', 10.481722228858606, 106.17324839294656, NULL, '2018-11-22 15:48:28', NULL, '2018-11-22 15:48:28', 0),
+(79, 'f0f88d5f-7efd-4850-8144-0ba64c02c3b4', 122, 'ao test cho an 1', 243234, 234234, 234234, '2018-11-22 17:00:00', 1, 0, 0, '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W', 0, 0, NULL, '2018-11-23 14:35:37', NULL, '2018-11-23 14:36:38', 0);
 
 -- --------------------------------------------------------
 
@@ -1228,7 +1245,7 @@ CREATE TABLE `ponduserroles` (
   `pondUserRolesId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
   `pondId` bigint(20) NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1237,9 +1254,11 @@ CREATE TABLE `ponduserroles` (
 --
 
 INSERT INTO `ponduserroles` (`pondUserRolesId`, `userId`, `pondId`, `createdDate`, `isDeleted`) VALUES
-(1, 129, 49, '2018-11-13 20:06:55', 0),
-(2, 129, 52, '2018-11-13 20:07:01', 0),
-(3, 129, 53, '2018-11-13 20:07:10', 0);
+(1, 129, 49, '2018-11-13 13:06:55', 0),
+(2, 129, 59, '2018-11-13 13:07:01', 0),
+(3, 129, 53, '2018-11-13 13:07:10', 0),
+(5, 136, 77, '2018-11-22 14:40:40', 0),
+(7, 136, 76, '2018-11-22 14:40:55', 0);
 
 -- --------------------------------------------------------
 
@@ -1253,7 +1272,7 @@ CREATE TABLE `prices` (
   `seasonId` bigint(20) NOT NULL,
   `totalCost` double NOT NULL,
   `totalProfit` double NOT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeteled` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1350,7 +1369,7 @@ CREATE TABLE `seasons` (
   `userId` bigint(20) NOT NULL,
   `seasonName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `status` int(1) NOT NULL DEFAULT '0',
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=COMPACT;
 
@@ -1359,10 +1378,12 @@ CREATE TABLE `seasons` (
 --
 
 INSERT INTO `seasons` (`seasonId`, `seasonUUId`, `userId`, `seasonName`, `status`, `createdDate`, `isDeleted`) VALUES
-(1, '6684aac9-7afa-40b6-8293-4b4870f554cc', 122, 'Đông Xuân 2018', 1, '2018-11-07 06:53:05', 0),
-(4, 'b1ce6237-8bf2-42a3-a064-4a085a2cd60a', 122, 'Thu Đông 2018', 1, '2018-11-09 01:56:50', 0),
-(5, '9b6ba182-7f23-4b79-949e-e7e9984c2daa', 122, 'Đông Xuân 2019', 1, '2018-11-09 01:57:26', 0),
-(6, '2e5634e7-ca34-4abd-84c2-73a77bb75ad6', 122, 'Hè Thu 2019', 0, '2018-11-09 02:14:54', 0);
+(1, '6684aac9-7afa-40b6-8293-4b4870f554cc', 122, 'Đông Xuân 2018', 1, '2018-11-06 23:53:05', 0),
+(4, 'b1ce6237-8bf2-42a3-a064-4a085a2cd60a', 122, 'Thu Đông 2018', 1, '2018-11-08 18:56:50', 0),
+(5, '9b6ba182-7f23-4b79-949e-e7e9984c2daa', 122, 'Đông Xuân 2019', 1, '2018-11-08 18:57:26', 0),
+(6, '2e5634e7-ca34-4abd-84c2-73a77bb75ad6', 122, 'Hè Thu 2019', 0, '2018-11-08 19:14:54', 0),
+(7, 'e6e6fd02-c44d-4b32-9b50-cdc4154d05c7', 133, 'Vụ 1', 1, '2018-11-22 15:22:16', 0),
+(8, '7dedcdb0-7492-49be-b4ff-e96149d6831d', 133, 'vụ 2', 0, '2018-11-22 15:22:58', 0);
 
 -- --------------------------------------------------------
 
@@ -1382,11 +1403,14 @@ CREATE TABLE `seasonsandpond` (
 
 INSERT INTO `seasonsandpond` (`seasonAndPondId`, `seasonId`, `pondId`) VALUES
 (5, 5, 54),
-(6, 5, 55),
 (21, 6, 49),
-(19, 6, 55),
 (20, 6, 59),
-(17, 6, 65);
+(17, 6, 65),
+(27, 6, 78),
+(28, 6, 79),
+(22, 7, 76),
+(25, 8, 76),
+(26, 8, 77);
 
 -- --------------------------------------------------------
 
@@ -1399,7 +1423,7 @@ CREATE TABLE `stocking` (
   `stockingUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `seasonAndPondId` bigint(20) NOT NULL,
   `notes` text COLLATE utf8_unicode_ci,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1408,7 +1432,7 @@ CREATE TABLE `stocking` (
 --
 
 INSERT INTO `stocking` (`stockingId`, `stockingUUId`, `seasonAndPondId`, `notes`, `createdDate`, `isDeleted`) VALUES
-(5, 'fee3d5ed-d3b2-4d1e-962d-f5181b5e8b49', 21, 'test', '2018-11-16 13:11:02', 0);
+(5, 'fee3d5ed-d3b2-4d1e-962d-f5181b5e8b49', 21, 'test', '2018-11-16 06:11:02', 0);
 
 -- --------------------------------------------------------
 
@@ -1451,7 +1475,8 @@ CREATE TABLE `storageowner` (
 
 INSERT INTO `storageowner` (`storageOwnerId`, `userId`, `isDeleted`) VALUES
 (9, 122, 0),
-(11, 125, 0);
+(11, 125, 0),
+(12, 133, 0);
 
 -- --------------------------------------------------------
 
@@ -1464,11 +1489,11 @@ CREATE TABLE `storages` (
   `storageUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `ownerId` bigint(20) NOT NULL,
   `productName` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `quantityStorages` float NOT NULL,
+  `quantityStorages` double NOT NULL,
   `unit` int(1) NOT NULL,
   `type` int(1) NOT NULL,
   `descriptions` text COLLATE utf8_unicode_ci,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1477,9 +1502,16 @@ CREATE TABLE `storages` (
 --
 
 INSERT INTO `storages` (`storageId`, `storageUUId`, `ownerId`, `productName`, `quantityStorages`, `unit`, `type`, `descriptions`, `createdDate`, `isDeleted`) VALUES
-(5, '5d867545-57a8-4d55-b7b5-14a640ade3f4', 9, 'Thức ăn Biotic', 20000, 0, 0, NULL, '2018-11-09 05:09:21', 0),
-(7, 'a98e0bb2-aa8a-4c5b-9271-04f3a31c9206', 9, 'Thức ăn cho tôm', 1400, 3, 0, NULL, '2018-11-11 01:06:32', 0),
-(8, '3529fff3-2830-4e53-9304-247c5f9fd268', 9, 'Quạt', 3093, 2, 1, NULL, '2018-11-14 10:59:59', 0);
+(5, '5d867545-57a8-4d55-b7b5-14a640ade3f4', 9, 'Thức ăn Biotic', 100, 0, 0, NULL, '2018-11-08 22:09:21', 0),
+(7, 'a98e0bb2-aa8a-4c5b-9271-04f3a31c9206', 9, 'Thức ăn cho tôm', 1400, 3, 0, NULL, '2018-11-10 18:06:32', 0),
+(8, '3529fff3-2830-4e53-9304-247c5f9fd268', 9, 'Quạt', 3093, 2, 1, NULL, '2018-11-14 03:59:59', 0),
+(9, '2b15aaa3-e3e5-4908-92db-c61ba3d01bdc', 9, 'Thuốc A', 120, 5, 2, 'HG', '2018-11-23 15:47:36', 0),
+(10, 'ac3a7ed4-3c68-45ed-8dee-cb6e5062d8d2', 9, 'test', 345345, 2, 0, NULL, '2018-11-23 18:26:25', 0),
+(12, '754e2ad2-9067-4ef0-b861-f67fcf47ec48', 9, 'huan', 14, 1, 0, NULL, '2018-11-23 19:28:47', 0),
+(13, '61d6f183-4884-4102-af86-6aa77b10c0db', 9, 'test2', 10000000000, 4, 0, NULL, '2018-11-24 20:18:23', 0),
+(14, '2c781f8d-4957-47d3-888c-a60fc1a41847', 9, 'test 3', 215, 2, 0, NULL, '2018-11-24 20:21:27', 0),
+(15, '8c171b37-7b62-40eb-beeb-000e1a253142', 9, 'test 4 ', 9999, 2, 0, NULL, '2018-11-24 20:22:17', 0),
+(16, '32182fa9-3b5b-4f81-bb24-e42fd9931296', 9, 'test 5', 999999995904, 3, 0, NULL, '2018-11-24 20:22:52', 0);
 
 --
 -- Triggers `storages`
@@ -1501,11 +1533,28 @@ CREATE TABLE `takecare` (
   `takeCareId` bigint(20) NOT NULL,
   `takeCareUUId` char(36) COLLATE utf8_unicode_ci NOT NULL,
   `seasonAndPondId` bigint(20) NOT NULL,
-  `takeType` tinyint(1) NOT NULL,
+  `type` tinyint(1) NOT NULL,
   `takeCareName` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `takecare`
+--
+
+INSERT INTO `takecare` (`takeCareId`, `takeCareUUId`, `seasonAndPondId`, `type`, `takeCareName`, `createdDate`, `isDeleted`) VALUES
+(1, 'edf6da83-94ee-40f9-bdf0-039c7a0cd016', 20, 0, 'tesst', '2018-11-20 03:56:48', 0),
+(3, '9e106c6a-3f20-4654-b611-67e14a88c652', 20, 0, 'cho tôm ăn', '2018-11-20 14:58:39', 0),
+(9, '1d8ba2ce-ecb8-4d14-8aba-fb301f274c9f', 20, 0, 'cho tôm ăn3', '2018-11-21 13:57:12', 0),
+(10, '9d26dc5c-95a6-40dc-a4d8-ff82053e1df8', 20, 1, 'cấp cứu tôm', '2018-11-21 15:14:07', 0),
+(11, 'e36569d2-4ec8-4dce-a2d0-36c681b39866', 27, 0, 'test1', '2018-11-22 15:56:01', 0),
+(12, 'cffbdef1-d091-4cf0-9aa5-1e63115cf980', 27, 0, 'test2', '2018-11-22 15:59:17', 0),
+(13, '91cee33a-d800-46fd-8e40-7cbb4ca0d588', 20, 0, 'test 3', '2018-11-22 16:31:03', 0),
+(14, '0b634330-6eda-4f68-9dfe-546de2821574', 28, 0, 'mua xuan do co em', '2018-11-23 14:38:19', 0),
+(15, '9d75a3aa-3ad6-4d21-a771-cee4813ffe05', 28, 0, 'sdysdfghsdfhsdfyhsfd', '2018-11-23 15:00:49', 0),
+(16, 'f8a68eb5-a09e-4115-84e6-c14520e65daf', 27, 1, 'dgdf', '2018-11-23 16:25:15', 0),
+(17, 'b08f8644-1c73-4137-9332-0da4b43e0bf7', 28, 1, 'test 2', '2018-11-23 16:26:57', 0);
 
 -- --------------------------------------------------------
 
@@ -1518,7 +1567,7 @@ CREATE TABLE `userroles` (
   `bossId` bigint(20) NOT NULL,
   `userId` bigint(20) NOT NULL,
   `roles` int(11) NOT NULL,
-  `createdDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1528,10 +1577,14 @@ CREATE TABLE `userroles` (
 --
 
 INSERT INTO `userroles` (`rolesId`, `bossId`, `userId`, `roles`, `createdDate`, `updatedBy`, `isDeleted`) VALUES
-(34, 122, 129, 2, '2018-11-07 08:03:16', NULL, 1),
-(58, 122, 130, 2, '2018-11-08 12:23:09', NULL, 0),
-(84, 122, 129, 1, '2018-11-08 14:15:01', NULL, 0),
-(87, 122, 130, 1, '2018-11-08 14:15:53', NULL, 1);
+(34, 122, 129, 2, '2018-11-07 01:03:16', NULL, 1),
+(58, 122, 130, 2, '2018-11-08 05:23:09', NULL, 0),
+(84, 122, 129, 1, '2018-11-08 07:15:01', NULL, 0),
+(87, 122, 130, 1, '2018-11-08 07:15:53', NULL, 0),
+(88, 133, 134, 1, '2018-11-22 09:01:49', NULL, 0),
+(89, 133, 135, 2, '2018-11-22 09:59:19', NULL, 0),
+(90, 133, 136, 1, '2018-11-22 14:03:36', NULL, 0),
+(91, 133, 134, 2, '2018-11-22 14:20:01', NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -1556,9 +1609,9 @@ CREATE TABLE `users` (
   `email` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `images` text COLLATE utf8_unicode_ci,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `updatedBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `updatedDate` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updatedDate` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -1567,12 +1620,16 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`userId`, `userUUId`, `firstname`, `lastname`, `birthday`, `addressContact`, `username`, `password`, `town`, `district`, `province`, `status`, `phone`, `email`, `images`, `createdBy`, `createdDate`, `updatedBy`, `updatedDate`, `isDeleted`) VALUES
-(122, '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', 'Huấn', 'Nguyễn', '1996-10-14 17:00:00', NULL, 'nvh', '$2a$09$saFTOu.H5TACoWvvYIc.S.VL8KF/M/blIBEqs6XT1vvElpwilz80e', '31423', '934', '93', 0, '0869143133', 'ngnviethuan@gmail.com', '1LrWlmSFWxJTYKGkYK-RTrmUhTGm4WQub', NULL, '2018-11-05 04:58:09', NULL, '2018-11-05 05:58:22', 0),
-(125, '8787b866-85ed-4443-a108-0d07e9cc540d', 'Võ', 'Phong', NULL, NULL, 'vhp', '$2a$06$NgAEYNYQbiR1NhOod74ymuk9TPO.QbFS26gHSvBUhodDNeH6EfQ8a', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-05 05:05:11', NULL, '2018-11-05 05:05:11', 0),
-(129, 'c6f5f044-0238-48bc-8037-fd0a0928dd2a', 'Vô Kỵ', 'Trương', NULL, NULL, 'tvk', '$2a$12$gxSl2DjXBggAmeZBlZ2bWeK2Mm5glNhCS967sycPtTxhispVE6va.', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-05 06:48:24', NULL, '2018-11-06 06:01:29', 0),
-(130, '7a82c0bd-52a8-4906-8aa2-6755cca3cf22', 'Nhất Hàn', 'Trác', NULL, NULL, 'tnh', '$2a$04$LCFurKpv.5lZ6ZnN8khHK.l.YqM6pFT.Zh4hTa1he87UGOXcXZWj6', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-05 06:48:53', NULL, '2018-11-06 06:01:42', 0),
-(131, '13886f23-08bb-435e-a5db-b01414f523c3', 'Dự', 'Đoàn', NULL, NULL, 'dd', '$2a$05$T8q2jn0feKlcGJc72FR71u26EsUytfaeH7xXajhrU13Gzc0odop8i', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-06 01:47:45', NULL, '2018-11-06 06:01:58', 0),
-(132, '8d661253-4815-45fd-ab3c-99992b30bfcf', 'Thất Công', 'Hồng', NULL, NULL, 'htc', '$2a$04$RdgBPfYd2jWTZwlVxFJ2sOk7P/0kKcfDX/rZDYCWwTIC8W9vDL/YK', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-06 01:48:18', NULL, '2018-11-06 06:02:01', 0);
+(122, '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', 'Huấn', 'Nguyễn', '1996-10-14 17:00:00', NULL, 'nvh', '$2a$09$saFTOu.H5TACoWvvYIc.S.VL8KF/M/blIBEqs6XT1vvElpwilz80e', '31423', '934', '93', 0, '0869143133', 'ngnviethuan@gmail.com', '1LrWlmSFWxJTYKGkYK-RTrmUhTGm4WQub', NULL, '2018-11-04 21:58:09', NULL, '2018-11-04 22:58:22', 0),
+(125, '8787b866-85ed-4443-a108-0d07e9cc540d', 'Võ', 'Phong', NULL, NULL, 'vhp', '$2a$06$NgAEYNYQbiR1NhOod74ymuk9TPO.QbFS26gHSvBUhodDNeH6EfQ8a', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', NULL, '2018-11-04 22:05:11', NULL, '2018-11-04 22:05:11', 0),
+(129, 'c6f5f044-0238-48bc-8037-fd0a0928dd2a', 'Vô Kỵ', 'Trương', NULL, NULL, 'tvk', '$2a$12$gxSl2DjXBggAmeZBlZ2bWeK2Mm5glNhCS967sycPtTxhispVE6va.', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-04 23:48:24', NULL, '2018-11-05 23:01:29', 0),
+(130, '7a82c0bd-52a8-4906-8aa2-6755cca3cf22', 'Nhất Hàn', 'Trác', NULL, NULL, 'tnh', '$2a$04$LCFurKpv.5lZ6ZnN8khHK.l.YqM6pFT.Zh4hTa1he87UGOXcXZWj6', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '344de7ee-8b0f-47d4-aafb-b6b60fe89e70', '2018-11-04 23:48:53', NULL, '2018-11-05 23:01:42', 0),
+(131, '13886f23-08bb-435e-a5db-b01414f523c3', 'Dự', 'Đoàn', NULL, NULL, 'dd', '$2a$05$T8q2jn0feKlcGJc72FR71u26EsUytfaeH7xXajhrU13Gzc0odop8i', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-05 18:47:45', NULL, '2018-11-05 23:01:58', 0),
+(132, '8d661253-4815-45fd-ab3c-99992b30bfcf', 'Thất Công', 'Hồng', NULL, NULL, 'htc', '$2a$04$RdgBPfYd2jWTZwlVxFJ2sOk7P/0kKcfDX/rZDYCWwTIC8W9vDL/YK', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '8787b866-85ed-4443-a108-0d07e9cc540d', '2018-11-05 18:48:18', NULL, '2018-11-05 23:02:01', 0),
+(133, '4a67abe4-3fba-457b-9f59-9a1826e21cba', 'Đế', 'Nam', NULL, NULL, 'namde', '$2a$09$QMP2bCQEPmWGYvXAlJbCb.yhFebEGFyW/ajzUg6hn2jlpCW6eypmW', NULL, NULL, NULL, 0, NULL, NULL, '1j02hmQM67IS3tnpPbfO0V6qAU7KPP8Ut', NULL, '2018-11-22 06:34:58', NULL, '2018-11-22 14:46:03', 0),
+(134, '8173973f-7883-41bb-8fc4-3ade0c37f727', 'Trùng Dương', 'Vương', NULL, NULL, 'vtd', '$2a$11$aRiFulu7t17nlp5GRfs1ZeCLqufTpOt1Fel/t5e3A22yuwv6/gKsK', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '4a67abe4-3fba-457b-9f59-9a1826e21cba', '2018-11-22 09:01:49', NULL, '2018-11-22 09:01:49', 0),
+(135, '3310db59-c5a1-4c53-9170-3514136b4c09', 'Dược Sư', 'Hoàng', NULL, NULL, 'hds', '$2a$04$XDISdCyQnf2hvoM1bEcTt.UkvCRJqXbUna02vdBSy3NbaUNCSPdtO', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '4a67abe4-3fba-457b-9f59-9a1826e21cba', '2018-11-22 09:59:19', NULL, '2018-11-22 09:59:19', 0),
+(136, '3e76e278-1bce-4964-a56c-dc57d550fcaf', 'Cửu Kiếm', 'Độc cô', NULL, NULL, 'dcck', '$2a$04$ww/u7w1QhJSfgPlFMAkZdeFbRBbFz7.9KZeaCxkyz4grCWott2DyC', NULL, NULL, NULL, 0, NULL, NULL, '1pL4I4TNcKOf5kD2YTNXXJjuWtyJSBDE2', '4a67abe4-3fba-457b-9f59-9a1826e21cba', '2018-11-22 14:03:36', NULL, '2018-11-22 22:21:49', 0);
 
 -- --------------------------------------------------------
 
@@ -1589,9 +1646,23 @@ CREATE TABLE `usingfoods` (
   `feedingRate` float NOT NULL,
   `totalFood` float NOT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `usingfoods`
+--
+
+INSERT INTO `usingfoods` (`usingFoodId`, `usingFoodUUId`, `takeCareId`, `storageId`, `massOfFishery`, `feedingRate`, `totalFood`, `createdBy`, `createdDate`, `isDeleted`) VALUES
+(1, 'c35dad05-601e-43fd-876e-f91734d6dee6', 1, 7, 564, 7867, 786786, NULL, '2018-10-31 23:59:59', 0),
+(2, '8a7ca5c1-bac1-4208-bb86-2fc690d0643a', 1, 5, 51541, 7686, 787685000, NULL, '2018-10-01 00:00:00', 0),
+(9, '5885f31e-c4ff-43c7-95c8-be4518fdb5cc', 9, 7, 11111100000000, 1111110000000, 11111100000000, NULL, '2018-11-21 13:57:13', 0),
+(10, '756118c4-d538-404d-b20f-316170566c00', 11, 5, 34627, 27, 473, NULL, '2018-11-22 15:56:01', 0),
+(11, '036e9895-cdf7-473b-ae07-b7f59843c5ea', 12, 5, 1111, 1111, 1111, NULL, '2018-11-22 15:59:17', 0),
+(12, 'bc775fbf-55bb-477c-8977-da7d9b8449c5', 13, 5, 9999, 99, 9999, NULL, '2018-11-22 16:31:04', 0),
+(13, '8ff39147-14af-4fa8-bed9-dd81d6db4f25', 14, 5, 6546460, 25, 3156, NULL, '2018-11-23 14:38:19', 0),
+(14, 'd05f8765-5e7f-4438-b81f-bd1f57bd4433', 15, 5, 644, 45, 10, NULL, '2018-11-23 15:00:49', 0);
 
 -- --------------------------------------------------------
 
@@ -1612,9 +1683,18 @@ CREATE TABLE `usingveterinary` (
   `latestHarvestDate` int(11) DEFAULT NULL,
   `mentor` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `createdBy` char(36) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `createdDate` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `createdDate` datetime DEFAULT CURRENT_TIMESTAMP,
   `isDeleted` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `usingveterinary`
+--
+
+INSERT INTO `usingveterinary` (`usingVeterinaryId`, `usingVeterinaryUUId`, `takeCareId`, `storageId`, `causesNSymptoms`, `averageSize`, `totalBiomass`, `quantity`, `result`, `latestHarvestDate`, `mentor`, `createdBy`, `createdDate`, `isDeleted`) VALUES
+(1, '26dda3cc-6ff8-4333-95b2-b5183749fbe9', 10, 7, 'tôm ngoi ngóp', 515, 5464, 55, 'đéo biết', 120, 'Trương lựu đạn', NULL, '2018-11-21 15:14:08', 0),
+(2, '39f1bdcb-4a8b-43b2-8439-8032337b0a0b', 16, 9, '5456', 4564, 45645, 20, 'ggfgj', 2018, 'tjrtyu', NULL, '2018-11-23 16:25:15', 0),
+(3, '706769b3-8bf8-4065-a975-66ee3669218f', 17, 9, 'test 2', 1111, 1111, 180, 'ok', 2018, 'test', NULL, '2018-11-23 16:26:58', 0);
 
 -- --------------------------------------------------------
 
@@ -12802,7 +12882,8 @@ ALTER TABLE `costs`
 --
 ALTER TABLE `coupons`
   ADD PRIMARY KEY (`couponId`),
-  ADD KEY `FK_CP_TO_USER` (`userId`);
+  ADD KEY `FK_CP_TO_USER` (`userId`),
+  ADD KEY `FK_CP_TO_SS` (`seasonId`);
 
 --
 -- Indexes for table `diedfisherys`
@@ -12848,7 +12929,8 @@ ALTER TABLE `harvests`
 ALTER TABLE `incurreds`
   ADD PRIMARY KEY (`incurredId`),
   ADD UNIQUE KEY `incurredUUId` (`incurredUUId`),
-  ADD KEY `FK_IC_TO_PPP` (`pondPrepareId`);
+  ADD KEY `FK_IC_TO_PPP` (`pondPrepareId`),
+  ADD KEY `FK_IC_TO_USER` (`ownerId`);
 
 --
 -- Indexes for table `materials`
@@ -13055,7 +13137,7 @@ ALTER TABLE `costs`
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `couponId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `couponId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `diedfisherys`
 --
@@ -13065,7 +13147,7 @@ ALTER TABLE `diedfisherys`
 -- AUTO_INCREMENT for table `growths`
 --
 ALTER TABLE `growths`
-  MODIFY `growthId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `growthId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `harvests`
 --
@@ -13075,17 +13157,17 @@ ALTER TABLE `harvests`
 -- AUTO_INCREMENT for table `incurreds`
 --
 ALTER TABLE `incurreds`
-  MODIFY `incurredId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `incurredId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `materials`
 --
 ALTER TABLE `materials`
-  MODIFY `materialId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `materialId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `ownerbreed`
 --
 ALTER TABLE `ownerbreed`
-  MODIFY `ownerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ownerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `ponddiary`
 --
@@ -13100,7 +13182,7 @@ ALTER TABLE `pondenvironments`
 -- AUTO_INCREMENT for table `pondprepare`
 --
 ALTER TABLE `pondprepare`
-  MODIFY `pondPrepareId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `pondPrepareId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 --
 -- AUTO_INCREMENT for table `pondpreparedetails`
 --
@@ -13110,12 +13192,12 @@ ALTER TABLE `pondpreparedetails`
 -- AUTO_INCREMENT for table `ponds`
 --
 ALTER TABLE `ponds`
-  MODIFY `pondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
+  MODIFY `pondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
 --
 -- AUTO_INCREMENT for table `ponduserroles`
 --
 ALTER TABLE `ponduserroles`
-  MODIFY `pondUserRolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `pondUserRolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `prices`
 --
@@ -13125,12 +13207,12 @@ ALTER TABLE `prices`
 -- AUTO_INCREMENT for table `seasons`
 --
 ALTER TABLE `seasons`
-  MODIFY `seasonId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `seasonId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `seasonsandpond`
 --
 ALTER TABLE `seasonsandpond`
-  MODIFY `seasonAndPondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `seasonAndPondId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 --
 -- AUTO_INCREMENT for table `stocking`
 --
@@ -13140,37 +13222,37 @@ ALTER TABLE `stocking`
 -- AUTO_INCREMENT for table `storageowner`
 --
 ALTER TABLE `storageowner`
-  MODIFY `storageOwnerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `storageOwnerId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `storages`
 --
 ALTER TABLE `storages`
-  MODIFY `storageId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `storageId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 --
 -- AUTO_INCREMENT for table `takecare`
 --
 ALTER TABLE `takecare`
-  MODIFY `takeCareId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `takeCareId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 --
 -- AUTO_INCREMENT for table `userroles`
 --
 ALTER TABLE `userroles`
-  MODIFY `rolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `rolesId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=133;
+  MODIFY `userId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=137;
 --
 -- AUTO_INCREMENT for table `usingfoods`
 --
 ALTER TABLE `usingfoods`
-  MODIFY `usingFoodId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `usingFoodId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT for table `usingveterinary`
 --
 ALTER TABLE `usingveterinary`
-  MODIFY `usingVeterinaryId` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `usingVeterinaryId` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- Constraints for dumped tables
 --
@@ -13205,6 +13287,7 @@ ALTER TABLE `costs`
 -- Constraints for table `coupons`
 --
 ALTER TABLE `coupons`
+  ADD CONSTRAINT `FK_CP_TO_SS` FOREIGN KEY (`seasonId`) REFERENCES `seasons` (`seasonId`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_CP_TO_USER` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -13235,7 +13318,8 @@ ALTER TABLE `harvests`
 -- Constraints for table `incurreds`
 --
 ALTER TABLE `incurreds`
-  ADD CONSTRAINT `FK_IC_TO_PPP` FOREIGN KEY (`pondPrepareId`) REFERENCES `pondprepare` (`pondPrepareId`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_IC_TO_PPP` FOREIGN KEY (`pondPrepareId`) REFERENCES `pondprepare` (`pondPrepareId`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_IC_TO_USER` FOREIGN KEY (`ownerId`) REFERENCES `users` (`userId`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `materials`
