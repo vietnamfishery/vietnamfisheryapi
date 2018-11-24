@@ -152,7 +152,7 @@ export class PondPrepareRoute extends BaseRoute {
     private getById = (request: Request, response: Response, next: NextFunction) => {
         const { pondprepareid } = request.headers;
         const pondPrepare: PondPrepare = new PondPrepare();
-        pondPrepare.setPondPrepareId = pondprepareid;
+        pondPrepare.setPondPrepareId = (pondprepareid as any) - 0;
         pondPrepare.getById(pondPrepare.getPondPrepareId).then(res => {
             response.status(200).json({
                 success: true,
@@ -440,7 +440,7 @@ export class PondPrepareRoute extends BaseRoute {
         if (!pondPrepareId) {
             return this.sequeliz.transaction().then(async (t: Transaction) => {
                 const pond: Pond = new Pond();
-                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude, pondLongitude, DateUtil.getUTCDateTime());
+                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, DateUtil.getUTCDateTime() as any, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                 const p: any = await this.pondsServices.models.create(pond, {
                     transaction: t
                 }).catch(e => {

@@ -2,6 +2,7 @@ import { authdb, Dialect, environment, pool } from '../common';
 import { Options, ReplicationOptions } from 'sequelize';
 import * as moment from 'moment-timezone';
 import * as os from 'os';
+import { find } from 'lodash';
 /**
  * Config port
  */
@@ -20,7 +21,12 @@ export const port = process.env.PORT || env === environment.development ? 7979 :
  * @var vietnamfishery
  * @var ipadress from Wi-Fi
  */
-export const host: string = os.networkInterfaces()[`Wi-Fi`][1] ? os.networkInterfaces()[`Wi-Fi`][1].address : os.hostname() ? os.hostname() : 'localhost';
+
+const reg: RegExp = new RegExp(/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/);
+
+const wifi: any = find(os.networkInterfaces()[`Wi-Fi`], e => reg.test(e.address.toString())) || {};
+
+export const host: string = wifi.address || os.hostname() || 'localhost';
 
 /**
  * Config database
