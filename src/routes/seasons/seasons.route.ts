@@ -1,6 +1,6 @@
 import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, UserRolesServices } from '../../services';
+import { logger, SeasonServices, UserRolesServices, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -18,6 +18,8 @@ export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
     private seasonServices: SeasonServices = new SeasonServices();
+    private userServives: UserServives = new UserServives();
+    private userRolesServices: UserRolesServices = new UserRolesServices();
 
     /**
      * @class SeasonRoute
@@ -148,12 +150,37 @@ export class SeasonRoute extends BaseRoute {
      * chức năng của admin
      */
     private getSeasons = (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const season: Season = new Season();
-        season.seasonServices.models.findAll({
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        this.seasonServices.models.findAll({
+            include: [
+                {
+                    model: this.userServives.models,
+                    as: ActionAssociateDatabase.SEASON_2_USER,
+                    include: [
+                        {
+                            model: this.userRolesServices.models,
+                            as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
+                            where: {
+                                [this.sequeliz.Op.or]: [
+                                    {
+                                        bossId: userId
+                                    },
+                                    {
+                                        userId,
+                                        roles: 1
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
             where: {
-                userId: deToken.userId
+                userId: ownerId
             }
         }).then(ss => {
             if (ss.length > 0) {
@@ -165,13 +192,12 @@ export class SeasonRoute extends BaseRoute {
             } else {
                 response.status(200).json({
                     success: false,
-                    message: 'Bạn chưa có vụ nuôi, vui lòng tạo một vụ để tiếp tục!'
+                    message: 'Có lỗi xảy ra, không tìm thấy vụ nuôi!'
                 });
             }
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                error: e,
                 message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
             });
         });

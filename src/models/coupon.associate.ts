@@ -11,6 +11,16 @@ export function couponToMaterial(thatmodel: Sequeliz.Model<{}, any>, model: Sequ
     });
 }
 
+export function couponToBoughtBreedDetails(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
+    return thatmodel.hasMany(model, {
+        as: ActionAssociateDatabase.COUPON_2_BOUGHT_BREED_DETAILS,
+        foreignKey: {
+            name: 'couponId',
+            field: 'couponId'
+        }
+    });
+}
+
 export function couponToUsers(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsTo(model, {
         as: ActionAssociateDatabase.COUPON_2_USER,

@@ -4,7 +4,7 @@ import { logger, UserRolesServices, UserServives, BreedOwnwerServices, BreedServ
 import { ActionAssociateDatabase } from '../../common';
 import { BaseRoute } from '../BaseRoute';
 import { Authentication } from '../../helpers/login-helpers';
-import { Transaction } from 'sequelize';
+import { Transaction, FindOptions } from 'sequelize';
 import * as uuidv4 from 'uuid/v4';
 
 /**
@@ -51,13 +51,75 @@ export class BreedRoute extends BaseRoute {
     }
 
     addBreed = async (request: Request, response: Response) => {
+        const { boughtBreedId, itemArr } = request.body;
+
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const { boughtBreedId, itemArr } = request.body;
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        this.userServives.models.findAll({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
+                    required: false,
+                    where: {
+                        userId
+                    }
+                },
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
+                    required: false,
+                    where: {
+                        bossId: userId
+                    }
+                },
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.USER_2_SEASON,
+                    where: {
+                        userId,
+                        status: 0
+                    }
+                }
+            ]
+        } as any).then(res => {
+            if (!res.length) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có vụ nào đang hoạt động, vui lòng thêm một vụ và quay lại sau.'
+                });
+            }
+        }).catch(e => {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền truy cập api này.'
+            });
+        });
+
         return this.sequeliz.transaction().then(async (t: Transaction) => {
             let boss: any = await this.breedOwnwerServices.models.findOne({
+                include: [
+                    {
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.OWNER_BREED_TO_USER,
+                        include: [
+                            {
+                                model: this.seasonServices.models,
+                                as: ActionAssociateDatabase.USER_2_SEASON,
+                                where: {
+                                    status: 0
+                                }
+                            }
+                        ],
+                        attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
+                    }
+                ],
                 where: {
-                    userId: deToken.userId
+                    userId: ownerId
                 },
                 transaction: t
             }).catch(e => {
@@ -68,12 +130,13 @@ export class BreedRoute extends BaseRoute {
                 t.rollback();
             });
             // Là chủ và phiên nhập mới
-            if (boss && !boughtBreedId) {
-                const ss: any = await this.seasonServices.models.findOne({
-                    where: {
-                        userId: deToken.userId,
-                        status: 0
-                    }
+            if (boss && boss.user.seasons.length) {
+                const boughtBreed: BoughtBreed = new BoughtBreed();
+                boughtBreed.setBoughtBreedUUId = uuidv4();
+                boughtBreed.setUserId = deToken.userId;
+                boughtBreed.setSeasonId = boss.user.seasons[0].seasonId;
+                const bb: any = await boughtBreed.boughtBreedServives.models.create(boughtBreed, {
+                    transaction: t
                 }).catch(e => {
                     response.status(200).json({
                         success: false,
@@ -81,152 +144,13 @@ export class BreedRoute extends BaseRoute {
                     });
                     t.rollback();
                 });
-                if(!ss) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Hiện tại bạn chưa có vụ nào được kích hoạt vui lòng thêm một vụ.'
-                    });
-                    t.rollback();
-                } else {
-                    const boughtBreed: BoughtBreed = new BoughtBreed();
-                    boughtBreed.setBoughtBreedUUId = uuidv4();
-                    boughtBreed.setUserId = deToken.userId;
-                    boughtBreed.setSeasonId = ss.seasonId;
-                    const bb: any = await boughtBreed.boughtBreedServives.models.create(boughtBreed, {
-                        transaction: t
-                    }).catch(e => {
-                        response.status(200).json({
-                            success: false,
-                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                        });
-                        t.rollback();
-                    });
-                    if (bb) {
-                        const result: any[] = [];
-                        for (const item of itemArr) {
-                            const breed: Breed = new Breed();
-                            if (typeof item.breedName === 'string') {
-                                breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity,item.unit, item.loopOfBreed);
-                                const bre: any = await breed.breedServives.models.create(breed, {
-                                    transaction: t
-                                }).catch(e => {
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                    });
-                                    t.rollback();
-                                });
-                                if (bre) {
-                                    const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
-                                    const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
-                                        transaction: t
-                                    }).catch(async e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
-                                            couponId: bb.boughtBreedId
-                                        });
-                                        t.rollback();
-                                    });
-                                    if (mat) {
-                                        result.push(mat);
-                                    }
-                                }
-                            } else {
-                                const sUpdate: any = await breed.breedServives.models.update({
-                                    totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
-                                }, {
-                                        where: {
-                                            breedId: item.breedName.breedId
-                                        },
-                                        transaction: t
-                                    }).catch(e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                        });
-                                        t.rollback();
-                                    });
-                                if (sUpdate.length > 0) {
-                                    const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                                    boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
-                                    const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t }).catch(e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                                        });
-                                        t.rollback();
-                                    });
-                                    result.push(boughtBre);
-                                } else {
-                                    t.rollback();
-                                    response.status(200).json({
-                                        success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                        position: item.position,
-                                        couponId: bb.boughtBreedId
-                                    });
-                                }
-                            }
-                        }
-                        if (result.length === itemArr.length) {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Thao tác thành công.'
-                            });
-                            t.commit();
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                                couponId: bb.boughtBreedId
-                            });
-                            t.rollback();
-                        }
-                    }
-                }
-            }
-            // Là chủ và phiên nhập cũ
-            else if (boss && boughtBreedId) {
-                const result: any[] = [];
-                for (const item of itemArr) {
-                    const breed: Breed = new Breed();
-                    if (typeof item.breedName === 'string') {
-                        breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity, item.unit, item.loopOfBreed);
-                        const bre: any = await breed.breedServives.models.create(breed, {
-                            transaction: t
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                            });
-                            t.rollback();
-                        });
-                        if (bre) {
-                            const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
-                            const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
-                                transaction: t
-                            }).catch(async e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                    boughtBreedId
-                                });
-                                t.rollback();
-                            });
-                            if (mat) {
-                                result.push(mat);
-                            }
-                        }
-                    } else {
-                        const sUpdate: any = await breed.breedServives.models.update({
-                            totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
-                        }, {
-                                where: {
-                                    breedId: item.breedName.breedId
-                                },
+                if (bb) {
+                    const result: any[] = [];
+                    for (const item of itemArr) {
+                        const breed: Breed = new Breed();
+                        if (typeof item.breedName === 'string') {
+                            breed.setBreed(null, uuidv4(), boss.ownerId, item.breedName, item.quantity, item.unit, item.loopOfBreed);
+                            const bre: any = await breed.breedServives.models.create(breed, {
                                 transaction: t
                             }).catch(e => {
                                 response.status(200).json({
@@ -235,35 +159,108 @@ export class BreedRoute extends BaseRoute {
                                 });
                                 t.rollback();
                             });
-                        if (sUpdate.length > 0) {
-                            const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
-                            boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
-                            const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t });
-                            result.push(boughtBre);
+                            if (bre) {
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, bre.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const mat: any = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, {
+                                    transaction: t
+                                }).catch(async e => {
+                                    if (e.message.includes('FailQuantityBoughtBreedDetails')) {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Lỗi nhập liệu số lượng vui lòng kiểm tra lại.',
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    } else {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    }
+                                    t.rollback();
+                                });
+                                if (mat) {
+                                    result.push(mat);
+                                }
+                            }
                         } else {
-                            t.rollback();
-                            response.status(200).json({
-                                success: false,
-                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
-                                position: item.position,
-                                boughtBreedId
-                            });
+                            const sUpdate: any = await breed.breedServives.models.update({
+                                totalQuantity: this.sequeliz.literal(`totalQuantity + ${item.quantity}`)
+                            }, {
+                                    where: {
+                                        breedId: item.breedName.breedId,
+                                        unit: item.unit
+                                    },
+                                    returning: true,
+                                    transaction: t
+                                }).catch(e => {
+                                    if (e.message.includes('FailQuantityBreed')) {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Lỗi nhập liệu số lượng vui lòng kiểm tra lại.',
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    } else {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    }
+                                    t.rollback();
+                                });
+                            if (sUpdate.length > 0) {
+                                const boughtBreedDetail: BoughtBreedDetail = new BoughtBreedDetail();
+                                boughtBreedDetail.setBoughtBreedDetails(null, uuidv4(), bb.boughtBreedId, item.breedName.breedId, item.quantity, item.unit, item.unitPrice, item.soldAddress, item.testingAgency, item.testingAgency);
+                                const boughtBre = await boughtBreedDetail.boughtBreedDetailsServives.models.create(boughtBreedDetail, { transaction: t }).catch(e => {
+                                    if (e.message.includes('FailQuantityBoughtBreedDetails')) {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: 'Lỗi nhập liệu số lượng vui lòng kiểm tra lại.',
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    } else {
+                                        response.status(200).json({
+                                            success: false,
+                                            message: `Thực hiện không thành công, vui lòng kiểm tra và thử lại sau.`,
+                                            position: item.position,
+                                            couponId: bb.boughtBreedId
+                                        });
+                                    }
+                                    t.rollback();
+                                });
+                                result.push(boughtBre);
+                            } else {
+                                t.rollback();
+                                response.status(200).json({
+                                    success: false,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
+                                    position: item.position,
+                                    couponId: bb.boughtBreedId
+                                });
+                            }
                         }
                     }
-                }
-                if (result.length === itemArr.length) {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm thành công, vui lòng đợi...'
-                    });
-                    t.commit();
-                } else {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
-                        boughtBreedId
-                    });
-                    t.rollback();
+                    if (result.length === itemArr.length) {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thao tác thành công.'
+                        });
+                        t.commit();
+                    } else {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Có lỗi xảy ra, vui lòng thử lại sau.',
+                            couponId: bb.boughtBreedId
+                        });
+                        t.rollback();
+                    }
                 }
             }
             // Nhân viên và phiên nhập mới
@@ -284,7 +281,8 @@ export class BreedRoute extends BaseRoute {
                                     model: this.breedOwnwerServices.models,
                                     as: ActionAssociateDatabase.USER_2_OWNER_BREED
                                 }
-                            ]
+                            ],
+                            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                         }
                     ],
                     transaction: t
@@ -308,7 +306,7 @@ export class BreedRoute extends BaseRoute {
                         });
                         t.rollback();
                     });
-                    if(!ss) {
+                    if (!ss) {
                         response.status(200).json({
                             success: false,
                             message: 'Hiện tại bạn chưa có vụ nào được kích hoạt vui lòng thêm một vụ.'
@@ -345,7 +343,7 @@ export class BreedRoute extends BaseRoute {
                                         }).catch(async e => {
                                             response.status(200).json({
                                                 success: false,
-                                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                                message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
                                                 couponId: bb.boughtBreedId
                                             });
                                             t.rollback();
@@ -384,7 +382,7 @@ export class BreedRoute extends BaseRoute {
                                         t.rollback();
                                         response.status(200).json({
                                             success: false,
-                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1}.`,
+                                            message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
                                             position: item.position,
                                             couponId: bb.boughtBreedId
                                         });
@@ -432,7 +430,8 @@ export class BreedRoute extends BaseRoute {
                                     model: this.breedOwnwerServices.models,
                                     as: ActionAssociateDatabase.USER_2_OWNER_BREED
                                 }
-                            ]
+                            ],
+                            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                         }
                     ],
                     transaction: t
@@ -466,7 +465,7 @@ export class BreedRoute extends BaseRoute {
                                 }).catch(async e => {
                                     response.status(200).json({
                                         success: false,
-                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                        message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
                                         position: item.position,
                                         boughtBreedId
                                     });
@@ -506,7 +505,7 @@ export class BreedRoute extends BaseRoute {
                                 t.rollback();
                                 response.status(200).json({
                                     success: false,
-                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${ item.position + 1 }.`,
+                                    message: `Thực hiện không thành công, bị lỗi ở form nhập thứ ${item.position + 1}.`,
                                     position: item.position,
                                     boughtBreedId
                                 });
@@ -538,50 +537,63 @@ export class BreedRoute extends BaseRoute {
     }
 
     getBreed = (request: Request, response: Response) => {
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
-        const query: any = {
-            where: {
-                [this.userRolesServices.Op.or]: [
-                    {
-                        userId: deToken.userId
-                    },
-                    {
-                        bossId: deToken.userId
-                    }
-                ]
-            },
-            attributes: ['bossId'],
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy === null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        const query: FindOptions<any> = {
             include: [
                 {
-                    model: this.userServives.models,
-                    as: ActionAssociateDatabase.USER_ROLES_2_USER_BOSS,
-                    attributes: ['userId'],
+                    model: this.breedOwnwerServices.models,
+                    as: ActionAssociateDatabase.BREED_2_OWNER_BREED,
                     include: [
                         {
-                            model: this.breedOwnwerServices.models,
-                            as: ActionAssociateDatabase.USER_2_OWNER_BREED,
+                            model: this.userServives.models,
+                            as: ActionAssociateDatabase.OWNER_BREED_TO_USER,
                             include: [
                                 {
-                                    model: this.breedServives.models,
-                                    as: ActionAssociateDatabase.OWNER_BREED_TO_BREED
+                                    model: this.userRolesServices.models,
+                                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
+                                    required: false
                                 }
-                            ]
+                            ],
+                            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                         }
                     ]
                 }
-            ]
+            ],
+            where: {
+                [this.sequeliz.Op.or]: [
+                    {
+                        '$owner.userId$': userId,
+                    },
+                    {
+                        '$owner->user->roles.userId$': userId,
+                        '$owner->user->roles.roles$': 2
+                    }
+                ]
+            } as any
         };
-        this.userRolesServices.models.findOne(query).then((res: any) => {
-            response.status(200).json({
+        this.breedServives.models.findAll(query).then((res: any) => {
+            if (!res.length) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Hiện tại trong kho không có giống nào.',
+                    breeds: res
+                });
+            }
+            return response.status(200).json({
                 success: true,
                 message: '',
-                breeds: res.employees.ownerBreed.breeds
+                breeds: res
             });
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Bạn không có vật phẩm nào trong kho của mình!'
+                message: 'Đã có lỗi xảy ra!'
             });
         });
     }

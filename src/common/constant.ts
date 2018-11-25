@@ -83,7 +83,7 @@ export enum ActionServer {
 
 export enum ActionAssociateDatabase {
     //
-    BOUGHT_BREED_DETAIL_2_BOUGHT_BREED = 'boughtBreeds',
+    BOUGHT_BREED_DETAIL_2_COUPON = 'coupon',
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
@@ -97,6 +97,7 @@ export enum ActionAssociateDatabase {
     COST_2_POND_PREPARE = 'costs',
     //
     COUPON_2_MATERIAL = 'materials',
+    COUPON_2_BOUGHT_BREED_DETAILS = 'breeds',
     COUPON_2_SEASON = 'season',
     COUPON_2_USER = 'user',
     //
@@ -108,8 +109,8 @@ export enum ActionAssociateDatabase {
     //
     HARVEST_DETAIL_2_HARVEST = 'harvestDetail',
     //
-    HARVEST_2_HARVEST_DETAILS = 'harvestToHarvestDetails',
-    HARVEST_2_SEASON_AND_POND = 'harvestSNP',
+    HARVEST_2_HARVEST_DETAILS = 'details',
+    HARVEST_2_SEASON_AND_POND = 'harvestsnp',
     //
     MATERIAL_2_COUPON = 'coupon',
     MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
@@ -155,13 +156,13 @@ export enum ActionAssociateDatabase {
     SEASON_AND_POND_2_POND_DIARY = 'seasonWithDiary',
     SEASON_AND_POND_2_POND_PREPARE = 'withPondPrepare',
     SEASON_AND_POND_2_TAKE_CARE = 'takeCares',
-    SEASON_AND_POND_2_STOCKING = 'SNPToStocking',
+    SEASON_AND_POND_2_STOCKING = 'stocking',
     SEASON_AND_POND_2_POND_ENV = 'seasonWithEnvironment',
     //
     SEASON_2_BOUGHT_BREED = 'boughtBreed',
     SEASON_2_PRICE = 'price',
     SEASON_2_COUPON = 'coupon',
-    SEASON_2_USER = 'seasons',
+    SEASON_2_USER = 'user',
     SEASON_2_USER_ROLES = 'roles',
     SEASON_2_POND = 'ponds',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
@@ -196,7 +197,7 @@ export enum ActionAssociateDatabase {
     USER_ROLES_2_USER_BOSS = 'employees', //
     USER_ROLES_2_POND_USER_ROLE = 'pondUserRoles', //
     //
-    USER_2_ROLE_USER = 'roles',
+    USER_2_ROLES_USER = 'roles',
     USER_2_POND = 'ponds',
     USER_2_POND_MANY_ROLES = 'pondsBy',
     USER_2_COUPON = 'coupons',
@@ -205,7 +206,7 @@ export enum ActionAssociateDatabase {
     USER_2_PRO = 'provinces',
     USER_2_DIS = 'districts',
     USER_2_WAR = 'wards',
-    USER_2_ROLES_BOSS = 'employees', //
+    USER_2_ROLES_GET_EMPLOYEES = 'employees', //
     USER_2_POND_USER_ROLE = 'pondUserRole',
     USER_2_OWNER_STORAGE = 'user',
     USER_2_OWNER_BREED = 'ownerBreed',

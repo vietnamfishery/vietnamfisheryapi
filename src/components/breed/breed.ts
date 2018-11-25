@@ -1,7 +1,5 @@
 import { BaseComponent } from '../baseComponents';
 import { BreedServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class Breed extends BaseComponent {
     public breedServives: BreedServives;

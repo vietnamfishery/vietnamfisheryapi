@@ -131,7 +131,8 @@ export class PondRoute extends BaseRoute {
             include: [
                 {
                     model: this.userServives.models,
-                    as: ActionAssociateDatabase.USER_ROLES_2_USER
+                    as: ActionAssociateDatabase.USER_ROLES_2_USER,
+                    attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                 }
             ]
         })
@@ -403,7 +404,8 @@ export class PondRoute extends BaseRoute {
                     include: [
                         {
                             model: this.userServives.models,
-                            as: ActionAssociateDatabase.POND_USER_ROLE_2_USER
+                            as: ActionAssociateDatabase.POND_USER_ROLE_2_USER,
+                            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                         }
                     ]
                 }

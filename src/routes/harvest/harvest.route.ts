@@ -1,6 +1,6 @@
 import { Harvest, HarvestDetail } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonAndPondServices, SeasonServices } from '../../services';
+import { logger, SeasonAndPondServices, SeasonServices, HarvestsServives, HarvestDetailsServives, PondsServices, StockingServices, StockingDetailsServices, BreedServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
@@ -19,6 +19,12 @@ export class HarvestRoute extends BaseRoute {
     private static instance: HarvestRoute;
     private seasonAndPondServices: SeasonAndPondServices = new SeasonAndPondServices();
     private seasonServices: SeasonServices = new SeasonServices();
+    private harvestsServives: HarvestsServives = new HarvestsServives();
+    private harvestDetailsServives: HarvestDetailsServives = new HarvestDetailsServives();
+    private pondsServices: PondsServices = new PondsServices();
+    private stockingServices: StockingServices = new StockingServices();
+    private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    private breedServives: BreedServives = new BreedServives();
 
     /**
      * @class HarvestRoute
@@ -42,6 +48,7 @@ export class HarvestRoute extends BaseRoute {
 
         // add route
         this.router.post('/add', Authentication.isLogin, this.addHarvest);
+        this.router.post('/gets', Authentication.isLogin, this.getHarvest);
 
         // log endpoints
         this.logEndpoints(this.router, HarvestRoute.path);
@@ -126,5 +133,76 @@ export class HarvestRoute extends BaseRoute {
                 });
             });
         }
+    }
+
+    /**
+     * @method POST
+     */
+    private getHarvest = async (request: Request, response: Response, next: NextFunction) => {
+        const { seasonId, pondId } = request.body;
+        this.harvestsServives.models.findAll({
+            include: [
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.HARVEST_2_SEASON_AND_POND,
+                    include: [
+                        {
+                            model: this.seasonServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                            where: {
+                                seasonId
+                            }
+                        },
+                        {
+                            model: this.pondsServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_POND,
+                            where: {
+                                pondId
+                            }
+                        },
+                        {
+                            model: this.stockingServices.models,
+                            as: ActionAssociateDatabase.SEASON_AND_POND_2_STOCKING,
+                            required: false,
+                            include: [
+                                {
+                                    model: this.stockingDetailsServices.models,
+                                    as: ActionAssociateDatabase.STOCKING_2_STOCKING_DETAILS,
+                                    include: [
+                                        {
+                                            model: this.breedServives.models,
+                                            as: ActionAssociateDatabase.STOCKING_DETAILS_2_BREED
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    model: this.harvestDetailsServives.models,
+                    as: ActionAssociateDatabase.HARVEST_2_HARVEST_DETAILS
+                }
+            ]
+        }).then(res => {
+            if(!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký thu hoạch.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    harvests: res
+                });
+            }
+        }).catch(e => {
+            e;
+            response.status(200).json({
+                success: false,
+                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
     }
 }

@@ -68,7 +68,6 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.boughtbreedsAssociate(
-            this.models[`boughtbreeddetailsOptions`],
             this.models[`seasonOptions`],
             this.models[`userOptions`]
         );
@@ -79,7 +78,7 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.boughtbreeddetailsAssociate(
-            this.models[`boughtbreedOptions`],
+            this.models[`couponOptions`],
             this.models[`breedOptions`]
         );
         return md;
@@ -140,7 +139,8 @@ export default class DBHelper {
         modelBuilder.couponAssociate(
             this.models[`materialOptions`],
             this.models[`userOptions`],
-            this.models[`seasonOptions`]
+            this.models[`seasonOptions`],
+            this.models[`boughtbreeddetailsOptions`]
         );
         return md;
     }

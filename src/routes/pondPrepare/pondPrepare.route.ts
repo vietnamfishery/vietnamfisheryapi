@@ -85,7 +85,8 @@ export class PondPrepareRoute extends BaseRoute {
                     include: [
                         {
                             model: this.userServives.models,
-                            as: ActionAssociateDatabase.INCURREDS_TO_USER
+                            as: ActionAssociateDatabase.INCURREDS_TO_USER,
+                            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
                         }
                     ]
                 },

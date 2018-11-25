@@ -5,17 +5,15 @@ import * as associations from './';
 export class ModelBuilder {
     constructor(private model: Sequeliz.Model<{}, any>) { }
 
-    boughtbreeddetailsAssociate(boughtBreedsModel: any, breedsModel: any) {
-        associations.boughtbreeddetailsToBoughtBreeds(this.model, boughtBreedsModel);
+    boughtbreeddetailsAssociate(couponModel: any, breedsModel: any) {
+        associations.boughtbreeddetailsToCoupon(this.model, couponModel);
         associations.boughtbreeddetailsToBreeds(this.model, breedsModel);
     }
 
     boughtbreedsAssociate(
-        boughtBreedDetailsModel: any,
         seasonModel: any,
         usersModel: any
     ) {
-        associations.boughtbreedsToBoughtBreedDetails(this.model, boughtBreedDetailsModel);
         associations.boughtbreedsToSeason(this.model, seasonModel);
         associations.boughtbreedsToUser(this.model, usersModel);
     }
@@ -37,9 +35,11 @@ export class ModelBuilder {
     couponAssociate(
         materialModel: any,
         usersModel: any,
-        seasonModel: any
+        seasonModel: any,
+        boughtBreedDetailsModel: any
     ) {
         associations.couponToMaterial(this.model, materialModel);
+        associations.couponToBoughtBreedDetails(this.model, boughtBreedDetailsModel);
         associations.couponToUsers(this.model, usersModel);
         associations.couponToSeason(this.model, seasonModel);
     }

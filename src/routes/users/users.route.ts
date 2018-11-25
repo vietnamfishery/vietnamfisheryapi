@@ -136,7 +136,7 @@ export class UserRoute extends BaseRoute {
             include: [
                 {
                     model: this.userRolesServices.models,
-                    as: ActionAssociateDatabase.USER_2_ROLE_USER,
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
                     required: false
                 }
             ],
@@ -412,7 +412,7 @@ export class UserRoute extends BaseRoute {
             include: [
                 {
                     model: this.userRolesServices.models,
-                    as: ActionAssociateDatabase.USER_2_ROLE_USER,
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
                     where: {
                         bossId: decodetoken.userId,
                         [this.userRolesServices.Op.and]: {

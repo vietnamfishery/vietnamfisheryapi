@@ -17,7 +17,7 @@ export const boughtbreeddetailsOptions: any = _.merge({
             unique: true,
             allowNull: false,
         },
-        boughtBreedId: {
+        couponId: {
             type: Sequelize.BIGINT(20),
             allowNull: false,
         },

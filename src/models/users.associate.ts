@@ -25,7 +25,7 @@ export function userToDistrict(thatmodel: Sequeliz.Model<{}, any>, model: Sequel
 
 export function userToRolesUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_ROLE_USER,
+        as: ActionAssociateDatabase.USER_2_ROLES_USER,
         foreignKey: {
             name: 'userId',
             field: 'userId'
@@ -100,7 +100,7 @@ export function userToWard(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.M
 
 export function userToRolesBoss(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.hasMany(model, {
-        as: ActionAssociateDatabase.USER_2_ROLES_BOSS,
+        as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
         foreignKey: {
             name: 'bossId',
             field: 'bossId'

@@ -77,7 +77,8 @@ export class UserRoleRoute extends BaseRoute {
         // get userInfo
         const userInfo: any = {
             model: this.userServives.models,
-            as: ActionAssociateDatabase.USER_ROLES_2_USER
+            as: ActionAssociateDatabase.USER_ROLES_2_USER,
+            attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
         };
         query.include.push(userInfo);
 

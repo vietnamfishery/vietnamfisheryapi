@@ -1,13 +1,11 @@
 import { BaseComponent } from '../baseComponents';
 import { BoughtBreedDetailsServives } from '../../services'; // import services
-import { Promise } from '../../lib';
-import { ActionServer } from '../../common';
 
 export class BoughtBreedDetail extends BaseComponent {
     public boughtBreedDetailsServives: BoughtBreedDetailsServives;
     private boughtBreedDetailId: number;
     private boughtBreedDetailUUId: string;
-    private boughtBreedId: number;
+    private couponId: number;
     private breedId: number;
     private quantity: number;
     private unit: number;
@@ -30,8 +28,8 @@ export class BoughtBreedDetail extends BaseComponent {
         this.boughtBreedDetailUUId = boughtBreedDetailUUId;
     }
 
-    public set setBoughtBreedId(boughtBreedId: number) {
-        this.boughtBreedId = boughtBreedId;
+    public set setCouponId(couponId: number) {
+        this.couponId = couponId;
     }
 
     public set setBreedId(breedId: number) {
@@ -69,7 +67,7 @@ export class BoughtBreedDetail extends BaseComponent {
     public setBoughtBreedDetails(
         boughtBreedDetailId: number,
         boughtBreedDetailUUId: string,
-        boughtBreedId: number,
+        couponId: number,
         breedId: number,
         quantity: number,
         unit: number,
@@ -81,7 +79,7 @@ export class BoughtBreedDetail extends BaseComponent {
     ) {
         this.setBoughtBreedDetailId = boughtBreedDetailId;
         this.setBoughtBreedDetailUUId = boughtBreedDetailUUId;
-        this.setBoughtBreedId = boughtBreedId;
+        this.setCouponId = couponId;
         this.setBreedId = breedId;
         this.setQuantity = quantity;
         this.setUnit = unit;
@@ -100,8 +98,8 @@ export class BoughtBreedDetail extends BaseComponent {
         return this.boughtBreedDetailUUId;
     }
 
-    public get getBoughtBreedId(): number {
-        return this.boughtBreedId;
+    public get getCouponId(): number {
+        return this.couponId;
     }
 
     public get getBreedId(): number {
