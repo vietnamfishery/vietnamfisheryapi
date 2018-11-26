@@ -366,12 +366,17 @@ export class PondPrepareRoute extends BaseRoute {
                                 transaction: t
                             }
                         ).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
-                                e
-                            });
                             t.rollback();
+                            if(e.message.includes('FailQuantity')) {
+                                return response.status(200).json({
+                                    success: false,
+                                    message: 'Số lượng trong kho không đủ đáp ứng.'
+                                });
+                            }
+                            return response.status(200).json({
+                                success: false,
+                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                            });
                         });
                         if (str.length > 0) {
                             const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
@@ -435,8 +440,22 @@ export class PondPrepareRoute extends BaseRoute {
      * Sau khi quá trình thêm kết thúc người dùng sẽ có một ao mới
      */
     private addNewPrepare = async (request: Request, response: Response, next: NextFunction) => {
-        const { pondPrepareId, ownerId, pondPrepareName, detailsOfPrepare } = request.body; // init
+        const { pondPrepareId, pondPrepareName, detailsOfPrepare } = request.body; // init
         const { pondName, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body; // Thông tin của ao mới
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        if(!isBoss) {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không đủ quyền truy cập api này.'
+            });
+        }
+
         /** Chuẩn bị cho ao mới */
         if (!pondPrepareId) {
             return this.sequeliz.transaction().then(async (t: Transaction) => {

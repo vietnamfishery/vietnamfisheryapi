@@ -155,6 +155,8 @@ export class SeasonRoute extends BaseRoute {
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
         this.seasonServices.models.findAll({
             include: [
                 {
@@ -164,24 +166,25 @@ export class SeasonRoute extends BaseRoute {
                         {
                             model: this.userRolesServices.models,
                             as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
-                            where: {
-                                [this.sequeliz.Op.or]: [
-                                    {
-                                        bossId: userId
-                                    },
-                                    {
-                                        userId,
-                                        roles: 1
-                                    }
-                                ]
-                            }
+                            required: false
                         }
                     ]
                 }
             ],
             where: {
-                userId: ownerId
-            }
+                [this.sequeliz.Op.or]: [
+                    {
+                        '$user->employees.bossId$': userId
+                    },
+                    {
+                        '$user->employees.userId$': userId,
+                        '$user->employees.roles$': 1
+                    },
+                    {
+                        userId
+                    }
+                ]
+            } as any
         }).then(ss => {
             if (ss.length > 0) {
                 response.status(200).json({
@@ -192,7 +195,8 @@ export class SeasonRoute extends BaseRoute {
             } else {
                 response.status(200).json({
                     success: false,
-                    message: 'Có lỗi xảy ra, không tìm thấy vụ nuôi!'
+                    message: 'Có lỗi xảy ra, không tìm thấy vụ nuôi!',
+                    seasons: []
                 });
             }
         }).catch(e => {

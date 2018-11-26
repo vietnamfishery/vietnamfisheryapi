@@ -349,6 +349,10 @@ export class StorageRoute extends BaseRoute {
                     {
                         '$owner->user->employees.userId$': userId,
                         '$owner->user->employees.roles$': 2
+                    },
+                    {
+                        '$owner->user->employees.userId$': userId,
+                        '$owner->user->employees.roles$': 1
                     }
                 ],
                 type: (type as any) - 0

@@ -162,7 +162,7 @@ export enum ActionAssociateDatabase {
     SEASON_2_BOUGHT_BREED = 'boughtBreed',
     SEASON_2_PRICE = 'price',
     SEASON_2_COUPON = 'coupon',
-    SEASON_2_USER = 'user',
+    SEASON_2_USER = 'user', //
     SEASON_2_USER_ROLES = 'roles',
     SEASON_2_POND = 'ponds',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
