@@ -144,7 +144,6 @@ export class StorageRoute extends BaseRoute {
                 },
                 transaction: t
             });
-            // Là chủ và phiên nhập mới
             if (boss && boss.user.seasons.length) {
                 const coupon: Coupon = new Coupon();
                 coupon.setUserId = userId;
@@ -234,7 +233,7 @@ export class StorageRoute extends BaseRoute {
                                 });
                             if (sUpdate.length > 0) {
                                 const material: Material = new Material();
-                                material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.unit, item.unitPrice);
+                                material.setMaterial(null, uuidv4(), cp.couponId, item.product.storageId, item.provider, item.providerAddress, item.quantity, item.product.unit, item.unitPrice);
                                 const mat = await material.materialServives.models.create(material, { transaction: t }).catch(e => {
                                     if (e.message.includes('FailWithInsertQuantityOfMaterials')) {
                                         response.status(200).json({

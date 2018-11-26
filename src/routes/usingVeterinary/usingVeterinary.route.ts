@@ -168,7 +168,7 @@ export class UsingVeterinaryRoute extends BaseRoute {
             include: [
                 {
                     model: this.usingVeterinaryServices.models,
-                    as: ActionAssociateDatabase.TAKE_CARE_2_USING_FOOD,
+                    as: ActionAssociateDatabase.TAKE_CARE_2_USING_VETERINARY,
                     where: {
                         createdDate: {
                             [this.sequeliz.Op.between]: [
@@ -180,7 +180,7 @@ export class UsingVeterinaryRoute extends BaseRoute {
                     include: [
                         {
                             model: this.storegeServices.models,
-                            as: ActionAssociateDatabase.USING_FOOD_2_STORAGE
+                            as: ActionAssociateDatabase.USING_VETERINARY_2_STORAGE
                         }
                     ],
                     required: false
