@@ -83,7 +83,7 @@ export enum ActionServer {
 
 export enum ActionAssociateDatabase {
     //
-    BOUGHT_BREED_DETAIL_2_COUPON = 'coupon',
+    BOUGHT_BREED_DETAIL_2_COUPON = 'coupon', // ✔
     BOUGHT_BREED_DETAIL_2_BREED = 'detailBreed',
     //
     BOUGHT_BREED_2_BOUGHT_BREED_DETAIL = 'boughtbreedsToBoughtBreedDetails',
@@ -118,7 +118,7 @@ export enum ActionAssociateDatabase {
     MATERIAL_2_USING_FOOD = 'usingFoods',
     MATERIAL_2_USING_VETERINARY = 'usingVeterinay',
     //
-    POND_DIARY_2_SEASON_AND_POND = 'pondDiarys',
+    POND_DIARY_2_SEASON_AND_POND = 'snp', // ✔
     //
     POND_ENVIRONMENT_2_SEASON_AND_POND = 'environments',
     //
@@ -134,13 +134,13 @@ export enum ActionAssociateDatabase {
     INCURREDS_TO_POND_PREPARE = 'pondPrepare',
     INCURREDS_TO_USER = 'user',
     //
-    POND_2_POND_USER_ROLE = 'pondUserRoles', // ok
+    POND_2_POND_USER_ROLE = 'pondUserRoles', // ✔
     POND_2_SEASON = 'seasons',
-    POND_2_USER = 'user', // ok
+    POND_2_USER = 'user', // ✔
     POND_2_EMPLOYEE = 'users',
     POND_2_SEASON_AND_POND = 'pondsToSeasonNPond',
     //
-    POND_USER_ROLE_2_USER = 'user', // ok
+    POND_USER_ROLE_2_USER = 'user', // ✔
     POND_USER_ROLE_2_USER_ROLE = 'userRole',
     POND_USER_ROLE_2_POND = 'pond',
     //
@@ -162,7 +162,7 @@ export enum ActionAssociateDatabase {
     SEASON_2_BOUGHT_BREED = 'boughtBreed',
     SEASON_2_PRICE = 'price',
     SEASON_2_COUPON = 'coupon',
-    SEASON_2_USER = 'user', //
+    SEASON_2_USER = 'user', // ✔
     SEASON_2_USER_ROLES = 'roles',
     SEASON_2_POND = 'ponds',
     SEASON_2_SEASON_AND_POND = 'seasonToSeasonNPond',
@@ -174,7 +174,7 @@ export enum ActionAssociateDatabase {
     STOCKING_DETAILS_2_STOCKING = 'stocking',
     STOCKING_DETAILS_2_BREED = 'breed',
     //
-    STORAGE_2_POND_PREPARE_DETAILS = 'pondPrepareDetails', //
+    STORAGE_2_POND_PREPARE_DETAILS = 'pondPrepareDetails', // ✔
     STORAGE_2_MATERIAL = 'materials',
     STORAGE_2_SEASON = 'storagesToSeason',
     STORAGE_2_PRICE = 'storagesToPrices',
@@ -194,19 +194,19 @@ export enum ActionAssociateDatabase {
     //
     USER_ROLES_2_USER = 'userInfo',
     USER_ROLES_2_SEASON = 'seasonRoles',
-    USER_ROLES_2_USER_BOSS = 'employees', //
-    USER_ROLES_2_POND_USER_ROLE = 'pondUserRoles', //
+    USER_ROLES_2_USER_BOSS = 'employees', // ✔
+    USER_ROLES_2_POND_USER_ROLE = 'pondUserRoles', // ✔
     //
     USER_2_ROLES_USER = 'roles',
     USER_2_POND = 'ponds',
     USER_2_POND_MANY_ROLES = 'pondsBy',
     USER_2_COUPON = 'coupons',
-    USER_2_SEASON = 'seasons', //
+    USER_2_SEASON = 'seasons', // ✔
     USER_2_BOUGHT_BREED = 'userToBoughtBreeds',
     USER_2_PRO = 'provinces',
     USER_2_DIS = 'districts',
     USER_2_WAR = 'wards',
-    USER_2_ROLES_GET_EMPLOYEES = 'employees', //
+    USER_2_ROLES_GET_EMPLOYEES = 'employees', // ✔
     USER_2_POND_USER_ROLE = 'pondUserRole',
     USER_2_OWNER_STORAGE = 'user',
     USER_2_OWNER_BREED = 'ownerBreed',

@@ -6,6 +6,7 @@ export class PondDiary extends BaseComponent {
     private pondDiaryId: number;
     private pondDiaryUUId: string;
     private seasonAndPondId: number;
+    private diaryName: string;
     private fisheryQuantity: number;
     private healthOfFishery: string;
     private pondVolume: number;
@@ -32,6 +33,10 @@ export class PondDiary extends BaseComponent {
 
     public set setSeasonAndPondId(seasonAndPondId: number) {
         this.seasonAndPondId = seasonAndPondId;
+    }
+
+    public set setDiaryName(diaryName: string) {
+        this.diaryName = diaryName;
     }
 
     public set setFisheryQuantity(fisheryQuantity: number) {
@@ -78,6 +83,7 @@ export class PondDiary extends BaseComponent {
         pondDiaryId: number,
         pondDiaryUUId: string,
         seasonAndPondId: number,
+        diaryName: string,
         fisheryQuantity: number,
         healthOfFishery: string,
         pondVolume: number,
@@ -92,6 +98,7 @@ export class PondDiary extends BaseComponent {
         this.setPondDiaryId = pondDiaryId;
         this.setPondDiaryUUId = pondDiaryUUId;
         this.setSeasonAndPondId= seasonAndPondId;
+        this.setDiaryName = diaryName;
         this.setFisheryQuantity = fisheryQuantity;
         this.setHealthOfFishery = healthOfFishery;
         this.setPondVolume = pondVolume;
@@ -114,6 +121,10 @@ export class PondDiary extends BaseComponent {
 
     public get getSeasonAndPondId(): number {
         return this.seasonAndPondId;
+    }
+
+    public get getDiaryName(): string {
+        return this.diaryName;
     }
 
     public get getFisheryQuantity(): number {

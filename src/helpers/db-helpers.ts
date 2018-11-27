@@ -190,7 +190,7 @@ export default class DBHelper {
         const md = this.model;
         const modelBuilder: ModelBuilder = new ModelBuilder(md);
         modelBuilder.ponddiaryAssociate(
-            this.models[`seasonOptions`]
+            this.models[`seasonAndPondOptions`]
         );
         return md;
     }

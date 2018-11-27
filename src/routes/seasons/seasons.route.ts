@@ -235,13 +235,41 @@ export class SeasonRoute extends BaseRoute {
 
     private getSeasonByUUId = (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId } = request.params;
+        // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
         const season: Season = new Season();
         season.seasonServices.models.findOne({
+            include: [
+                {
+                    model: this.userServives.models,
+                    as: ActionAssociateDatabase.SEASON_2_USER,
+                    include: [
+                        {
+                            model: this.userRolesServices.models,
+                            as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
+                            required: false,
+                            where: {
+                                [this.sequeliz.Op.or]: [
+                                    {
+                                        bossId: userId
+                                    },
+                                    {
+                                        userId
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
             where: {
                 seasonUUId,
-                userId: deToken.userId
+                userId: ownerId
             }
         }).then((res: Season) => {
             response.status(200).json({
@@ -250,6 +278,7 @@ export class SeasonRoute extends BaseRoute {
                 season: res
             });
         }).catch(e => {
+            e;
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'

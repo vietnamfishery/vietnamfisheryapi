@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices, SeasonServices } from '../../services';
+import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices, UserServives } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User, UserRole, OwnerBreed, OwnerStorage } from '../../components';
 import { ActionAssociateDatabase } from '../../common';
@@ -28,6 +28,7 @@ export class UserRoute extends BaseRoute {
     private districtServives: DistrictServives = new DistrictServives();
     private wardServices: WardServices = new WardServices();
     private pondsServices: PondsServices = new PondsServices();
+    private userServives: UserServives = new UserServives();
     /**
      * @class UserRoute
      * @constructor
@@ -47,6 +48,12 @@ export class UserRoute extends BaseRoute {
     private init() {
         // log message
         logger.info('[UserRoute] Creating user route.');
+
+        // vertify login
+        this.router.get('/vertify', this.vertify);
+        this.router.get('/vertify/boss', Authentication.isLogin, this.vertifyBoss);
+        this.router.get('/vertify/roles', Authentication.isLogin, this.vertifyRoles);
+
         // add route boss
         this.router.post('/register', this.register);
         this.router.post('/login', this.login);
@@ -612,6 +619,95 @@ export class UserRoute extends BaseRoute {
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+    }
+
+    private vertify = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization;
+        jwt.verify(token, Authentication.cert, {
+            algorithms: ['RS512', 'RS256']
+        }, (err, data) => {
+            if(err) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Bạn cần đăng nhập để tiếp tục.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: 'Đăng nhập thành công!'
+                });
+            }
+        });
+    }
+
+    private vertifyBoss = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        this.userServives.models.findOne({
+            where: {
+                userId,
+                createdBy: null
+            }
+        }).then(res => {
+            if(res) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    isBoss: true
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: '',
+                    isBoss: false
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
+            });
+        });
+    }
+
+    private vertifyRoles = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        this.userServives.models.findOne({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER
+                }
+            ],
+            where: {
+                userId
+            }
+        }).then((res: any) => {
+            if(res) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    roles: res.roles
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: '',
+                    roles: []
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
             });
         });
     }

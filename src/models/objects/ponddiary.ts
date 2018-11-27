@@ -22,6 +22,9 @@ export const ponddiaryOptions: any = _.merge({
             type: Sequelize.BIGINT(20),
             allowNull: false
         },
+        diaryName: {
+            type: Sequelize.STRING(100)
+        },
         fisheryQuantity: {
             type: Sequelize.FLOAT
         },
