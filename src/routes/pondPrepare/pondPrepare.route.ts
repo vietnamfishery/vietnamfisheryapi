@@ -7,6 +7,7 @@ import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 import { Transaction } from 'sequelize';
 import { DateUtil } from '../../lib';
+import { addPondPrepareSchema } from '../../schemas';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -63,7 +64,7 @@ export class PondPrepareRoute extends BaseRoute {
         this.logEndpoints(this.router, PondPrepareRoute.path);
     }
 
-    private getPondPrepares = (request: Request, response: Response, next: NextFunction) => {
+    private getPondPrepares = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, pondId } = request.body;
         this.pondPrepareServices.models.findAll({
             include: [
@@ -100,7 +101,7 @@ export class PondPrepareRoute extends BaseRoute {
                 }
             ]
         }).then((res) => {
-            if(!res.length) {
+            if (!res.length) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy nhật ký chuẩn bị ao của ao này.'
@@ -120,14 +121,14 @@ export class PondPrepareRoute extends BaseRoute {
         });
     }
 
-    private getPondPrepareByPondPrePareUUId = (request: Request, response: Response, next: NextFunction) => {
+    private getPondPrepareByPondPrePareUUId = async (request: Request, response: Response, next: NextFunction) => {
         const { pondPrepareUUId } = request.body;
         this.pondPrepareServices.models.findOne({
             where: {
                 pondPrepareUUId
             }
         }).then(res => {
-            if(!res) {
+            if (!res) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy nhật ký chuẩn bị ao.'
@@ -150,7 +151,7 @@ export class PondPrepareRoute extends BaseRoute {
     /**
      * Chức năng click vào 1 đợt chuẩn bị cụ thể
      */
-    private getById = (request: Request, response: Response, next: NextFunction) => {
+    private getById = async (request: Request, response: Response, next: NextFunction) => {
         const { pondprepareid } = request.headers;
         const pondPrepare: PondPrepare = new PondPrepare();
         pondPrepare.setPondPrepareId = (pondprepareid as any) - 0;
@@ -171,7 +172,7 @@ export class PondPrepareRoute extends BaseRoute {
     /**
      * Update tên vụ
      */
-    private updatePondPrepare = (request: Request, response: Response, next: NextFunction) => {
+    private updatePondPrepare = async (request: Request, response: Response, next: NextFunction) => {
         const pondPrepare: PondPrepare = new PondPrepare();
         const { pondPrepareId, pondprepareName } = request.body;
         if (!pondPrepareId) {
@@ -311,126 +312,108 @@ export class PondPrepareRoute extends BaseRoute {
 
     private addPrepareOldPond = async (request: Request, response: Response, next: NextFunction) => {
         const { pondId, ownerId, pondPrepareName, detailsOfPrepare } = request.body;
-        const snp: any = await this.seasonAndPondServices.models.findOne({
-            include: [
-                {
-                    model: this.seasonServices.models,
-                    as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
-                    where: {
-                        userId: ownerId,
-                        status: 0
-                    },
-                    attributes: []
-                }
-            ],
-            where: {
-                pondId
-            },
-            attributes: ['seasonAndPondId']
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-            });
-        });
-        if (!snp) {
-            response.status(200).json({
-                success: false,
-                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-            });
-        } else {
-            return this.sequeliz.transaction().then(async (t: Transaction) => {
-                const pondPrepare: PondPrepare = new PondPrepare();
-                pondPrepare.setPondprepare(null, uuidv4(), snp.seasonAndPondId, pondPrepareName);
-                const pp: any = await pondPrepare.pondPrepareServices.models.create(pondPrepare, {
-                    transaction: t
-                }).catch(e => {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                    });
-                    t.rollback();
+        const validate: any = this.validator(addPondPrepareSchema);
+        const filter: any = this.validator.filter(addPondPrepareSchema);
+        const filtered: any = filter(request.body);
+        const validater: boolean = validate(filtered);
+        if (validater) {
+            const snp: any = await this.seasonAndPondServices.models.findOne({
+                include: [
+                    {
+                        model: this.seasonServices.models,
+                        as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                        where: {
+                            userId: ownerId,
+                            status: 0
+                        },
+                        attributes: []
+                    }
+                ],
+                where: {
+                    pondId
+                },
+                attributes: ['seasonAndPondId']
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                 });
-                if (pp) {
-                    const successArr: any[] = [];
-                    for (const detail of detailsOfPrepare) {
-                        const storage: Storage = new Storage();
-                        const str: any = await storage.storegeServices.models.update(
-                            {
-                                quantityStorages: this.sequeliz.literal(`quantityStorages - ${detail.quantity}`)
-                            },
-                            {
-                                where: {
-                                    storageId: detail.storageId
-                                },
-                                transaction: t
-                            }
-                        ).catch(e => {
-                            t.rollback();
-                            if(e.message.includes('FailQuantity')) {
-                                return response.status(200).json({
-                                    success: false,
-                                    message: 'Số lượng trong kho không đủ đáp ứng.'
-                                });
-                            }
-                            return response.status(200).json({
-                                success: false,
-                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                            });
-                        });
-                        if (str.length > 0) {
-                            const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
-                            pondPrepareDetail.setPondpreparedetails(null, uuidv4(), pp.pondPrepareId, detail.storageId, detail.quantity);
-                            const ppd: any = await pondPrepareDetail.pondPrepareDetailsServices.models.create(pondPrepareDetail, {
-                                transaction: t
-                            }).catch(e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
-                                    e
-                                });
-                                t.rollback();
-                            });
-                            if (ppd) {
-                                successArr.push(1);
-                            } else {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Thất bại, vui lòng thử lại sau.',
-                                });
-                            }
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Vật phẩm không tồn tại trong kho của bạn, vui lòng thêm vật phẩm này vào kho và quay lại sau.'
-                            });
-                        }
-                    }
-                    if (detailsOfPrepare.length === successArr.length) {
-                        t.commit();
-                        response.status(200).json({
-                            success: true,
-                            message: 'Thêm thành công.'
-                        });
-                    } else {
+            });
+            if (!snp) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            } else {
+                return this.sequeliz.transaction().then(async (t: Transaction) => {
+                    const pondPrepare: PondPrepare = new PondPrepare();
+                    pondPrepare.setPondprepare(null, uuidv4(), snp.seasonAndPondId, pondPrepareName);
+                    const pp: any = await pondPrepare.pondPrepareServices.models.create(pondPrepare, {
+                        transaction: t
+                    }).catch(e => {
                         t.rollback();
-                        response.status(200).json({
-                            success: false,
-                            message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
-                        });
+                    });
+                    if (pp) {
+                        const successArr: any[] = [];
+                        for (const detail of detailsOfPrepare) {
+                            const storage: Storage = new Storage();
+                            const str: any = await storage.storegeServices.models.update(
+                                {
+                                    quantityStorages: this.sequeliz.literal(`quantityStorages - ${detail.quantity}`)
+                                },
+                                {
+                                    where: {
+                                        storageId: detail.storageId
+                                    },
+                                    transaction: t
+                                }
+                            ).catch(e => {
+                                if (e.message === 'FailQuantity') {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Số lượng cơ sở vật chất trong kho không đủ.'
+                                    });
+                                } else {
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
+                                    });
+                                }
+                            });
+                            if (!!str) {
+                                const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
+                                pondPrepareDetail.setPondpreparedetails(null, uuidv4(), pp.pondPrepareId, detail.storageId, detail.quantity);
+                                const ppd: any = await pondPrepareDetail.pondPrepareDetailsServices.models.create(pondPrepareDetail, {
+                                    transaction: t
+                                });
+                                if (ppd) {
+                                    successArr.push(1);
+                                }
+                            }
+                        }
+                        if (detailsOfPrepare.length === successArr.length) {
+                            t.commit();
+                            response.status(200).json({
+                                success: true,
+                                message: 'Thêm thành công.'
+                            });
+                        } else {
+                            return t.rollback();
+                        }
+                    } else {
+                        return t.rollback();
                     }
-                } else {
-                    t.rollback();
+                }).catch(e => {
                     response.status(200).json({
                         success: false,
                         message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
                     });
-                }
-            }).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
                 });
+            }
+        } else {
+            response.status(200).json({
+                success: false,
+                message: 'Số lượng là số nguyên và lớn hơn 1, vui lòng nhập lại!'
             });
         }
     }
@@ -449,7 +432,7 @@ export class PondPrepareRoute extends BaseRoute {
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
 
-        if(!isBoss) {
+        if (!isBoss) {
             return response.status(200).json({
                 success: false,
                 message: 'Bạn không đủ quyền truy cập api này.'
@@ -610,7 +593,7 @@ export class PondPrepareRoute extends BaseRoute {
         const incurred: Incurred = new Incurred();
         incurred.setIncurred(null, uuidv4(), pondPrepareId, userId, incurredName, value, notes);
         incurred.incurredsServices.models.create(incurred).then(res => {
-            if(!res) {
+            if (!res) {
                 response.status(200).json({
                     success: false,
                     message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
@@ -634,28 +617,28 @@ export class PondPrepareRoute extends BaseRoute {
         this.incurredsServices.models.update({
             incurredName, value, notes
         }, {
-            where: {
-                incurredUUId
-            },
-            returning: true
-        }).then(res => {
-            if(!res) {
+                where: {
+                    incurredUUId
+                },
+                returning: true
+            }).then(res => {
+                if (!res) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Cập nhật thành công phí phát sinh thành công.'
+                    });
+                }
+            }).catch(e => {
                 response.status(200).json({
                     success: false,
                     message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                 });
-            } else {
-                response.status(200).json({
-                    success: true,
-                    message: 'Cập nhật thành công phí phát sinh thành công.'
-                });
-            }
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
-        });
     }
 
     private getIncurredByIncurredUUId = async (request: Request, response: Response, next: NextFunction) => {
@@ -665,7 +648,7 @@ export class PondPrepareRoute extends BaseRoute {
                 incurredUUId
             }
         }).then(res => {
-            if(!res) {
+            if (!res) {
                 response.status(200).json({
                     success: false,
                     message: 'Không tìm thấy thông tin chi phí phát sinh.'

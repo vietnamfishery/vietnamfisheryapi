@@ -561,7 +561,7 @@ export class BreedRoute extends BaseRoute {
         });
     }
 
-    getBreed = (request: Request, response: Response) => {
+    getBreed = async (request: Request, response: Response) => {
         // start authozation info
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);

@@ -40,7 +40,7 @@ export class WardRoute extends BaseRoute {
         this.logEndpoints(this.router, WardRoute.path);
     }
 
-    private getAllWard(request: Request, response: Response) {
+    private getAllWard = async (request: Request, response: Response) => {
         const ward = new Ward();
         if (!request.headers.districtid) {
             ward.getAllWard().then((res: any[]) => {

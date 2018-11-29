@@ -51,7 +51,7 @@ export class GrowthsRoute extends BaseRoute {
     }
 
     // Get getgrowths
-    private getGrowths = (request: Request, response: Response, next: NextFunction) => {
+    private getGrowths = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, pondId, ownerId } = request.body;
         this.growthsServives.models.findAll({
             include: [

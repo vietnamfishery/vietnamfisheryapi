@@ -106,11 +106,18 @@ export class DiedFisheryRoute extends BaseRoute {
                 ['createdDate', 'DESC']
             ]
         }).then((wastes) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                wastes
-            });
+            if(!wastes.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy nhật ký sử lý chất thải.'
+                });
+            } else {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    wastes
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,

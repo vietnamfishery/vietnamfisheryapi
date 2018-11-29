@@ -4,6 +4,9 @@ import { BaseRoute } from '../BaseRoute';
 import { SeasonsAndPond } from '../../components';
 import { ActionAssociateDatabase } from '../../common';
 import { Transaction } from 'sequelize';
+import { Authentication } from '../../helpers/login-helpers';
+import { differenceWith, isEqual } from 'lodash';
+
 /**
  * @api {get} /ping Ping Request customer object
  * @apiName Ping
@@ -55,79 +58,104 @@ export class SeasonAndPondRoute extends BaseRoute {
      * @param next {NextFunction} Execute the next method.
      */
     private addSeasonAndPond = async (request: Request, response: Response) => {
-        const { seasonId, pondIdArr } = request.body;
-        if (Array.isArray(pondIdArr)) {
-            if(pondIdArr.length) {
-                return this.sequeliz.transaction().then(async (t: Transaction) => {
-                    const result: any[] = [];
-                    for (const pondId of pondIdArr) {
-                        const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
-                        seasonsAndPond.setSeasonsAndPond(null, seasonId, pondId);
-                        const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond, {
-                            transaction: t
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
-                            });
-                            t.rollback();
-                        });
-                        if (snp) {
-                            result.push(1);
-                        } else {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
-                            });
-                            t.rollback();
-                        }
-                    }
-                    if (pondIdArr.length !== 0 && pondIdArr.length === result.length) {
-                        t.commit();
-                        response.status(200).json({
-                            success: true,
-                            message: 'Thêm thành công!'
-                        });
-                    } else {
-                        t.rollback();
-                        response.status(200).json({
-                            success: false,
-                            message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
-                        });
-                    }
+        const { seasonId, pondIdArr: pondArr } = request.body;
+        // start authozation info
+        const token: string = request.headers.authorization;
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ponds: any = await this.pondsServices.models.findAll({
+            where: {
+                userId
+            },
+            attributes: ['pondId', 'userId']
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
+            });
+        });
+        const diff: any = differenceWith(pondArr, ponds.map(e => {
+            return { pondId: e.pondId, userId: e.userId };
+        }), isEqual);
+        if(!!diff.length) {
+            return response.status(200).json({
+                success: false,
+                message: 'Ao không hợp lệ, vui lòng kiểm tra và thử lại.'
+            });
+        }
+        return this.sequeliz.transaction().then(async (t: Transaction) => {
+            const result: any[] = [];
+            for (const pond of pondArr) {
+                const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
+                seasonsAndPond.setSeasonsAndPond(null, seasonId, pond.pondId);
+                const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond, {
+                    transaction: t
                 }).catch(e => {
                     response.status(200).json({
                         success: false,
                         message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
                     });
+                    t.rollback();
                 });
-            } else {
-                response.status(200).json({
-                    success: false,
-                    message: 'Vui lòng cung cấp dữ liệu để tiếp tục.',
-                });
+                if (snp) {
+                    result.push(1);
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
+                    });
+                    t.rollback();
+                }
             }
-        } else {
-            const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
-            seasonsAndPond.setSeasonsAndPond(null, seasonId, pondIdArr);
-            const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
-                });
-            });
-            if(!snp) {
-                response.status(200).json({
-                    success: false,
-                    message: 'Lỗi đường truyền, vui lòng thử lại.'
-                });
-            } else {
+            if (pondArr.length !== 0 && pondArr.length === result.length) {
+                t.commit();
                 response.status(200).json({
                     success: true,
-                    message: 'Thêm thành công.'
+                    message: 'Thêm thành công!'
+                });
+            } else {
+                t.rollback();
+                response.status(200).json({
+                    success: false,
+                    message: 'Thao tác bị lỗi, vui lòng thử lại sau.',
                 });
             }
-        }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+            });
+        });
+        // if (Array.isArray(pondArr)) {
+        //     if(pondArr.length) {
+
+        //     } else {
+        //         response.status(200).json({
+        //             success: false,
+        //             message: 'Vui lòng cung cấp dữ liệu để tiếp tục.',
+        //         });
+        //     }
+        // } else {
+        //     const seasonsAndPond: SeasonsAndPond = new SeasonsAndPond();
+        //     seasonsAndPond.setSeasonsAndPond(null, seasonId, pondArr);
+        //     const snp: any = await seasonsAndPond.seasonAndPondServices.models.create(seasonsAndPond).catch(e => {
+        //         response.status(200).json({
+        //             success: false,
+        //             message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+        //         });
+        //     });
+        //     if(!snp) {
+        //         response.status(200).json({
+        //             success: false,
+        //             message: 'Lỗi đường truyền, vui lòng thử lại.'
+        //         });
+        //     } else {
+        //         response.status(200).json({
+        //             success: true,
+        //             message: 'Thêm thành công.'
+        //         });
+        //     }
+        // }
     }
 
     private updateSeasonAndPond = async (request: Request, response: Response) => {
@@ -155,7 +183,7 @@ export class SeasonAndPondRoute extends BaseRoute {
     /**
      * đếm số ao theo vụ
      */
-    private countPondWithSeason = (request: Request, response: Response, next: NextFunction) => {
+    private countPondWithSeason = async (request: Request, response: Response, next: NextFunction) => {
         const { ownerid, seasonid } = request.headers;
         this.seasonAndPondServices.models.findAndCountAll({
             include: [
@@ -187,7 +215,7 @@ export class SeasonAndPondRoute extends BaseRoute {
     /**
      * Đếm số vụ của ao
      */
-    private countSeasonOfPond = (request: Request, response: Response, next: NextFunction) => {
+    private countSeasonOfPond = async (request: Request, response: Response, next: NextFunction) => {
         const { ownerid, pondid } = request.headers;
         this.seasonAndPondServices.models.findAndCountAll({
             include: [

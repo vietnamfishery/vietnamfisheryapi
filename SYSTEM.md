@@ -58,3 +58,7 @@
 [☄] Đồ thị realtime
 
 [✿] Hiển thị tổng số ao, số vụ của người dùng
+
+Nhật ký
+Kho
+

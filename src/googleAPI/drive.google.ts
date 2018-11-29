@@ -57,7 +57,7 @@ export class GoogleDrive {
         });
     }
 
-    public static getFile(request: Request, response: Response, next: NextFunction) {
+    public static getFile = async (request: Request, response: Response, next: NextFunction) => {
         const options: any = {
             auth: GoogleDrive.jwtToken,
             fileId: request.params.fileId,

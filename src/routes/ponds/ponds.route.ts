@@ -7,6 +7,8 @@ import * as uuidv4 from 'uuid/v4';
 import { GoogleDrive } from '../../googleAPI/drive.google';
 import { Authentication } from '../../helpers/login-helpers';
 import { Transaction, FindOptions } from 'sequelize';
+import { addPondSchema } from '../../schemas';
+import { DateUtil } from '../../lib';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -69,56 +71,75 @@ export class PondRoute extends BaseRoute {
     }
 
     private addPond = async (request: Request, response: Response, next: NextFunction) => {
-        const pond: Pond = new Pond();
-        const token: string = request.headers.authorization;
-        const deToken: any = Authentication.detoken(token);
-        const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body;
-        if (!pondName || !pondCreatedDate || !pondArea || !pondDepth || !createCost || status === '' || status === null || status === undefined) {
-            response.status(200).json({
-                success: false,
-                message: 'Có lỗi xảy ra vui lòng kiểm tra lại!'
-            });
-        } else {
-            if (request.files) {
-                GoogleDrive.upload(request, response, next).then((data: any) => {
-                    if (data.fileId) {
-                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
-                        pond.pondsServices.models.create(pond).then((pond$: Pond) => {
-                            response.status(200).json({
-                                success: true,
-                                message: 'Thêm ao mới thành công.'
-                            });
-                        }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
-                            });
-                        });
-                    } else {
-                        response.status(200).json({
-                            success: false,
-                            message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
-                        });
-                    }
+        const validate: any = this.validator(addPondSchema);
+        const dataCheck: any = {
+            pondName: request.body.pondName,
+            createCost: request.body.createCost - 0,
+            pondArea: request.body.pondArea - 0,
+            pondCreatedDate: new Date(request.body.pondCreatedDate).toJSON(),
+            pondDepth: request.body.pondDepth - 0,
+            pondLatitude: (request.body.pondLatitude - 0) || null,
+            pondLongitude: (request.body.pondLongitude - 0) || null,
+            status: request.body.status - 0
+        };
+        const validater: boolean = validate(dataCheck);
+        if(validater) {
+            const pond: Pond = new Pond();
+            const token: string = request.headers.authorization;
+            const deToken: any = Authentication.detoken(token);
+            const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body;
+            if(DateUtil.getUTCDateTime(pondCreatedDate) > DateUtil.getUTCDateTime()) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Ngày tạo ao không thể lớn hơn ngày hiện tại.'
                 });
             } else {
-                pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
-                pond.pondsServices.models.create(pond).then((pond$: Pond) => {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Thêm ao mới thành công.'
+                if (request.files) {
+                    GoogleDrive.upload(request, response, next).then((data: any) => {
+                        if (data.fileId) {
+                            pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                            pond.pondsServices.models.create(pond).then((pond$: Pond) => {
+                                response.status(200).json({
+                                    success: true,
+                                    message: 'Thêm ao mới thành công.'
+                                });
+                            }).catch(e => {
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                                });
+                            });
+                        } else {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Đã có lỗi xảy ra, xin vui lòng thử lại!'
+                            });
+                        }
                     });
-                }).catch(e => {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                } else {
+                    pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                    pond.pondsServices.models.create(pond).then((pond$: Pond) => {
+                        response.status(200).json({
+                            success: true,
+                            message: 'Thêm ao mới thành công.'
+                        });
+                    }).catch(e => {
+                        response.status(200).json({
+                            success: false,
+                            message: 'Đã có lỗi xảy ra, vui lòng kiểm tra và thử lại sau.'
+                        });
                     });
-                });
+                }
             }
+        } else {
+            response.status(200).json({
+                success: false,
+                message: 'Dữ liệu cung cấp không phù hợp, vui lòng kiếm tra và thử lại sau.'
+            });
         }
     }
 
-    private getEmployeePondRoles = (request: Request, response: Response, next: NextFunction) => {
+    private getEmployeePondRoles = async (request: Request, response: Response, next: NextFunction) => {
         const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
         this.userRolesServices.models.findAll({
@@ -155,7 +176,7 @@ export class PondRoute extends BaseRoute {
         const token: string = request.headers.authorization;
         const deToken: any = Authentication.detoken(token);
         const pond: Pond = new Pond();
-        pond.pondsServices.models.findAll(({
+        pond.pondsServices.models.findAll({
             include: [
                 {
                     model: this.userServives.models,
@@ -179,26 +200,21 @@ export class PondRoute extends BaseRoute {
                         '$ponduserroles.userId$': deToken.userId
                     }
                 ]
-            }
-        } as any)).then(async (res: any[]) => {
-            if (res.length > 0) {
-                const endData = [];
-                for (const e of res) {
-                    e[`images`] = await GoogleDrive.delayGetFileById(e.images);
-                    endData.push(e);
-                }
+            } as any
+        }).then(async (res: any[]) => {
+            if(!res.length) {
                 response.status(200).json({
-                    success: true,
-                    ponds: endData
+                    success: false,
+                    message: 'Không tìm thấy ao.'
                 });
             } else {
                 response.status(200).json({
                     success: true,
-                    ponds: []
+                    message: '',
+                    ponds: res
                 });
             }
         }).catch(e => {
-            e;
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
@@ -390,7 +406,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private getPondByPondUUId = (request: Request, response: Response, next: NextFunction) => {
+    private getPondByPondUUId = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const { pondUUId } = request.params;
         const token: string = request.headers.authorization;
@@ -445,7 +461,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private updatePond = (request: Request, response: Response, next: NextFunction) => {
+    private updatePond = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         // start authozation info
         const token: string = request.headers.authorization;
@@ -518,7 +534,7 @@ export class PondRoute extends BaseRoute {
         }
     }
 
-    private getPondBySeasonUUId = (request: Request, response: Response, next: NextFunction) => {
+    private getPondBySeasonUUId = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId } = request.params;
         const pond: Pond = new Pond();
         pond.pondsServices.models.findAll({
@@ -547,7 +563,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private getPostPondBySeasonUUId = (request: Request, response: Response, next: NextFunction) => {
+    private getPostPondBySeasonUUId = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId, ownerId } = request.body;
         const pond: Pond = new Pond();
         pond.pondsServices.models.findAll({
@@ -770,7 +786,7 @@ export class PondRoute extends BaseRoute {
     /**
      * Đếm tổng số ao của người dùng
      */
-    private countPond = (request: Request, response: Response, next: NextFunction) => {
+    private countPond = async (request: Request, response: Response, next: NextFunction) => {
         const { pondOwner } = request.body;
         const pond: Pond = new Pond();
         pond.pondsServices.models.findAndCountAll({
@@ -803,7 +819,7 @@ export class PondRoute extends BaseRoute {
      */
     private getPondAdvanceds = async (request: Request, response: Response, next: NextFunction) => {
         // flagged
-        const { image, isnull, isnotnull, isupgrade, seasonid, notRoles, userid } = request.headers;
+        const { image, isnull, isnotnull, isupgrade, seasonid, notRoles, userid, seasonuuid } = request.headers;
 
         // start authozation info
         const token: string = request.headers.authorization;
@@ -848,8 +864,18 @@ export class PondRoute extends BaseRoute {
                     }
                 };
                 query.include.push(presentSeason);
-            } else {
-                // load theo vụ yêu cầu
+            } else if(seasonuuid) /* load theo id vụ yêu cầu */ {
+                const requestSeason: any = {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        userId: ownerId,
+                        seasonUUId: seasonuuid
+                    }
+                };
+                query.include.push(requestSeason);
+            } else  {
+                // load theo id vụ yêu cầu
                 const requestSeason: any = {
                     model: this.seasonServices.models,
                     as: ActionAssociateDatabase.POND_2_SEASON,
@@ -878,38 +904,18 @@ export class PondRoute extends BaseRoute {
             };
         }
         this.pondsServices.models.findAll(query).then(async (res: any[]) => {
-            if (image === 'true') {
-                if (res.length) {
-                    const endData = [];
-                    for (const e of res) {
-                        e[`images`] = await GoogleDrive.delayGetFileById(e.images);
-                        endData.push(e);
-                    }
-                    response.status(200).json({
-                        success: true,
-                        ponds: endData
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Không tìm thấy ao.',
-                        ponds: []
-                    });
-                }
+            if (!res.length) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy ao khả dụng.',
+                    ponds: []
+                });
             } else {
-                if (!res.length) {
-                    response.status(200).json({
-                        success: true,
-                        message: 'Không tìm thấy ao.',
-                        ponds: []
-                    });
-                } else {
-                    response.status(200).json({
-                        success: true,
-                        message: '',
-                        ponds: res
-                    });
-                }
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    ponds: res
+                });
             }
         }).catch(e => {
             response.status(200).json({

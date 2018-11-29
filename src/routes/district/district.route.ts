@@ -40,7 +40,7 @@ export class DistrictRoute extends BaseRoute {
         this.logEndpoints(this.router, DistrictRoute.path);
     }
 
-    private getAllDistrict(request: Request, response: Response) {
+    private getAllDistrict = async (request: Request, response: Response) => {
         const district = new District();
         if (!request.headers.provinceid) {
             district.getAllDistrict().then((res: any[]) => {

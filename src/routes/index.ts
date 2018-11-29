@@ -29,6 +29,7 @@ import { UsingFoodRoute } from './usingFood';
 import { PondDiaryRoute } from './pondDiary';
 import { TakeCareRoute } from './takeCare';
 import { UsingVeterinaryRoute } from './usingVeterinary';
+import { CostsRoute } from './costs';
 
 /**
  * / route
@@ -71,6 +72,7 @@ export class ApiRoutes extends BaseRoute {
         // add index page route
         this.router.get('/', this.get);
         this.router.use(BreedRoute.path, BreedRoute.router);
+        this.router.use(CostsRoute.path, CostsRoute.router);
         this.router.use(DiedFisheryRoute.path, DiedFisheryRoute.router);
         this.router.use(DistrictRoute.path, DistrictRoute.router);
         this.router.use(GetFileRoute.path, GetFileRoute.router);
@@ -97,7 +99,7 @@ export class ApiRoutes extends BaseRoute {
         this.router.use(WardRoute.path, WardRoute.router);
 
         // log total endpoint
-        console.log(`\n${ colorCli.CYAN }###################################################\n${ colorCli.CYAN }##        Total endpoints of api is: ${ colorCli.YELLOW }${ BaseRoute.countEndpoints }${ colorCli.CYAN }          ##\n${ colorCli.CYAN }###################################################\n`);
+        console.log(`\n${ colorCli.CYAN }###################################################\n${ colorCli.CYAN }##        Total endpoints of api is: ${ colorCli.YELLOW }${ BaseRoute.countEndpoints }${ colorCli.CYAN }         ##\n${ colorCli.CYAN }###################################################\n`);
     }
 
     /**

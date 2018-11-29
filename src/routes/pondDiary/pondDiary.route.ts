@@ -232,7 +232,7 @@ export class PondDiaryRoute extends BaseRoute {
     /**
      * Sửa đổi
      */
-    private updatePondDiary = (request: Request, response: Response, next: NextFunction) => {
+    private updatePondDiary = async (request: Request, response: Response, next: NextFunction) => {
         //
     }
 }

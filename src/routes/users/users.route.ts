@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices, UserServives } from '../../services';
+import { logger, UserRolesServices, ProvinceServices, DistrictServives, WardServices, PondsServices, UserServives , PondUserRolesServices} from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { User, UserRole, OwnerBreed, OwnerStorage } from '../../components';
 import { ActionAssociateDatabase } from '../../common';
@@ -29,6 +29,7 @@ export class UserRoute extends BaseRoute {
     private wardServices: WardServices = new WardServices();
     private pondsServices: PondsServices = new PondsServices();
     private userServives: UserServives = new UserServives();
+    private pondUserRolesServices: PondUserRolesServices = new PondUserRolesServices();
     /**
      * @class UserRoute
      * @constructor
@@ -51,8 +52,10 @@ export class UserRoute extends BaseRoute {
 
         // vertify login
         this.router.get('/vertify', this.vertify);
-        this.router.get('/vertify/boss', Authentication.isLogin, this.vertifyBoss);
-        this.router.get('/vertify/roles', Authentication.isLogin, this.vertifyRoles);
+        this.router.get('/vertify/boss', this.vertifyBoss);
+        this.router.get('/vertify/roles/storage', this.vertifyStorageRoles);
+        this.router.get('/vertify/roles/pond', this.vertifyPondRoles);
+        this.router.get('/vertify/roles/pond/:pondUUId', this.vertifyRolesOfPond);
 
         // add route boss
         this.router.post('/register', this.register);
@@ -134,7 +137,7 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    private login = (request: Request, response: Response, next: NextFunction) => {
+    private login = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { username, password } = request.body;
         user.setUsername = username;
@@ -144,7 +147,27 @@ export class UserRoute extends BaseRoute {
                 {
                     model: this.userRolesServices.models,
                     as: ActionAssociateDatabase.USER_2_ROLES_USER,
-                    required: false
+                    required: false,
+                    attributes: ['userId', 'roles', 'bossId']
+                },
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
+                    required: false,
+                    attributes: ['userId', 'roles']
+                },
+                {
+                    model: this.pondUserRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_POND_USER_ROLE,
+                    required: false,
+                    attributes: ['userId', 'pondId'],
+                    include: [
+                        {
+                            model: this.pondsServices.models,
+                            as: ActionAssociateDatabase.POND_USER_ROLE_2_POND,
+                            attributes: ['pondUUId']
+                        }
+                    ]
                 }
             ],
             where: {
@@ -162,6 +185,7 @@ export class UserRoute extends BaseRoute {
                     if(isMatch) {
                         delete u.dataValues.password;
                         const content: any = u.dataValues;
+                        content.isLogin = true;
                         const token: any = jwt.sign(content, this.cert, {
                             algorithm: 'RS512'
                         });
@@ -193,7 +217,7 @@ export class UserRoute extends BaseRoute {
     /**
      * get cho chức năng xem thông tin
      */
-    private getUserInfo = (request: Request, response: Response) => {
+    private getUserInfo = async (request: Request, response: Response) => {
         const user: User = new User();
         const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
@@ -238,7 +262,7 @@ export class UserRoute extends BaseRoute {
     /**
      * get cho chưc năng update, khong can join tinh huyen xa
      */
-    private getUserInfoWithUpdate = (request: Request, response: Response, next: NextFunction) => {
+    private getUserInfoWithUpdate = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const token: string = request.headers.authorization;
         const decodeToken: any = Authentication.detoken(token);
@@ -261,7 +285,7 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    private updateUserProfile = (request: Request, response: Response, next: NextFunction) => {
+    private updateUserProfile = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const token: string = request.headers.authorization;
         const decodetoken: any = Authentication.detoken(token);
@@ -321,7 +345,7 @@ export class UserRoute extends BaseRoute {
         }
     }
 
-    private updateUserPassword = (request: Request, response: Response, next: NextFunction) => {
+    private updateUserPassword = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { oldPassword, newPassword } = request.body;
         const token: string = request.headers.authorization;
@@ -646,6 +670,13 @@ export class UserRoute extends BaseRoute {
     private vertifyBoss = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
         const token: string = request.headers.authorization;
+        if(!token) {
+            return response.status(200).json({
+                success: false,
+                message: '',
+                isBoss: false
+            });
+        }
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         this.userServives.models.findOne({
@@ -675,33 +706,143 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    private vertifyRoles = async (request: Request, response: Response, next: NextFunction) => {
+    private vertifyPondRoles = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
         const token: string = request.headers.authorization;
+        if(!token) {
+            return response.status(200).json({
+                success: false,
+                message: ''
+            });
+        }
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
-        this.userServives.models.findOne({
+        this.userServives.models.findAll({
             include: [
                 {
                     model: this.userRolesServices.models,
-                    as: ActionAssociateDatabase.USER_2_ROLES_USER
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
+                    required: false
+                }
+            ],
+            where: {
+                [this.sequeliz.Op.or]: [
+                    {
+                        '$roles.roles$': 1,
+                        userId
+                    },
+                    {
+                        userId,
+                        createdBy: null
+                    }
+                ]
+            } as any
+        }).then((res: any) => {
+            if(res.length) {
+                response.status(200).json({
+                    success: true,
+                    message: ''
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: ''
+                });
+            }
+        }).catch(e => {
+            e;
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
+            });
+        });
+    }
+
+    private vertifyStorageRoles = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization;
+        if(!token) {
+            return response.status(200).json({
+                success: false,
+                message: ''
+            });
+        }
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        this.userServives.models.findAll({
+            include: [
+                {
+                    model: this.userRolesServices.models,
+                    as: ActionAssociateDatabase.USER_2_ROLES_USER,
+                    required: false
+                }
+            ],
+            where: {
+                [this.sequeliz.Op.or]: [
+                    {
+                        '$roles.roles$': 2,
+                        userId
+                    },
+                    {
+                        userId,
+                        createdBy: null
+                    }
+                ]
+            } as any
+        }).then((res: any) => {
+            if(res.length) {
+                response.status(200).json({
+                    success: true,
+                    message: ''
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: ''
+                });
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
+            });
+        });
+    }
+
+    private vertifyRolesOfPond = async (request: Request, response: Response, next: NextFunction) => {
+        const { pondUUId } = request.params;
+        const token: string = request.headers.authorization;
+        if(!token) {
+            return response.status(200).json({
+                success: false,
+                message: 'Lỗi xác thực người dùng.'
+            });
+        }
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        this.pondUserRolesServices.models.findAll({
+            include: [
+                {
+                    model: this.pondsServices.models,
+                    as: ActionAssociateDatabase.POND_USER_ROLE_2_POND,
+                    where: {
+                        pondUUId
+                    }
                 }
             ],
             where: {
                 userId
             }
         }).then((res: any) => {
-            if(res) {
+            if(res.length) {
                 response.status(200).json({
                     success: true,
-                    message: '',
-                    roles: res.roles
+                    message: ''
                 });
             } else {
                 response.status(200).json({
                     success: false,
-                    message: '',
-                    roles: []
+                    message: ''
                 });
             }
         }).catch(e => {

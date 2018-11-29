@@ -378,7 +378,7 @@ export class StorageRoute extends BaseRoute {
         });
     }
 
-    private getStorageById = (request: Request, response: Response, next: NextFunction) => {
+    private getStorageById =  async (request: Request, response: Response, next: NextFunction) => {
         //
     }
 

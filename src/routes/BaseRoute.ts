@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Sequelize } from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
 import { host, port, colorCli, method } from '../config';
+import * as validator from 'is-my-json-valid';
 
 export abstract class BaseRoute {
     /**
@@ -14,6 +15,7 @@ export abstract class BaseRoute {
     public static countEndpoints: number = 0;
     protected router: Router = Router();
     protected sequeliz: Sequelize = DBHelper.sequelize;
+    protected validator: any = validator;
 
     constructor () {}
 

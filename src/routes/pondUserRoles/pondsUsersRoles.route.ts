@@ -50,7 +50,7 @@ export class PondUserRolesRoute extends BaseRoute {
         this.logEndpoints(this.router, PondUserRolesRoute.path);
     }
 
-    private addPondRoles = (request: Request, response: Response, next: NextFunction) => {
+    private addPondRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
         const { userId, pondId } = request.body;
         pondUserRole.setUserId = (userId as number) - 0;
@@ -140,7 +140,7 @@ export class PondUserRolesRoute extends BaseRoute {
         }
     }
 
-    private updateRoles = (request: Request, response: Response, next: NextFunction) => {
+    private updateRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
         const token: string = request.headers.authorization;
         const { pondUserRolesId, pondId } = request.body;
@@ -177,7 +177,7 @@ export class PondUserRolesRoute extends BaseRoute {
         }
     }
 
-    private deleteRoles = (request: Request, response: Response, next: NextFunction) => {
+    private deleteRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
         const token: string = request.headers.authorization;
         const { pondUserRolesId } = request.body;

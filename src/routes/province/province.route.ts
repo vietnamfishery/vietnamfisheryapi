@@ -40,7 +40,7 @@ export class ProvinceRoute extends BaseRoute {
         this.logEndpoints(this.router, ProvinceRoute.path);
     }
 
-    private getAllProvince(request: Request, response: Response) {
+    private getAllProvince = async (request: Request, response: Response) => {
         const province = new Province();
         province.getAllProvince().then((res: any[]) => {
             response.status(200).json(res);
