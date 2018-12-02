@@ -53,7 +53,7 @@ export class CostsRoute extends BaseRoute {
     private getAllPrices = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonId } = request.params;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

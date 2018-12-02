@@ -56,7 +56,7 @@ export class BreedRoute extends BaseRoute {
     addBreed = async (request: Request, response: Response) => {
         const { couponId, itemArr } = request.body;
 
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -563,7 +563,7 @@ export class BreedRoute extends BaseRoute {
 
     getBreed = async (request: Request, response: Response) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy === null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

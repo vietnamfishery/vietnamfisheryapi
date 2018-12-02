@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { readFileSync } from 'fs';
+import { find } from 'lodash';
 
 export class Authentication {
     static cert: Buffer = readFileSync(process.cwd() + '/authKey/jwtRS256.key.pub');
     constructor() {}
     static isLogin(request: Request, response: Response, next: NextFunction) {
-        const token: string = request.headers.authorization ? request.headers.authorization: null;
+        const token: string = request.headers.authorization ? request.headers.authorization.split(' ')[1] : null;
         if(!token) {
             response.status(200).json({
                 success: false,
@@ -29,27 +30,54 @@ export class Authentication {
     }
 
     static isBoss(request: Request, response: Response, next: NextFunction) {
-        const token: string = request.headers.authorization ? request.headers.authorization: null;
-        if(!token) {
+        // start authozation info
+        const token: string = request.headers.authorization.split(' ')[1];
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        if(!isBoss) {
             response.status(200).json({
                 success: false,
-                message: 'Bạn cần đăng nhập để tiếp tục.'
+                message: 'Bạn không có quyền truy cập.'
             });
         } else {
-            jwt.verify(token,Authentication.cert,(err, data: any) => {
-                if(err) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Bạn cần đăng nhập để tiếp tục.'
-                    });
-                } else if(data.boss.length === 0) {
-                    next();
-                } else {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Tài khoản của bạn không đủ thẩm quyền, liên hệ với quản lý để được hỗ trợ thêm.'
-                    });
-                }
+            next();
+        }
+    }
+
+    static isPondRole(request: Request, response: Response, next: NextFunction) {
+        // start authozation info
+        const token: string = request.headers.authorization.split(' ')[1];
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        const isPondRole: boolean = !!find(deToken.roles, e => e.roles === 1) || !deToken.roles.length;
+        if(isPondRole || isBoss) {
+            next();
+        } else {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền truy cập.'
+            });
+        }
+    }
+
+    static isStorageRole(request: Request, response: Response, next: NextFunction) {
+        // start authozation info
+        const token: string = request.headers.authorization.split(' ')[1];
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        const isStorageRole: boolean = !!find(deToken.roles, e => e.roles === 2) || !deToken.roles.length;
+        if(isBoss && isStorageRole) {
+            next();
+        } else {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền truy cập.'
             });
         }
     }

@@ -63,7 +63,7 @@ export class UserRoleRoute extends BaseRoute {
     private getAllMyEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const { roles } = request.headers;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -144,7 +144,7 @@ export class UserRoleRoute extends BaseRoute {
     private getRoleByRoleId = async (request: Request, response: Response, next: NextFunction) => {
         const { roleId } = request.params;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -177,11 +177,13 @@ export class UserRoleRoute extends BaseRoute {
     }
 
     private deleteRoles = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
         const { rolesId } = request.body;
         this.userRolesServices.models.destroy({
             where: {
+                bossId: userId,
                 rolesId
             }
         }).then((res: any) => {
@@ -199,25 +201,49 @@ export class UserRoleRoute extends BaseRoute {
 
     private upsertRoles = async (request: Request, response: Response, next: NextFunction) => {
         const userRole: UserRole = new UserRole();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId, roles, isDeleted } = request.body;
         userRole.setBossId = deToken.userId;
         userRole.setUserId = userId;
         userRole.setRoles = roles;
         userRole.setIsDeleted = isDeleted;
+        const main: any = await this.userRolesServices.models.findAll({
+            where: {
+                userId,
+                bossId: deToken.userId
+            }
+        }).catch(e => {
+            response.status(200).json({
+                success: false,
+                message: 'Có lỗi xảy ra, vui lòng thử lại sau.'
+            });
+        });
+        if(!main) {
+            return response.status(200).json({
+                success: false,
+                message: 'Bạn không có quyền thao tác này!'
+            });
+        }
         userRole.userRolesServices.models.upsert(userRole.getFields(), {
             fields: ['roles', 'isDeleted'],
             returning: true
         }).then((res: any) => {
-            response.status(200).json({
-                success: true,
-                message: 'Thao tác thành công.'
-            });
+            if(res) {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thao tác thành công.'
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Thất bại, thử lại sau.'
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,
-                message: 'Lỗi đường truyền, vui lòng thử lại sau.'
+                message: 'Có lỗi xảy ra, vui lòng thử lại sau.'
             });
         });
     }
@@ -240,7 +266,7 @@ export class UserRoleRoute extends BaseRoute {
                 });
                 t.rollback();
             }).then(async (result: any) => {
-                const token: string = request.headers.authorization;
+                const token: string = request.headers.authorization.split(' ')[1];
                 const deToken: any = Authentication.detoken(token);
                 userRole = new UserRole();
                 userRole.setBossId = deToken.userId;

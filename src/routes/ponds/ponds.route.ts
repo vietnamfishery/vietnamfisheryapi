@@ -48,23 +48,22 @@ export class PondRoute extends BaseRoute {
         logger.info('[PondRoute] Creating pond route.');
 
         // add route
-        this.router.post('/add', Authentication.isLogin, this.addPond); // Thêm ao
-        this.router.get('/gets', Authentication.isLogin, this.getPonds); // get all - có hình
-        this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages); // get all kèm với quyền - không hình
+        this.router.get('/gets', Authentication.isLogin, this.getPonds); // get ponds
         this.router.get('/get/:pondUUId', Authentication.isLogin, this.getPondByPondUUId);  // get với UUID
-        this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật
-        this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao
-        this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi
-        this.router.post('/gets/seasonUUId', Authentication.isLogin, this.getPostPondBySeasonUUId); // get ao theo vụ nuôi
-        this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user
-        this.router.post('/seasons/count', Authentication.isLogin, this.countSeasonWithPond); // đếm ao của user
-        this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // get số ao không có trong vụ
-        this.router.post('/gets/ownerSeason', Authentication.isLogin, this.getPondByOwnerSeason); // đếm ao của user
-        this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // get ao của người dùng hiện tại có hình ảnh
-        this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds);
+        // this.router.get('/gets/withoutImage', Authentication.isLogin, this.getPondWithoutImages); // get all kèm với quyền - không hình [bỏ]
+        // this.router.get('/gets/employees', Authentication.isLogin, this.getEmployeePondRoles); // get nhân viên theo ao [không sử dụng]
+        // this.router.get('/gets/advanced', Authentication.isLogin, this.getPondAdvanceds); // [gộp vào gets]
+        // this.router.get('/gets/season/:seasonUUId', Authentication.isLogin, this.getPondBySeasonUUId); // get ao theo vụ nuôi với seasonUUId
         this.router.get('/gets/boss', Authentication.isLogin, this.getPondOfBoss);
-        this.router.post('/gets/notEmployee', Authentication.isLogin, this.getPondWithUserNotManage);
-        this.router.post('/gets/not/manage', Authentication.isLogin, this.getPondWithoutManager);
+        this.router.post('/add', Authentication.isLogin, this.addPond); // Thêm ao
+        // this.router.post('/gets/seasonUUId', Authentication.isLogin, this.getPostPondBySeasonUUId); // get ao theo vụ nuôi [nên đổi về phương thức get]
+        // this.router.post('/count', Authentication.isLogin, this.countPond); // đếm ao của user - [tích hwjp vào gets]
+        // this.router.post('/seasons/count', Authentication.isLogin, this.countSeasonWithPond); // nên tích hợp vào get pond
+        this.router.post('/get/notin/seasonAndPond', Authentication.isLogin, this.getPondNotInSeasonAndPond); // get số ao không có trong vụ [to GET]
+        this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // /** Xem xét */get ao của người dùng hiện tại có hình ảnh
+        this.router.post('/gets/notEmployee', Authentication.isLogin, this.getPondWithUserNotManage); // Xem xét
+        this.router.post('/gets/not/manage', Authentication.isLogin, this.getPondWithoutManager); // Xem xét
+        this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật [Ok]
 
         // log endpoints
         this.logEndpoints(this.router, PondRoute.path);
@@ -85,7 +84,7 @@ export class PondRoute extends BaseRoute {
         const validater: boolean = validate(dataCheck);
         if(validater) {
             const pond: Pond = new Pond();
-            const token: string = request.headers.authorization;
+            const token: string = request.headers.authorization.split(' ')[1];
             const deToken: any = Authentication.detoken(token);
             const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body;
             if(DateUtil.getUTCDateTime(pondCreatedDate) > DateUtil.getUTCDateTime()) {
@@ -97,7 +96,7 @@ export class PondRoute extends BaseRoute {
                 if (request.files) {
                     GoogleDrive.upload(request, response, next).then((data: any) => {
                         if (data.fileId) {
-                            pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                            pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                             pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                                 response.status(200).json({
                                     success: true,
@@ -117,7 +116,7 @@ export class PondRoute extends BaseRoute {
                         }
                     });
                 } else {
-                    pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                    pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                     pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                         response.status(200).json({
                             success: true,
@@ -140,7 +139,7 @@ export class PondRoute extends BaseRoute {
     }
 
     private getEmployeePondRoles = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodetoken: any = Authentication.detoken(token);
         this.userRolesServices.models.findAll({
             where: {
@@ -173,14 +172,18 @@ export class PondRoute extends BaseRoute {
     }
 
     private getPonds = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const { seasonUUId, status, seasonId } = request.query;
+        // start authozation info
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
-        const pond: Pond = new Pond();
-        pond.pondsServices.models.findAll({
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+        let query: FindOptions<any> = {
             include: [
                 {
                     model: this.userServives.models,
-                    as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+                    as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
                     required: false,
                     attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
                 },
@@ -189,6 +192,20 @@ export class PondRoute extends BaseRoute {
                     as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
                     required: false,
                     attributes: []
+                },
+                {
+                    model: this.seasonServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON,
+                    where: {
+                        userId: ownerId,
+                        status: 0
+                    },
+                    attributes: []
+                },
+                {
+                    model: this.seasonAndPondServices.models,
+                    as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                    required: false
                 }
             ],
             where: {
@@ -201,11 +218,147 @@ export class PondRoute extends BaseRoute {
                     }
                 ]
             } as any
-        }).then(async (res: any[]) => {
-            if(!res.length) {
+        };
+        if(!!seasonUUId) {
+            if(!isBoss) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có quyền thao tác này!'
+                });
+            }
+            query = {
+                include: [
+                    {
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
+                        required: false,
+                        attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                    },
+                    {
+                        model: this.pondUserRolesServices.models,
+                        as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                        required: false,
+                        attributes: []
+                    },
+                    {
+                        model: this.seasonServices.models,
+                        as: ActionAssociateDatabase.POND_2_SEASON,
+                        where: {
+                            seasonUUId,
+                            userId: ownerId
+                        },
+                        attributes: []
+                    },
+                    {
+                        model: this.seasonAndPondServices.models,
+                        as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                        required: false
+                    }
+                ],
+                where: {
+                    [this.sequeliz.Op.or]: [
+                        {
+                            userId: deToken.userId
+                        },
+                        {
+                            '$ponduserroles.userId$': deToken.userId
+                        }
+                    ]
+                } as any
+            };
+        }
+        if(!!seasonId) {
+            if(!isBoss) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không có quyền thao tác này!'
+                });
+            }
+            query = {
+                include: [
+                    {
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
+                        required: false,
+                        attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                    },
+                    {
+                        model: this.pondUserRolesServices.models,
+                        as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                        required: false,
+                        attributes: []
+                    },
+                    {
+                        model: this.seasonServices.models,
+                        as: ActionAssociateDatabase.POND_2_SEASON,
+                        where: {
+                            seasonId,
+                            userId: ownerId
+                        },
+                        attributes: []
+                    },
+                    {
+                        model: this.seasonAndPondServices.models,
+                        as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                        required: false
+                    }
+                ],
+                where: {
+                    [this.sequeliz.Op.or]: [
+                        {
+                            userId: deToken.userId
+                        },
+                        {
+                            '$ponduserroles.userId$': deToken.userId
+                        }
+                    ]
+                } as any
+            };
+        }
+        if(!!status) {
+            if(status.includes('notnull')) /** Ao đang nuôi + đang nâng cấp */ {
+                const notIn: any = {
+                    status: {
+                        [this.sequeliz.Op.notIn]: [0]
+                    }
+                };
+                query.where = {
+                    ...query.where,
+                    ...notIn
+                };
+            } else if(status.includes('forPrepare')) /** Ao trống + đang nâng cấp */ {
+                const condition: any = {
+                    status: {
+                        [this.sequeliz.Op.notIn]: [1]
+                    }
+                };
+                query.where = {
+                    ...query.where,
+                    ... condition
+                };
+            } else if(status.includes('forStocking')) /** Ao trống + đang nuôi */ {
+                const condition: any = {
+                    status: {
+                        [this.sequeliz.Op.notIn]: [2]
+                    }
+                };
+                query.where = {
+                    ...query.where,
+                    ... condition
+                };
+            } else /** theo status gui len */ {
+                query.where = {
+                    ...query.where,
+                    status: status as any - 0
+                };
+            }
+        }
+        this.pondsServices.models.findAll(query).then(async (res: any) => {
+            if(!Object.keys(res).length) {
                 response.status(200).json({
                     success: false,
-                    message: 'Không tìm thấy ao.'
+                    message: 'Không tìm thấy ao.',
+                    ponds: []
                 });
             } else {
                 response.status(200).json({
@@ -224,7 +377,7 @@ export class PondRoute extends BaseRoute {
 
     private getPondOfBoss = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -263,16 +416,16 @@ export class PondRoute extends BaseRoute {
     }
 
     private getPondWithoutImages = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const pond: Pond = new Pond();
         pond.pondsServices.models.findAll(({
             include: [
                 {
                     model: this.userServives.models,
-                    as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+                    as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
                     required: false,
-                    attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                    // attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
                 },
                 {
                     model: this.pondUserRolesServices.models,
@@ -309,7 +462,7 @@ export class PondRoute extends BaseRoute {
     private getPondNotInSeasonAndPond = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -409,7 +562,7 @@ export class PondRoute extends BaseRoute {
     private getPondByPondUUId = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         const { pondUUId } = request.params;
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodetoken: any = Authentication.detoken(token);
         const query: any = {
             include: [
@@ -464,7 +617,7 @@ export class PondRoute extends BaseRoute {
     private updatePond = async (request: Request, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -475,7 +628,7 @@ export class PondRoute extends BaseRoute {
                 message: 'Dừng lại! Truy cập là trái phép.'
             });
         }
-        const { pondUUId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, images, pondLatitude, pondLongitude, status, isFed, isDiary } = request.body;
+        const { pondUUId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, wasHarvests, pondLatitude, pondLongitude, status, isFed, isDiary } = request.body;
         if (!pondUUId) {
             response.status(200).json({
                 success: false,
@@ -485,7 +638,7 @@ export class PondRoute extends BaseRoute {
             if (request.files) {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
-                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, wasHarvests, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                         pond.pondsServices.models.update({
                             pondName, pondCreatedDate, pondArea, pondDepth, createCost, images:
                                 data.fileId, pondLatitude, pondLongitude, status, isFed, isDiary
@@ -602,7 +755,7 @@ export class PondRoute extends BaseRoute {
     private getPondByOwnerSeason = async (request: Request, response: Response, next: NextFunction) => {
         const { status } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -717,7 +870,7 @@ export class PondRoute extends BaseRoute {
     private getPondWithoutManager = async (request: Request, response: Response, next: NextFunction) => {
         const { employeeId } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -822,7 +975,7 @@ export class PondRoute extends BaseRoute {
         const { image, isnull, isnotnull, isupgrade, seasonid, notRoles, userid, seasonuuid } = request.headers;
 
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -964,7 +1117,7 @@ export class PondRoute extends BaseRoute {
     private getPondWithUserNotManage = async (request: Request, response: Response, next: NextFunction) => {
         const { employeeId } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

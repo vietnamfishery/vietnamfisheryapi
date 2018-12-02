@@ -426,7 +426,7 @@ export class PondPrepareRoute extends BaseRoute {
         const { pondPrepareId, pondPrepareName, detailsOfPrepare } = request.body; // init
         const { pondName, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body; // Thông tin của ao mới
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -443,7 +443,7 @@ export class PondPrepareRoute extends BaseRoute {
         if (!pondPrepareId) {
             return this.sequeliz.transaction().then(async (t: Transaction) => {
                 const pond: Pond = new Pond();
-                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, DateUtil.getUTCDateTime() as any, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, DateUtil.getUTCDateTime() as any, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                 const p: any = await this.pondsServices.models.create(pond, {
                     transaction: t
                 }).catch(e => {
@@ -530,7 +530,7 @@ export class PondPrepareRoute extends BaseRoute {
                                         });
                                         t.rollback();
                                     });
-                                    if (str.length > 0) {
+                                    if (!!str) {
                                         const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
                                         pondPrepareDetail.setPondpreparedetails(null, uuidv4(), pp.pondPrepareId, detail.storageId, detail.quantity);
                                         const ppd: any = await pondPrepareDetail.pondPrepareDetailsServices.models.create(pondPrepareDetail, {
@@ -586,7 +586,7 @@ export class PondPrepareRoute extends BaseRoute {
     }
 
     private addIncurred = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const { pondPrepareId, incurredName, value, notes } = request.body;

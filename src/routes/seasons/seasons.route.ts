@@ -1,12 +1,12 @@
 import { Season } from '../../components';
 import { NextFunction, Request, Response } from 'express';
-import { logger, SeasonServices, UserRolesServices, UserServives } from '../../services';
+import { logger, SeasonServices, UserRolesServices, UserServives, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
 import { Transaction } from 'sequelize';
-import { addSeasonSchema } from '../../schemas';
+import { addSeasonSchema, updateSeasonsSchema } from '../../schemas';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -19,6 +19,7 @@ export class SeasonRoute extends BaseRoute {
     public static path = '/seasons';
     private static instance: SeasonRoute;
     private seasonServices: SeasonServices = new SeasonServices();
+    private pondsServices: PondsServices = new PondsServices();
     private userServives: UserServives = new UserServives();
     private userRolesServices: UserRolesServices = new UserRolesServices();
 
@@ -43,23 +44,26 @@ export class SeasonRoute extends BaseRoute {
         logger.info('[SeasonRoute] Creating season route.');
 
         // add route
-        this.router.post('/add', Authentication.isLogin, this.addSeason);
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
-        this.router.put('/update', Authentication.isLogin, this.updateSeason);
         this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
-        this.router.post('/get', Authentication.isLogin, this.getSeasonById);
         this.router.get('/gets/present', Authentication.isLogin, this.getPresentSeason);
+        this.router.post('/get', Authentication.isLogin, this.getSeasonById);
+        this.router.post('/add', Authentication.isLogin, Authentication.isBoss, this.addSeason);
+        this.router.put('/update', Authentication.isLogin, Authentication.isBoss, this.updateSeason);
 
         // log endpoints
         this.logEndpoints(this.router, SeasonRoute.path);
     }
 
     /**
-     * Thêm mới vụ
-     * Điều kiện: mỗi user chỉ có 1 vụ có status 0 trong tổng số vụ
-     * Tìm vụ đang có status = 0
-     * tạo transaction update lại vụ đã tìm thấy thành 1
-     * và thêm vụ mới với status bằng 0 với tên vụ được người dùng gửi lên
+     * Thêm mới vụ với điều kiện:
+     * - Mỗi user chỉ có 1 vụ có status 0 trong tổng số vụ
+     * - Tất cả ao đều được thu hoạch xong
+     *
+     * Cập nhật lại bảng Ponds:
+     * - status
+     * - isFed
+     * - isDiary
      */
     private addSeason = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonName } = request.body;
@@ -67,26 +71,70 @@ export class SeasonRoute extends BaseRoute {
         const filter: any = this.validator.filter(addSeasonSchema);
         const filtered: any = filter(request.body);
         const validater: boolean = validate(filtered);
-        if(validater) {
+        if (validater) {
             // start authozation info
-            const token: string = request.headers.authorization;
+            const token: string = request.headers.authorization.split(' ')[1];
             const deToken: any = Authentication.detoken(token);
             const { userId } = deToken;
+
+            const wasHarvest: any = await this.pondsServices.models.findAll({
+                where: {
+                    wasHarvests: 0,
+                    userId
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau!'
+                });
+            });
+            // Còn vụ chưa thu hoạch
+            if (!!wasHarvest.length) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Bạn không thể thêm vụ nuôi mới khi còn ao chưa thu hoạch.',
+                    wasHarvest: false
+                });
+            }
             this.sequeliz.transaction().then(async (t: Transaction) => {
+                const resetHarvest: any = await this.pondsServices.models.update({
+                    wasHarvests: 0
+                }, {
+                        where: {
+                            userId,
+                            wasHarvests: 1
+                        },
+                        transaction: t
+                    }).catch(e => {
+                        return t.rollback();
+                    });
+                const resetStatus: any = await this.pondsServices.models.update({
+                    status: 0,
+                    isFed: 0,
+                    isDiary: 0
+                }, {
+                        where: {
+                            userId,
+                            status: 1
+                        },
+                        transaction: t
+                    }).catch(e => {
+                        return t.rollback();
+                    });
                 const onUpdate: any = await this.seasonServices.models.update({
                     status: 1
                 }, {
-                    where: {
-                        userId,
-                        status: 0
-                    },
-                    returning: true,
-                    transaction: t
-                }).catch(e => {
-                    return t.rollback();
-                });
+                        where: {
+                            userId,
+                            status: 0
+                        },
+                        returning: true,
+                        transaction: t
+                    }).catch(e => {
+                        return t.rollback();
+                    });
 
-                if(onUpdate) {
+                if (onUpdate) {
                     const season = new Season();
                     season.setSeason(null, uuidv4(), userId, seasonName, 0);
                     season.seasonServices.models.create(season, {
@@ -126,7 +174,7 @@ export class SeasonRoute extends BaseRoute {
      */
     private getSeasons = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -159,35 +207,51 @@ export class SeasonRoute extends BaseRoute {
     }
 
     private updateSeason = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId, seasonName, status } = request.body;
-        if (!seasonId) {
-            response.status(200).json({
-                success: false,
-                message: 'Hành động không được phép, vui lòng thử lại sau!'
-            });
-        } else {
-            const season: Season = new Season();
-            season.setSeason(seasonId, null, null, seasonName, status);
-            season.update().then((res: any) => {
-                if (!res) {
-                    response.status(200).json({
-                        success: false,
-                        message: 'Đã có lỗi xảy ra, xin vui lòng thử lại sau!'
-                    });
-                } else {
+        // validate
+        const validate: any = this.validator(updateSeasonsSchema);
+        const filter: any = this.validator.filter(updateSeasonsSchema);
+        const filtered: any = filter(request.body);
+        const validater: boolean = validate(filtered);
+        if(validater) {
+            const { seasonId, seasonUUId, seasonName, status } = request.body;
+            const data: any = {
+                ...(seasonName ? {seasonName} : {}),
+                ...(status ? {status} : {}),
+            };
+            this.seasonServices.models.update(data, {
+                where: {
+                    [this.sequeliz.Op.or]: [
+                        {seasonId},
+                        {seasonUUId}
+                    ]
+                }
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau!'
+                });
+            }).then(res => {
+                if(res) {
                     response.status(200).json({
                         success: true,
                         message: 'Cập nhật thành công!'
                     });
+                } else {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Thất bại.'
+                    });
                 }
             });
+        } else {
+            console.log(validate.error);
         }
     }
 
     private getSeasonByUUId = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonUUId } = request.params;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

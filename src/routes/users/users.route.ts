@@ -219,7 +219,7 @@ export class UserRoute extends BaseRoute {
      */
     private getUserInfo = async (request: Request, response: Response) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodeToken: any = Authentication.detoken(token);
         const { userId } = decodeToken;
         user.userServices.models.findOne({
@@ -264,7 +264,7 @@ export class UserRoute extends BaseRoute {
      */
     private getUserInfoWithUpdate = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodeToken: any = Authentication.detoken(token);
         user.setUsername = decodeToken.username;
         user.login().then((user$: any) => {
@@ -287,7 +287,7 @@ export class UserRoute extends BaseRoute {
 
     private updateUserProfile = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodetoken: any = Authentication.detoken(token);
         const { firstname, lastname, birthday, email, phone, town, district, province, images } = request.body;
         user.setUser(decodetoken.userId,undefined,firstname,lastname,undefined,null,birthday,email,phone,undefined,town,district,province,null,images,undefined,undefined,undefined,undefined,undefined);
@@ -348,7 +348,7 @@ export class UserRoute extends BaseRoute {
     private updateUserPassword = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
         const { oldPassword, newPassword } = request.body;
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodeToken: any = Authentication.detoken(token);
         user.setUsername = decodeToken.username;
         user.login().then((data: any) => {
@@ -380,7 +380,7 @@ export class UserRoute extends BaseRoute {
 
     private regiterEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { username, password, firstname, lastname, roles } = request.body;
         user.setUserUUId = uuidv4();
@@ -437,7 +437,7 @@ export class UserRoute extends BaseRoute {
 
     private getEmployee = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const decodetoken: any = Authentication.detoken(token);
         user.userServices.models.findAll({
             include: [
@@ -499,7 +499,7 @@ export class UserRoute extends BaseRoute {
     private insertOnlyRole = async (request: Request, response: Response, next: NextFunction) => {
         const userRoles: UserRole = new UserRole();
         const { userId, roles } = request.body;
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         userRoles.setBossId = deToken.userId;
         userRoles.setUserId = userId;
@@ -542,7 +542,7 @@ export class UserRoute extends BaseRoute {
 
     private getEmployeesPondRole = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         user.userServices.models.findAll({
             include: [
@@ -582,7 +582,7 @@ export class UserRoute extends BaseRoute {
 
     private getAllPondAndEmployees = async (request: Request, response: Response, next: NextFunction) => {
         const user: User = new User();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         user.userServices.models.findOne({
             include: [
@@ -626,7 +626,7 @@ export class UserRoute extends BaseRoute {
     }
 
     private getEmployeesWithoutIsDelete = async (request: Request, response: Response, next: NextFunction) => {
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const user: User = new User();
         user.userServices.models.findAll({
@@ -649,7 +649,7 @@ export class UserRoute extends BaseRoute {
 
     private vertify = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         jwt.verify(token, Authentication.cert, {
             algorithms: ['RS512', 'RS256']
         }, (err, data) => {
@@ -669,7 +669,7 @@ export class UserRoute extends BaseRoute {
 
     private vertifyBoss = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         if(!token) {
             return response.status(200).json({
                 success: false,
@@ -708,7 +708,7 @@ export class UserRoute extends BaseRoute {
 
     private vertifyPondRoles = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         if(!token) {
             return response.status(200).json({
                 success: false,
@@ -760,7 +760,7 @@ export class UserRoute extends BaseRoute {
 
     private vertifyStorageRoles = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         if(!token) {
             return response.status(200).json({
                 success: false,
@@ -811,7 +811,7 @@ export class UserRoute extends BaseRoute {
 
     private vertifyRolesOfPond = async (request: Request, response: Response, next: NextFunction) => {
         const { pondUUId } = request.params;
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         if(!token) {
             return response.status(200).json({
                 success: false,

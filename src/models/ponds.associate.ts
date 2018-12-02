@@ -33,7 +33,7 @@ export function pondsToUser(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.
 
 export function pondsToUserEmployee(thatmodel: Sequeliz.Model<{}, any>, model: Sequeliz.Model<{}, any>) {
     return thatmodel.belongsToMany(model, {
-        as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+        as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
         through: 'ponduserroles',
         foreignKey: {
             name: 'pondId',

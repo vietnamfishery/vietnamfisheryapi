@@ -14,6 +14,7 @@ export class Pond extends BaseComponent {
     private status: number;
     private isFed: number;
     private isDiary: number;
+    private wasHarvests: number;
     private images: string;
     private pondLatitude: number;
     private pondLongitude: number;
@@ -72,6 +73,10 @@ export class Pond extends BaseComponent {
         this.isDiary = isDiary;
     }
 
+    public set setWasHarverts(wasHarvests: number) {
+        this.wasHarvests = wasHarvests;
+    }
+
     public set setImages(images: string) {
         this.images = images;
     }
@@ -116,6 +121,7 @@ export class Pond extends BaseComponent {
         status: number,
         isFed: number,
         isDiary: number,
+        wasHarvests: number,
         images: string,
         pondLatitude?: number,
         pondLongitude?: number,
@@ -135,6 +141,7 @@ export class Pond extends BaseComponent {
         this.setStatus = status || status === 0 ? status * 1 : null;
         this.setIsFed = isFed;
         this.setIsDiary = isDiary;
+        this.setWasHarverts = wasHarvests;
         this.setImages = images;
         this.setPondLatitude = pondLatitude;
         this.setPondLongitude = pondLongitude;
@@ -184,6 +191,10 @@ export class Pond extends BaseComponent {
 
     public get getIsDiary(): number {
         return this.isFed;
+    }
+
+    public get getWasHarverts(): number {
+        return this.wasHarvests;
     }
 
     public get getImages(): number {

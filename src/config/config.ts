@@ -44,7 +44,8 @@ export const configDB: Options = {
     operatorsAliases: false,
     pool,
     replication,
-    timezone
+    timezone,
+    port: 3306
 };
 
 /**

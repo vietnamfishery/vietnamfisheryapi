@@ -57,7 +57,7 @@ export class StorageRoute extends BaseRoute {
         const { couponId, itemArr } = request.body;
 
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -303,7 +303,7 @@ export class StorageRoute extends BaseRoute {
         const { type } = request.headers;
 
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy === null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -392,7 +392,7 @@ export class StorageRoute extends BaseRoute {
     private getCoupon = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonId } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

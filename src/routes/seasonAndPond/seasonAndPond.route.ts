@@ -60,7 +60,7 @@ export class SeasonAndPondRoute extends BaseRoute {
     private addSeasonAndPond = async (request: Request, response: Response) => {
         const { seasonId, pondIdArr: pondArr } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ponds: any = await this.pondsServices.models.findAll({

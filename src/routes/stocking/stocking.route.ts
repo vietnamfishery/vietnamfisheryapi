@@ -111,14 +111,8 @@ export class StockingRoute extends BaseRoute {
                 if (onUpdate) {
                     const stockingDetail: StockingDetail = new StockingDetail();
                     stockingDetail.setStockingdetails(uuidv4(), breedId, st.stockingId, stockingQuantity, phFirst, salinityFirst);
-                    stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
+                    const std: any = await stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
                         transaction: t
-                    }).then(res => {
-                        response.status(200).json({
-                            success: true,
-                            message: 'Thêm thành công.'
-                        });
-                        t.commit();
                     }).catch(e => {
                         response.status(200).json({
                             success: false,
@@ -126,6 +120,32 @@ export class StockingRoute extends BaseRoute {
                         });
                         t.rollback();
                     });
+                    if(!!Object.keys(std).length) {
+                        this.pondsServices.models.update({
+                            status: 1
+                        }, {
+                            where: {
+                                pondId
+                            },
+                            transaction: t
+                        }).then(res => {
+                            if(!!Object.keys(res).length) {
+                                t.commit();
+                                return response.status(200).json({
+                                    success: true,
+                                    message: 'Thêm nhật ký thả nuôi thành công.'
+                                });
+                            } else {
+                                t.rollback();
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Không thể thêm nhật ký thả nuôi.'
+                                });
+                            }
+                        }).catch(e => {
+                            t.rollback();
+                        });
+                    }
                 }
             }
         }).catch(e => {
@@ -138,7 +158,7 @@ export class StockingRoute extends BaseRoute {
 
     private getStocking = async (request: Request, response: Response, next: NextFunction) => {
         const { seasonId, ownerId } = request.body;
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         this.stockingServices.models.findAll(({
             include: [
@@ -163,7 +183,7 @@ export class StockingRoute extends BaseRoute {
                             include: [
                                 {
                                     model: this.userServives.models,
-                                    as: ActionAssociateDatabase.POND_2_EMPLOYEE,
+                                    as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
                                     required: false,
                                     attributes: []
                                 },

@@ -58,7 +58,7 @@ export class UsingFoodRoute extends BaseRoute {
     private addUsingFood = async (request: Request, response: Response, next: NextFunction) => {
         const { pondId, takeCareName, massOfFishery, feedingRate, storageId, quantity } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
@@ -160,7 +160,7 @@ export class UsingFoodRoute extends BaseRoute {
     private getUsingFood = async (request: Request, response: Response, next: NextFunction) => {
         const { pondId, seasonId, options } = request.body;
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;

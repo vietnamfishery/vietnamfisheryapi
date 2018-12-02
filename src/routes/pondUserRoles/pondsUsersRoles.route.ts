@@ -80,7 +80,7 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private getUserManageWithPond = async (request: Request, response: Response, next: NextFunction) => {
         // start authozation info
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
@@ -142,7 +142,7 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private updateRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const { pondUserRolesId, pondId } = request.body;
         if(!pondId && !pondUserRolesId) {
             response.status(200).json({
@@ -179,7 +179,7 @@ export class PondUserRolesRoute extends BaseRoute {
 
     private deleteRoles = async (request: Request, response: Response, next: NextFunction) => {
         const pondUserRole: PondUserRole = new PondUserRole();
-        const token: string = request.headers.authorization;
+        const token: string = request.headers.authorization.split(' ')[1];
         const { pondUserRolesId } = request.body;
         pondUserRole.setIsDeleted = 1;
         pondUserRole.pondUserRolesServices.models.destroy({
