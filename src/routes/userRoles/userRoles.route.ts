@@ -229,17 +229,10 @@ export class UserRoleRoute extends BaseRoute {
             fields: ['roles', 'isDeleted'],
             returning: true
         }).then((res: any) => {
-            if(res) {
-                response.status(200).json({
-                    success: true,
-                    message: 'Thao tác thành công.'
-                });
-            } else {
-                response.status(200).json({
-                    success: false,
-                    message: 'Thất bại, thử lại sau.'
-                });
-            }
+            response.status(200).json({
+                success: true,
+                message: 'Thao tác thành công.'
+            });
         }).catch(e => {
             response.status(200).json({
                 success: false,

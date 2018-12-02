@@ -3,6 +3,7 @@ import { logger, MaterialServives, CouponServives, StoregeServices, BoughtBreedD
 import { BaseRoute } from '../BaseRoute';
 import { Authentication } from '../../helpers/login-helpers';
 import { ActionAssociateDatabase } from '../../common';
+import { DateUtil } from '../../lib';
 
 /**
  * @api {get} /costs Cost Request customer object
@@ -45,6 +46,7 @@ export class CostsRoute extends BaseRoute {
 
         // add route
         this.router.get('/gets/:seasonId', this.getAllPrices);
+        this.router.get('/get/test', this.test);
 
         // log endpoint
         this.logEndpoints(this.router, CostsRoute.path);
@@ -162,5 +164,52 @@ export class CostsRoute extends BaseRoute {
                 results: []
             });
         }
+    }
+
+    private test = async (request: Request, response: Response, next: NextFunction) => {
+        // start authozation info
+        const token: string = request.headers.authorization.split(' ')[1];
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
+
+        this.couponServives.models.findAll({
+            attributes: [
+                [this.sequeliz.literal('materials.quantity*materials.unitPrice'), 'totalMaterial'],
+                [this.sequeliz.literal('breeds.quantity*breeds.unitPrice'), 'totalBreed'],
+                [this.sequeliz.fn('YEAR', this.sequeliz.col('createdDate')), 'year'],
+                'createdDate'
+            ],
+            include: [
+                {
+                    model: this.materialServives.models,
+                    as: ActionAssociateDatabase.COUPON_2_MATERIAL,
+                    required: false
+                },
+                {
+                    model: this.boughtBreedDetailsServives.models,
+                    as: ActionAssociateDatabase.COUPON_2_BOUGHT_BREED_DETAILS,
+                    required: false
+                }
+            ],
+            where: {
+                userId
+            },
+            group: ['createdDate']
+        }).then(res => {
+            response.status(200).json({
+                success: true,
+                message: '',
+                results: res
+            });
+        }).catch(e => {
+            e;
+            response.status(200).json({
+                success: false,
+                message: '',
+                e
+            });
+        });
     }
 }
