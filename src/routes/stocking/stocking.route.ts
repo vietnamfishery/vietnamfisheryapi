@@ -5,7 +5,7 @@ import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Transaction } from 'sequelize';
+import { Transaction, FindOptions, UpdateOptions } from 'sequelize';
 
 /**
  * @api {get} /ping Ping Request customer object
@@ -268,31 +268,60 @@ export class StockingRoute extends BaseRoute {
     }
 
     private updateStockingDetailsByStockingDetailsUUId = async (request: Request, response: Response, next: NextFunction) => {
-        const { stockingDetailUUId, breedId, stockingQuantity } = request.body;
-        this.stockingDetailsServices.models.update({
-            breedId, stockingQuantity
-        }, {
+        const { stockingDetailUUId, breedId, stockingQuantity, oldValue } = request.body;
+        let onUpdate: any = {};
+        if(stockingQuantity >=  oldValue) {
+            onUpdate = {
+                totalQuantity: this.sequeliz.literal(`totalQuantity - ${ stockingQuantity - oldValue }`)
+            };
+        } else {
+            onUpdate = {
+                totalQuantity: this.sequeliz.literal(`totalQuantity + ${ oldValue - stockingQuantity }`)
+            };
+        }
+        this.breedServives.models.update(onUpdate, {
             where: {
-                stockingDetailUUId
-            },
-            returning: true
-        }).then(res => {
-            if (!res.length) {
+                breedId
+            }
+        }).then(ok => {
+            this.stockingDetailsServices.models.update({
+                stockingQuantity
+            }, {
+                where: {
+                    stockingDetailUUId
+                },
+                returning: true
+            }).then(res => {
+                if (!res.length) {
+                    response.status(200).json({
+                        success: false,
+                        message: 'Thất bại, vui lòng thử lại sau.'
+                    });
+                } else {
+                    response.status(200).json({
+                        success: true,
+                        message: 'Cập nhật thành công!'
+                    });
+                }
+            }).catch(e => {
                 response.status(200).json({
                     success: false,
-                    message: 'Thất bại, vui lòng thử lại sau.'
+                    message: 'Có lỗi xảy ra.'
+                });
+            });
+        }).catch(e => {
+            e;
+            if(e.message.includes('FailQuantityBreed')) {
+                response.status(200).json({
+                    success: false,
+                    message: 'Số lượng không phù hợp, vui lòng kiểm tra lại!'
                 });
             } else {
                 response.status(200).json({
-                    success: true,
-                    message: 'Cập nhật thành công!'
+                    success: false,
+                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau!'
                 });
             }
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Có lỗi xảy ra.'
-            });
         });
     }
 }

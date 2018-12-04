@@ -101,8 +101,8 @@ export enum ActionAssociateDatabase {
     COST_2_POND_PREPARE = 'costs',
 
     COUPON_2_MATERIAL = 'materials',
-    COUPON_2_BOUGHT_BREED_DETAILS = 'breeds',
-    COUPON_2_SEASON = 'season',
+    COUPON_2_BOUGHT_BREED_DETAILS = 'boughtBreedDetails', // ✔
+    COUPON_2_SEASON = 'season', // ✔
     COUPON_2_USER = 'user',
 
     DIED_FISHERY_2_SEASON_AND_POND = 'seasonAndPond',
@@ -118,7 +118,7 @@ export enum ActionAssociateDatabase {
 
     MATERIAL_2_COUPON = 'coupon',
     MATERIAL_2_POND_PREPARE = 'materialToPondPrepare',
-    MATERIAL_2_STORAGE = 'storage',
+    MATERIAL_2_STORAGE = 'storage', // ✔
     MATERIAL_2_USING_FOOD = 'usingFoods',
     MATERIAL_2_USING_VETERINARY = 'usingVeterinay',
 
