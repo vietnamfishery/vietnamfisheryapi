@@ -43,11 +43,11 @@ export class StorageRoute extends BaseRoute {
         logger.info('[StorageRoute] Creating storage route.');
 
         // add route
-        this.router.post('/add', Authentication.isLogin, this.addStorage);
         this.router.get('/gets', Authentication.isLogin, this.getStorages);
-        this.router.get('/get/:storageId', Authentication.isLogin, this.getStorageById);
+        this.router.get('/gets/:storageId', Authentication.isLogin, this.getStorageById);
+        this.router.get('/coupons/gets/:seasonId', Authentication.isLogin, this.getCoupon);
+        this.router.post('/add', Authentication.isLogin, this.addStorage);
         this.router.put('/update', Authentication.isLogin, this.updateStorage);
-        this.router.post('/coupons/gets', Authentication.isLogin, this.getCoupon);
 
         // log endpoints
         this.logEndpoints(this.router, StorageRoute.path);
@@ -390,13 +390,7 @@ export class StorageRoute extends BaseRoute {
      * @method POST
      */
     private getCoupon = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId } = request.body;
-        // start authozation info
-        const token: string = request.headers.authorization.split(' ')[1];
-        const deToken: any = Authentication.detoken(token);
-        const { userId } = deToken;
-        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
-        const isBoss: boolean = userId === ownerId;
+        const { seasonId } = request.params;
         const query: FindOptions<any> = {
             include: [
                 {
@@ -421,76 +415,11 @@ export class StorageRoute extends BaseRoute {
                         }
                     ]
                 }
-            ]
+            ],
+            where: {
+                seasonId
+            }
         };
-        const withSeason: Array<{}> = [];
-        if (seasonId) {
-            withSeason.push({
-                model: this.userServives.models,
-                as: ActionAssociateDatabase.COUPON_2_USER,
-                include: [
-                    {
-                        model: this.seasonServices.models,
-                        as: ActionAssociateDatabase.USER_2_SEASON,
-                        where: {
-                            seasonId,
-                            userId: ownerId
-                        }
-                    },
-                    {
-                        model: this.userRolesServices.models,
-                        as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
-                        where: {
-                            [this.sequeliz.Op.or]: [
-                                {
-                                    bossId: userId
-                                },
-                                {
-                                    userId,
-                                    roles: 2
-                                }
-                            ]
-                        }
-                    }
-                ],
-                attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
-            });
-        } else {
-            withSeason.push({
-                model: this.userServives.models,
-                as: ActionAssociateDatabase.COUPON_2_USER,
-                include: [
-                    {
-                        model: this.seasonServices.models,
-                        as: ActionAssociateDatabase.USER_2_SEASON,
-                        where: {
-                            userId: ownerId,
-                            status: 0
-                        }
-                    },
-                    {
-                        model: this.userRolesServices.models,
-                        as: ActionAssociateDatabase.USER_2_ROLES_GET_EMPLOYEES,
-                        where: {
-                            [this.sequeliz.Op.or]: [
-                                {
-                                    bossId: userId
-                                },
-                                {
-                                    userId,
-                                    roles: 2
-                                }
-                            ]
-                        }
-                    }
-                ],
-                attributes: ['userId', 'userUUId', 'lastname', 'firstname', 'username', 'createdDate', 'createdBy']
-            });
-        }
-        query.include = [
-            ...query.include,
-            ...withSeason
-        ];
         this.couponServives.models.findAll(query).then(res => {
             if (!res.length) {
                 return response.status(200).json({

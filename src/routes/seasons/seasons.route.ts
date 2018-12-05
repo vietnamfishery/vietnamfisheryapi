@@ -79,8 +79,8 @@ export class SeasonRoute extends BaseRoute {
 
             const wasHarvest: any = await this.pondsServices.models.findAll({
                 where: {
-                    wasHarvests: 0,
-                    userId
+                    userId,
+                    status: 1
                 }
             }).catch(e => {
                 response.status(200).json({
@@ -97,17 +97,6 @@ export class SeasonRoute extends BaseRoute {
                 });
             }
             this.sequeliz.transaction().then(async (t: Transaction) => {
-                const resetHarvest: any = await this.pondsServices.models.update({
-                    wasHarvests: 0
-                }, {
-                        where: {
-                            userId,
-                            wasHarvests: 1
-                        },
-                        transaction: t
-                    }).catch(e => {
-                        return t.rollback();
-                    });
                 const resetStatus: any = await this.pondsServices.models.update({
                     status: 0,
                     isFed: 0,

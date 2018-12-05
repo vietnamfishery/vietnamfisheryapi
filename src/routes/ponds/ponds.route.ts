@@ -96,7 +96,7 @@ export class PondRoute extends BaseRoute {
                 if (request.files) {
                     GoogleDrive.upload(request, response, next).then((data: any) => {
                         if (data.fileId) {
-                            pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                            pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                             pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                                 response.status(200).json({
                                     success: true,
@@ -116,7 +116,7 @@ export class PondRoute extends BaseRoute {
                         }
                     });
                 } else {
-                    pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                    pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                     pond.pondsServices.models.create(pond).then((pond$: Pond) => {
                         response.status(200).json({
                             success: true,
@@ -628,7 +628,7 @@ export class PondRoute extends BaseRoute {
                 message: 'Dừng lại! Truy cập là trái phép.'
             });
         }
-        const { pondUUId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, wasHarvests, pondLatitude, pondLongitude, status, isFed, isDiary } = request.body;
+        const { pondUUId, pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status, isFed, isDiary } = request.body;
         if (!pondUUId) {
             response.status(200).json({
                 success: false,
@@ -638,7 +638,7 @@ export class PondRoute extends BaseRoute {
             if (request.files) {
                 GoogleDrive.upload(request, response, next).then((data: any) => {
                     if (data.fileId) {
-                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, wasHarvests, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                        pond.setPond(null, uuidv4(), deToken.userId, pondName, pondArea, pondDepth, createCost, pondCreatedDate, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, data.fileId, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                         pond.pondsServices.models.update({
                             pondName, pondCreatedDate, pondArea, pondDepth, createCost, images:
                                 data.fileId, pondLatitude, pondLongitude, status, isFed, isDiary

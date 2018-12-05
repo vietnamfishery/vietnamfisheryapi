@@ -443,7 +443,7 @@ export class PondPrepareRoute extends BaseRoute {
         if (!pondPrepareId) {
             return this.sequeliz.transaction().then(async (t: Transaction) => {
                 const pond: Pond = new Pond();
-                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, DateUtil.getUTCDateTime() as any, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
+                pond.setPond(null, uuidv4(), ownerId, pondName, pondArea, pondDepth, createCost, DateUtil.getUTCDateTime() as any, status, status === 1 ? 1 : 0, status === 1 ? 1 : 0, defaultImage.pondImage, pondLatitude !== '' ? pondLatitude : undefined, pondLongitude !== '' ? pondLongitude : undefined);
                 const p: any = await this.pondsServices.models.create(pond, {
                     transaction: t
                 }).catch(e => {

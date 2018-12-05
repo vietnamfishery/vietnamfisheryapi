@@ -52,11 +52,6 @@ export const pondOptions: any = _.merge({
             allowNull: true,
             defaultValue: 0
         },
-        wasHarvests: {
-            type: Sequelize.INTEGER(1),
-            allowNull: true,
-            defaultValue: 0
-        },
         images: {
             type: Sequelize.TEXT({ length: '1000' }),
             allowNull: true
