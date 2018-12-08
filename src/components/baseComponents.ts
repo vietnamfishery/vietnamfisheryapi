@@ -1,27 +1,23 @@
 import { actionUserServices, ActionServer, IOptionQuery, ISearchOptions } from '../common';
 import { Promise } from '../lib';
 import { BaseServices } from '../services';
+import { FindOptions } from 'sequelize';
 
 export class BaseComponent {
     protected services: BaseServices;
     protected primary: object;
     protected foreignKey: any;
-    public constructor() {}
+    public constructor() { }
 
-    protected createQuery(options: ISearchOptions) {
-        switch(options.method) {
-            case ActionServer.GET:
-                const offset: any = options.pageIndex ? Number(options.pageIndex) - 1 : null;
-                const limit: any = options.pageSizes ? Number(options.pageSizes) : null;
-                const order: any[] = options.orderBy && options.orderType ? [
-                    [options.orderBy,options.orderType]
-                ] : options.orderBy && !options.orderType ? [
-                    [options.orderBy]
-                ] : null;
-                return { ...offset, ...limit, ...order };
-            default:
-                return {};
-        }
+    protected criteriaQuery(options: ISearchOptions) {
+        const offset: any = options.pageIndex ? Number(options.pageIndex) - 1 : null;
+        const limit: any = options.pageSizes ? Number(options.pageSizes) : null;
+        // const order: any[] = options.orderBy && options.orderType ? [
+        //     [options.orderBy, options.orderType]
+        // ] : options.orderBy && !options.orderType ? [
+        //     [options.orderBy]
+        // ] : null;
+        return { ...offset, ...limit };
     }
 
     /**
@@ -31,9 +27,9 @@ export class BaseComponent {
     public getFields(obj?: any): string[] {
         const that: any = this;
         const object: any = {};
-        for(const key in that) {
-            if(that[key] !== null && that[key] !== undefined && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^ge[t].+$/) || that[key] === 0) {
-                if(that[key] || that[key] === 0) {
+        for (const key in that) {
+            if (that[key] !== null && that[key] !== undefined && typeof that[key] !== 'object' && typeof that[key] !== 'function' && !key.match(/^ge[t].+$/) || that[key] === 0) {
+                if (that[key] || that[key] === 0) {
                     object[key] = that[key];
                 }
             }
@@ -74,18 +70,23 @@ export class BaseComponent {
         });
     }
 
-    gets(options: ISearchOptions, criteria: any): Promise<any> {
-        const gotOptions = this.createQuery(options);
+    gets(condition: FindOptions<any>, options?: ISearchOptions): Promise<any> {
+        const gotOptions = this.criteriaQuery(options);
         return new Promise((resolve, reject) => {
-            this.services.getAll(gotOptions, criteria).then(res => {
+            this.services.getAll({
+                ...condition,
+                ...gotOptions
+            }).then(res => {
                 resolve(res);
+            }).catch(e => {
+                reject(e);
             });
         });
     }
 
     getById(id: number, userId?: number): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.services.getById(id,userId).then(res => {
+            this.services.getById(id, userId).then(res => {
                 resolve(res);
             });
         });

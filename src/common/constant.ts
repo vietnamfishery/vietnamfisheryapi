@@ -13,6 +13,8 @@ export enum Dialect {
     mssql = 'mssql'
 }
 
+export const isUUId4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+
 export const databaseName: string = 'fisheriesdatabase';
 
 export enum environment {
@@ -63,7 +65,6 @@ export interface ISearchOptions {
     between?: string[];
     count?: string;
     userId?: string;
-    method: string;
 }
 
 export enum ActionServer {

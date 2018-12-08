@@ -196,6 +196,7 @@ export class PondRoute extends BaseRoute {
                 {
                     model: this.seasonServices.models,
                     as: ActionAssociateDatabase.POND_2_SEASON,
+                    required: (!!seasonUUId || !!seasonId),
                     where: {
                         userId: ownerId,
                         status: 0

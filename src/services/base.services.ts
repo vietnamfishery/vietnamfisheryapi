@@ -29,17 +29,21 @@ export abstract class BaseServices {
         });
     }
 
-    public getAll(query: any, options?: any): Promise<any[]> {
+    public getAll(query: Sequeliz.FindOptions<any>): Promise<any[]> {
         if(query) {
             return new Promise((resolve, reject) => {
                 this.models.findAll(this.getQuery(query)).then((obj: any[]) => {
                     resolve(obj);
+                }).catch(e => {
+                    reject(e);
                 });
             });
         } else {
             return new Promise((resolve, reject) => {
                 this.models.findAll().then((obj: any[]) => {
                     resolve(obj);
+                }).catch(e => {
+                    reject(e);
                 });
             });
         }

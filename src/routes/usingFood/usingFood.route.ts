@@ -23,6 +23,7 @@ export class UsingFoodRoute extends BaseRoute {
     private seasonServices: SeasonServices = new SeasonServices();
     private usingFoodsServices: UsingFoodsServices = new UsingFoodsServices();
     private storegeServices: StoregeServices = new StoregeServices();
+    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class UsingFoodRoute
      * @constructor
@@ -130,12 +131,31 @@ export class UsingFoodRoute extends BaseRoute {
                         });
                         t.rollback();
                     }).then(res => {
-                        response.status(200).json({
-                            success: true,
-                            message: 'Thêm thành công.',
-                            res
+                        this.pondsServices.models.update({
+                            isFed: 1
+                        }, {
+                            where: {
+                                pondId
+                            },
+                            transaction: t
+                        }).then(res$ => {
+                            if(!res$) {
+                                t.rollback();
+                                response.status(200).json({
+                                    success: false,
+                                    message: 'Thất bại.'
+                                });
+                            } else {
+                                response.status(200).json({
+                                    success: true,
+                                    message: 'Thêm thành công.',
+                                    res
+                                });
+                                t.commit();
+                            }
+                        }).catch(e => {
+                            t.rollback();
                         });
-                        t.commit();
                     });
                 }
             } else {

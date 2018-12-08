@@ -5,7 +5,7 @@ import { BaseRoute } from '../BaseRoute';
 import { ActionAssociateDatabase } from '../../common';
 import * as uuidv4 from 'uuid/v4';
 import { Authentication } from '../../helpers/login-helpers';
-import { Transaction } from 'sequelize';
+import { Transaction, FindOptions } from 'sequelize';
 import { addSeasonSchema, updateSeasonsSchema } from '../../schemas';
 
 /**
@@ -45,9 +45,7 @@ export class SeasonRoute extends BaseRoute {
 
         // add route
         this.router.get('/gets', Authentication.isLogin, this.getSeasons);
-        this.router.get('/get/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
-        this.router.get('/gets/present', Authentication.isLogin, this.getPresentSeason);
-        this.router.post('/get', Authentication.isLogin, this.getSeasonById);
+        this.router.get('/gets/:seasonUUId', Authentication.isLogin, this.getSeasonByUUId);
         this.router.post('/add', Authentication.isLogin, Authentication.isBoss, this.addSeason);
         this.router.put('/update', Authentication.isLogin, Authentication.isBoss, this.updateSeason);
 
@@ -162,6 +160,7 @@ export class SeasonRoute extends BaseRoute {
      * chức năng của admin
      */
     private getSeasons = async (request: Request, response: Response, next: NextFunction) => {
+        const { present } = request.query;
         // start authozation info
         const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
@@ -169,11 +168,23 @@ export class SeasonRoute extends BaseRoute {
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
 
-        this.seasonServices.models.findAll({
+        const query: FindOptions<any> = {
             where: {
                 userId: isBoss ? userId : ownerId
-            }
-        }).then(ss => {
+            },
+            order: [
+                ['createdDate', 'DESC']
+            ]
+        };
+
+        if(!!present) {
+            query.where = {
+                ...query.where,
+                status: 0
+            };
+        }
+
+        this.seasonServices.models.findAll(query).then(ss => {
             if (ss) {
                 response.status(200).json({
                     success: true,
@@ -188,6 +199,7 @@ export class SeasonRoute extends BaseRoute {
                 });
             }
         }).catch(e => {
+            e;
             response.status(200).json({
                 success: false,
                 message: 'Đã có lỗi xãy ra, xin vui lòng thử lại!'
@@ -290,47 +302,47 @@ export class SeasonRoute extends BaseRoute {
         });
     }
 
-    private getSeasonById = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonId } = request.body;
-        this.seasonServices.models.findById(seasonId).then((res: Season) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                season: res
-            });
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
-            });
-        });
-    }
+    // private getSeasonById = async (request: Request, response: Response, next: NextFunction) => {
+    //     const { seasonId } = request.body;
+    //     this.seasonServices.models.findById(seasonId).then((res: Season) => {
+    //         response.status(200).json({
+    //             success: true,
+    //             message: '',
+    //             season: res
+    //         });
+    //     }).catch(e => {
+    //         response.status(200).json({
+    //             success: false,
+    //             message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+    //         });
+    //     });
+    // }
 
-    private getPresentSeason = async (request: Request, response: Response, next: NextFunction) => {
-        const { ownerid } = request.headers;
-        this.seasonServices.models.findOne({
-            where: {
-                userId: ownerid,
-                status: 0
-            }
-        }).then((res: any) => {
-            if (res) {
-                response.status(200).json({
-                    success: true,
-                    message: '',
-                    season: res.dataValues
-                });
-            } else {
-                response.status(200).json({
-                    success: false,
-                    message: 'Bạn không có vụ nào được kích hoạt, vui lòng kích hoạt một vụ mùa trong hệ thống.'
-                });
-            }
-        }).catch(e => {
-            response.status(200).json({
-                success: false,
-                message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
-            });
-        });
-    }
+    // private getPresentSeason = async (request: Request, response: Response, next: NextFunction) => {
+    //     const { ownerid } = request.headers;
+    //     this.seasonServices.models.findOne({
+    //         where: {
+    //             userId: ownerid,
+    //             status: 0
+    //         }
+    //     }).then((res: any) => {
+    //         if (res) {
+    //             response.status(200).json({
+    //                 success: true,
+    //                 message: '',
+    //                 season: res.dataValues
+    //             });
+    //         } else {
+    //             response.status(200).json({
+    //                 success: false,
+    //                 message: 'Bạn không có vụ nào được kích hoạt, vui lòng kích hoạt một vụ mùa trong hệ thống.'
+    //             });
+    //         }
+    //     }).catch(e => {
+    //         response.status(200).json({
+    //             success: false,
+    //             message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.'
+    //         });
+    //     });
+    // }
 }

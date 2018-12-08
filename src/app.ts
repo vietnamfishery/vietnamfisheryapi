@@ -71,8 +71,6 @@ export class ServerExpress {
         this.server = createServer(this.app);
         // this.server = createServer(options,this.app);
         // Add socket server
-        this.io = SocketIO(this.server);
-        new BaseSocketServer(this.io);
         // Google Drive API
         new GoogleDrive();
         // configure application
@@ -83,6 +81,8 @@ export class ServerExpress {
         this.handleErr();
         // connect db
         DBHelper.getDatabaseConnection();
+        this.io = SocketIO(this.server);
+        new BaseSocketServer(this.io);
     }
 
     /**

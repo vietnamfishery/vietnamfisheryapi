@@ -11,7 +11,7 @@ export abstract class BaseRoute {
      * @class BaseRoute
      * @constructor
      */
-    public static path = '/api';
+    public static path = '/api/v1';
     public static countEndpoints: number = 0;
     protected router: Router = Router();
     protected sequeliz: Sequelize = DBHelper.sequelize;
