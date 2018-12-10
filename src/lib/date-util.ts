@@ -85,7 +85,7 @@ export class DateUtil {
      * @param {String} newFormat    The new format pattern to be used
      * @return {String} Return the new formatted date
      */
-    public static reformatDate(str: moment.MomentInput, format: moment.MomentFormatSpecification, newFormat: string): string {
+    public static refFormatDate(str: moment.MomentInput, format: moment.MomentFormatSpecification, newFormat: string): string {
         const date: Date = this.parse(str, format);
         return DateUtil.formatDate(date, newFormat);
     }

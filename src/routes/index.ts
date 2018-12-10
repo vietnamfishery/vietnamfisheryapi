@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import * as httpStatusCode from 'http-status-codes';
-import { colorCli, APIVersion } from '../config';
+import { colorCli } from '../config';
 
 import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';

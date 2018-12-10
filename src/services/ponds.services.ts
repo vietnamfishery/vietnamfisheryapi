@@ -6,7 +6,7 @@ import { ActionAssociateDatabase } from '../common';
 import { Promise } from '../lib';
 import { Sequelize, Transaction } from 'sequelize';
 import DBHelper from '../helpers/db-helpers';
-import { UserRole, PondUserRole, Pond } from '../components';
+import { UserRole, PondUserRole } from '../components';
 
 export class PondsServices extends BaseServices {
     protected static optionsModel: IOptionsModelDB = pondOptions;

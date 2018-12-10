@@ -12,8 +12,4 @@ export class BaseSocketServer {
             });
         });
     }
-
-    protected getSocketConnect = (): SocketIO.Socket => {
-        return this.socketConnection;
-    }
 }

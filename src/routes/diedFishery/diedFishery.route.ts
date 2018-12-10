@@ -69,24 +69,32 @@ export class DiedFisheryRoute extends BaseRoute {
             },
             attributes: ['seasonAndPondId']
         }).catch(e => {
+            e;
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
         });
-        const diedFishery: DiedFishery = new DiedFishery();
-        diedFishery.setDiedfisherys(null, uuidv4(), seasonAndPond.seasonAndPondId, card, quantity, solutions, employee);
-        diedFishery.diedFisherysServives.models.create(diedFishery).then(res => {
-            response.status(200).json({
-                success: true,
-                message: 'Thêm thành công.'
+        if(!!Object.keys(seasonAndPond).length) {
+            const diedFishery: DiedFishery = new DiedFishery();
+            diedFishery.setDiedfisherys(null, uuidv4(), seasonAndPond.seasonAndPondId, card, quantity, solutions, employee);
+            diedFishery.diedFisherysServives.models.create(diedFishery).then(res => {
+                response.status(200).json({
+                    success: true,
+                    message: 'Thêm thành công.'
+                });
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
             });
-        }).catch(e => {
+        } else {
             response.status(200).json({
                 success: false,
-                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                message: 'Lỗi đường truyền!'
             });
-        });
+        }
     }
 
     private getDiedFishery = async (request: Request, response: Response, next: NextFunction) => {

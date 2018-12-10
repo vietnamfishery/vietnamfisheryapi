@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { logger, MaterialServives, CouponServives, StoregeServices, BoughtBreedDetailsServives, BreedServives, HarvestDetailsServives, HarvestsServives, SeasonAndPondServices, SeasonServices, StockingServices, StockingDetailsServices } from '../../services';
+import { logger, MaterialServives, CouponServives, StoregeServices, BoughtBreedDetailsServives, BreedServives, HarvestDetailsServives, HarvestsServives, SeasonAndPondServices, SeasonServices, StockingServices, StockingDetailsServices, PondsServices } from '../../services';
 import { BaseRoute } from '../BaseRoute';
 import { Authentication } from '../../helpers/login-helpers';
 import { ActionAssociateDatabase } from '../../common';
@@ -27,6 +27,7 @@ export class CostsRoute extends BaseRoute {
     private seasonServices: SeasonServices = new SeasonServices();
     private stockingServices: StockingServices = new StockingServices();
     private stockingDetailsServices: StockingDetailsServices = new StockingDetailsServices();
+    private pondsServices: PondsServices = new PondsServices();
     /**
      * @class CostsRoute
      * @constructor
@@ -396,6 +397,10 @@ export class CostsRoute extends BaseRoute {
                                     userId,
                                     seasonUUId
                                 }
+                            },
+                            {
+                                model: this.pondsServices.models,
+                                as: ActionAssociateDatabase.SEASON_AND_POND_2_POND
                             }
                         ]
                     }
@@ -405,15 +410,16 @@ export class CostsRoute extends BaseRoute {
             return new Promise((resolve, reject) => {
                 t.commit();
                 charts = charts.map((e: any) => {
-                    const group: any = groupBy(charts, (u: any) => {
-                        const d: Date = new Date(u.createdDate);
-                        return (d.getDate() + d.getMonth() + d.getFullYear() ? 'createdDate' : false);
-                    });
-                    const sum: number = sumBy(group.createdDate, (o: any) => {
-                        return (o.details[0].quantity * o.details[0].unitPrice);
-                    });
-                    e.dataValues[`totals`] = sum;
-                    return e.dataValues;
+                    const dL: Date = new Date(e.createdDate);
+                    const isDL: number = dL.getDate() + dL.getMonth() + dL.getFullYear();
+                    for(const e$ of charts) {
+                        const dS: Date = new Date(e$.createdDate);
+                        const isDS: number = dS.getDate() + dS.getMonth() + dS.getFullYear();
+                        if(isDL === isDS) {
+                            e.dataValues[`totals`] = e.details[0].quantity * e.details[0].unitPrice;
+                            return e.dataValues;
+                        }
+                    }
                 });
                 return resolve(charts);
                 // if(!!tables.length && !!charts.length) {

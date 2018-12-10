@@ -451,14 +451,14 @@ export class PondPrepareRoute extends BaseRoute {
                         success: false,
                         message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                     });
-                    t.rollback();
+                    return t.rollback();
                 });
                 if (!p) {
                     response.status(200).json({
                         success: false,
                         message: 'Lỗi dữ liệu đường truyền, vui lòng thử lại sau'
                     });
-                    t.rollback();
+                    return t.rollback();
                 } else {
                     const ss: any = await this.seasonServices.models.findOne({
                         where: {
@@ -467,10 +467,6 @@ export class PondPrepareRoute extends BaseRoute {
                         },
                         transaction: t
                     }).catch(e => {
-                        response.status(200).json({
-                            success: false,
-                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                        });
                         t.rollback();
                     });
                     if (!ss) {
@@ -478,35 +474,24 @@ export class PondPrepareRoute extends BaseRoute {
                             success: false,
                             message: 'Bạn không có vụ đang kích hoạt, vui lòng kích hoạt vụ mùa để tiếp tục sử dụng hệ thống.'
                         });
+                        return t.rollback();
                     } else {
                         const seasonAndPond: SeasonsAndPond = new SeasonsAndPond();
                         seasonAndPond.setSeasonsAndPond(null, ss.seasonId, p.pondId);
                         const snp: any = await seasonAndPond.seasonAndPondServices.models.create(seasonAndPond, {
                             transaction: t
                         }).catch(e => {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                            });
-                            t.rollback();
+                            return t.rollback();
                         });
                         if (!snp) {
-                            response.status(200).json({
-                                success: false,
-                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                            });
-                            t.rollback();
+                            return t.rollback();
                         } else {
                             const pondPrepare: PondPrepare = new PondPrepare();
                             pondPrepare.setPondprepare(null, uuidv4(), snp.seasonAndPondId, pondPrepareName);
                             const pp: any = await pondPrepare.pondPrepareServices.models.create(pondPrepare, {
                                 transaction: t
                             }).catch(e => {
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                                });
-                                t.rollback();
+                                return t.rollback();
                             });
                             if (pp) {
                                 const successArr: any[] = [];
@@ -523,12 +508,13 @@ export class PondPrepareRoute extends BaseRoute {
                                             transaction: t
                                         }
                                     ).catch(e => {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
-                                            e
-                                        });
-                                        t.rollback();
+                                        if(e.message.includes('FailQuantity')) {
+                                            response.status(200).json({
+                                                success: false,
+                                                message: 'Không đủ số lượng trong kho.'
+                                            });
+                                        }
+                                        return t.rollback();
                                     });
                                     if (!!str) {
                                         const pondPrepareDetail: PondPrepareDetail = new PondPrepareDetail();
@@ -539,49 +525,43 @@ export class PondPrepareRoute extends BaseRoute {
                                             response.status(200).json({
                                                 success: false,
                                                 message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
-                                                e
                                             });
-                                            t.rollback();
+                                            return t.rollback();
                                         });
                                         if (ppd) {
                                             successArr.push(1);
                                         } else {
-                                            response.status(200).json({
-                                                success: false,
-                                                message: 'Thất bại, vui lòng thử lại sau.',
-                                            });
+                                            return t.rollback();
                                         }
-                                    } else {
-                                        response.status(200).json({
-                                            success: false,
-                                            message: 'Vật phẩm không tồn tại trong kho của bạn, vui lòng thêm vật phẩm này vào kho và quay lại sau.'
-                                        });
                                     }
                                 }
                                 if (detailsOfPrepare.length === successArr.length) {
-                                    t.commit();
                                     response.status(200).json({
                                         success: true,
                                         message: 'Thêm thành công.'
                                     });
-                                } else {
-                                    t.rollback();
-                                    response.status(200).json({
-                                        success: false,
-                                        message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
-                                    });
+                                    return t.commit();
                                 }
                             } else {
-                                t.rollback();
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Đã có lỗi xảy ra, vui lòng thử lại sau.',
-                                });
+                                return t.rollback();
                             }
                         }
                     }
                 }
             });
+            // .catch(e => {
+            //     if(e.message.includes('FailQuantity')) {
+            //         return response.status(200).json({
+            //             success: false,
+            //             message: 'Không đủ số lượng trong kho.'
+            //         });
+            //     } else {
+            //         return response.status(200).json({
+            //             success: false,
+            //             message: 'Đã xảy ra lỗi vui lòng thử lại sau.',
+            //         });
+            //     }
+            // });
         }
     }
 

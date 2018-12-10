@@ -68,11 +68,19 @@ export class GrowthsRoute extends BaseRoute {
                 ['createdDate', 'DESC']
             ]
         }).then((growths) => {
-            response.status(200).json({
-                success: true,
-                message: '',
-                growths
-            });
+            if(!!growths.length) {
+                response.status(200).json({
+                    success: true,
+                    message: '',
+                    growths
+                });
+            } else {
+                response.status(200).json({
+                    success: false,
+                    message: 'Không tìm thấy thông tin tăng trưởng.',
+                    growths: []
+                });
+            }
         }).catch(e => {
             response.status(200).json({
                 success: false,

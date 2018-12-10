@@ -14,7 +14,10 @@ import * as morgan from 'morgan';
 import * as path from 'path';
 import * as fileUpload from 'express-fileupload';
 import * as SocketIO from 'socket.io';
-import { createServer, Server } from 'http';
+// import { createServer, Server } from 'http';
+import { createServer, Server } from 'https';
+import { readFileSync } from 'fs';
+
 import { GoogleDrive } from './googleAPI/drive.google';
 import DBHelper from './helpers/db-helpers';
 
@@ -24,6 +27,8 @@ import { BaseSocketServer } from './socketServer/BaseSocket';
 
 import { ApiRoutes } from './routes';
 import { logger } from './services';
+
+import { SocketBuild } from './socketServer/index';
 
 // import './services/connectionDB';
 
@@ -58,11 +63,24 @@ export class ServerExpress {
         // create expressjs application
         this.app = express();
         // create server for socket io
-        this.server = createServer(this.app);
+        // this.server = createServer(this.app);
+
+        // https config
+        const certsPath = path.join(__dirname, '../certs', 'server');
+        const caCertsPath = path.join(__dirname, '../certs', 'ca');
+        const options: any = {
+            key: readFileSync(certsPath + '/my-server.key.pem', { encoding: 'utf8'}),
+            cert: readFileSync(certsPath + '/my-server.crt.pem', { encoding: 'utf8'}),
+            ca: readFileSync(caCertsPath + '/my-root-ca.crt.pem', { encoding: 'utf8'}),
+            requestCert: false,
+            rejectUnauthorized: false
+        };
+        this.server = createServer(options,this.app);
+
         // Add socket server
         this.io = SocketIO(this.server);
         // socket client in /socket.io/socket.io.js
-        new BaseSocketServer(this.io);
+        new SocketBuild(this.io);
 
         // Google Drive API
         new GoogleDrive();
@@ -103,13 +121,13 @@ export class ServerExpress {
         } as morgan.Options));
 
         // mount urlencode parser
-        await this.app.use(bodyParser.json({
+        this.app.use(bodyParser.json({
             limit: '50mb',
         }));
 
         // mount urlencode parser
-        await this.app.use(bodyParser.urlencoded({
-            extended: false,
+        this.app.use(bodyParser.urlencoded({
+            extended: false            
         }));
 
         // mount query string parser

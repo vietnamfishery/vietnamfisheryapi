@@ -63,7 +63,7 @@ export class PondRoute extends BaseRoute {
         this.router.post('/gets/ownerSeason/WithImage', Authentication.isLogin, this.getPondByOwnerSeasonWithImage); // /** Xem xét */get ao của người dùng hiện tại có hình ảnh
         this.router.post('/gets/notEmployee', Authentication.isLogin, this.getPondWithUserNotManage); // Xem xét
         this.router.post('/gets/not/manage', Authentication.isLogin, this.getPondWithoutManager); // Xem xét
-        this.router.put('/update', Authentication.isLogin, this.updatePond); // Cập nhật [Ok]
+        this.router.put('/update', Authentication.isLogin, this.updatePondWithUUId); // Cập nhật [Ok]
 
         // log endpoints
         this.logEndpoints(this.router, PondRoute.path);
@@ -87,7 +87,7 @@ export class PondRoute extends BaseRoute {
             const token: string = request.headers.authorization.split(' ')[1];
             const deToken: any = Authentication.detoken(token);
             const { pondName, pondCreatedDate, pondArea, pondDepth, createCost, pondLatitude, pondLongitude, status } = request.body;
-            if(DateUtil.getUTCDateTime(pondCreatedDate) > DateUtil.getUTCDateTime()) {
+            if(pondCreatedDate > DateUtil.getNow()) {
                 return response.status(200).json({
                     success: false,
                     message: 'Ngày tạo ao không thể lớn hơn ngày hiện tại.'
@@ -131,6 +131,7 @@ export class PondRoute extends BaseRoute {
                 }
             }
         } else {
+            validate.error;
             response.status(200).json({
                 success: false,
                 message: 'Dữ liệu cung cấp không phù hợp, vui lòng kiếm tra và thử lại sau.'
@@ -172,61 +173,29 @@ export class PondRoute extends BaseRoute {
     }
 
     private getPonds = async (request: Request, response: Response, next: NextFunction) => {
-        const { seasonUUId, status, seasonId } = request.query;
+        const { seasonUUId, status, seasonId, all } = request.query;
         // start authozation info
         const token: string = request.headers.authorization.split(' ')[1];
         const deToken: any = Authentication.detoken(token);
         const { userId } = deToken;
         const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
         const isBoss: boolean = userId === ownerId;
-        let query: FindOptions<any> = {
-            include: [
-                {
-                    model: this.userServives.models,
-                    as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
-                    required: false,
-                    attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
-                },
-                {
-                    model: this.pondUserRolesServices.models,
-                    as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
-                    required: false,
-                    attributes: []
-                },
-                {
-                    model: this.seasonServices.models,
-                    as: ActionAssociateDatabase.POND_2_SEASON,
-                    required: (!!seasonUUId || !!seasonId),
-                    where: {
-                        userId: ownerId,
-                        status: 0
-                    },
-                    attributes: []
-                },
-                {
-                    model: this.seasonAndPondServices.models,
-                    as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
-                    required: false
-                }
-            ],
+        const seasonPresent: any = await this.seasonServices.models.findOne({
             where: {
                 [this.sequeliz.Op.or]: [
                     {
-                        userId: deToken.userId
+                        userId: ownerId,
+                        status: 0
                     },
                     {
-                        '$ponduserroles.userId$': deToken.userId
+                        userId: ownerId,
+                        status: 0
                     }
                 ]
             } as any
-        };
-        if(!!seasonUUId) {
-            if(!isBoss) {
-                return response.status(200).json({
-                    success: false,
-                    message: 'Bạn không có quyền thao tác này!'
-                });
-            }
+        });
+        let query: FindOptions<any> = {};
+        if(((seasonPresent ? !!Object.keys(seasonPresent).length : false) && (seasonPresent.seasonId === seasonId || seasonPresent.seasonUUId === seasonUUId)) || Boolean(all) === true) {
             query = {
                 include: [
                     {
@@ -244,9 +213,10 @@ export class PondRoute extends BaseRoute {
                     {
                         model: this.seasonServices.models,
                         as: ActionAssociateDatabase.POND_2_SEASON,
+                        required: (!!seasonUUId || !!seasonId),
                         where: {
-                            seasonUUId,
-                            userId: ownerId
+                            userId: ownerId,
+                            status: 0
                         },
                         attributes: []
                     },
@@ -267,21 +237,162 @@ export class PondRoute extends BaseRoute {
                     ]
                 } as any
             };
-        }
-        if(!!seasonId) {
-            if(!isBoss) {
-                return response.status(200).json({
-                    success: false,
-                    message: 'Bạn không có quyền thao tác này!'
-                });
+            if(!!seasonUUId) {
+                if(!isBoss) {
+                    return response.status(200).json({
+                        success: false,
+                        message: 'Bạn không có quyền thao tác này!'
+                    });
+                }
+                query = {
+                    include: [
+                        {
+                            model: this.userServives.models,
+                            as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
+                            required: false,
+                            attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                        },
+                        {
+                            model: this.pondUserRolesServices.models,
+                            as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                            required: false,
+                            attributes: []
+                        },
+                        {
+                            model: this.seasonServices.models,
+                            as: ActionAssociateDatabase.POND_2_SEASON,
+                            where: {
+                                seasonUUId,
+                                userId: ownerId
+                            },
+                            attributes: []
+                        },
+                        {
+                            model: this.seasonAndPondServices.models,
+                            as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                            required: false
+                        }
+                    ],
+                    where: {
+                        [this.sequeliz.Op.or]: [
+                            {
+                                userId: deToken.userId
+                            },
+                            {
+                                '$ponduserroles.userId$': deToken.userId
+                            }
+                        ]
+                    } as any
+                };
             }
+            if(!!seasonId) {
+                if(!isBoss) {
+                    return response.status(200).json({
+                        success: false,
+                        message: 'Bạn không có quyền thao tác này!'
+                    });
+                }
+                query = {
+                    include: [
+                        {
+                            model: this.userServives.models,
+                            as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
+                            required: false,
+                            attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                        },
+                        {
+                            model: this.pondUserRolesServices.models,
+                            as: ActionAssociateDatabase.POND_2_POND_USER_ROLE,
+                            required: false,
+                            attributes: []
+                        },
+                        {
+                            model: this.seasonServices.models,
+                            as: ActionAssociateDatabase.POND_2_SEASON,
+                            where: {
+                                seasonId,
+                                userId: ownerId
+                            },
+                            attributes: []
+                        },
+                        {
+                            model: this.seasonAndPondServices.models,
+                            as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                            required: false
+                        }
+                    ],
+                    where: {
+                        [this.sequeliz.Op.or]: [
+                            {
+                                userId: deToken.userId
+                            },
+                            {
+                                '$ponduserroles.userId$': deToken.userId
+                            }
+                        ]
+                    } as any
+                };
+            }
+            if(!!status) {
+                if(status.includes('notnull')) /** Ao đang nuôi + đang nâng cấp */ {
+                    const notIn: any = {
+                        status: {
+                            [this.sequeliz.Op.notIn]: [0]
+                        }
+                    };
+                    query.where = {
+                        ...query.where,
+                        ...notIn
+                    };
+                } else if(status.includes('forPrepare')) /** Ao trống + đang nâng cấp */ {
+                    const condition: any = {
+                        status: {
+                            [this.sequeliz.Op.notIn]: [1]
+                        }
+                    };
+                    query.where = {
+                        ...query.where,
+                        ... condition
+                    };
+                } else if(status.includes('forStocking')) /** Ao trống + đang nuôi */ {
+                    const condition: any = {
+                        status: {
+                            [this.sequeliz.Op.notIn]: [2]
+                        }
+                    };
+                    query.where = {
+                        ...query.where,
+                        ... condition
+                    };
+                } else /** theo status gui len */ {
+                    query.where = {
+                        ...query.where,
+                        status: status as any - 0
+                    };
+                }
+            }
+        } else {
             query = {
                 include: [
                     {
-                        model: this.userServives.models,
-                        as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
-                        required: false,
-                        attributes: ['userId', 'username', 'firstname', 'lastname', 'userUUId']
+                        model: this.seasonAndPondServices.models,
+                        as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                        include: [
+                            {
+                                model: this.seasonServices.models,
+                                as: ActionAssociateDatabase.SEASON_AND_POND_2_SEASON,
+                                where: {
+                                    [this.sequeliz.Op.or]: [
+                                        {
+                                            seasonUUId
+                                        },
+                                        {
+                                            seasonId
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
                     },
                     {
                         model: this.pondUserRolesServices.models,
@@ -290,17 +401,8 @@ export class PondRoute extends BaseRoute {
                         attributes: []
                     },
                     {
-                        model: this.seasonServices.models,
-                        as: ActionAssociateDatabase.POND_2_SEASON,
-                        where: {
-                            seasonId,
-                            userId: ownerId
-                        },
-                        attributes: []
-                    },
-                    {
-                        model: this.seasonAndPondServices.models,
-                        as: ActionAssociateDatabase.POND_2_SEASON_AND_POND,
+                        model: this.userServives.models,
+                        as: ActionAssociateDatabase.POND_2_EMPLOYEE_MAYNY_ROLES,
                         required: false
                     }
                 ],
@@ -315,44 +417,6 @@ export class PondRoute extends BaseRoute {
                     ]
                 } as any
             };
-        }
-        if(!!status) {
-            if(status.includes('notnull')) /** Ao đang nuôi + đang nâng cấp */ {
-                const notIn: any = {
-                    status: {
-                        [this.sequeliz.Op.notIn]: [0]
-                    }
-                };
-                query.where = {
-                    ...query.where,
-                    ...notIn
-                };
-            } else if(status.includes('forPrepare')) /** Ao trống + đang nâng cấp */ {
-                const condition: any = {
-                    status: {
-                        [this.sequeliz.Op.notIn]: [1]
-                    }
-                };
-                query.where = {
-                    ...query.where,
-                    ... condition
-                };
-            } else if(status.includes('forStocking')) /** Ao trống + đang nuôi */ {
-                const condition: any = {
-                    status: {
-                        [this.sequeliz.Op.notIn]: [2]
-                    }
-                };
-                query.where = {
-                    ...query.where,
-                    ... condition
-                };
-            } else /** theo status gui len */ {
-                query.where = {
-                    ...query.where,
-                    status: status as any - 0
-                };
-            }
         }
         this.pondsServices.models.findAll(query).then(async (res: any) => {
             if(!Object.keys(res).length) {
@@ -615,7 +679,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private updatePond = async (request: any, response: Response, next: NextFunction) => {
+    private updatePondWithUUId = async (request: any, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         // start authozation info
         const token: string = request.headers.authorization.split(' ')[1];
