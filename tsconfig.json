@@ -1,29 +1,36 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es5",
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "allowJs": true,
-    "typeRoots": [
-      "node_modules/@types"
-    ],
-    "lib": ["dom", "es2017"],
-    "watch": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es5",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "allowJs": true,
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "dom",
+            "es2017"
+        ],
+        "watch": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": [
+                "./*"
+            ]
+        },
+        "types": [
+            "node",
+            "lodash",
+            "express"
+        ]
     },
-    "types" : ["node", "lodash", "express"]
-  },
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
-  "files": [
-    "src/index.ts"
-  ]
+    "exclude": [
+        "node_modules",
+        "dist"
+    ],
+    "files": [
+        "src/index.ts"
+    ]
 }

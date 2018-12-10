@@ -1,6 +1,6 @@
 import { google, drive_v3 } from 'googleapis';
 import { JWT } from 'google-auth-library';
-import { folderDrive, actionUserServices } from '../common';
+import { folderDrive } from '../common';
 import { NextFunction, Request, Response } from 'express';
 import { CustomStream } from '../lib';
 import { colorCli } from '../config';
@@ -23,9 +23,9 @@ export class GoogleDrive {
         });
     }
 
-    public static upload(request: Request, response: Response, next: NextFunction): Promise<any> {
+    public static upload(request: any, response: Response, next: NextFunction): Promise<any> {
         return new Promise((resolve, reject) => {
-            const image: any = request.files.image || request.files.images;
+            const image: any = (request.files as any).image || (request.files as any).images;
             const requestBody = {
                 name: image.name,
                 parents: [folderDrive.uploadImageVNF]

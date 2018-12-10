@@ -3,7 +3,6 @@
 */
 
 import * as Promise from 'bluebird';
-
 Promise.config({
     warnings: {
         wForgottenReturn: false

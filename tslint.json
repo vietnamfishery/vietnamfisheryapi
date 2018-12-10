@@ -79,7 +79,7 @@
         ],
         "no-empty": false,
         "no-internal-module": true,
-        "no-trailing-whitespace": true,
+        "no-trailing-whitespace": false,
         "no-null-keyword": false,
         "space-before-function-paren": false,
         "arrow-parens": false,

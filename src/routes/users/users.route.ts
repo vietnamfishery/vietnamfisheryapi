@@ -285,7 +285,7 @@ export class UserRoute extends BaseRoute {
         });
     }
 
-    private updateUserProfile = async (request: Request, response: Response, next: NextFunction) => {
+    private updateUserProfile = async (request: any, response: Response, next: NextFunction) => {
         const user: User = new User();
         const token: string = request.headers.authorization.split(' ')[1];
         const decodetoken: any = Authentication.detoken(token);

@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import * as httpStatusCode from 'http-status-codes';
-import { colorCli } from '../config';
+import { colorCli, APIVersion } from '../config';
 
 import { BaseRoute } from './BaseRoute';
 import { logger } from '../services';
@@ -30,21 +30,21 @@ import { PondDiaryRoute } from './pondDiary';
 import { TakeCareRoute } from './takeCare';
 import { UsingVeterinaryRoute } from './usingVeterinary';
 import { CostsRoute } from './costs';
-
 /**
  * / route
  *
  * @class User
  */
 export class ApiRoutes extends BaseRoute {
+    public static path = '/api/v1';
     private static instance: ApiRoutes;
+
     /**
      * @class ApiRoutes
      * @constructor
      */
     private constructor () {
         super();
-        // this.get = this.get.bind(this);
         this.init();
     }
 
@@ -53,7 +53,7 @@ export class ApiRoutes extends BaseRoute {
      * @method getRouter
      * @returns {Router}
      */
-    static get router () {
+    static get router (): Router {
         if (!this.instance) {
             this.instance = new ApiRoutes();
         }
@@ -65,7 +65,6 @@ export class ApiRoutes extends BaseRoute {
      * @method init
      */
     private init () {
-        // log
         // console.log('\x1b[36m%s\x1b[0m', 'I am cyan');
         console.log(`\n${ colorCli.YELLOW }###################################################\n${ colorCli.YELLOW }##         WELCOME TO VIETNAM FISHERY API        ##\n${ colorCli.YELLOW }##             Creating api routes...            ##\n${ colorCli.YELLOW }###################################################\n`);
 
@@ -109,7 +108,7 @@ export class ApiRoutes extends BaseRoute {
      * @param res {Response} The express Response object.
      * @param next {NextFunction} Execute the next method.
      */
-    private get = async (req: Request, res: Response, next: NextFunction) => {
+    private async get (req: Request, res: Response, next: NextFunction) {
         res.status(httpStatusCode.OK).render('index');
     }
 }

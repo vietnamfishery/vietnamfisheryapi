@@ -1,0 +1,24 @@
+var shell = require('shelljs');
+var root = process.cwd() + '/';
+shell.mkdir('authKey');
+shell.mkdir('certs');
+shell.mkdir('certs/ca');
+shell.mkdir('certs/server');
+shell.mkdir('certs/tmp');
+shell.mkdir('.vscode/');
+shell.cp('key/authKey/cryptTool.js', 'authKey/cryptTool.js');
+shell.cp('key/authKey/jwtRS256.key', 'authKey/jwtRS256.key');
+shell.cp('key/authKey/jwtRS256.key.pub', 'authKey/jwtRS256.key.pub');
+shell.cp('key/certs/ca/my-root-ca.crt.pem', 'certs/ca/my-root-ca.crt.pem');
+shell.cp('key/certs/ca/my-root-ca.key.pem', 'certs/ca/my-root-ca.key.pem');
+shell.cp('key/certs/ca/my-root-ca.srl', 'certs/ca/my-root-ca.srl');
+shell.cp('key/certs/server/my-server.crt.pem', 'certs/server/my-server.crt.pem');
+shell.cp('key/certs/server/my-server.key.pem', 'certs/server/my-server.key.pem');
+shell.cp('key/certs/tmp/my-server.csr.pem', 'certs/tmp/my-server.csr.pem');
+shell.cp('key/.env', '.env');
+shell.cp('key/debug.env', 'debug.env');
+shell.cp('key/production.env', 'production.env');
+shell.cp('key/.vscode/launch.json', '.vscode/launch.json');
+shell.cp('key/.vscode/settings.json', '.vscode/settings.json');
+shell.cp('key/.vscode/tasks.json', '.vscode/tasks.json');
+

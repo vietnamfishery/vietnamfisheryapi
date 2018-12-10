@@ -23,7 +23,7 @@ export class PondsServices extends BaseServices {
         return new Promise((resolve, reject) => {
             sequeliz.transaction({autocommit: false},(t: Transaction) => {
                 return this.models.create(entity.pond);
-            }).then((pond) => {
+            }).then((pond: any) => {
                 if(pond) {
                     const pondUserRole: PondUserRole = new PondUserRole();
                     pondUserRole.setUserId = entity.userId;

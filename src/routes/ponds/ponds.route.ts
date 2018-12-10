@@ -69,7 +69,7 @@ export class PondRoute extends BaseRoute {
         this.logEndpoints(this.router, PondRoute.path);
     }
 
-    private addPond = async (request: Request, response: Response, next: NextFunction) => {
+    private addPond = async (request: any, response: Response, next: NextFunction) => {
         const validate: any = this.validator(addPondSchema);
         const dataCheck: any = {
             pondName: request.body.pondName,
@@ -615,7 +615,7 @@ export class PondRoute extends BaseRoute {
         });
     }
 
-    private updatePond = async (request: Request, response: Response, next: NextFunction) => {
+    private updatePond = async (request: any, response: Response, next: NextFunction) => {
         const pond: Pond = new Pond();
         // start authozation info
         const token: string = request.headers.authorization.split(' ')[1];

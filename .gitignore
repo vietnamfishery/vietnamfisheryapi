@@ -23,12 +23,4 @@ checkstyle-result.xml
 
 .idea
 .vs
-.vscode/
-.env
-debug.env
-production.env
-authKey/
-certs/
-key/
-*.zip
-desktop.ini
+package-lock.json

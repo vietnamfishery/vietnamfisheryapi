@@ -1,4 +1,4 @@
-import { actionUserServices, ActionServer, IOptionQuery, ISearchOptions } from '../common';
+import { ISearchOptions } from '../common';
 import { Promise } from '../lib';
 import { BaseServices } from '../services';
 import { FindOptions } from 'sequelize';

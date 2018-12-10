@@ -21,7 +21,7 @@ export class UserServives extends BaseServices {
                 return this.models.create(entity.user);
             }).catch(e => {
                 return resolve(e);
-            }).then((user) => {
+            }).then((user: any) => {
                 if(user) {
                     const userRoles: UserRole = new UserRole();
                     userRoles.setUserId = user.userId;

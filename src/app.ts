@@ -1,32 +1,31 @@
-import * as path from 'path';
 import setEnvironment from './bin/setEnvironment';
 setEnvironment();
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as createError from 'http-errors';
 import * as compression from 'compression';
-import * as session from 'express-session';
-import * as cors from 'cors';
 import * as errorHandler from 'errorhandler';
 import * as express from 'express';
+import * as cors from 'cors';
 import * as expressStatusMonitor from 'express-status-monitor';
 import * as helmet from 'helmet';
-import { readFileSync } from 'fs';
 import * as methodOverride from 'method-override';
 import * as morgan from 'morgan';
+import * as path from 'path';
+import * as fileUpload from 'express-fileupload';
 import * as SocketIO from 'socket.io';
 import { createServer, Server } from 'http';
-// import { createServer, Server } from 'https';
-import * as passport from 'passport';
-import * as fileUpload from 'express-fileupload';
+import { GoogleDrive } from './googleAPI/drive.google';
 import DBHelper from './helpers/db-helpers';
+
 // socket import
-import { BaseSocketServer } from './socketServer';
+import { BaseSocketServer } from './socketServer/BaseSocket';
+// import { PhSocket } from './socketServer/phSocket';
 
 import { ApiRoutes } from './routes';
 import { logger } from './services';
-// must be after config env
-import { GoogleDrive } from './googleAPI/drive.google';
+
+// import './services/connectionDB';
 
 /**
  * The server.
@@ -59,30 +58,25 @@ export class ServerExpress {
         // create expressjs application
         this.app = express();
         // create server for socket io
-        // const certsPath = path.join(__dirname, 'certs', 'server');
-        // const caCertsPath = path.join(__dirname, 'certs', 'ca');
-        // const options: any = {
-        //     key: readFileSync(path.join(certsPath, 'my-server.key.pem'), { encoding: 'utf8'}),
-        //     cert: readFileSync(path.join(certsPath, 'my-server.crt.pem'), { encoding: 'utf8'}),
-        //     ca: readFileSync(path.join(caCertsPath, 'my-root-ca.crt.pem'), { encoding: 'utf8'}),
-        //     requestCert: false,
-        //     rejectUnauthorized: false
-        // };
         this.server = createServer(this.app);
-        // this.server = createServer(options,this.app);
         // Add socket server
+        this.io = SocketIO(this.server);
+        // socket client in /socket.io/socket.io.js
+        new BaseSocketServer(this.io);
+
         // Google Drive API
         new GoogleDrive();
+
         // configure application
         this.config();
         // add routes
         this.routes();
-        // handle error
+
+        // handle error 404, ...etc
         this.handleErr();
-        // connect db
+
+        // using Database
         DBHelper.getDatabaseConnection();
-        this.io = SocketIO(this.server);
-        new BaseSocketServer(this.io);
     }
 
     /**
@@ -91,7 +85,9 @@ export class ServerExpress {
      * @class Server
      * @method config
      */
-    public config() {
+    public async config() {
+        this.app.use(cors());
+
         // add static paths
         this.app.use('/assets', express.static(path.join(__dirname, '../public')));
 
@@ -107,49 +103,36 @@ export class ServerExpress {
         } as morgan.Options));
 
         // mount urlencode parser
-        this.app.use(bodyParser.json({
-            limit: '50mb'
+        await this.app.use(bodyParser.json({
+            limit: '50mb',
         }));
 
         // mount urlencode parser
-        this.app.use(bodyParser.urlencoded({
-            extended: false
+        await this.app.use(bodyParser.urlencoded({
+            extended: false,
         }));
 
         // mount query string parser
         this.app.use(cookieParser());
 
-        this.app.use(session({
-            secret: 'vietnamfisherysecret',
-            resave: false,
-            saveUninitialized: false,
-            cookie: {
-              maxAge: 365 * 24 * 60 * 60 * 1000
-            }
-        }));
-
-        /**
-         * Using passport
-         */
-        this.app.use(passport.initialize());
-        this.app.use(passport.session());
-
         // mount override?
         this.app.use(helmet());
-        this.app.use(cors());
         this.app.use(compression());
         this.app.use(methodOverride());
         this.app.use(expressStatusMonitor());
-        // using file upload
-        this.app.use(fileUpload());
-        this.app.use(function(req, res, next) {
-            res.header('Access-Control-Allow-Origin', '*');
-            res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-            next();
-        });
+        this.app.use(fileUpload({
+            limits: { fileSize: 50 * 1024 * 1024 },
+        }));
+
+        // this.app.use(function (req, res, next) {
+        //     res.header('Access-Control-Allow-Origin', '*:*');
+        //     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        //     next();
+        // });
+        // this.handleErr();
     }
 
-    private handleErr() {
+    private handleErr = () => {
         // catch 404 and forward to error handler
         this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
             next(createError(404));
@@ -179,7 +162,7 @@ export class ServerExpress {
      * @method routes
      * @return void
      */
-    private routes() {
+    private routes = async () => {
         this.app.use(ApiRoutes.path, ApiRoutes.router);
     }
 }

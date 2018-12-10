@@ -1,11 +1,10 @@
 import { Sequelize } from 'sequelize';
 import * as Sequeliz from 'sequelize';
 import { configDB, colorCli } from '../config';
-import { databaseName } from '../common';
+import { databaseName } from '../config';
 import { IOptionsModelDB } from '../interfaces';
 import { ModelBuilder } from '../models/model-builder';
 import * as options from '../models/objects';
-const { dialect, operatorsAliases, pool, replication } = configDB;
 
 export default class DBHelper {
     public static sequelize: Sequelize = new Sequeliz(databaseName, null, null, {

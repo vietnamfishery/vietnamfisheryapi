@@ -1,51 +1,32 @@
-import { PoolOptions } from 'sequelize';
+export const ContentType = {
+    Gzip: 'application/gzip',
+    Json: 'application/json',
+    JsonUtf8: 'application/json; charset=utf8',
+};
 
-export const IdDataTypes: any = {
+export const apig = {
+    logLevel: 'INFO',
+    metricsEnabled: true,
+    origin: '*',
+};
+
+export const AccessExposeHeaders = 'X-Pagination-Index,X-Pagination-Size,X-Pagination-TotalCount';
+
+export interface IOptionsHttpResponse {
+    err?: any;
+    message?: any;
+    data?: any;
+    status?: number;
+    excludeStack?: any;
+    code?: string;
+    details?: any;
+}
+
+export const IdDataTypes = {
     Integer: 'Integer',
     UuidV1: 'UuidV1',
     UuidV4: 'UuidV4',
 };
-
-export enum Dialect {
-    mysql = 'mysql',
-    sqlite = 'sqlite',
-    postgres = 'postgres',
-    mssql = 'mssql'
-}
-
-export const isUUId4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
-
-export const databaseName: string = 'fisheriesdatabase';
-
-export enum environment {
-    development = 'development',
-    production = 'production'
-}
-
-export const pool: PoolOptions = {
-    acquire: 30000,
-    idle: 10000,
-    max: 5,
-    min: 0
-};
-
-export const authdb: any = {
-    host: 'localhost',
-    password: 'J%:dTva*#9c>k@L6',
-    username: 'fisherier'
-};
-
-export enum actionUserServices {
-    REGISTER = 'register',
-    ADD_CHILD = 'register-empployees',
-    LOGIN = 'login',
-    LOGOUT = 'logout',
-    UPDATEMYPROFILE = 'updateMyProfile',
-    DELETE = 'delete',
-    USERINFO = 'getUserInfo',
-    CHANGEUSERPASSWORD = 'updateUserPassword',
-    UPLOAD_IMAGE = 'uploadImage'
-}
 
 export enum folderDrive {
     uploadImageVNF = '1zh74DklADISZbcEYVix2nDDKd5wtt0-Z'
@@ -56,6 +37,8 @@ export enum defaultImage {
     pondImage = '1EVRh5NePZkOBxfKFDAD1RZ3AjHSWJ12W'
 }
 
+export const isUUId4: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+
 export interface ISearchOptions {
     pageSizes?: string;
     pageIndex?: string;
@@ -65,21 +48,6 @@ export interface ISearchOptions {
     between?: string[];
     count?: string;
     userId?: string;
-}
-
-export enum ActionServer {
-    GET = 'GET',
-    POST = 'POST',
-    PUT = 'PUT',
-    AUTH = 'authorzation',
-    INSERT = 'insert',
-    UPDATE = 'update',
-    DELETE = 'delete',
-    REGISTER = 'register',
-    SIGNIN = 'login',
-    SIGNOUT = 'logout',
-    ADD_EMPLOYEE = 'registerEmpployees',
-    UPLOAD_IMAGE = 'uploadImage'
 }
 
 /**
@@ -224,22 +192,4 @@ export enum ActionAssociateDatabase {
     USING_VETERINARY_2_TAKE_CARE = 'usingVeterinaryTakeCare',
 
     WARD_2_USER = 'wards',
-}
-
-export enum sortType {
-    ASC = 'asc',
-    DESC = 'desc'
-}
-
-export interface IOptionQuery {
-    action?: ActionServer;
-    data?: any;
-    primary?: object; // xác định thực thế chịu tác dụng của hành động
-    pagination?: {
-        offset: number,
-        limit: number
-    };
-    count?: boolean;
-    order?: Array<string | sortType>;
-    attributes?: string;
 }

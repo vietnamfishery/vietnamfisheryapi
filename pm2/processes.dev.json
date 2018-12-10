@@ -1,12 +1,13 @@
 [
-  {
-    "script": "index.js",
-    "name": "api-dev",
-    "exec_mode": "cluster",
-    "node_args": "--harmony",
-    "instances": 0,
-    "env": {
-      "NODE_ENV": "development"
+    {
+        "script": "index.js",
+        "name": "api-dev",
+        "exec_mode": "cluster",
+        "node_args": "--harmony",
+        "instances": 0,
+        "env": {
+            "NODE_ENV": "development",
+            "PORT": 7979
+        }
     }
-  }
 ]
