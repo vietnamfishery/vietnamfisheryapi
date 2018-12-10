@@ -24,7 +24,7 @@ export abstract class BaseRoute {
                 const endpoints: string = Object.keys(stack.route.methods)[0].toLocaleUpperCase();
                 console.log(`[${
                     endpoints === method.get ? colorCli.MAGENTA : endpoints === method.post ? colorCli.YELLOW : endpoints === method.put ? colorCli.CYAN : colorCli.RED
-                }${ endpoints }${ colorCli.RESET }]\thttp://${ host }:${ port }${ BaseRoute.path }${ APIVersion.v1 }${ path }${ stack.route.path }`);
+                }${ endpoints }${ colorCli.RESET }]\thttps://${ host }:${ port }${ BaseRoute.path }${ path }${ stack.route.path }`);
                 BaseRoute.countEndpoints++;
             }
             console.log('');
