@@ -49,7 +49,7 @@ export class ServerExpress {
     public io: SocketIO.Server;
 
     /**
-     * Constructor.
+     * Constructor
      *
      * @class Server
      * @constructor
