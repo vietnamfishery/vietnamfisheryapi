@@ -2,7 +2,7 @@
 set -u
 set -e
 
-FQDN='api.vietnamfishery.com'
+FQDN='vietnamfishery.tk'
 
 # make directories to work from
 mkdir -p certs/{server,ca,tmp}

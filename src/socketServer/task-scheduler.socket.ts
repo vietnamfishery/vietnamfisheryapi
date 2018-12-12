@@ -10,8 +10,9 @@ export class TaskScheduler extends BaseSocketServer {
 
     constructor(protected io: SocketIO.Server) {
         super(io);
-        const timeToUpdate: any = DateUtil.endOf(new Date(), 'dates');
-        // const timeToUpdate: any = new Date(2018,11,10,17,11,0);
+        // const timeToUpdate: any = DateUtil.endOf(new Date(2018,11,11,0,0,0), 'dates');
+        console.log();
+        const timeToUpdate: any = new Date(2018,11,11,0,0,0);
 
         schedule.scheduleJob(timeToUpdate, async () => {
             await this.pondsServices.models.update({

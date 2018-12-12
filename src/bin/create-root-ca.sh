@@ -20,7 +20,7 @@ openssl req \
   -key certs/ca/my-root-ca.key.pem \
   -days 3652 \
   -out certs/ca/my-root-ca.crt.pem \
-  -subj "//C=US\ST=Utah\L=Provo\O=ACME Signing Authority Inc\CN=api.vietnamfishery.com"
+  -subj "//C=US\ST=Utah\L=Provo\O=ACME Signing Authority Inc\CN=vietnamfishery.tk"
 
 # NOTE
 # -nodes means "no-des" which means "no passphrase"

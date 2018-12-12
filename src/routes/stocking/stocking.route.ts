@@ -56,7 +56,12 @@ export class StockingRoute extends BaseRoute {
     }
 
     private addStocking = async (request: Request, response: Response, next: NextFunction) => {
-        const { ownerId, pondId, breedId, stockingQuantity, phFirst, salinityFirst, notes, createdDate } = request.body;
+        const { pondId, breedId, stockingQuantity, phFirst, salinityFirst, notes, createdDate } = request.body;
+        const token: string = request.headers.authorization.split(' ')[1];
+        const deToken: any = Authentication.detoken(token);
+        const { userId } = deToken;
+        const ownerId: number = deToken.createdBy == null && deToken.roles.length === 0 ? deToken.userId : deToken.roles[0].bossId;
+        const isBoss: boolean = userId === ownerId;
         const seasonAndPond: any = await this.seasonAndPondServices.models.findOne({
             include: [
                 {
@@ -79,81 +84,88 @@ export class StockingRoute extends BaseRoute {
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
         });
-        this.sequeliz.transaction().then(async (t: Transaction) => {
-            const stocking: Stocking = new Stocking();
-            stocking.setStocking(null, uuidv4(), seasonAndPond.seasonAndPondId, notes, createdDate);
-            const st: any = await stocking.stockingServices.models.create(stocking, {
-                transaction: t
-            }).catch(e => {
-                response.status(200).json({
-                    success: false,
-                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
-                });
-                t.rollback();
-            });
-            if (st) {
-                const onUpdate: any = await this.breedServives.models.update(
-                    {
-                        totalQuantity: this.sequeliz.literal(`totalQuantity - ${stockingQuantity}`)
-                    },
-                    {
-                        where: {
-                            breedId // lấy ra từ form select get từ api breed, chỉ có breed của owner hiện tại
-                        }
-                    }
-                ).catch(e => {
+        if(seasonAndPond) {
+            this.sequeliz.transaction().then(async (t: Transaction) => {
+                const stocking: Stocking = new Stocking();
+                stocking.setStocking(null, uuidv4(), seasonAndPond.seasonAndPondId, notes, createdDate);
+                const st: any = await stocking.stockingServices.models.create(stocking, {
+                    transaction: t
+                }).catch(e => {
                     response.status(200).json({
                         success: false,
                         message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                     });
                     t.rollback();
                 });
-                if (onUpdate) {
-                    const stockingDetail: StockingDetail = new StockingDetail();
-                    stockingDetail.setStockingdetails(uuidv4(), breedId, st.stockingId, stockingQuantity, phFirst, salinityFirst);
-                    const std: any = await stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
-                        transaction: t
-                    }).catch(e => {
+                if (st) {
+                    const onUpdate: any = await this.breedServives.models.update(
+                        {
+                            totalQuantity: this.sequeliz.literal(`totalQuantity - ${stockingQuantity}`)
+                        },
+                        {
+                            where: {
+                                breedId // lấy ra từ form select get từ api breed, chỉ có breed của owner hiện tại
+                            }
+                        }
+                    ).catch(e => {
                         response.status(200).json({
                             success: false,
                             message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
                         });
                         t.rollback();
                     });
-                    if(!!Object.keys(std).length) {
-                        this.pondsServices.models.update({
-                            status: 1
-                        }, {
-                            where: {
-                                pondId
-                            },
+                    if (onUpdate) {
+                        const stockingDetail: StockingDetail = new StockingDetail();
+                        stockingDetail.setStockingdetails(uuidv4(), breedId, st.stockingId, stockingQuantity, phFirst, salinityFirst);
+                        const std: any = await stockingDetail.stockingDetailsServices.models.create(stockingDetail, {
                             transaction: t
-                        }).then(res => {
-                            if(!!Object.keys(res).length) {
-                                t.commit();
-                                return response.status(200).json({
-                                    success: true,
-                                    message: 'Thêm nhật ký thả nuôi thành công.'
-                                });
-                            } else {
-                                t.rollback();
-                                response.status(200).json({
-                                    success: false,
-                                    message: 'Không thể thêm nhật ký thả nuôi.'
-                                });
-                            }
                         }).catch(e => {
+                            response.status(200).json({
+                                success: false,
+                                message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                            });
                             t.rollback();
                         });
+                        if(!!Object.keys(std).length) {
+                            this.pondsServices.models.update({
+                                status: 1
+                            }, {
+                                where: {
+                                    pondId
+                                },
+                                transaction: t
+                            }).then(res => {
+                                if(!!Object.keys(res).length) {
+                                    t.commit();
+                                    return response.status(200).json({
+                                        success: true,
+                                        message: 'Thêm nhật ký thả nuôi thành công.'
+                                    });
+                                } else {
+                                    t.rollback();
+                                    response.status(200).json({
+                                        success: false,
+                                        message: 'Không thể thêm nhật ký thả nuôi.'
+                                    });
+                                }
+                            }).catch(e => {
+                                t.rollback();
+                            });
+                        }
                     }
                 }
-            }
-        }).catch(e => {
+            }).catch(e => {
+                response.status(200).json({
+                    success: false,
+                    message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
+                });
+            });
+        } else {
             response.status(200).json({
                 success: false,
                 message: 'Đã xảy ra lỗi vui lòng thử lại sau.'
             });
-        });
+        }
     }
 
     private getStocking = async (request: Request, response: Response, next: NextFunction) => {
@@ -268,7 +280,7 @@ export class StockingRoute extends BaseRoute {
     }
 
     private updateStockingDetailsByStockingDetailsUUId = async (request: Request, response: Response, next: NextFunction) => {
-        const { stockingDetailUUId, breedId, stockingQuantity, oldValue } = request.body;
+        const { stockingDetailUUId, breedId, stockingQuantity, oldValue, phFirst, salinityFirst } = request.body;
         let onUpdate: any = {};
         if(stockingQuantity >=  oldValue) {
             onUpdate = {
@@ -279,7 +291,11 @@ export class StockingRoute extends BaseRoute {
                 totalQuantity: this.sequeliz.literal(`totalQuantity + ${ oldValue - stockingQuantity }`)
             };
         }
-        this.breedServives.models.update(onUpdate, {
+        this.breedServives.models.update({
+            ...onUpdate,
+            salinityFirst,
+            phFirst
+        }, {
             where: {
                 breedId
             }

@@ -131,11 +131,42 @@ export class PondRoute extends BaseRoute {
                 }
             }
         } else {
-            validate.error;
-            response.status(200).json({
-                success: false,
-                message: 'Dữ liệu cung cấp không phù hợp, vui lòng kiếm tra và thử lại sau.'
-            });
+            if(validate.error.includes('pondName')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Tên ao không hợp lệ.'
+                });
+            } else
+            if(validate.error.includes('createCost')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Phí tạo ao không hợp lệ.'
+                });
+            } else
+            if(validate.error.includes('pondArea')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Diện tích ao không hợp lệ.'
+                });
+            } else 
+            if(validate.error.includes('pondCreatedDate')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Ngày tạo ao không hợp lệ.'
+                });
+            } else
+            if(validate.error.includes('pondDepth')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Độ sâu ao không hợp lệ.'
+                });
+            } else 
+            if(validate.error.includes('status')) {
+                return response.status(200).json({
+                    success: false,
+                    message: 'Trạng thái ao không hợp lệ.'
+                });
+            }
         }
     }
 

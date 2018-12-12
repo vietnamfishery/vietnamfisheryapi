@@ -97,7 +97,7 @@ export class UserRoute extends BaseRoute {
                     success: false,
                     message: 'Tên người dùng đã được sử dụng, vui lòng thử tên khác.'
                 });
-                t.rollback();
+                return t.rollback();
             });
             if(userCreated.userId) {
                 const storageOwner: OwnerStorage = new OwnerStorage();
